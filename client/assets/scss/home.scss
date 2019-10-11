@@ -1,0 +1,48 @@
+.home {
+  display: flex;
+  justify-content: center;
+  margin-top: 3%;
+  .card {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 14px 30px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e1e7ee;
+    box-shadow: 0 0 11px 0 #e1e7ee;
+    width: 560px;
+    height: 208px;
+    border-radius: 6px;
+    cursor: pointer;
+    .main {
+      font-size: 16px;
+      line-height: 1;
+      color: #9b9b9b;
+      .body {
+        display: flex;
+        margin: 0;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        .plus {
+          width: 25px;
+          height: 25px;
+        }
+      }
+    }
+    &:hover {
+      border: 1px solid Fuchsia;
+    }
+    &:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin-top: 15%;
+      }
+    }
+  }
+}
