@@ -1,0 +1,128 @@
+.dialog {
+  position: absolute;
+  width: 887px;
+  top: 215px;
+  z-index: 3;
+  .panel-body {
+    display: flex;
+    background-color: #fff;
+    .table-left {
+      min-width: 200px;
+      max-height: 393px;
+      background-color: #f3f3f3;
+      overflow-y: scroll;
+      .list-group {
+        cursor: pointer;
+        margin-bottom: 0;
+        a {
+          display: flex;
+          align-items: center;
+          height: 50px;
+        }
+        ::after {
+          position: absolute;
+          right: 20px;
+          font-family: "Glyphicons Halflings";
+          content: "\E258";
+        }
+      }
+    }
+    .table-right {
+      background-color: #f3f3f3;
+      width: 100%;
+      max-height: 393px;
+      display: flex;
+      justify-content: flex-start;
+      overflow-y: scroll;
+      .row {
+        margin-top: 20px;
+        margin-left: 0px;
+        margin-right: 0px;
+        .col-xs-6 {
+          max-width: 163px;
+          min-width: 158px;
+          min-height: 150px;
+          img {
+            width: 150px;
+            height: 120px;
+          }
+          .thumbnail {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+        }
+        .select {
+          .thumbnail {
+            border: 1px solid #469dff;
+            box-shadow: 0 0 10px 1px #daeafc;
+          }
+        }
+        .thumbnail {
+          cursor: pointer;
+          color: #404657;
+        }
+      }
+    }
+  }
+  .btn-group {
+    width: 100%;
+    padding: 15px;
+    padding-top: 0;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      width: 90px;
+      margin-right: 30px;
+    }
+  }
+  .next-table {
+    width: 100%;
+    .form-horizontal {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      .form-group {
+        display: flex;
+        align-items: center;
+        margin-left: 10%;
+        margin-right: 10%;
+        width: 50%;
+        .col-sm-2 {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          height: 64px;
+          width: 100px;
+          font-size: 14px;
+          padding-top: 0;
+          padding-right: 9px;
+          color: #86898E;
+        }
+        &:nth-child(2) {
+          .col-sm-2 {
+            &::before {
+              content: '*';
+              position: relative;
+              font-family: SimSun;
+              right: 4px;
+              color: #FF3333;
+            }
+          }
+        }
+        .col-sm-10 {
+          font-size: 14px;
+          height: 64px;
+          display: flex;
+          align-items: center;
+          span {
+            margin-left: 10px;
+          }
+          img {
+            width: 64px;
+          }
+        }
+      }
+    }
+  }
+}

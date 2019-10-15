@@ -28,17 +28,4 @@ mongoose.connection.on('disconnected', function () {
   console.log('Mongoose connection disconnected');
 });
 
-var blogSchema = new mongoose.Schema({
-  title:  String,
-  comments: [{ body: String, date: Date }],
-  date: { type: Date, default: Date.now },
-  hidden: Boolean,
-  meta: {
-    votes: Number,
-    favs:  Number
-  }
-})
-
-var blogModel = mongoose.model('Blog', blogSchema);
-
 module.exports = mongoose;

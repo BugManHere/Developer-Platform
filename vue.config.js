@@ -30,10 +30,21 @@ module.exports = {
         '@': resolve('client'),
         '@components': resolve('client/components'),
         '@assets': resolve('client/assets'),
+        '@public': resolve('public'),
         },
       })
   },
   devServer: {
     hotOnly: false,
+    proxy: {
+      '/api': {
+          target: 'localhost: 8090',
+          changeOrigin: true,
+          ws: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+      }
+  }
   },
 }
