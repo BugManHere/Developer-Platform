@@ -28,4 +28,25 @@ mongoose.connection.on('disconnected', function () {
   console.log('Mongoose connection disconnected');
 });
 
+/**
+ * 定义modl
+ */
+let adminSchema = new mongoose.Schema({
+  hasDeviceList: [{
+    productID: Number,
+    deviceID: Number,
+    brand: String,
+    deviceName: String,
+    productModel: String,
+    protocol: String,
+    createTime: String,
+  }],
+});
+global.adminModel = mongoose.model('admin', adminSchema);
+
+let productSchema = new mongoose.Schema({
+  productList: [{ name: 'string' }],
+});
+global.productModel = mongoose.model('product', productSchema);
+
 module.exports = mongoose;

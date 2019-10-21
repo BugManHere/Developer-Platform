@@ -5,3 +5,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /babel.config.js
+/client/views/Home.vue

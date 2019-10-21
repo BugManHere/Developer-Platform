@@ -1,11 +1,13 @@
 .home {
-  display: flex;  
+  display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 3%;
   .card-table {
     display: flex;
-    justify-content: center;
+    width: 1180px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     > div {
       position: relative;
       display: inline-block;
@@ -28,12 +30,74 @@
           margin: 0;
           height: 100%;
           flex-direction: column;
+          // flex-wrap: wrap;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-end;
           text-align: center;
           .plus {
             width: 25px;
             height: 25px;
+          }
+          .message-top {
+            height: 128px;
+            width: 100%;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            img {
+              width: 86px;
+              height: 86px;
+              margin: 0 16px 0 22px;
+              background-color: #fafafa;
+            }
+            div {
+              display: flex;
+              flex-wrap: wrap;
+              width: 350px;
+              span {
+                text-align: left;
+                width: 100%;
+                height: 36px;
+                &:first-child {
+                  color: #404657;
+                }
+                &:nth-child(2) {
+                  font-size: 12px;
+                }
+              }
+            }
+            > span {
+              color: #91C5FF;
+              font-size: 14px;
+              height: 16px;
+              align-self: flex-start;
+              margin-top: 22px;
+              z-index: 1;
+              &:hover {
+                color: #49ABFF;
+              }
+            }
+          }
+          .message-bottom {
+            height: 80px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: #fcfcfc;
+            // padding-bottom: 0px;
+            div {
+              width: 124px;
+              display: flex;
+              flex-direction: column;
+              // align-items: flex-end;
+              flex-wrap: wrap;
+              justify-content: center;
+              > :first-child {
+                color: #c5c5c5;
+                font-size: 12px;
+                margin-bottom: 10px;
+              }
+            }
           }
         }
       }

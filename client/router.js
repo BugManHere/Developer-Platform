@@ -3,8 +3,10 @@ import Router from 'vue-router';
 
 const Home = r =>
   require.ensure([], () => r(require('./views/Home.vue')));
-const ProductInfo = r =>
-  require.ensure([], () => r(require('./views/ProductInfo.vue')));
+const Product = r =>
+  require.ensure([], () => r(require('./views/Product.vue')));
+const Account = r =>
+  require.ensure([], () => r(require('./views/Account.vue')));
 
 Vue.use(Router);
 
@@ -13,7 +15,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Home',
+      redirect: '/Account/Login',
     },
     {
       path: '/Home',
@@ -21,9 +23,16 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/ProductInfo',
-      name: 'ProductInfo',
-      component: ProductInfo,
+      path: '/Account/:loginType',
+      name: 'Account',
+      component: Account,
+      props: true
+    },
+    {
+      path: '/Product/:deviceKey',
+      name: 'Product',
+      component: Product,
+      props: true
     },
   ]
 })

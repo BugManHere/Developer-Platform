@@ -36,7 +36,9 @@
           class="table-right"
           v-show="currentStatus === 0"
         >
-          <div class="row">
+          <div
+            class="row"
+            v-if="productList[deviceInfo.productID].deviceList">
             <div
               class="col-xs-6 col-md-3"
               :class="{select: deviceInfo.deviceID === index}"
@@ -46,14 +48,14 @@
             >
               <p class="thumbnail">
                 <img :src="require(`@public/img/${item.img}`)">
-                {{item.devName}}
+                <span>{{item.devName}}</span>
               </p>
             </div>
           </div>
         </div>
         <div
           class="next-table"
-          v-show="currentStatus === 1">
+          v-if="currentStatus === 1">
           <form class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-2 control-label">品类</label>
@@ -66,15 +68,53 @@
               <label
                 for="inputPassword"
                 class="col-sm-2 control-label"
+              >品牌</label>
+              <div class="col-sm-10">
+                <span>格力</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label
+                for="inputPassword"
+                class="col-sm-2 control-label"
               >产品名称</label>
               <div class="col-sm-10">
                 <input
                   type="text"
                   class="form-control"
                   id="inputText"
-                  placeholder="请输入产品名称"
+                  placeholder="请输入产品名称，如贝塔柜机"
                   @change="setDeviceName"
                 >
+              </div>
+            </div>
+            <div class="form-group">
+              <label
+                for="inputPassword"
+                class="col-sm-2 control-label"
+              >产品型号</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputText"
+                  placeholder="请输入产品型号，如s2"
+                  @change="setProductModel"
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label
+                for="inputPassword"
+                class="col-sm-2 control-label"
+              >通信协议</label>
+              <div class="col-sm-10">
+                <label class="radio-inline">
+                  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" @click="deviceInfo.protocol = 'WiFi'" checked> WiFi
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" @click="deviceInfo.protocol = '蓝牙'" > 蓝牙
+                </label>
               </div>
             </div>
           </form>
@@ -127,13 +167,17 @@ export default {
       deviceInfo: {
         productID: 0,
         deviceID: 0,
-        deviceName: ''
+        brand: '格力',
+        deviceName: '',
+        productModel: '',
+        protocol: 'WiFi',
       }
     };
   },
   computed: {
     ...mapState({
-      productList: state => state.productList
+      productList: state => state.productList,
+      hasDeviceList: state => state.hasDeviceList
     }),
   },
   methods: {
@@ -144,26 +188,36 @@ export default {
       this.$emit("hideDialog", false);
     },
     selectProduct(index) {
-      this.deviceInfo.productID = index;
+      this.$set(this.deviceInfo, 'productID', index);
+      // this.deviceInfo.productID = index;
+      console.log(this.deviceInfo.productID);
     },
     selectDevice(index) {
       this.deviceInfo.deviceID = index;
     },
     goState(index) {
+      if (!this.productList[this.deviceInfo.productID].deviceList) return;
       this.currentStatus = index;
     },
     setDeviceName(evt) {
       console.log(evt.target.value);
       this.$set(this.deviceInfo, 'deviceName', evt.target.value);
     },
+    setProductModel(evt) {
+      console.log(evt.target.value);
+      this.$set(this.deviceInfo, 'productModel', evt.target.value);
+    },
     submit() {
       https.fetchPost('/product', this.deviceInfo)
         .then((data) => {
+          const hasDeviceList = data.data.hasDeviceList;
+          this.setState(['hasDeviceList', hasDeviceList]);
           console.log(data);
         })
         .catch((err) => {
           console.log(err);
         })
+      this.$emit("hideDialog", false);
     }
   }
 };

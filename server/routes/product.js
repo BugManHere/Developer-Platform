@@ -1,28 +1,43 @@
 var express = require('express');
 var router = express.Router();
-var crypto = require('crypto');
+var dayjs = require('dayjs');
 
-var mongoose = require('../mongoose.js');
+require('../mongoose.js');
 
-let Schema = new mongoose.Schema({
-  productList: [{ name: 'string' }],
-});
-let model = mongoose.model('product', Schema);
 let data;
 
-model.find().then((params) => {
-  data = params;
-})
+// global.productModel.find().then((params) => {
+//   data = params;
+// })
 
 router.get('/', function(req, res, next) {
-  res.json(data[0]);
+  global.productModel.find().then((params) => {
+    data = params;
+    res.json(data[0]);
+  })
 });
 
 router.post('/', function(req, res, next) {
-  res.json(data[0]);
-  let Signture  = crypto.createHmac('sha1', global.key);
-  Signture.update(req.body.deviceName);
-  console.log(Signture.digest().toString('base64'));
+  const map = {};
+  map.productID = req.body.productID;
+  map.deviceID = req.body.deviceID;
+  map.brand = req.body.brand;
+  map.deviceName = req.body.deviceName;
+  map.productModel = req.body.productModel;
+  map.protocol = req.body.protocol;
+  map.createTime = dayjs().format('YYYY.MM.DD');
+  const hasDeviceList = global.adminInfo.hasDeviceList;
+  hasDeviceList.push(map);
+
+  global.adminInfo.set({hasDeviceList: hasDeviceList});
+  global.adminInfo.save()
+      .then((v) => {
+        res.json(v);
+        console.log(v);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
 });
 
 module.exports = router;

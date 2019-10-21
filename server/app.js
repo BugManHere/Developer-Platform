@@ -1,4 +1,4 @@
-var createError = require('http-errors');
+// var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -10,10 +10,11 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var productRouter = require('./routes/product');
 var adminRouter = require('./routes/admin');
+var httpsRouter = require('./routes/https');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
-// var key = 'greekey';
 global.key = 'greekey';
 
 // view engine setup
@@ -46,6 +47,8 @@ app.use(bodyParser.urlencoded({
 app.use('/', indexRouter);
 app.use('/product', productRouter);
 app.use('/admin', adminRouter);
+app.use('/https', httpsRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
