@@ -49,7 +49,7 @@
             </li>
           </ul>
         </div>
-        <div v-else class="register">
+        <!-- <div v-else class="register">
           <ul class="nav navbar-nav navbar-right" v-if="$route.params.loginType === 'Register'">
             <li><a>已有账号，</a></li>
             <li><a href="#/Account/Login">登录</a></li>
@@ -58,7 +58,7 @@
             <li><a>还没账号？</a></li>
             <li><a href="#/Account/Register">注册</a></li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </nav>
   </div>
@@ -68,7 +68,6 @@
 import { mapState } from "vuex";
 
 export default {
-  name: 'HelloWorld',
   props: {
     msg: String
   },

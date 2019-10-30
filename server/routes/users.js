@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user");
+const Verify = require("../models/verify");
 // 密码加密
 const bcrypt = require("bcrypt");
 // 登录token
@@ -10,6 +11,8 @@ const keys = require('../config/keys');
 const passport = require("passport");
 // 邮箱验证
 const mail = require('../api/mail');
+// 日期模块
+const dayjs = require('dayjs');
 
 // post请求：注册接口 users/register
 router.post("/register", (req, res) => {
@@ -38,7 +41,6 @@ router.post("/register", (req, res) => {
               .catch(err => console.log(err));
           });
         });
-
       }
     });
 });
@@ -48,6 +50,7 @@ router.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   //查询数据库是否有邮箱
+  console.log(email);
   User.findOne({
       email
     })
@@ -91,14 +94,30 @@ router.post("/mail", (req, res) => {
   //查询数据库是否有邮箱
   User.findOne({ email })
     .then((user) => {
-      console.log(user);
       if (user) {
         res.status(202).json("邮箱已被注册");
       } else {
-        mail(email)
-          .then((data) => {
-            res.json(data);
-            console.log(data);
+        Verify.findOne({ email })
+          .then((verify) => {
+            console.log(verify);
+            if (verify && verify.register) {
+              const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+              const lastDate = verify.register.time;
+            } else {
+              mail(email)
+                .then((data) => {
+                  const newVerify = new Verify({
+                    email: email,
+                  });
+                  newVerify.save().then(() => {
+                    console.log('yes');
+                    res.json(data);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  })
+                })
+            }
           })
       }
     });

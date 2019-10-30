@@ -74,12 +74,7 @@ export default {
   methods: {
     //  提交表单
     submitForm() {
-      https.fetchPost("/api/users/login", this.loginUser).then(res => {
-        // 登陆成功
-        this.$message({
-          message: "账号登陆成功!",
-          type: "success"
-        });
+      https.fetchPost("users/login", this.loginUser).then(res => {
         // 获取token
         const { token } = res.data;
         localStorage.setItem("eleToken", token);
@@ -89,7 +84,7 @@ export default {
         // token储存在vuex中
         this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
         this.$store.dispatch("setUser", decoded);
-        this.$router.push("/index");
+        this.$router.push("/Home");
       });
     },
     isEmpty(value) {

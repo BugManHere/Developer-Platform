@@ -1,7 +1,7 @@
 <template>
   <div class="account">
-    <Register v-if="loginType === 'Register'"/>
-    <Login v-else/>
+    <!-- <Register v-if="loginType === 'Register'"/> -->
+    <Login />
   </div>
 </template>
 

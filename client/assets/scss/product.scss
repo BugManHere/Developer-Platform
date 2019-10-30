@@ -1,12 +1,13 @@
 .product {
-  .message {
+  position: relative;
+  top: 20px;
+  > div {
     width: 1084px;
     border: 1px #d6dee6 solid;
-    height: 190px;
     border-radius: 4px;
     background: #ffffff;
-    margin: 0 auto;
-    .header {
+    margin: 20px auto auto auto;
+    .frame-header {
       width: 100%;
       border-bottom: 1px rgba(211, 222, 230, 0.6) solid;
       height: 43px;
@@ -45,6 +46,10 @@
         }
       }
     }
+  }
+  .message {
+    position: relative;
+    height: 190px;
     .body {
       width: 1084px;
       clear: both;
@@ -62,18 +67,65 @@
         height: 85px;
         float: left;
         margin: 45px 0 0 18px;
-        span {
+        p {
           padding: 0;
           margin: 0;
+          span {
+            color: #ffb533;
+            padding-right: 16px;
+            font-size: 12px;
+            :before {
+              padding-right: 6px;
+              position: relative;
+              display: inline-block;
+              font-style: normal;
+              font-weight: lighter;
+              // font-variant: normal;
+              // text-transform: none;
+              font-size: 16px;
+              font-family: 'Glyphicons Halflings';
+              content: "\e023"
+            }
+          }
         }
       }
       > :nth-child(3) {
-        width: 645px;
+        width: 600px;
         overflow: hidden;
         float: left;
         margin-top: 24px;
-        
+        > div {
+          float: left;
+          width: 129px;
+          text-align: center;
+          height: 55px;
+          > :nth-child(1) {
+            color: #c5c5c5;
+            font-size: 12px;
+            margin-bottom: 3px;
+          }
+          > :nth-child(2) {
+            color: #8b8b8b;
+            font-size: 14px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            cursor: default;
+            position: relative;
+          }
+        }
       }
     }
+  }
+  .function {
+    margin: 0 auto;
+    border-radius: 4px;
+    margin-top: 16px;
+    overflow: hidden;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    background: #ffffff;
   }
 }

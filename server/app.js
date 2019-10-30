@@ -8,9 +8,9 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
-var productRouter = require('./routes/product');
-var adminRouter = require('./routes/admin');
-var httpsRouter = require('./routes/https');
+var productTypeRouter = require('./routes/productType');
+var deviceRouter = require('./routes/device');
+// var httpsRouter = require('./routes/https');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -45,9 +45,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/', indexRouter);
-app.use('/product', productRouter);
-app.use('/admin', adminRouter);
-app.use('/https', httpsRouter);
+app.use('/productType', productTypeRouter);
+app.use('/device', deviceRouter);
+// app.use('/https', httpsRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

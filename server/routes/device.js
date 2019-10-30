@@ -1,22 +1,21 @@
-var express = require('express');
-var router = express.Router();
-var crypto = require('crypto');
+const express = require('express');
+const router = express.Router();
+const crypto = require('crypto');
+const deviceModel = require("../models/device");
 
 let data;
 
-// global.adminModel.find().then((params) => {
-//   data = params;
-// })
-
 router.get('/', function(req, res, next) {
-  global.adminModel.find().then((params) => {
+  deviceModel.find().then((params) => {
     data = params;
     res.json(data[0]);
   })
 });
 
-router.post('/device', function(req, res, next) {
-  console.log(global.adminInfo);
+router.post('/info', function(req, res, next) {
+  deviceModel.findOne({admin: global.admin}).then((params) => {
+    res.json(params.hasDeviceList[req.body.productKey]);
+  })
 });
 
 router.post('/', function(req, res, next) {
@@ -24,7 +23,7 @@ router.post('/', function(req, res, next) {
   Signture.update(req.body.admin);
   const Ciphertext = Signture.digest().toString('base64');
   global.admin = Ciphertext;
-  global.adminModel.findOne({admin: global.admin}).then((params) => {
+  deviceModel.findOne({admin: global.admin}).then((params) => {
     data = params;
     res.json(data);
     global.adminInfo = data;

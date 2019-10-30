@@ -1,17 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var dayjs = require('dayjs');
+const express = require('express');
+const router = express.Router();
+const dayjs = require('dayjs');
+const productTypeModel = require("../models/productType");
 
 require('../mongoose.js');
 
 let data;
 
-// global.productModel.find().then((params) => {
-//   data = params;
-// })
-
 router.get('/', function(req, res, next) {
-  global.productModel.find().then((params) => {
+  productTypeModel.find().then((params) => {
     data = params;
     res.json(data[0]);
   })

@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
 // 创建Schema
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -18,7 +17,6 @@ const UserSchema = new Schema({
   avatar: {
     type: String
   },
-
   identity: {
     type: Number,
     required: true

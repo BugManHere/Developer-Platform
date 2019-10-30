@@ -27,15 +27,15 @@
       <div
         v-for="(item, index) in hasDeviceList"
         :key="index"
-        @click="goProductPage(item._id)"
+        @click="goProductPage(index)"
       >
         <div
           class="main"
-          v-if="hasDeviceList.length && productList.length"
+          v-if="hasDeviceList.length && productTypeList.length"
         >
           <div class="body">
             <div class="message-top">
-              <img :src="require(`@public/img/${productList[item.productID].deviceList[item.deviceID].img}`)">
+              <img :src="require(`@public/img/${productTypeList[item.productID].deviceTypeList[item.deviceID].img}`)">
               <div>
                 <span>{{item.deviceName}}</span>
                 <span>创建时间：{{item.createTime}}</span>
@@ -86,22 +86,22 @@ export default {
   computed: {
     ...mapState({
       admin: state => state.admin,
-      productList: state => state.productList,
+      productTypeList: state => state.productTypeList,
       hasDeviceList: state => state.hasDeviceList
     })
   },
   mounted() {
     https
-      .fetchGet("/product")
+      .fetchGet("/productType")
       .then(data => {
-        const productList = data.data.productList;
-        this.setState(["productList", productList]);
+        const productTypeList = data.data.productTypeList;
+        this.setState(["productTypeList", productTypeList]);
       })
       .catch(err => {
         console.log(err);
       });
     https
-      .fetchPost("/admin", { admin: this.admin })
+      .fetchPost("/device", { admin: this.admin })
       .then(data => {
         const hasDeviceList = data.data.hasDeviceList;
         this.setState(["hasDeviceList", hasDeviceList]);
@@ -126,8 +126,8 @@ export default {
     productInfo(item) {
       return {
         产品品牌: item.brand,
-        产品品类: this.productList[item.productID].deviceList[item.deviceID]
-          .devName,
+        产品品类: this.productTypeList[item.productID].deviceTypeList[item.deviceID]
+          .name,
         产品型号: item.productModel,
         通信协议: item.protocol
       };

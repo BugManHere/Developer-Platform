@@ -1,7 +1,7 @@
 <template>
   <div
     class="dialog"
-    v-if="productList.length"
+    v-if="productTypeList.length"
   >
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -24,7 +24,7 @@
           <div class="list-group">
             <a
               class="list-group-item"
-              v-for="(item, index) in productList"
+              v-for="(item, index) in productTypeList"
               :key="index"
               @click="selectProduct(index)"
             >
@@ -38,11 +38,11 @@
         >
           <div
             class="row"
-            v-if="productList[deviceInfo.productID].deviceList">
+            v-if="productTypeList[deviceInfo.productID].deviceTypeList">
             <div
               class="col-xs-6 col-md-3"
               :class="{select: deviceInfo.deviceID === index}"
-              v-for="(item, index) in productList[deviceInfo.productID].deviceList"
+              v-for="(item, index) in productTypeList[deviceInfo.productID].deviceTypeList"
               :key="index"
               @click="selectDevice(index)"
             >
@@ -60,8 +60,8 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">品类</label>
               <div class="col-sm-10">
-                <img :src="require(`@public/img/${productList[deviceInfo.productID].deviceList[deviceInfo.deviceID].img}`)">
-                <span class="form-control-static">{{ productList[deviceInfo.productID].deviceList[deviceInfo.deviceID].devName }}</span>
+                <img :src="require(`@public/img/${productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].img}`)">
+                <span class="form-control-static">{{ productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].devName }}</span>
               </div>
             </div>
             <div class="form-group">
@@ -176,7 +176,7 @@ export default {
   },
   computed: {
     ...mapState({
-      productList: state => state.productList,
+      productTypeList: state => state.productTypeList,
       hasDeviceList: state => state.hasDeviceList
     }),
   },
@@ -196,7 +196,7 @@ export default {
       this.deviceInfo.deviceID = index;
     },
     goState(index) {
-      if (!this.productList[this.deviceInfo.productID].deviceList) return;
+      if (!this.productTypeList[this.deviceInfo.productID].deviceTypeList) return;
       this.currentStatus = index;
     },
     setDeviceName(evt) {
@@ -208,7 +208,7 @@ export default {
       this.$set(this.deviceInfo, 'productModel', evt.target.value);
     },
     submit() {
-      https.fetchPost('/product', this.deviceInfo)
+      https.fetchPost('/productType', this.deviceInfo)
         .then((data) => {
           const hasDeviceList = data.data.hasDeviceList;
           this.setState(['hasDeviceList', hasDeviceList]);
