@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex';
 import App from './App.vue'
 import router from './router';
-import "bootstrap";
+import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.css";
 
 import './assets/scss/global.scss';
