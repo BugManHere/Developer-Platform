@@ -1,0 +1,25 @@
+@import 'status';
+@import 'order';
+
+.gr-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .edit-box {
+    position: absolute;
+    top: 150px;
+    z-index: 3;
+    width: 549px;
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      div {
+        display: flex;
+        justify-content: flex-end;
+        button {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}

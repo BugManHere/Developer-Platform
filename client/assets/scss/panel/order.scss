@@ -1,0 +1,13 @@
+.order-body {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 15px 0;
+  .transfer-body {
+    width: 100%;
+  }
+  .order-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+}

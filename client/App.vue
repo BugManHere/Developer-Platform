@@ -5,7 +5,6 @@
       <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
-    <!-- <Header /> -->
   </div>
 </template>
 
@@ -16,7 +15,7 @@ import Header from '@/components/Header';
 export default {
   name: 'app',
   components: {
-    Header
+    Header,
   }
 }
 </script>

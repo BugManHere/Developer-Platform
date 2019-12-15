@@ -176,13 +176,15 @@ export default {
   },
   computed: {
     ...mapState({
-      productTypeList: state => state.productTypeList,
-      hasDeviceList: state => state.hasDeviceList
+      productTypeList: state => state.devModule.productTypeList,
+      hasDeviceList: state => state.devModule.hasDeviceList,
+      funcDefineList: state => state.funcModule.funcDefineList
     }),
   },
   methods: {
     ...mapMutations({
-      setState: "SET_STATE"
+      setDevState: "SET_DEV_OBJECT",
+      setFuncObject: "SET_FUNC_OBJECT",
     }),
     hideDialog() {
       this.$emit("hideDialog", false);
@@ -211,8 +213,7 @@ export default {
       https.fetchPost('/productType', this.deviceInfo)
         .then((data) => {
           const hasDeviceList = data.data.hasDeviceList;
-          this.setState(['hasDeviceList', hasDeviceList]);
-          console.log(data);
+          this.setDevState(['hasDeviceList', hasDeviceList]);
         })
         .catch((err) => {
           console.log(err);

@@ -1,12 +1,14 @@
 .product {
   position: relative;
-  top: 20px;
+  top: 0px;
   > div {
     width: 1084px;
-    border: 1px #d6dee6 solid;
-    border-radius: 4px;
-    background: #ffffff;
-    margin: 20px auto auto auto;
+    margin: 70px auto 84px auto;
+    > div {
+      border: 1px #d6dee6 solid;
+      border-radius: 4px;
+      background: #ffffff;
+    }
     .frame-header {
       width: 100%;
       border-bottom: 1px rgba(211, 222, 230, 0.6) solid;
@@ -119,13 +121,30 @@
       }
     }
   }
-  .function {
+  .panel-body {
     margin: 0 auto;
     border-radius: 4px;
     margin-top: 16px;
     overflow: hidden;
     padding-bottom: 20px;
     margin-bottom: 20px;
-    background: #ffffff;
+    // background: #ffffff;
+  }
+  .bottom-panel {
+    position: fixed;
+    width: 100%;
+    z-index: 5;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: #d8eafd;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0;
+    .button-save {
+      margin-right: 35px;
+    }
   }
 }

@@ -6,6 +6,7 @@ function resolve (dir) {
 }
 
 module.exports = {
+  runtimeCompiler: true,
   pages: {
     index: {
       // page 的入口

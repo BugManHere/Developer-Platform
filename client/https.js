@@ -7,6 +7,10 @@ axios.defaults.baseURL = 'http://localhost:3000';   //配置接口地址
 
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
+    if (typeof window !== 'undefined' && window.myvm) {
+        const vm = window.myvm;
+        vm.$loading.show();
+    }
     //在发送请求之前做某件事
     if(config.method  === 'post'){
         config.data = qs.stringify(config.data);
@@ -19,13 +23,20 @@ axios.interceptors.request.use((config) => {
 
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use((res) =>{
+    if (typeof window !== 'undefined' && window.myvm) {
+        const vm = window.myvm;
+        vm.$loading.hide();
+    }
     //对响应数据做些事
     if(!res.data.success){
         return Promise.resolve(res);
     }
     return res;
 }, (error) => {
-    console.log('网络异常')
+    if (typeof window !== 'undefined' && window.myvm) {
+        const vm = window.myvm;
+        vm.$toast.error('网络异常');
+    }
     return Promise.reject(error);
 });
 

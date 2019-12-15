@@ -59,12 +59,10 @@
       class="overlay-backdrop"
       v-show="isShowDialog"
     />
-    <transition name="fade">
-      <Dialog
-        @hideDialog="setDialogType"
-        v-if="isShowDialog"
-      />
-    </transition>
+    <Dialog
+      @hideDialog="setDialogType"
+      v-fade:show="isShowDialog"
+    />
   </div>
 </template>
 
@@ -85,9 +83,9 @@ export default {
   },
   computed: {
     ...mapState({
-      admin: state => state.admin,
-      productTypeList: state => state.productTypeList,
-      hasDeviceList: state => state.hasDeviceList
+      admin: state => state.userModule.admin,
+      productTypeList: state => state.devModule.productTypeList,
+      hasDeviceList: state => state.devModule.hasDeviceList
     })
   },
   mounted() {
@@ -95,7 +93,7 @@ export default {
       .fetchGet("/productType")
       .then(data => {
         const productTypeList = data.data.productTypeList;
-        this.setState(["productTypeList", productTypeList]);
+        this.setDevState(["productTypeList", productTypeList]);
       })
       .catch(err => {
         console.log(err);
@@ -104,8 +102,12 @@ export default {
       .fetchPost("/device", { admin: this.admin })
       .then(data => {
         const hasDeviceList = data.data.hasDeviceList;
-        this.setState(["hasDeviceList", hasDeviceList]);
-        console.log(this.hasDeviceList);
+        this.setDevState(["hasDeviceList", hasDeviceList]);
+        const funcDefineList = {};
+        this.hasDeviceList.forEach(val => {
+          funcDefineList[val._id] = val.funcDefineList;
+        });
+        this.setFuncObject(['funcDefineList', funcDefineList]);
       })
       .catch(err => {
         console.log(err);
@@ -113,14 +115,15 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setState: "SET_STATE"
+      setDevState: "SET_DEV_OBJECT",
+      setFuncObject: "SET_FUNC_OBJECT",
     }),
     setDialogType(val) {
       this.isShowDialog = val;
     },
     goProductPage(val) {
       this.$router.push({
-        path: `Product/${val}`
+        path: `Product/${this.hasDeviceList[val]._id}`
       });
     },
     productInfo(item) {

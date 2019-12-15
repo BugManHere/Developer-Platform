@@ -5,7 +5,9 @@
 @import 'login';
 @import 'header';
 @import 'register';
-@import 'table';
+@import 'panel/index';
+@import 'function-table';
+@import 'logic/index';
 
 #app {
   background-color: #F1F5FC;
@@ -14,7 +16,7 @@
   overflow-y: auto;
 }
 
-.hiddle {
+.hidden {
   display: none;
 }
 
@@ -29,13 +31,13 @@
   z-index: 2;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  opacity: 1;
-  transition: top .2s, opacity .2s;
+@keyframes slowshow {
+  from {opacity: 0; top: 0; transform: translateY(-100%);}
+  to {opacity: 1;}
 }
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-  top: 0;
+
+@keyframes slowhide {
+  from {opacity: 1;}
+  to {opacity: 0; top: 0; transform: translateY(-100%); display: none;}
 }
+

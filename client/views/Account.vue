@@ -7,13 +7,13 @@
 
 <script>
 import Login from '@components/Login';
-import Register from '@components/Register';
+// import Register from '@components/Register';
 
 export default {
   props: ['loginType'],
   components: {
     Login,
-    Register
+    // Register
   },
   data() {
     return {
