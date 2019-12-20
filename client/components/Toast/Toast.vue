@@ -1,7 +1,7 @@
 <template>
   <div class="gr-toast">
     <div v-fade:show="show" :class="type">
-      <span>{{ text }}</span>
+      <span v-text="text"/>
     </div>
   </div>
 </template>

@@ -6,7 +6,7 @@
       width: 1040px;
     }
     .label-select {
-      height: 50px;
+      min-height: 50px;
       width: 100%;
       border: 1px LightSlateGray solid;
       margin: 10px auto;
@@ -14,6 +14,7 @@
       justify-content: space-between;
       align-items: center;
       border-radius: 6px;
+      user-select: none;
       .label-theme {
         color: LightSlateGray;
         margin-left: 15px;
@@ -23,24 +24,26 @@
         position: relative;
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         align-items: center;
         height: 100%;
         width: 80%;
         > div {
+          max-height: 38px;
           position: relative;
           padding: 8px 12px;
-          margin: 0 10px;
+          margin: 6px 10px;
           position: relative;
           background-color: PowDerBlue;
           border: 1px #00D0D0 solid;
           border-radius: 3px;
           &:hover {
             span {
-              position: absolute;
-              top: 1px;
-              right: 2px;
-              font-size: 10px;
               &::after {
+                position: absolute;
+                font-size: 10px;
+                top: 1px;
+                right: 2px;
                 content: '\2716';
                 color: #A0A0A0;
                 &:hover {
@@ -71,14 +74,30 @@
       width: auto;
       display: flex;
       justify-content: center;
+      margin-top: 30px;
+      user-select: none;
       tbody {
+        overflow: auto;
         tr {
           td {
             width: 100px;
+            min-width: 50px;
+            min-height: 50px;
             height: 50px;
             border: 1px #D6DEE6 solid;
             text-align: center;
             vertical-align: middle !important;
+          }
+          .set-hover {
+            background-color: #c5c5c5;
+          }
+        }
+        > :nth-child(2n-1) {
+          background-color: #f0f0f0;
+        }
+        > :first-child {
+          > :first-child {
+            background-color: #A0A0A0;
           }
         }
       }

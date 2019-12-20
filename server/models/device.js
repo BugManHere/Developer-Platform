@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 // 创建孙子文档 funcDefine
+const logicSchema = new mongoose.Schema({
+  json: String
+})
+
+// 创建孙子文档 funcDefine
 const funcSchema = new mongoose.Schema({
   name: String,
   identifier: String,
@@ -18,6 +23,7 @@ const listSchema = new mongoose.Schema({
   productModel: String,
   protocol: String,
   createTime: String,
+  logicMap: logicSchema,
   funcDefine: [funcSchema],
 })
 

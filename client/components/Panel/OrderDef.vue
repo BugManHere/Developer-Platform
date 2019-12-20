@@ -1,11 +1,7 @@
 <template>
   <div>
     <div class="order-body" role="group">
-      <transfer v-if="settingStep === 1" class="transfer-body" :optionslList="optionslList" @itemList="getOrderList"/>
-      <div class="order-buttons col-md-5">
-        <button type="button" class="btn btn-default btn-cancel" @click="jumpStep()">上一步</button>
-        <button type="button" class="btn btn-primary btn-save" @click="settingDone">完&emsp;成</button>
-      </div>
+      <transfer v-if="statusSetStep === 1" class="transfer-body" :optionslList="optionslList" @itemList="getOrderList"/>
     </div>
   </div>
 </template>
@@ -31,22 +27,19 @@ export default {
     ...mapState({
       currentFuncId: state => state.funcModule.currentFuncId,
       deviceKey: state => state.funcModule.deviceKey,
-      settingStep: state => state.funcModule.settingStep,
-      statusList: state => state.funcModule.statusList,
+      statusSetStep: state => state.funcModule.statusSetStep,
+      allStatusList: state => state.funcModule.allStatusList,
+      selectStatusList: state => state.funcModule.selectStatusList,
       orderList: state => state.funcModule.orderList,
-      funcDefine: function getFuncDefine(state) {
-        return state.funcModule.funcDefineList[state.funcModule.deviceKey];
-      },
+      funcDefine: (state, getters) => getters.funcDefine,
     }),
-    statusListLen() {
-      return this.statusList.length;
-    },
     rightList() {
-      const order = this.funcDefine[this.currentFuncId].order;
-      return _difference(this.funcDefine[this.currentFuncId].order, this.constList);
+      // return _difference(this.funcDefine[this.currentFuncId].order, this.constList);
+      console.log(this.selectStatusList);
+      return this.selectStatusList.concat();
     },
     leftList() {
-      return _difference(this.statusList, [...this.rightList, ...this.constList]);
+      return _difference(this.allStatusList, [...this.rightList, ...this.constList]);
     },
     optionslList() {
       return {
@@ -59,11 +52,8 @@ export default {
   methods: {
     ...mapMutations({
       setFuncObject: "SET_FUNC_OBJECT",
-      setFuncDefine: "SET_FUNC_DEFINE",
+      setFuncDefine: "SET_FUNC_DEFINE"
     }),
-    jumpStep() {
-      this.setFuncObject(["settingStep", 0]);
-    },
     keyToName(arr, key) {
       if (!this.funcDefine.length) return {};
       switch (key) {
@@ -75,16 +65,10 @@ export default {
           break;
       }
       return arr.map(item => {
+        console.log(arr);
+        console.log(item);
         return this.funcDefine[this.currentFuncId].statusDefine[item].name;
       });
-    },
-    settingDone() {
-      const orderList = ['default'].concat(this.orderList);
-      const funcDefine = deepCopy(this.funcDefine);
-      funcDefine[this.currentFuncId].order = orderList;
-      this.setFuncDefine([this.deviceKey, funcDefine]);
-      this.setFuncObject(["currentFuncId", false]);
-      this.setFuncObject(["settingStep", 0]);
     },
     getOrderList(val) {
       const map = {};
@@ -100,6 +84,15 @@ export default {
       })
       const orderList = Object.values(map);
       this.setFuncObject(['orderList', orderList]);
+      console.log(orderList);
+    },
+    settingDone() {
+      const funcDefine = deepCopy(this.funcDefine);
+      funcDefine[this.currentFuncId].order = this.orderList;
+      this.setFuncDefine([this.deviceKey, funcDefine]);
+      this.setFuncObject(["currentFuncId", false]);
+      this.setFuncObject(["statusSetStep", 0]);
+      this.setFuncObject(["selectStatusList", null]);
     }
   }
 }

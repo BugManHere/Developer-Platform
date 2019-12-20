@@ -10,4 +10,7 @@ export default {
   [type.SET_FUNC_DEFINE](state, [key, val]) {
     state.funcModule.funcDefineList[key] = val;
   },
+  [type.SET_LOGIC_MAP](state, [key, val]) {
+    state.funcModule.logicMap[key] = val;
+  },
 };

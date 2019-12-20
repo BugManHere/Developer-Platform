@@ -3,7 +3,7 @@
     <div
       class="status"
       :class="{ unfold: currentStatusId === index }"
-      v-for="(item, index) in statusList"
+      v-for="(item, index) in allStatusList"
       :key="index"
     >
       <div class="edit-optional" :class="{ must: ['undefined', 'default'].includes(item) }">
@@ -12,18 +12,14 @@
           :class="{selectable: !delStatusType}"
           @mouseup="unfoldStatus(index)"
         >
-          <div @mouseup.stop="isUnfold(index)">
+          <div @mouseup.stop="isUnfold(index)" :class="{'change-color': !editName && currentStatusId === index}">
             <input
               type="text"
               class="form-control"
               v-if="editName && currentStatusId === index"
               v-model="editName"
             />
-            <span v-else>
-              {{
-              currentFun.statusDefine[item].name
-              }}
-            </span>
+            <span v-else v-text="currentFun.statusDefine[item].name"/>
             <div
               v-show="!['undefined', 'default'].includes(item) && currentStatusId === index"
               class="icon"
@@ -74,9 +70,9 @@
           <div class="col-md-6" v-show="useCustomize">
             <label for="inputPassword" class="control-label">函数接入方式</label>
             <select class="form-control" v-model="customizeType">
-              <option :value="0">执行前</option>
-              <option :value="1">执行后</option>
-              <option :value="2">替代</option>
+              <option value="after">执行前</option>
+              <option value="before">执行后</option>
+              <option value="replace">替代</option>
             </select>
           </div>
         </div>
@@ -91,8 +87,8 @@
             </thead>
             <tbody v-if="currentStatus.moreCommand">
               <tr class="active" v-for="(item, key) in currentStatus.moreCommand" :key="key">
-                <td>{{ key }}</td>
-                <td>{{ item }}</td>
+                <td v-text="key"/>
+                <td v-text="item"/>
               </tr>
             </tbody>
             <tbody>
@@ -132,20 +128,6 @@
         </div>
       </div>
     </div>
-    <div
-      v-show="currentStatusId === false"
-      class="btn-group btn-group-justified col-md-12"
-      role="group"
-      aria-label="..."
-    >
-      <div class role="group" v-if="delStatusType">
-        <button type="button" class="btn btn-danger btn-del" @click="delStatus()">删除</button>
-        <button type="button" class="btn btn-default btn-cancel" @click="delStatusMod(false)">取消</button>
-      </div>
-      <div class role="group" v-else>
-        <button type="button" class="btn btn-primary btn-save" @click="jumpStep()">下一步</button>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -159,37 +141,29 @@ export default {
       $_funcDefine: [], // 所有功能定义
       currentStatusId: false, // 当前状态ID
       checkingStatus: [], // 状态对应的布尔值（是否被选中）
-      statusList: [], // 功能对应的状态列表
+      allStatusList: [], // 功能对应的状态列表
       useCustomize: false, // 是否使用自定义指令
       customizeType: 0,
-      delStatusType: false, // 是否处于删除状态
       addStatusType: false, // 是否处于添加状态
       extraCmd: "", // 额外命令字段
       extraCmdVal: "", // 额外命令值
       editName: false, // 编辑功能名称
+      $_selectStatusList: [], // 输出的状态列表
     };
   },
   mounted() {
-    this.$_funcDefine = JSON.parse(JSON.stringify(this.funcDefine));
-    if (isPositiveNum(this.currentFuncId)) {
-      const keys = Object.keys(
-        this.$_funcDefine[this.currentFuncId].statusDefine
-      );
-      this.statusList = keys;
-    } else {
-      this.statusList.length = 0;
-    }
+   this.init();
   },
   computed: {
     ...mapState({
       currentFuncId: state => state.funcModule.currentFuncId,
       deviceKey: state => state.funcModule.deviceKey,
-      funcDefine: function getFuncDefine(state) {
-        return state.funcModule.funcDefineList[state.funcModule.deviceKey];
-      }
+      delStatusType: state => state.funcModule.delStatusType,
+      selectStatusList: state => state.funcModule.selectStatusList,
+      funcDefine: (state, getters) => getters.funcDefine,
     }),
     statusLen() {
-      return this.statusList.length;
+      return this.allStatusList.length;
     },
     currentFun() {
       const id = this.currentFuncId;
@@ -201,7 +175,7 @@ export default {
     currentStatus() {
       const id = this.currentStatusId;
       if (isPositiveNum(id)) {
-        return this.currentFun.statusDefine[this.statusList[id]];
+        return this.currentFun.statusDefine[this.allStatusList[id]];
       }
       return {};
     }
@@ -213,16 +187,19 @@ export default {
       this.$nextTick(() => {
         if (isPositiveNum(newVal)) {
           this.useCustomize = Boolean(this.currentStatus.customize);
+          this.customizeType = this.currentStatus.customize;
         }
       });
+      this.setFuncObject(["currentStatusId", newVal]);
     },
     useCustomize(newVal) {
-      if (!newVal) {
-        this.$set(this.currentStatus, "customize", false);
-      }
+      this.customizeType = newVal ? 'after' : false;
     },
     customizeType(newVal) {
       this.setCustomize(newVal);
+    },
+    delStatusType() {
+      this.clearSelect();
     }
   },
   methods: {
@@ -230,34 +207,47 @@ export default {
       setFuncObject: "SET_FUNC_OBJECT",
       setFuncDefine: "SET_FUNC_DEFINE",
     }),
+    init() {
+      // 复制funcDefine
+      this.$_funcDefine = deepCopy(this.funcDefine);
+      // 初始化statusList
+      if (isPositiveNum(this.currentFuncId)) {
+        const keys = Object.keys(
+          this.$_funcDefine[this.currentFuncId].statusDefine
+        );
+        this.allStatusList = keys;
+      } else {
+        this.allStatusList.length = 0;
+      }
+      // 初始化orderList
+      this.$_selectStatusList = this.selectStatusList || this.funcDefine[this.currentFuncId].order.concat();
+      this.setFuncObject(["selectStatusList", this.$_selectStatusList.concat()]);
+    },
     delStatus() {
-      const len = this.statusLen - 1;
       const arr = this.checkingStatus.concat();
-      console.log(arr);
       let delNum = 0;
       arr.forEach((val, i) => {
         const index = i - delNum;
-        if (index !== 0 && index !== len && val) {
-          const delKey = this.statusList[index];
-          this.$delete(this.statusList, index);
+        if (index !== 0 && val) {
+          const delKey = this.allStatusList[index];
+          this.$delete(this.allStatusList, index);
           this.$delete(this.checkingStatus, index);
-          // this.$nextTick(() => {
           this.$delete(
             this.$_funcDefine[this.currentFuncId].statusDefine,
             delKey
           );
+          this.$_selectStatusList.remove(delKey);
+          this.setFuncObject(["selectStatusList", this.$_selectStatusList.concat()]);
           delNum += 1;
-          // });
         }
       });
     },
     addStatus() {
       let key;
-      const index = this.statusLen - 1;
-      if (this.statusList.length === 2) {
-        key = 'status_0';
+      if (this.allStatusList.length === 2) {
+        key = 'status_1';
       } else {
-        const str = this.statusList.toString();
+        const str = this.allStatusList.toString();
         const num = Math.max(...str.match(/\d+/g).map(Number)) + 1; // 找最大值然后+1
         key = `status_${num}`;
       }
@@ -268,15 +258,8 @@ export default {
         isCheck: true,
         customize: {}
       };
-      this.statusList.push(key);
+      this.allStatusList.push(key);
       this.checkingStatus.push(false);
-    },
-    delStatusMod(type) {
-      if (type === this.delStatusType) return;
-      this.delStatusType = type;
-      if (type) {
-        this.clearSelect();
-      }
     },
     changeStatusName(key) {
       this.$set(
@@ -296,8 +279,7 @@ export default {
         this.unfoldStatus(index);
       } else if (
         !this.editName &&
-        index !== 0 &&
-        index !== this.statusLen - 1
+        ![0, 1].includes(index)
       ) {
         this.editName = this.currentStatus.name;
       }
@@ -324,7 +306,7 @@ export default {
       if (this.currentStatus.moreCommand) {
         this.$set(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.statusList[this.currentStatusId]
+            this.allStatusList[this.currentStatusId]
           ].moreCommand,
           this.extraCmd,
           this.extraCmdVal
@@ -334,7 +316,7 @@ export default {
         map[this.extraCmd] = this.extraCmdVal;
         this.$set(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.statusList[this.currentStatusId]
+            this.allStatusList[this.currentStatusId]
           ],
           "moreCommand",
           map
@@ -348,7 +330,7 @@ export default {
       if (this.currentStatus.moreCommand[key]) {
         this.$delete(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.statusList[this.currentStatusId]
+            this.allStatusList[this.currentStatusId]
           ].moreCommand,
           key
         );
@@ -356,27 +338,24 @@ export default {
       }
     },
     // 插入自定义函数
-    setCustomize(index) {
-      const key = ['after', 'before', 'replace'][index];
+    setCustomize(val='after') {
       this.$set(
-        this.$_funcDefine[this.currentFuncId].statusDefine[
-          this.statusList[this.currentStatusId]
-        ],
+        this.currentStatus,
         'customize',
-        key
+        val
       );
     },
-    jumpStep() {
+    nextStep() {
       const nameMap = {};
       const statusDefine = this.currentFun.statusDefine;
-      for (let i = 0; i < this.statusList.length; i += 1) {
-        const name = statusDefine[this.statusList[i]].name;
+      for (let i = 0; i < this.allStatusList.length; i += 1) {
+        const name = statusDefine[this.allStatusList[i]].name;
         if (nameMap[name]) return this.$toast.warning('不允许存在同名状态');
         nameMap[name] = true;
       }
-      this.setFuncObject(['statusList', this.statusList.concat()]);
+      this.setFuncObject(['allStatusList', this.allStatusList.concat()]);
       this.setFuncDefine([this.deviceKey, deepCopy(this.$_funcDefine)]);
-      this.setFuncObject(["settingStep", 1]);
+      this.setFuncObject(["statusSetStep", 1]);
     },
     checknumber(String) {
       const reg = /^[0-9]+$/;

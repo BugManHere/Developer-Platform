@@ -36,6 +36,7 @@ axios.interceptors.response.use((res) =>{
     if (typeof window !== 'undefined' && window.myvm) {
         const vm = window.myvm;
         vm.$toast.error('网络异常');
+        vm.$loading.hide();
     }
     return Promise.reject(error);
 });

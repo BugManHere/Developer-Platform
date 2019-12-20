@@ -1,5 +1,6 @@
 @import 'status';
 @import 'order';
+@import 'label';
 
 .gr-panel {
   display: flex;
@@ -7,7 +8,7 @@
   align-items: center;
   .edit-box {
     position: absolute;
-    top: 150px;
+    // top: 150px;
     z-index: 3;
     width: 549px;
     .panel-title {
@@ -20,6 +21,50 @@
           margin-left: 10px;
         }
       }
+    }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      padding-bottom: 15px;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      button{
+        width: 80px;
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.edit-check {
+  position: relative;
+  left: 5px;
+  padding-left: 10px;
+  margin: 4px 5px 4px 4px;
+  width: 24px;
+  height: 24px;
+  background-color: #E0E0E0;
+  border-radius: 4px;
+  border: 1px #A6A6A6 solid;
+  &.checking {
+    &::before {
+      font-family: 'Glyphicons Halflings';
+      content: "\e013";
+      position: absolute;
+      top: 1px;
+      left: 4px;
+    }
+  }
+  &.ban {
+    &::before {
+      font-family: 'Glyphicons Halflings';
+      content: "\e090";
+      position: absolute;
+      top: 1px;
+      left: 4px;
+      cursor: no-drop;
     }
   }
 }

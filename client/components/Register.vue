@@ -145,7 +145,6 @@ export default {
       https
         .fetchPost("users/mail", this.registerUser)
         .then(res => {
-          console.log(res);
           if (res.status === 202) {
             this.errorMsg = res.data;
           } else {

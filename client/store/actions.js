@@ -12,8 +12,7 @@ export default {
   // 上传功能列表
   // eslint-disable-next-line
   async [POST_FUNC]({}, obj) {
-    const res = await https.fetchPost("/device/postFunc", obj)
-    res.status === 200 && window.myvm.$toast.info('保存成功');
+    await https.fetchPost("/device/save", obj);
   },
   // 增加功能
   async [ADD_FUNC]({ commit, state }, obj) {

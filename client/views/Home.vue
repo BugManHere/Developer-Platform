@@ -37,18 +37,18 @@
             <div class="message-top">
               <img :src="require(`@public/img/${productTypeList[item.productID].deviceTypeList[item.deviceID].img}`)">
               <div>
-                <span>{{item.deviceName}}</span>
+                <span v-text="item.deviceName"/>
                 <span>创建时间：{{item.createTime}}</span>
               </div>
-              <span>删除设备</span>
+              <span v-text="'删除设备'"/>
             </div>
             <div class="message-bottom">
               <div
                 v-for="(val, key) in productInfo(item)"
                 :key="key"
               >
-                <span>{{key}}</span>
-                <span>{{val}}</span>
+                <span v-text="key"/>
+                <span v-text="val"/>
               </div>
             </div>
           </div>

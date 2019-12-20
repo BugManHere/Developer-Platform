@@ -27,9 +27,7 @@
               v-for="(item, index) in productTypeList"
               :key="index"
               @click="selectProduct(index)"
-            >
-              {{item.name}}
-            </a>
+              v-text="item.name"/>
           </div>
         </div>
         <div
@@ -48,7 +46,7 @@
             >
               <p class="thumbnail">
                 <img :src="require(`@public/img/${item.img}`)">
-                <span>{{item.devName}}</span>
+                <span v-text="item.devName"/>
               </p>
             </div>
           </div>
@@ -61,7 +59,7 @@
               <label class="col-sm-2 control-label">品类</label>
               <div class="col-sm-10">
                 <img :src="require(`@public/img/${productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].img}`)">
-                <span class="form-control-static">{{ productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].devName }}</span>
+                <span class="form-control-static" v-text="productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].devName"/>
               </div>
             </div>
             <div class="form-group">
@@ -98,7 +96,7 @@
                   type="text"
                   class="form-control"
                   id="inputText"
-                  placeholder="请输入产品型号，如s2"
+                  placeholder="请输入产品型号，如11005"
                   @change="setProductModel"
                 >
               </div>
@@ -191,8 +189,6 @@ export default {
     },
     selectProduct(index) {
       this.$set(this.deviceInfo, 'productID', index);
-      // this.deviceInfo.productID = index;
-      console.log(this.deviceInfo.productID);
     },
     selectDevice(index) {
       this.deviceInfo.deviceID = index;
@@ -202,11 +198,9 @@ export default {
       this.currentStatus = index;
     },
     setDeviceName(evt) {
-      console.log(evt.target.value);
       this.$set(this.deviceInfo, 'deviceName', evt.target.value);
     },
     setProductModel(evt) {
-      console.log(evt.target.value);
       this.$set(this.deviceInfo, 'productModel', evt.target.value);
     },
     submit() {

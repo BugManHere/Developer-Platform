@@ -8,10 +8,7 @@ const transitionFade = {
     }
   },
   update: (el, bingding) => {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
+    if (timer) return;
     const animationSecond = state.animationSecond;
     if (bingding.value) {
       el.style.display = 'block';
@@ -21,6 +18,7 @@ const transitionFade = {
       el.style.animation = `slowhide ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
       timer = setTimeout(() => {
+        timer = null;
         el.style.display = 'none';
       }, animationSecond * 1000);
     }

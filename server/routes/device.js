@@ -29,18 +29,18 @@ router.post('/', function(req, res, next) {
   })
 });
 
-router.post('/postFunc', function(req, res, next) {
+router.post('/save', function(req, res, next) {
   const body = global.adminInfo.hasDeviceList.id(req.body.key);
-  const funcDefine = JSON.parse((req.body.funcDefine));
+  const funcDefine = JSON.parse(req.body.funcDefine);
+  const logicMap = req.body.logicMap;
   body.funcDefine = funcDefine;
+  body.logicMap.json = logicMap;
   global.adminInfo.save()
     .then(v => {
       res.json(v);
-      // console.log(v);
     })
     .catch(err => {
       res.json(err);
-      // console.log(err);
     })
 });
 
@@ -59,7 +59,11 @@ router.post('/pushFunc', function(req, res, next) {
 
 router.post('/delFunc', function(req, res, next) {
   let body = global.adminInfo.hasDeviceList.id(req.body.key);
-  body.funcDefine[req.body.index].remove();
+  const funcDefine = body.funcDefine[req.body.index];
+  const identifier = funcDefine.identifier;
+  const json = body.logicMap.json.replace(new RegExp("\"" + identifier + "\"",'g'), "\"\"");
+  body.logicMap.json = json;
+  funcDefine.remove();
   global.adminInfo.save()
     .then(v => {
       res.json(v);

@@ -23,7 +23,7 @@
             @click="selectOne(0, index)"
           >
             <div class="checkbox-input" :class="{'select select-all': selectList.left[index]}" />
-            <span class="checkbox-label">{{item}}</span>
+            <span class="checkbox-label" v-text="item"/>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@
             v-for="(item, index) in disAbleList"
             :key="-index-1"
           >
-            <span class="checkbox-label">{{item}}</span>
+            <span class="checkbox-label" v-text="item"/>
           </div>
           <!-- 自选内容 -->
           <div
@@ -105,7 +105,7 @@
               class="checkbox-input"
               :class="{'select select-all': selectList.right[index]}"
             />
-            <span class="checkbox-label">{{item}}</span>
+            <span class="checkbox-label" v-text="item"/>
           </div>
         </div>
       </div>

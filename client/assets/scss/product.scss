@@ -17,7 +17,7 @@
       margin: 0 auto;
       span {
         display: block;
-        width: 70px;
+        width: auto;
         height: 16px;
         margin: 13px 0 0 19px;
         font-size: 16px;
@@ -47,6 +47,15 @@
           }
         }
       }
+    }
+    >.panel-body {
+      margin: 0 auto;
+      border-radius: 4px;
+      margin-top: 16px;
+      overflow: hidden;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      // background: #ffffff;
     }
   }
   .message {
@@ -121,15 +130,6 @@
       }
     }
   }
-  .panel-body {
-    margin: 0 auto;
-    border-radius: 4px;
-    margin-top: 16px;
-    overflow: hidden;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    // background: #ffffff;
-  }
   .bottom-panel {
     position: fixed;
     width: 100%;
@@ -143,7 +143,7 @@
     align-items: center;
     justify-content: flex-end;
     margin: 0;
-    .button-save {
+    button {
       margin-right: 35px;
     }
   }

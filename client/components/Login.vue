@@ -80,7 +80,6 @@ export default {
         localStorage.setItem("eleToken", token);
         // 解析token
         const decoded = jwt_decode(token);
-        console.log("carson", decoded);
         // token储存在vuex中
         this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
         this.$store.dispatch("setUser", decoded);

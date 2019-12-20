@@ -1,0 +1,53 @@
+.selevtLabel {
+  .panel-body {
+    max-height: 500px;
+    overflow-y: auto;
+    .btn-all {
+      position: relative;
+      left: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 8px;
+      > div {
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+        &.checking {
+          &::before {
+            top: -1px;
+            left: 1px;
+          }
+        }
+      }
+      > span {
+        margin: 0 25px 0 3px;
+        font-size: 14px;
+        color: #404657;
+      }
+    }
+    .label-group {
+      padding-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      .label-item {
+        background-color: #EEF1F6;
+        padding: 5px 10px;
+        margin: 10px 12px;
+        border-radius: 15px;
+        border: 1px#D6DEE6 solid;
+        width: auto;
+        cursor: pointer;
+        color: #404657;
+        &:hover {
+          border: 1px#14B5E0 solid;
+        }
+        &.select {
+          border: 1px#00a1d6 solid;
+          color: #00a1d6;
+        }
+      }
+    }
+  }
+}

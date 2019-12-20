@@ -1,10 +1,20 @@
 const state = {
+  devSetStep: 0,
   deviceKey: false,
   currentFuncId: false,
-  settingStep: 0,
-  funcDefineList: {},
-  statusList: [],
+  currentStatusId: false,
+  delStatusType: false,
+  statusSetStep: 0,
+  allStatusList: [],
+  selectStatusList: null,
   orderList: [],
+  selectPanel: false,
+  selectLabel: {
+    col: [],
+    row: []
+  },
+  funcDefineList: {},
+  logicMap: {},
   // funcDefineList: [
   //   {
   //     name: '左右扫风',
