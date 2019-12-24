@@ -10,7 +10,8 @@
 import { deepCopy } from "@/utils";
 import transfer from '@components/Transfer';
 import _difference from 'lodash/difference';
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
+import https from '@/https';
 
 export default {
   components: {
@@ -35,10 +36,10 @@ export default {
     }),
     rightList() {
       // return _difference(this.funcDefine[this.currentFuncId].order, this.constList);
-      console.log(this.selectStatusList);
       return this.selectStatusList.concat();
     },
     leftList() {
+
       return _difference(this.allStatusList, [...this.rightList, ...this.constList]);
     },
     optionslList() {
@@ -53,6 +54,9 @@ export default {
     ...mapMutations({
       setFuncObject: "SET_FUNC_OBJECT",
       setFuncDefine: "SET_FUNC_DEFINE"
+    }),
+    ...mapActions({
+      editFunc: "EDIT_FUNC",
     }),
     keyToName(arr, key) {
       if (!this.funcDefine.length) return {};
@@ -89,7 +93,11 @@ export default {
     settingDone() {
       const funcDefine = deepCopy(this.funcDefine);
       funcDefine[this.currentFuncId].order = this.orderList;
-      this.setFuncDefine([this.deviceKey, funcDefine]);
+      this.editFunc({
+        index: this.currentFuncId,
+        key: this.deviceKey,
+        funcDefine: JSON.stringify(funcDefine)
+      })
       this.setFuncObject(["currentFuncId", false]);
       this.setFuncObject(["statusSetStep", 0]);
       this.setFuncObject(["selectStatusList", null]);

@@ -1,19 +1,15 @@
 <template>
   <div class="enumerate-table">
-    <table class="table">
-      <caption/>
-    </table>
+    <GrTable :table-options="tableOptions"/>
   </div>
 </template>
 
 <script>
-import { deepCopy } from "@/utils";
-import { mapMutations, mapState, mapActions } from "vuex";
-import Panel from "@components/Panel/index";
+import GrTable from "@components/Table/index";
 
 export default {
   components: {
-    Panel
+    GrTable
   },
   data() {
     return {
@@ -21,6 +17,13 @@ export default {
     }
   },
   computed: {
+    tableOptions() {
+      return {
+        type: ['self', 'enumerate'],
+        titleList: ["功能名称", "标识符", "控制字段"],
+        keyList: ['name', 'identifier', 'json'],
+      };
+    },
     funcOptions() {
       return {
         title: ['功能名称']

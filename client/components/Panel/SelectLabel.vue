@@ -11,7 +11,7 @@
       </div>
       <!-- 标签 -->
       <div class="label-group">
-        <div v-for="(item, index) in this.funcDefine" :key="index">
+        <div v-for="(item, index) in this.labelList" :key="index">
           <div class="label-item" :class="{select: selectType[index]}" @click="selectItem(index)" v-text="item.name"/>
         </div>
       </div>
@@ -30,7 +30,7 @@ export default {
     }
   },
   watch: {
-    funcDefine: {
+    labelList: {
       handler(newVal) {
         if (!newVal) return;
         this.updateSelect(newVal);
@@ -44,7 +44,7 @@ export default {
       deviceKey: state => state.funcModule.deviceKey,
       selectPanel: state => state.funcModule.selectPanel,
       selectLabel: state => state.funcModule.selectLabel,
-      funcDefine: (state, getters) => getters.funcDefine,
+      labelList: (state, getters) => getters.labelList,
     }),
     isAllSelect() {
       return !this.selectType.some(item => {
@@ -66,13 +66,13 @@ export default {
         this.$set(this.selectType, index, !this.selectType[index]);
       }
     },
-    updateSelect(funcDefine=this.funcDefine) {
+    updateSelect(labelList=this.labelList) {
       const selectLabel = deepCopy(this.selectLabel);
       const val = selectLabel[this.selectSide];
       if (val.length) {
         this.selectType = selectLabel[this.selectSide];
       } else {
-        this.selectType = Array(funcDefine.length).fill(false);
+        this.selectType = Array(labelList.length).fill(false);
       }
     },
     commitSelect() {

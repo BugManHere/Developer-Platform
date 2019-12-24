@@ -256,7 +256,7 @@ export default {
         value: 1,
         status: "on",
         isCheck: true,
-        customize: {}
+        customize: false
       };
       this.allStatusList.push(key);
       this.checkingStatus.push(false);

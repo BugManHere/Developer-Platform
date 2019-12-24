@@ -46,10 +46,13 @@
       </div>
     </div>
     <div class="bottom-panel" v-show="currentFuncId === false">
-      <button type="button" class="btn btn-default" @click="saveRes(false)" v-show="!devSetStep" v-text="'保存'"/>
-      <button type="button" class="btn btn-primary" @click="saveRes" v-show="!devSetStep" v-text="'保存并进入下一步'"/>
-      <button type="button" class="btn btn-default" @click="setStep(-1)" v-show="devSetStep" v-text="'上一步'"/>
-      <button type="button" class="btn btn-primary" @click="saveRes" v-show="devSetStep" v-text="'完成配置'"/>
+      <button 
+        type="button" 
+        v-for="(item, index) in bottomBtnOptions" 
+        class="btn"
+        :class="item.class"
+        :key="devSetStep * 10 + index"
+        @click="item.func.parameter !== undefined ? item.func.defined(item.func.parameter) : item.func.defined()" v-text="item.text"/>
     </div>
   </div>
 </template>
@@ -78,7 +81,7 @@ export default {
   },
   watch: {
     devSetStep(newVal) {
-      if (newVal === 2) {
+      if (newVal === 3) {
         this.$router.push({name: 'Home'});
         this.$toast.info('保存成功');
       }
@@ -118,28 +121,29 @@ export default {
       devSetStep: state => state.funcModule.devSetStep,
       currentFuncId: state => state.funcModule.currentFuncId,
       funcDefine: (state, getters) => getters.funcDefine,
-      logicMap: (state, getters) => getters.logicMap
+      logicMap: (state, getters) => getters.logicMap,
+      labelList: (state, getters) => getters.labelList,
     }),
     pageOption() {
       if (this.devSetStep === 0) {
         return {
-          title: "功能-布尔值",
+          title: "功能-多状态",
           rightBtn: {
             name: "添加",
             method: this.$_addFunc
           },
           component: "BooleanTable"
         };
-      } else if (this.devSetStep === 99999) {
+      } else if (this.devSetStep === 1) {
         return {
-          title: "功能-枚举值",
+          title: "功能-单状态",
           rightBtn: {
             name: "添加",
             method: this.$_addFunc
           },
           component: "EnumerateTable"
         };
-      } else if (this.devSetStep === 1) {
+      } else if (this.devSetStep === 2) {
         return {
           title: "互斥",
           rightBtn: {
@@ -150,6 +154,52 @@ export default {
         };
       }
       return {};
+    },
+    bottomBtnOptions() {
+      const result = [];
+      const save = {
+        text: '暂存',
+        func: {
+          defined: this.saveRes,
+          parameter: false
+        },
+        class: 'btn-default',
+      };
+      const lastStep = {
+        text: '上一步',
+        func: {
+          defined: this.setStep,
+        },
+        class: 'btn-default',
+      }
+      const saveAndNext = {
+        text: '保存并进入下一步',
+        func: {
+          defined: this.saveRes,
+        },
+        class: 'btn-primary',
+      };
+      const done = {
+        text: '完成配置',
+        func: {
+          defined: this.settingDone,
+        },
+        class: 'btn-primary',
+      };
+      switch (this.devSetStep) {
+        case 0:
+          result.push(save, saveAndNext);
+          return result;
+        case 1:
+          result.push(save, lastStep, saveAndNext);
+          return result;
+        case 2:
+          result.push(lastStep, done);
+          return result;
+        default:
+          result.push(lastStep, done);
+          return result;
+      }
     }
   },
   methods: {
@@ -159,7 +209,8 @@ export default {
     }),
     ...mapActions({
       postFunc: "POST_FUNC",
-      addFunc: "ADD_FUNC"
+      addFunc: "ADD_FUNC",
+      setDone: "SET_DONE",
     }),
     getInfo() {
       this.currentDev = this.hasDeviceList.find(
@@ -175,10 +226,11 @@ export default {
     },
     $_addFunc() {
       const name = `未命名${randomKey(4)}`;
-      const insertMap = JSON.stringify({
+      const insertMap = {
         name: name,
         identifier: "-",
         json: "-",
+        type: 'self',
         statusDefine: {
           default: {
             name: "默认",
@@ -192,23 +244,29 @@ export default {
             isCheck: false,
             customize: false
           },
-          status_1: {
-            name: "开启",
-            value: 1,
-            isCheck: true,
-            customize: false
-          }
+
         },
-        order: ["status_1"]
-      });
+        order: []
+      };
+      if (!this.devSetStep) {
+        insertMap.statusDefine.type = 'btn';
+        insertMap.statusDefine.status_1 = {
+          name: "开启",
+          value: 1,
+          isCheck: true,
+          customize: false
+        };
+        insertMap.statusDefine.order.push("status_1")
+      }
+      const insertStr = JSON.stringify(insertMap);
       this.addFunc({
-        insertMap,
+        insertMap: insertStr,
         key: this.deviceKey
       }).then(res => {
         res;
       });
     },
-    setStep(val) {
+    setStep(val=-1) {
       this.setFuncObject(["devSetStep", this.devSetStep + val]);
     },
     saveRes(nextStep=true) {
@@ -218,16 +276,24 @@ export default {
         funcDefine,
         logicMap,
         key: this.deviceKey
-      }).then(() => {
-        !nextStep && this.$toast.info('保存成功');
-        nextStep && this.setStep(1);
+      }).then( status => {
+        status && (nextStep ? this.setStep(1) : this.$toast.info('保存成功'));
       });
     },
     showAllLogic() {
       const selectLabel = {};
-      selectLabel.col = Array(this.funcDefine.length).fill(true);
-      selectLabel.row = Array(this.funcDefine.length).fill(true);
+      selectLabel.col = Array(this.labelList.length).fill(true);
+      selectLabel.row = Array(this.labelList.length).fill(true);
       this.setFuncObject(["selectLabel", selectLabel]);
+    },
+    settingDone() {
+      const funcDefine = JSON.stringify(this.funcDefine);
+      const logicMap = JSON.stringify(this.logicMap);
+      this.setDone({
+        funcDefine,
+        logicMap,
+        key: this.deviceKey
+      });
     }
   }
 };

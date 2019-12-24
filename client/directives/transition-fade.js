@@ -1,4 +1,3 @@
-let timer = null;
 import state from '@/store/pulicModule/state.js'
 
 const transitionFade = {
@@ -8,7 +7,7 @@ const transitionFade = {
     }
   },
   update: (el, bingding) => {
-    if (timer) return;
+    if (el.$_timer) return;
     const animationSecond = state.animationSecond;
     if (bingding.value) {
       el.style.display = 'block';
@@ -17,8 +16,8 @@ const transitionFade = {
     } else {
       el.style.animation = `slowhide ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
-      timer = setTimeout(() => {
-        timer = null;
+      el.$_timer = setTimeout(() => {
+        el.$_timer = undefined;
         el.style.display = 'none';
       }, animationSecond * 1000);
     }

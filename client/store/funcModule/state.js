@@ -9,6 +9,7 @@ const state = {
   selectStatusList: null,
   orderList: [],
   selectPanel: false,
+  labelList: [],
   selectLabel: {
     col: [],
     row: []

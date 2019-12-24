@@ -10,7 +10,7 @@
         <span class="label-theme" v-text="option"/>
         <!-- 已添加的标签 -->
         <div class="label-body">
-          <div v-for="(label, index) in labelList[type]" :key="index" class="name" v-show="label" @click="removeOneLabel(type, label.index)">
+          <div v-for="(label, index) in axis[type]" :key="index" class="name" v-show="label" @click="removeOneLabel(type, label.index)">
             <span v-html="label.name"/>
           </div>
         </div>
@@ -25,7 +25,8 @@
         <tbody>
           <tr v-for="(colItem, colIndex) in logictable" :key="colIndex">
             <td v-for="(rowItem, rowIndex) in colItem" :key="rowIndex" :class="{'set-hover': setHoverClass(rowIndex, colIndex)}" @mouseenter="setHoverItem(rowIndex, colIndex)" @click="setLogic(rowIndex, colIndex)">
-              <span v-text="rowItem"/>
+              <!-- 换行 -->
+              <span v-html="rowItem.replace(/\B（/g, '<br/>（')"/>
             </td>
           </tr>
         </tbody>
@@ -65,7 +66,7 @@ export default {
       selectPanel: state => state.funcModule.selectPanel,
       selectLabel: state => state.funcModule.selectLabel,
       logicMap: (state, getters) => getters.logicMap,
-      funcDefine: (state, getters) => getters.funcDefine,
+      labelList: (state, getters) => getters.labelList,
     }),
     panelOptions() {
       return {
@@ -92,15 +93,16 @@ export default {
     selectSide() {
       return ['col', 'row'][this.selectPanel];
     },
-    labelList() {
+    axis() {
       const result = {};
       const setLabelList = side => {
         const arr = [];
         this.selectLabel[side].forEach((item, index) => {
           if (item) {
-            const key = this.funcDefine[index].identifier;
-            const name = this.funcDefine[index].name;
-            arr.push({ name, index, key });
+            const name = this.labelList[index].name;
+            const key = `${this.labelList[index].identifier}_${this.labelList[index].statusName}`;
+            const identifier = this.labelList[index].identifier;
+            arr.push({ name, index, key, identifier });
           }
         });
         return arr;
@@ -111,13 +113,13 @@ export default {
     },
     logictable() {
       const result = [['是否互斥']];
-      this.labelList.row.forEach(rowItem => {
+      this.axis.row.forEach(rowItem => {
         result[0].push(rowItem.name);
       });
-      this.labelList.col.forEach((colItem, colIndex) => {
+      this.axis.col.forEach((colItem, colIndex) => {
         const colKey = colItem.key;
         result[colIndex + 1] = [colItem.name];
-        this.labelList.row.forEach(rowItem => {
+        this.axis.row.forEach(rowItem => {
           const rowKey = rowItem.key;
           if (this.logicMap[colKey] && this.logicMap[colKey].includes(rowKey)) {
             result[colIndex + 1].push('\u2713');
@@ -166,9 +168,11 @@ export default {
       return isSetClass;
     },
     setLogic(rowIndex, colIndex) {
-      const rowKey = this.labelList.row[rowIndex - 1].key;
-      const colKey = this.labelList.col[colIndex - 1].key;
-      if (rowKey && colKey && rowKey !== colKey) {
+      const rowKey = this.axis.row[rowIndex - 1].key;
+      const rowId = this.axis.row[rowIndex - 1].identifier;
+      const colKey = this.axis.col[colIndex - 1].key;
+      const colId = this.axis.col[colIndex - 1].identifier;
+      if (rowId && colId && rowId !== colId) {
         const logicMap = deepCopy(this.logicMap);
         if (logicMap[colKey]) {
           if (logicMap[colKey].includes(rowKey)) {

@@ -11,6 +11,7 @@ const funcSchema = new mongoose.Schema({
   identifier: String,
   json: String,
   order: [String],
+  type: String,
   statusDefine: Object,
 })
 
