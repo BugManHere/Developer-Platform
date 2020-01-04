@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
 
-// 创建孙子文档 funcDefine
+// 创建孙子文档 
 const logicSchema = new mongoose.Schema({
+  json: String
+})
+
+// 创建孙子文档 
+const disableSchema = new mongoose.Schema({
   json: String
 })
 
@@ -25,6 +30,7 @@ const listSchema = new mongoose.Schema({
   protocol: String,
   createTime: String,
   logicMap: logicSchema,
+  disableMap: disableSchema,
   funcDefine: [funcSchema],
 })
 

@@ -32,6 +32,7 @@ module.exports = {
         '@components': resolve('client/components'),
         '@assets': resolve('client/assets'),
         '@public': resolve('public'),
+        '@plugin': resolve('plugin-mould'),
         },
       })
   },

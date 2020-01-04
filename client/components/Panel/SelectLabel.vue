@@ -1,5 +1,5 @@
 <template>
-  <div class="selevtLabel">
+  <div class="select-label">
     <div class="panel-body">
       <!-- 全选按钮 -->
       <div class="btn-all">
@@ -83,7 +83,3 @@ export default {
   },
 }
 </script>
-
-<style>
-
-</style>

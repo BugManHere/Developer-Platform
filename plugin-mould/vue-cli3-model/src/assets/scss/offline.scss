@@ -1,0 +1,24 @@
+.gree-error {
+  .gree-offline-content {
+    .gree-offline-pic {
+      width: 312px !important;
+      // height: 72px !important;
+    }
+    .gree-offline-text {
+      font-size: 48px !important;
+    }
+  }
+}
+
+.tipList {
+  font-family: 'FZLTH--GB1-4';
+  font-size: 45px;
+  position: absolute;
+  top: 960px;
+  z-index: inherit;
+  width: 60%;
+  margin-left: 207px;
+  li {
+    margin-top: 30px;
+  }
+}

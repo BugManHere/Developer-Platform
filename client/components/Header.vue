@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#Home">GDP</a>
+          <a class="navbar-brand" href="#Home" @click="updataPage">GDP</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="user.identity">
           <ul class="nav navbar-nav">
@@ -75,6 +75,11 @@ export default {
     ...mapState({
       user: state => state.userModule.user,
     })
+  },
+  methods: {
+    updataPage() {
+      this.$router.push({name: 'Home'});
+    }
   },
 }
 </script>

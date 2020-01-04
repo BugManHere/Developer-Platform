@@ -1,5 +1,5 @@
 <template>
-  <div class="btn-table">
+  <div class="enumerate-table">
     <GrTable :table-options="tableOptions"/>
   </div>
 </template>
@@ -19,9 +19,10 @@ export default {
   computed: {
     tableOptions() {
       return {
-        type: ['btn'],
+        type: ['self', 'enumerate'],
         titleList: ["功能名称", "标识符", "控制字段"],
         keyList: ['name', 'identifier', 'json'],
+        operate: ['define', 'delete']
       };
     },
     funcOptions() {

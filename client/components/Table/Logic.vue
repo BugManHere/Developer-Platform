@@ -1,9 +1,7 @@
 <template>
   <div class="logic-table">
     <div>
-      <caption>
-        提示：点击纵轴后是否执行横轴的互斥
-      </caption>
+      <caption v-text="'提示：点击纵轴后是否执行横轴的互斥'"/>
       <!-- 标签- -->
       <div class="label-select" v-for="(option, type, index) in labelOptions" :key="type">
         <!-- 标题 -->
@@ -21,16 +19,31 @@
         </div>
       </div>
       <!-- 互斥表格 -->
-      <table class="table" v-show="logictable.length > 1 && logictable[0].length > 1">
-        <tbody>
-          <tr v-for="(colItem, colIndex) in logictable" :key="colIndex">
-            <td v-for="(rowItem, rowIndex) in colItem" :key="rowIndex" :class="{'set-hover': setHoverClass(rowIndex, colIndex)}" @mouseenter="setHoverItem(rowIndex, colIndex)" @click="setLogic(rowIndex, colIndex)">
-              <!-- 换行 -->
-              <span v-html="rowItem.replace(/\B（/g, '<br/>（')"/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div 
+        class="table-content" 
+        v-show="logictable.length > 1 && logictable[0].length > 1">
+        <caption 
+          class="table-caption" 
+          v-html="'\u2714：纵轴生效时执行横轴的互斥（左键）<br/>\u2716：纵轴生效后禁用横轴（右键）'"/>
+        <table class="table-main">
+          <tbody>
+            <tr 
+              v-for="(colItem, colIndex) in logictable" 
+              :key="colIndex">
+              <td 
+                v-for="(rowItem, rowIndex) in colItem" 
+                :key="rowIndex"
+                :class="{'set-hover': setHoverClass(rowIndex, colIndex)}" 
+                @mouseenter="setHoverItem(rowIndex, colIndex)"
+                @click="setLogic(rowIndex, colIndex, true)"
+                @contextmenu.prevent="setLogic(rowIndex, colIndex, false)">
+                <!-- 换行 -->
+                <span v-html="rowItem.replace(/\B（/g, '<br/>（')"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <Panel :options="panelOptions"/>
   </div>
@@ -66,6 +79,7 @@ export default {
       selectPanel: state => state.funcModule.selectPanel,
       selectLabel: state => state.funcModule.selectLabel,
       logicMap: (state, getters) => getters.logicMap,
+      disableMap: (state, getters) => getters.disableMap,
       labelList: (state, getters) => getters.labelList,
     }),
     panelOptions() {
@@ -121,20 +135,33 @@ export default {
         result[colIndex + 1] = [colItem.name];
         this.axis.row.forEach(rowItem => {
           const rowKey = rowItem.key;
-          if (this.logicMap[colKey] && this.logicMap[colKey].includes(rowKey)) {
-            result[colIndex + 1].push('\u2713');
+          const logicType = this.logicMap[colKey] && this.logicMap[colKey].includes(rowKey);
+          const disableType = this.disableMap[colKey] && this.disableMap[colKey].includes(rowKey);
+          let str = '';
+          if (logicType || disableType) {
+            logicType && (str += '\u2714 ');
+            disableType && (str += '\u2716');
           } else {
-            result[colIndex + 1].push('-');
+            str = '-'
           }
+          result[colIndex + 1].push(str);
         })
       });
       return result;
     }
   },
+  destroyed() {
+    const selectLabel = {
+      col: [],
+      row: []
+    };
+    this.setFuncObject(['selectLabel', selectLabel]);
+  },
   methods: {
     ...mapMutations({
       setFuncObject: "SET_FUNC_OBJECT",
       setLogicMap: "SET_LOGIC_MAP",
+      setDisableMap: "SET_DISABLE_MAP",
     }),
     panelShow(val=false) {
       this.setFuncObject(['selectPanel', val]);
@@ -167,23 +194,23 @@ export default {
       }
       return isSetClass;
     },
-    setLogic(rowIndex, colIndex) {
+    setLogic(rowIndex, colIndex, type) {
       const rowKey = this.axis.row[rowIndex - 1].key;
       const rowId = this.axis.row[rowIndex - 1].identifier;
       const colKey = this.axis.col[colIndex - 1].key;
       const colId = this.axis.col[colIndex - 1].identifier;
       if (rowId && colId && rowId !== colId) {
-        const logicMap = deepCopy(this.logicMap);
-        if (logicMap[colKey]) {
-          if (logicMap[colKey].includes(rowKey)) {
-            logicMap[colKey].remove(rowKey);
+        const map = deepCopy(type ? this.logicMap : this.disableMap);
+        if (map[colKey]) {
+          if (map[colKey].includes(rowKey)) {
+            map[colKey].remove(rowKey);
           } else {
-            logicMap[colKey].push(rowKey);
+            map[colKey].push(rowKey);
           }
         } else {
-          logicMap[colKey] = [rowKey];
+          map[colKey] = [rowKey];
         }
-        this.setLogicMap([this.deviceKey, logicMap]);
+        type ? this.setLogicMap([this.deviceKey, map]) : this.setDisableMap([this.deviceKey, map]);
       }
     },
   },

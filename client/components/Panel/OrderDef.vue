@@ -11,7 +11,6 @@ import { deepCopy } from "@/utils";
 import transfer from '@components/Transfer';
 import _difference from 'lodash/difference';
 import { mapState, mapMutations, mapActions } from 'vuex'
-import https from '@/https';
 
 export default {
   components: {

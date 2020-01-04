@@ -68,7 +68,7 @@
 
 <script>
 import Dialog from "@components/Dialog";
-import https from "../https";
+import https from "@/https";
 import { mapState, mapMutations } from "vuex";
 
 export default {

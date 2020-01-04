@@ -39,8 +39,10 @@ router.post('/save', function(req, res, next) {
   const body = global.adminInfo.hasDeviceList.id(req.body.key);
   const funcDefine = JSON.parse(req.body.funcDefine);
   const logicMap = req.body.logicMap;
+  const disableMap = req.body.disableMap;
   body.funcDefine = funcDefine;
   body.logicMap.json = logicMap;
+  body.disableMap.json = disableMap;
   global.adminInfo.save()
     .then(v => {
       res.json(v);
@@ -81,8 +83,10 @@ router.post('/delFunc', function(req, res, next) {
   let body = global.adminInfo.hasDeviceList.id(req.body.key);
   const funcDefine = body.funcDefine[req.body.index];
   const identifier = funcDefine.identifier;
-  const json = body.logicMap.json.replace(new RegExp("\"" + identifier + "\"",'g'), "\"\"");
-  body.logicMap.json = json;
+  const logicJson = body.logicMap.json.replace(new RegExp("\"" + identifier + "\"",'g'), "\"\"");
+  body.logicMap.json = logicJson;
+  const disableJson = body.disableMap.json.replace(new RegExp("\"" + identifier + "\"",'g'), "\"\"");
+  body.disableMap.json = disableJson;
   funcDefine.remove();
   global.adminInfo.save()
     .then(v => {
@@ -98,8 +102,10 @@ router.post('/done', function(req, res, next) {
   const body = global.adminInfo.hasDeviceList.id(key);
   const funcDefine = JSON.parse(req.body.funcDefine);
   const logicMap = req.body.logicMap;
+  const disableMap = req.body.disableMap;
   body.funcDefine = funcDefine;
   body.logicMap.json = logicMap;
+  body.disableMap.json = disableMap;
   global.adminInfo.save((err, product) => {
     if (err) {
       console.log(err);

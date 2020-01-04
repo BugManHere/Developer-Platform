@@ -1,6 +1,7 @@
 @import 'status';
 @import 'order';
-@import 'label';
+@import 'selectLabel';
+@import 'selectPage';
 
 .gr-panel {
   display: flex;
@@ -34,6 +35,9 @@
         margin-right: 10px;
         margin-left: 10px;
       }
+    }
+    &.big {
+      width: 1200px;
     }
   }
 }

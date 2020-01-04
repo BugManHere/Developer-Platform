@@ -53,14 +53,15 @@
           </td>
           <td v-if="funcOptions.content">
             <p>
-              <span @click="editStatus(realIndex[index])" v-text="'定义'" />
-              <span @click="$_delFun(realIndex[index])" v-text="'删除'" />
+              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')"/>
+              <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
+              <span @click="$_delFun(realIndex[index])" v-text="'删除'" v-show="tableOptions.operate.includes('delete')"/>
             </p>
           </td>
         </tr>
       </tbody>
     </table>
-    <Panel :options="panelOptions" ref="panel" />
+    <Panel :options="insertPageShow === false ? defPanelOptions : insertPageOptions" ref="panel" />
   </div>
 </template>
 
@@ -88,6 +89,7 @@ export default {
       isNext: false,
       timer: null,
       realIndex: [],
+      insertPageShow: false,
     };
   },
   computed: {
@@ -110,28 +112,28 @@ export default {
       let content = [];
       let funcDefine = [];
       try {
-        funcDefine = this.hasDeviceList.find(item => item._id = this.deviceKey).funcDefine;
+        funcDefine = this.hasDeviceList.find(item => item._id === this.deviceKey).funcDefine;
+        const filterArr = funcDefine.filter((item, index) => {
+          return this.tableOptions.type.includes(item.type) && realIndex.push(index);
+        });
+        this.setRealIndex(realIndex);
+        if (filterArr.length) {
+          content = filterArr.map(val => {
+            const res = this.tableOptions.keyList.map(item => {
+              return val[item];
+            });
+            res.push([]);
+            ['default', ...val.order].forEach(item => {
+              const target = val.statusDefine[item];
+              let text = `${target.name}：${target.value}`
+              text += target.moreCommand ? "+" : "";
+              res[res.length - 1].push(text);
+            })
+            return res;
+          });
+        }
       } catch (err) {
         err;
-      }
-      const filterArr = funcDefine.filter((item, index) => {
-        return this.tableOptions.type.includes(item.type) && realIndex.push(index);
-      });
-      this.setRealIndex(realIndex);
-      if (filterArr.length) {
-        content = filterArr.map(val => {
-          const res = this.tableOptions.keyList.map(item => {
-            return val[item];
-          });
-          res.push([]);
-          ['default', ...val.order].forEach(item => {
-            const target = val.statusDefine[item];
-            let text = `${target.name}：${target.value}`
-            text += target.moreCommand ? "+" : "";
-            res[res.length - 1].push(text);
-          })
-          return res;
-        });
       }
       return {
         caption: "",
@@ -139,7 +141,31 @@ export default {
         content
       };
     },
-    panelOptions() {
+    // 【插入页面】页面设置
+    insertPageOptions() {
+      const result = {
+        show: this.insertPageShow !== false,
+        class: 'big',
+        title: '选择页面',
+        miniBtn: {
+          close: {
+            method: this.insertPage
+          }
+        },
+        bottomBtn: {
+          done: {
+            selfMethod: "settingDone"
+          }
+        },
+        component: {
+          name: "SelectPage",
+          ref: "SelectPage"
+        }
+      };
+      return result;
+    },
+    // 【定义】页面设置
+    defPanelOptions() {
       let result = {};
       switch (this.statusSetStep) {
         case 0:
@@ -227,6 +253,9 @@ export default {
       e.keyCode === 27 && this.currentFuncId !== false && this.editStatus();
     };
   },
+  destroyed() {
+    this.editStatus();
+  },
   methods: {
     ...mapMutations({
       setFuncObject: "SET_FUNC_OBJECT",
@@ -237,6 +266,10 @@ export default {
     }),
     setRealIndex(index) {
       this.realIndex = index;
+    },
+    // 插入页面
+    insertPage(index=false) {
+      this.insertPageShow = index;
     },
     // 编辑状态
     editStatus(index = false) {
@@ -265,7 +298,7 @@ export default {
       }, 0);
     },
     setValue(evt) {
-      if (this.isNext || this.editItem[0] === false) return;
+      if (this.isNext || this.editItem[0] === false || evt.target.value === '') return;
       const valOrder = ["name", "identifier", "json"];
       const fromValue = valOrder[this.editItem[1]];
       const toValue = evt.target.value;
@@ -317,6 +350,7 @@ export default {
     Previous() {
       this.setFuncObject(["statusSetStep", 0]);
     },
+    // 节流函数
     $_throttle() {
       if (this.timer) return false;
       this.timer = setTimeout(() => {

@@ -1,0 +1,21 @@
+.select-page {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .panel {
+    height: 450px;
+    width: 250px;
+    margin: 20px 10px;
+    background-color: #CCCCCC;
+    border: 1px #CCCCCC solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      height: 400px;
+    }
+    &:hover {
+      border: 1px CadetBlue solid;
+    }
+  }
+}

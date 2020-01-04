@@ -23,6 +23,7 @@ router.post('/', function(req, res, next) {
   map.productModel = req.body.productModel;
   map.protocol = req.body.protocol;
   map.logicMap = {json: "{}"};
+  map.disableMap = {json: "{}"};
   map.createTime = dayjs().format('YYYY.MM.DD');
   const hasDeviceList = global.adminInfo.hasDeviceList;
   hasDeviceList.push(map);

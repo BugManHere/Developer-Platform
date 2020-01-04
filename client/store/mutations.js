@@ -13,4 +13,7 @@ export default {
   [type.SET_LOGIC_MAP](state, [key, val]) {
     state.funcModule.logicMap[key] = val;
   },
+  [type.SET_DISABLE_MAP](state, [key, val]) {
+    state.funcModule.disableMap[key] = val;
+  },
 };

@@ -1,0 +1,10 @@
+{
+  "pageConfig": {
+    "Sweep": {
+      "routerName": "Sweep",
+      "params": {
+        "id": "2"
+      }
+    }
+  }
+}

@@ -6,25 +6,26 @@
       v-for="(item, index) in allStatusList"
       :key="index"
     >
-      <div class="edit-optional" :class="{ must: ['undefined', 'default'].includes(item) }">
+      <div class="edit-optional" :class="{ must: isConstItem(item) }">
         <div
           class="edit-header"
           :class="{selectable: !delStatusType}"
           @mouseup="unfoldStatus(index)"
         >
-          <div @mouseup.stop="isUnfold(index)" :class="{'change-color': !editName && currentStatusId === index}">
+          <div @mouseup.stop="isUnfold(index)" :class="{'change-color': !editName && currentStatusId === index && !isConstItem(item)}">
             <input
               type="text"
               class="form-control"
-              v-if="editName && currentStatusId === index"
+              v-if="editName !== false && currentStatusId === index"
               v-model="editName"
+              @blur='changeStatusName(item)'
             />
             <span v-else v-text="currentFun.statusDefine[item].name"/>
             <div
-              v-show="!['undefined', 'default'].includes(item) && currentStatusId === index"
+              v-show="!isConstItem(item) && currentStatusId === index"
               class="icon"
             >
-              <span v-show="!editName" class="icon" />
+              <span v-show="editName === false" class="icon" />
               <span
                 v-show="editName"
                 :class="{ 'edit-ok': editName }"
@@ -41,7 +42,7 @@
         <div
           class="edit-check"
           v-show="delStatusType"
-          :class="{ checking: checkingStatus[index], ban: ['default', 'undefined'].includes(item) }"
+          :class="{ checking: checkingStatus[index], ban: isConstItem(item) }"
           @click="selectStatus(item, index)"
         />
       </div>
@@ -70,8 +71,8 @@
           <div class="col-md-6" v-show="useCustomize">
             <label for="inputPassword" class="control-label">函数接入方式</label>
             <select class="form-control" v-model="customizeType">
-              <option value="after">执行前</option>
-              <option value="before">执行后</option>
+              <option value="before">执行前</option>
+              <option value="after">执行后</option>
               <option value="replace">替代</option>
             </select>
           </div>
@@ -193,7 +194,7 @@ export default {
       this.setFuncObject(["currentStatusId", newVal]);
     },
     useCustomize(newVal) {
-      this.customizeType = newVal ? 'after' : false;
+      this.customizeType = newVal ? 'before' : false;
     },
     customizeType(newVal) {
       this.setCustomize(newVal);
@@ -222,6 +223,9 @@ export default {
       // 初始化orderList
       this.$_selectStatusList = this.selectStatusList || this.funcDefine[this.currentFuncId].order.concat();
       this.setFuncObject(["selectStatusList", this.$_selectStatusList.concat()]);
+    },
+    isConstItem(item) {
+      return ['default', 'undefined'].includes(item);
     },
     delStatus() {
       const arr = this.checkingStatus.concat();
@@ -262,6 +266,7 @@ export default {
       this.checkingStatus.push(false);
     },
     changeStatusName(key) {
+      if (!this.editName) return;
       this.$set(
         this.$_funcDefine[this.currentFuncId].statusDefine[key],
         "name",
@@ -284,9 +289,9 @@ export default {
         this.editName = this.currentStatus.name;
       }
     },
-    // 使用某个状态
+    // 选中某个状态
     selectStatus(item, index) {
-      if (["undefined", "default"].includes(item)) return;
+      if (this.isConstItem(item)) return;
       this.$set(this.checkingStatus, index, !this.checkingStatus[index]);
     },
     // 清空状态选择
@@ -309,11 +314,11 @@ export default {
             this.allStatusList[this.currentStatusId]
           ].moreCommand,
           this.extraCmd,
-          this.extraCmdVal
+          Number(this.extraCmdVal)
         );
       } else {
         const map = {};
-        map[this.extraCmd] = this.extraCmdVal;
+        map[this.extraCmd] = Number(this.extraCmdVal);
         this.$set(
           this.$_funcDefine[this.currentFuncId].statusDefine[
             this.allStatusList[this.currentStatusId]
@@ -327,7 +332,7 @@ export default {
     },
     // 删除额外命令
     delCmd(key) {
-      if (this.currentStatus.moreCommand[key]) {
+      if (key in this.currentStatus.moreCommand) {
         this.$delete(
           this.$_funcDefine[this.currentFuncId].statusDefine[
             this.allStatusList[this.currentStatusId]
@@ -338,7 +343,8 @@ export default {
       }
     },
     // 插入自定义函数
-    setCustomize(val='after') {
+    setCustomize(val='before') {
+      console.log(val);
       this.$set(
         this.currentStatus,
         'customize',

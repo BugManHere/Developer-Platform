@@ -16,6 +16,7 @@ const state = {
   },
   funcDefineList: {},
   logicMap: {},
+  disableMap: {},
   // funcDefineList: [
   //   {
   //     name: '左右扫风',

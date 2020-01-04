@@ -5,11 +5,14 @@ const getters = {
   logicMap: state => {
     return state.funcModule.logicMap[state.funcModule.deviceKey];
   },
+  disableMap: state => {
+    return state.funcModule.disableMap[state.funcModule.deviceKey];
+  },
   labelList: (state, getters) => {
     const result = [];
     getters.funcDefine.forEach((funcItem, funcIndex) => {
       const statusDefine = funcItem.statusDefine;
-      ['undefined', ...funcItem.order].forEach(item => {
+      ['undefined', 'default', ...funcItem.order].forEach(item => {
         if (statusDefine[item].isCheck) {
           result.push({
             identifier: funcItem.identifier,

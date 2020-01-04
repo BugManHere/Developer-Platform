@@ -3,7 +3,7 @@
     <!-- 蒙版 -->
     <div class="overlay-backdrop" v-if="options.show" />
     <!-- 内容 -->
-    <div class="edit-box" v-fade:show="options.show" :style="{top: `${documentHeight}px`}">
+    <div class="edit-box" :class="options.class" v-fade:show="options.show" :style="{top: `${documentHeight}px`}">
       <div class="panel panel-default" v-if="panelShow">
         <!-- 顶栏 -->
         <div class="panel-heading">
@@ -50,13 +50,15 @@
 import StatusDef from "./StatusDef";
 import OrderDef from "./OrderDef";
 import SelectLabel from "./SelectLabel";
+import SelectPage from "./SelectPage";
 import { mapMutations } from "vuex";
 
 export default {
   components: {
     StatusDef,
     OrderDef,
-    SelectLabel
+    SelectLabel,
+    SelectPage
   },
   props: {
     options: {
@@ -64,6 +66,7 @@ export default {
       default: function() {
         return {
           show: true,
+          class: '',
           title: "无输入值",
           // Supported options: plus/minus/close
           miniBtn: {

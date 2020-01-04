@@ -91,8 +91,6 @@
               display: inline-block;
               font-style: normal;
               font-weight: lighter;
-              // font-variant: normal;
-              // text-transform: none;
               font-size: 16px;
               font-family: 'Glyphicons Halflings';
               content: "\e023"
@@ -143,6 +141,7 @@
     align-items: center;
     justify-content: flex-end;
     margin: 0;
+    border-top: 1px LightBLue solid;
     button {
       margin-right: 35px;
     }

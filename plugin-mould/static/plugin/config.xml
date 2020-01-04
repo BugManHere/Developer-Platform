@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<devices>
+    <device>
+      <mid>80241</mid>
+      <version>4.3</version>
+      <iconpath>/images/icon.png</iconpath>
+      <iconpath2>/images/iconGroup.png</iconpath2>
+      <statueJson>["Pow","LigPow","ScrTime","AutoCtr","TemSor","HumSor","HCHO","PM2P5","CO2","InAirQuality","SensorErr","BatteryWarn"]</statueJson>
+      <statueJson2>["Pow","LigPow","ScrTime","AutoCtr","TemSor","HumSor","HCHO","PM2P5","CO2","InAirQuality","SensorErr","BatteryWarn"]</statueJson2>
+    </device>
+    <device>
+      <mid>80242</mid>
+      <version>1.3</version>
+      <iconpath>/images/icon.png</iconpath>
+      <iconpath2>/images/iconGroup.png</iconpath2>
+      <statueJson>["Pow","LigPow","ScrTime","AutoCtr","TemSor","HumSor","HCHO","PM2P5","CO2","InAirQuality","SensorErr"]</statueJson>
+      <statueJson2>["Pow","LigPow","ScrTime","AutoCtr","TemSor","HumSor","HCHO","PM2P5","CO2","InAirQuality","SensorErr"]</statueJson2>
+    </device>
+    <device>
+      <mid>11009</mid>
+      <version>1.2</version>
+      <iconpath>/images/icon.png</iconpath>
+      <iconpath2>/images/iconGroup.png</iconpath2>
+      <statueJson>["Pow","Mod","TemUn","SetTem","TemRec","StHt","SvSt","Add0.5","host","name"]</statueJson>
+      <statueJson2>["Pow","Mod","SetTem","StHt","Add0.5","WdSpd","Tur","Quiet","SwUpDn","SwingLfRig","Lig","SwhSlp","SlpMod","AssHt","AppTimer","UDFanPort","VocCtl"]</statueJson2>
+    </device>
+</devices>

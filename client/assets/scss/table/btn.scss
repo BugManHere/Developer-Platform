@@ -35,8 +35,12 @@
         }
       }
       > :nth-child(5) {
-        max-width: 100px !important;
         min-width: 100px !important;
+        p {
+          span {
+            padding-left: 2px;
+          }
+        }
       }
       &:hover {
         background-color: #f0f0f0;
@@ -46,7 +50,6 @@
     th {
       text-align: center;
       vertical-align: middle !important;
-
       p {
         cursor: pointer;
         position: relative;
