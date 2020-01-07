@@ -90,6 +90,9 @@ export default {
       }
     }
   },
+  destroyed() {
+    this.setFuncObject(["devSetStep", 0]);
+  },
   created() {
     this.setFuncObject(["deviceKey", this.deviceKey]);
   },

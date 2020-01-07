@@ -3,7 +3,6 @@
     ref="wrapper"
     class="carousel-wrapper"
     :style="{width: options.width, 'margin-left': options.marginLeft}"
-    @touchstart="_touchstart"
   >
     <section
       v-if="options.isShow"
@@ -43,7 +42,7 @@
             >
               {{ item.content }}
               <span
-                v-show="item.id % 2 && options.Has05"
+                v-show="item.id % 2 && options.has05"
                 :style="{'font-size': '1.45rem', 'margin-left': '-40px', 'font-family': 'RobotoLight'}"
               >.5</span>
             </div>
@@ -165,7 +164,8 @@ export default {
           fontSize: '32px',
           spaceBetween: '108px',
           radiusMutiply: 1,
-          Has05: false
+          has05: false,
+          has01: false,
         };
       }
     }
@@ -333,6 +333,7 @@ export default {
   },
   mounted() {
     this.init_Mode();
+    this.$refs.wrapper.addEventListener('touchstart', this._touchstart);
   },
   methods: {
     // 重绘函数，用于动态传入数据时使用，根据当前的 computedData 重新计算并绘制

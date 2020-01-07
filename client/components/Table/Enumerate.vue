@@ -11,11 +11,6 @@ export default {
   components: {
     GrTable
   },
-  data() {
-    return {
-      
-    }
-  },
   computed: {
     tableOptions() {
       return {
@@ -25,11 +20,6 @@ export default {
         operate: ['define', 'delete']
       };
     },
-    funcOptions() {
-      return {
-        title: ['功能名称']
-      }
-    }
   },
 }
 </script>

@@ -10,6 +10,8 @@ const state = {
   functype: 0, // 0代表正常，1代表集中控制
   isScene: 0, // 是否是场景模式
   watchLock: true,
+  has05: true,
+  has01: true,
   dataObject: {
     Pow: 1,
     Mod: 1,

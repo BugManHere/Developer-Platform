@@ -82,33 +82,38 @@ const CarouselConfig = {
   },
   computed: {
     ...mapState({
-      Has05: state => state.Has05,
-      Add05: state => state.dataObject.Add05,
+      has05: state => state.has05,
+      has01: state => state.has01,
+      Add05: state => state.dataObject['Add0.5'],
+      Add01: state => state.dataObject['Add0.1'],
       StHt: state => state.dataObject.StHt,
     }),
     temData() {
       if (this.StHt) {
-        const len = this.Has05 ? 29 : 15;
-        return Array(len).fill(8);
+        return Array(50).fill(8);
       } 
       const startNum = 16;
       const endNum = 30;
       const arr = [];
       for (let i = startNum; i <= endNum; i += 1) {
-        if (this.Has05 && i !== endNum) {
-          arr.push(i);
-        }
+        // if (this.has01 && i !== endNum) {
+        //   for (let o = 0; o < 9; o += 1) {
+        //     arr.push(i);
+        //   }
+        // } else if (this.has05 && i !== endNum) {
+        //   arr.push(i);
+        // }
         arr.push(i);
       }
       return arr;
     },
     temOptions() {
-      const pos = this.Add05 ? '-1.4rem' : '-.9rem';
+      const pos = (this.Add05 || this.Add01) ? '-1.4rem' : '-.9rem';
       let Left;
       if (this.StHt) {
         Left = '-.5rem';
       } else {
-        Left = this.Has05 ? pos : '-1rem';
+        Left = (this.has05 || this.has01) ? pos : '-1rem';
       }
       return {
         isShow: true, // 是否显示
@@ -123,7 +128,7 @@ const CarouselConfig = {
         height: '3.9rem', // 图片大小
         fontSize: '3.6rem',
         radiusMutiply: 1.5, // 半径系数
-        Has05: this.Has05
+        has05: this.has05
       };
     },
   }

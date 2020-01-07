@@ -69,7 +69,8 @@ const LogicWatch = {
         itemLogicMap.forEach(item => {
           const id = this.g_stateToId[item];
           if (!id) return;
-          const currentStatus = this.g_statusMap[id].state;
+          const currentStatus = this.g_statusMap[id].status;
+          // item为需要互斥的state currentState为当前state
           const currentState = `${id}_${currentStatus}`;
           item === currentState && this.g_defaultStatusMap[id] && this.g_runLogic(id);
         });

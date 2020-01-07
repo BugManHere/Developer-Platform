@@ -1,4 +1,4 @@
-import LogicPort from "./port";
+import LogicPort from './port';
 
 const LogicDefine = {
   mixins: [LogicPort],
@@ -11,7 +11,7 @@ const LogicDefine = {
     };
   },
   mounted() {
-    const { key } = require("@/../plugin.id.json");
+    const { key } = require('@/../plugin.id.json');
     const { funcDefine, logicMap, disableMap } = require(`@/../../../output/${key}.json`);
     this.g_funcDefine = funcDefine;
     this.g_logicMap = JSON.parse(logicMap.json);
@@ -21,7 +21,7 @@ const LogicDefine = {
   computed: {
     g_funcDefine_btn() {
       return this.g_funcDefine.filter(item => {
-        return item.type === "btn";
+        return item.type === 'btn';
       });
     },
     /**
@@ -55,7 +55,7 @@ const LogicDefine = {
         const order = Object.keys(funcItem.statusDefine);
         result[key] = {};
         order.forEach(statusName => {
-          if (statusName === "undefined") return;
+          if (statusName === 'undefined') return;
           const val = funcItem.statusDefine[statusName].value;
           const beforeStatus = result[key][val];
           // 是否存在同源状态（JSON取值相等）
@@ -152,7 +152,7 @@ const LogicDefine = {
       const result = {};
       this.g_funcDefine.forEach(funcItem => {
         const order = funcItem.order;
-        ["undefined", "default", ...order].forEach(item => {
+        ['undefined', 'default', ...order].forEach(item => {
           const state = `${funcItem.identifier}_${item}`;
           result[state] = funcItem.identifier;
         });
@@ -220,16 +220,16 @@ const LogicDefine = {
       this.g_funcDefine.forEach(item => {
         const id = item.identifier;
         const json = item.json;
-        const order = ["default", ...item.order];
+        const order = ['default', ...item.order];
         const len = order.length;
         const currentStatus = this.g_statusMap[id].status;
         const currentIndex = order.indexOf(currentStatus);
-        let status = "default";
+        let status = 'default';
         let index = 1;
         while (
           ![len - 1, -1].includes(currentIndex) &&
           order[currentIndex + index] &&
-          status === "default"
+          status === 'default'
         ) {
           const statusName = order[currentIndex + index];
           const state = `${item.identifier}_${statusName}`;

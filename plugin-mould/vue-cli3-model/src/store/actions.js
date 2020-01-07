@@ -19,6 +19,7 @@ let _timer = 0; // 轮询定时器
 let _timer2 = null;
 let setData = {};
 let lastObject = {};
+let sendTime = 0;
 
 /**
  * @description 封装发送指令代码
@@ -27,8 +28,10 @@ function sendControl({ state, commit }, dataMap) {
   _timer2 && clearTimeout(_timer2);
   setData = {...setData, ...dataMap};
   commit(SET_STATE, ['uilock', true]);
+  (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]);
   _timer2 = setTimeout(async () => {
     commit(SET_STATE, ['watchLock', true]);
+    sendTime = 0;
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
@@ -79,7 +82,7 @@ function sendControl({ state, commit }, dataMap) {
       commit(SET_STATE, ['uilock', false]);
       err;
     }
-  }, 400);
+  }, 300);
 }
 
 /**
