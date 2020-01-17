@@ -24,7 +24,8 @@ const listSchema = new mongoose.Schema({
   imgPath: String,
   modelPath: String,
   moreOption: optionSchema,
-  funcImport: [String]
+  funcImport: [String],
+  midTypeFunc: mongoose.Schema.Types.Mixed
 });
 
 // 创建Schema

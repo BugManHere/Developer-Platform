@@ -10,6 +10,7 @@ const keys = require('../config/keys');
 // 权限判断
 const permit = require('../api/permit');
 import { getOutput, getAdminDevice } from '../api/index';
+import { deepCopy } from '../../utils';
 
 const resolve = dir => {
   return path.join(__dirname, dir);
@@ -114,13 +115,18 @@ router.post('/save', async function(req, res) {
     res.status(401).send('没有此权限');
     return;
   }
-  const admin = req.body.admin;
-  const id = req.body.id;
+  const { admin, id, midType } = req.body;
   const idList = JSON.parse(req.body.idList);
   const userDevice = await getAdminDevice(admin);
   const device = await userDevice.userDeviceList.id(id);
-  device.funcImport = idList;
-  device.funcImport = Array(...new Set(device.funcImport));
+  // 细分码处理
+  if (midType === '0') {
+    device.funcImport = Array(...new Set(idList));
+  } else {
+    const midTypeFunc = deepCopy(device.midTypeFunc);
+    midTypeFunc[midType] = Array(...new Set(idList));
+    device.midTypeFunc = midTypeFunc;
+  }
   await userDevice.save();
   res.json(userDevice.userDeviceList);
 });
@@ -130,14 +136,20 @@ router.post('/delFunc', async function(req, res) {
     res.status(401).send('没有此权限');
     return;
   }
-  const admin = req.body.admin;
-  const id = req.body.id;
-  const funcId = req.body.funcId;
+  const { admin, id, funcId, midType } = req.body;
   const userDevice = await getAdminDevice(admin);
   const device = await userDevice.userDeviceList.id(id);
-  const funcImport = device.funcImport;
-  const delIndex = funcImport.findIndex(item => item === funcId);
-  funcImport.splice(delIndex, 1);
+  // 细分码处理
+  if (midType === '0') {
+    const { funcImport } = device;
+    const delIndex = funcImport.findIndex(item => item === funcId);
+    funcImport.splice(delIndex, 1);
+  } else {
+    const midTypeFunc = deepCopy(device.midTypeFunc);
+    const delIndex = midTypeFunc[midType].findIndex(item => item === funcId);
+    midTypeFunc[midType].splice(delIndex, 1);
+    device.midTypeFunc = midTypeFunc;
+  }
   await userDevice.save();
   res.json(userDevice.userDeviceList);
 });
@@ -162,6 +174,35 @@ router.get('/download', function(req, res) {
   const deviceKey = req.query.deviceKey;
   const downloadUrl = resolve(`../../output/${deviceKey}.json`);
   res.download(downloadUrl);
+});
+
+router.post('/midType/add', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
+    res.status(401).send('没有此权限');
+    return;
+  }
+  const { admin, id, midType, addMidType } = req.body;
+  const userDevice = await getAdminDevice(admin);
+  const device = await userDevice.userDeviceList.id(id);
+  // 增加细分码
+  if (device.midTypeFunc) {
+    if (device.midTypeFunc[addMidType]) {
+      res.json(userDevice.userDeviceList);
+      return;
+    } else {
+      const midTypeFunc = deepCopy(device.midTypeFunc);
+      const funcImport = midType === '0' ? device.funcImport : midTypeFunc[midType];
+      midTypeFunc[addMidType] = funcImport;
+      device.midTypeFunc = midTypeFunc;
+    }
+  } else {
+    device.midTypeFunc = {
+      [addMidType]: device.funcImport
+    };
+  }
+  console.log(device.midTypeFunc);
+  await userDevice.save();
+  res.json(userDevice.userDeviceList);
 });
 
 // 保存更多配置
