@@ -2,12 +2,16 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 70px;
+  align-items: flex-start;
+  margin: 70px 0;
+  overflow-y: auto;
+  height: 100%;
   .card-table {
     display: flex;
     width: 1180px;
     justify-content: flex-start;
     flex-wrap: wrap;
+    padding-bottom: 70px;
     > div {
       position: relative;
       display: inline-block;
