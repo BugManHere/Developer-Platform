@@ -1,21 +1,20 @@
-setState<template>
+<template>
   <gree-view>
     <gree-page 
       no-navbar 
       class="page-home">
       <!-- 头部 -->
-      <div
-        class="page-header"
-        :style="{ backgroundImage: 'url(' + head_bg + ')' }"
-      >
-        <gree-header
+      <div 
+        class="page-header" 
+        :style="{backgroundImage: 'url(' + `${require('@/assets/img/mode/mode_bg.png')}` + ')', 'background-size': '500% 100%', 'background-position': `${Mod * 25}% 0%`}">
+        <gree-header 
           theme="transparent"
-          :left-options="{ preventGoBack: true }"
-          :right-options="{ showMore: true }"
-          @on-click-back="goBack"
-          @on-click-more="moreInfo"
-        >{{ devname }}</gree-header
-        >
+          :left-options="{ preventGoBack: true }" 
+          :right-options="{ showMore: true }" 
+          @on-click-back="goBack" 
+          @on-click-more="moreInfo">
+          {{ devname }}
+        </gree-header>
         <!-- 设备状态小图标 -->
         <div class="bar-top">
           <gree-row>
@@ -26,62 +25,20 @@ setState<template>
                 :key="index">
                 <img 
                   v-if="item.img"
-                  :src="item.img"/>
+                  :src="item.img" />
               </div>
             </gree-col>
           </gree-row>
         </div>
         <!-- 模式滑轮 -->
-        <div 
-          class="mod-carousel-holder" 
-          :class="{ hidden: !Pow }">
-          <Carousel
-            ref="modCarousel"
-            @currentChange="setMod"
-            :prop-data="modImgList"
-            :options="modOptions"
-          />
-          <span class="mod-text">{{ modName }}</span>
-        </div>
+        <modeSwiper v-show="Pow" />
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
         <!-- 温度滑轮 -->
-        <div 
-          class="tem-carousel-holder" 
-          :class="{ hidden: !Pow }">
-          <div v-if="Mod">
-            <Carousel
-              ref="temCarousel"
-              class="tem-carousel-pos"
-              @currentChange="setTemperature"
-              :prop-data="temData"
-              :options="temOptions"
-            ></Carousel>
-            <img 
-              :src="temImg"
-              class="tem-unit" />
-          </div>
-          <span
-            class="auto-text"
-            v-show="!Mod">
-            <span>{{ $language("mode.mode_auto") }}</span>
-          </span>
-        </div>
+        <temSwiper v-if="Pow"/>
         <!-- 风档滑轮 -->
-        <div 
-          class="fan-carousel-holder"
-          :class="{ hidden: !Pow }">
-          <Carousel
-            keep-alive
-            ref="fanCarousel"
-            @currentChange="setFan"
-            @touchstart.native="showTip"
-            :prop-data="fanImgList"
-            :options="fanOptions"
-          />
-          <span class="rotate-fan">{{ fanName }}</span>
-        </div>
+        <fanSwiper v-show="Pow" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -98,28 +55,34 @@ setState<template>
       <!-- 底部弹框 -->
       <PopupBottom ref="PopupBottom" />
       <!-- 关机页面 -->
-      <gree-power-off
-        v-model="showPowOff"
+      <gree-power-off 
+        v-model="showPowOff" 
         text="已关机"
-        :style="{ backgroundImage: 'url(' + power_off_bg + ')' }"
-      ></gree-power-off>
+        :style="{ backgroundImage: 'url(' + power_off_bg + ')' }"/>
     </gree-page>
   </gree-view>
 </template>
 
 <script>
+
 import { Header, PowerOff, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  closePage,
-  editDevice,
-  showToast
-} from '@/../../static/lib/PluginInterface.promise';
+import { closePage, editDevice, showToast } from '@/../../static/lib/PluginInterface.promise';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
-import CarouselConfig from '@/mixins/config/carousel.js';
 import homeConfig from '@/mixins/config/home.js';
 import LogicDefine from '@/logic/define';
+import modeSwiper from '@/components/Swiper/mode';
+import temSwiper from '@/components/Swiper/tem';
+import fanSwiper from '@/components/Swiper/fan';
+
+const imgList = [
+  require('@/assets/img/mode/bg_auto.png'),
+  require('@/assets/img/mode/bg_cool.png'),
+  require('@/assets/img/mode/bg_dry.png'),
+  require('@/assets/img/mode/bg_fan.png'),
+  require('@/assets/img/mode/bg_heat.png')
+];
 
 export default {
   components: {
@@ -128,11 +91,16 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
     Carousel,
-    PopupBottom
+    PopupBottom,
+    modeSwiper,
+    temSwiper,
+    fanSwiper,
   },
-  mixins: [homeConfig, CarouselConfig, LogicDefine],
+  mixins: [homeConfig, LogicDefine],
   data() {
-    return {};
+    return {
+      imgList
+    };
   },
   computed: {
     ...mapState({
@@ -149,7 +117,7 @@ export default {
       return !this.Pow;
     },
     head_bg() {
-      return require('@/assets/img/bg_header_on.png');
+      return imgList[this.Mod];
     },
     power_off_bg() {
       return require('@/assets/img/bg_off.png');
@@ -185,33 +153,6 @@ export default {
     }
   },
   watch: {
-    Mod: {
-      handler(newVal) {
-        this.$nextTick(() => {
-          this.$refs.modCarousel.setId(newVal);
-        });
-      },
-      immediate: true
-    },
-    SetTem: {
-      handler(newVal) {
-        const num = this.temData.indexOf(newVal);
-        this.$nextTick(() => {
-          if (this.Mod) {
-            this.$refs.temCarousel.setId(num);
-          }
-        });
-      },
-      immediate: true
-    },
-    WdSpd: {
-      handler(newVal) {
-        this.$nextTick(() => {
-          this.$refs.fanCarousel.setId(newVal);
-        });
-      },
-      immediate: true
-    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -279,15 +220,8 @@ export default {
     /**
      * @description 温度滑轮设置
      */
-    setTemperature(val) {
-      const temNum = this.temData[val];
-      const set05 = val % 2;
-      const setData = {};
-      if (temNum !== this.SetTem || (set05 !== this.Add05 && this.Has05)) {
-        setData.SetTem = temNum;
-        this.Has05 ? (setData.Add05 = set05) : '';
-        this.changeData(setData);
-      }
+    setTemperature(even) {
+      console.log(even);
     },
     /**
      * @description 风速滑轮设置
@@ -300,7 +234,7 @@ export default {
         setData[state] = num;
       }
       this.changeData(setData);
-    }
+    },
   }
 };
 </script>

@@ -8,7 +8,8 @@ const updateStatus = {
   },
   computed: {
     ...mapState({
-      isOffline: state => state.deviceInfo.deviceState
+      isOffline: state => state.deviceInfo.deviceState,
+      lang: state => state.deviceInfo.lang
     })
   },
   watch: {
@@ -19,6 +20,12 @@ const updateStatus = {
       if (newV === -1) {
         this.$router.push({ name: 'Offline' });
       }
+    },
+    lang: {
+      handler(newVal) {
+        this.$i18n.locale = newVal;
+      },
+      immediate: true
     }
   },
   methods: {

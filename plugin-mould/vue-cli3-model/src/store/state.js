@@ -1,24 +1,21 @@
-/*
- * @Author: Jerry-Rain
- * @Date: 2019-09-11 16:43:42
- * @LastEditors: Jerry-Rain
- * @LastEditTime: 2019-10-08 15:31:30
- * @Description: 
- */
 const state = {
   mac: '', // 设备mac
   functype: 0, // 0代表正常，1代表集中控制
   isScene: 0, // 是否是场景模式
   watchLock: true,
-  has05: true,
-  has01: true,
+  autoAbleSetTem: false,
+  swiperHold: false,
   dataObject: {
     Pow: 1,
     Mod: 1,
-    SetTem: 24,
-    WdSpd: 5,
+    SetTem: 17,
+    WdSpd: 4,
+    'Add0.5': 1,
+    'Add0.1': 6,
     Lig: 1,
-    LigSen: 1, 
+    LigSen: 1,
+    has05: 0,
+    has01: 1,
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
@@ -26,8 +23,8 @@ const state = {
     path: '', // 主体插件页面路径
     fullstatueJson: '', // config.xml里对应的查询字段
     deviceState: 2, // 设备在线状态，-1离线，2在线
-    lang: '', // 语言
-    name: '空调模板'
+    lang: 'zh_CN', // 语言
+    name: '空调'
   }
 };
 export default state;

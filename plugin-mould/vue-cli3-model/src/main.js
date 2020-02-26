@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
+
 import { View, Page } from 'gree-ui';
 
 import App from './App';
@@ -9,21 +10,16 @@ import store from './store';
 
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
-
-import {
-  closePage,
-  getInfo,
-  changeBarColor
-} from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { closePage, getInfo, changeBarColor } from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
 import './assets/js/flexible';
 import './assets/scss/global.scss';
 import language from './utils/language'; // 对i18n的封装
 
 // 安装插件
+Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.use(language);
-Vue.use(Vuex);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
@@ -38,26 +34,30 @@ const i18n = new VueI18n({
 
 Vue.config.productionTip = false;
 
-const debug = process.env.NODE_ENV === 'development';
+const dev = process.env.NODE_ENV === 'development';
 
-const vm = new Vue({
-  el: '#app',
-  mixins: debug ? [debugMixin] : [initMixin],
-  render: h => h(App),
-  router,
-  store,
-  i18n
-});
+function createVue() {
+  const vm = new Vue({
+    el: '#app',
+    mixins: dev ? [debugMixin] : [initMixin],
+    // mixins: [initMixin],
+    render: h => h(App),
+    router,
+    store,
+    i18n
+  });
+  dev ? '' : vm.init();
+  window.myvm = vm;
+  console.info(`Current Running mid: ${process.env.VUE_APP_MID}`);
+}
 
-window.myvm = vm;
+dev ? createVue() : '';
 
 /* 启用页面调试器 */
-if (process.env.NODE_ENV === 'production') {
-  if (process.env.VUE_APP_MODE === 'debug') {
-    const VConsole = require('vconsole/dist/vconsole.min.js');
-    // eslint-disable-next-line no-new
-    new VConsole();
-  }
+if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+  const VConsole = require('vconsole/dist/vconsole.min.js');
+  // eslint-disable-next-line no-new
+  new VConsole();
 }
 
 /* ********************************* Native Func ********************************* */
@@ -67,8 +67,10 @@ if (process.env.NODE_ENV === 'production') {
  */
 window.backButton = function backButton() {
   const { name } = router.currentRoute;
-  if (name === 'Home' || name === 'Offline') {
+  if (name === 'Error' || name === 'Home' || name === 'Offline') {
     closePage();
+  } else if (name === 'Voice' || name === 'Sweep' || name === 'Air') {
+    router.push({ name: 'Home' });
   } else {
     router.back(-1);
   }
@@ -106,10 +108,18 @@ window.onResume = function onResume(msg) {
 
 // 根据加载页面改变状态栏颜色
 window.init = function init() {
-  vm.init();
+  createVue();
   router.beforeEach((to, from, next) => {
-    const color = '#000000';
+    let color;
+    if (to.name === 'Error') {
+      color = '#ddd5a3';
+    } else if (to.name === 'Offline') {
+      color = store.state.dataObject.Mod === 4 ? '#f78d00' : '#6ba0e2';
+    } else {
+      color = '#000000';
+    }
     changeBarColor(color);
     next();
   });
 };
+

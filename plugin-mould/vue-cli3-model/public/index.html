@@ -11,9 +11,25 @@
     />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>iotfe</title>
+    <!-- <script src="./static/plugin/cordova.js"></script>
+    <script src="./static/lib/cordovainit.js"></script> -->
     <% if (NODE_ENV === 'testing') { %>
-    <script src="http://pv6xprt09.bkt.clouddn.com/cordova.js"></script>
-    <script src="http://pv6xprt09.bkt.clouddn.com/cordovainit.js"></script>
+    <script>
+      function trigger() {
+        var re = /OS ((\d{1,2})_\d{1,2}||(\d{1,2})_\d{1,2}_\d{1,2}) like Mac OS X/i;
+        var result = re.exec(window.navigator.userAgent);
+        var ver = result && result[1] && result[1].substr(0, 2);
+        return parseInt(ver) >= 8;
+      }
+      var script = document.createElement('script');
+      if (trigger()) {
+        script.src = '//gree-iot.test.upcdn.net/ios/cordova.js';
+      } else {
+        script.src = '//gree-iot.test.upcdn.net/cordova.js';
+      }
+      document.head.appendChild(script);
+    </script>
+    <script src="http://gree-iot.test.upcdn.net/cordovainit.js"></script>
     <% } else if (NODE_ENV === 'production') { %>
     <script src="./../../cordova.js"></script>
     <script src="./js/cordovainit.js"></script>

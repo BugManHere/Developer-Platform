@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <device>
-  <mid>0</mid>
+  <mid>10f04</mid>
   <version>1.0</version>
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
-  <statueJson>[]</statueJson>
-  <statueJson2>[]</statueJson2>
+  <statueJson>["Pow", "Mod", "TemUn", "SetTem", "Add0.5", "Add0.1", "PctCle", "WdSpd", "SwUpDn", "SwingLfRig", "Lig", "Health", "AssHt", "SwhSlp", "SlpMod"]</statueJson>
+  <statueJson2>["Pow", "Mod", "TemUn", "SetTem", "Add0.5", "Add0.1", "PctCle"]</statueJson2>
 </device>

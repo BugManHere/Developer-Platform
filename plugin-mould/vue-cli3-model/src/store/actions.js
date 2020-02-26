@@ -26,10 +26,15 @@ let sendTime = 0;
  */
 function sendControl({ state, commit }, dataMap) {
   _timer2 && clearTimeout(_timer2);
+  !state.uilock && commit(SET_STATE, ['uilock', true]); // ui锁
+  (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]); // 互斥锁
   setData = {...setData, ...dataMap};
-  commit(SET_STATE, ['uilock', true]);
-  (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]);
   _timer2 = setTimeout(async () => {
+    if (state.swiperHold) {
+      sendControl({ state, commit }, {});
+      console.log('1');
+      return;
+    }
     commit(SET_STATE, ['watchLock', true]);
     sendTime = 0;
     const setOpt = [];
@@ -70,9 +75,9 @@ function sendControl({ state, commit }, dataMap) {
       const { r } = result;
       // const _p = result.p;
       const _p = [state.dataObject.Pow, state.dataObject.Mod,
-        state.dataObject.SetTem, state.dataObject.WdSpd,
-        state.dataObject.Air, state.deviceInfo.name,
-        state.dataObject.TemUn, state.dataObject.TemRec];
+        state.dataObject.TemUn, state.dataObject.SetTem,
+        state.dataObject['Add0.5'], state.dataObject['Add0.1'],
+        state.dataObject.PctCle];
       // 成功之后更新主体状态
       r === 200 && commit(SET_STATE, ['uilock', false]) &&
         (await updateStates(state.mac, JSON.stringify(_p))
@@ -82,7 +87,7 @@ function sendControl({ state, commit }, dataMap) {
       commit(SET_STATE, ['uilock', false]);
       err;
     }
-  }, 300);
+  }, 350);
 }
 
 /**
@@ -112,7 +117,7 @@ function getStatusOfDev({ state, commit }) {
       for (let i = 0, j = cols.length; i < j; i += 1) {
         DataObject[cols[i]] = res[i]; // 遍历查询到的数据，将值写入state中的DataObject，根据业务更改
       }
-      if (!state.isScene) {
+      if (!state.functype && !state.uilock) {
         // 非场景时提交数据
         commit(SET_CHECK_OBJECT, DataObject);
         commit(SET_DATA_OBJECT, DataObject);

@@ -1,7 +1,11 @@
 <template>
-  <gree-popup v-model="showPopup" position="bottom">
+  <gree-popup 
+    v-model="showPopup" 
+    position="bottom">
     <div class="popup-bottom">
-      <div class="arrow-down" @touchend.stop="hidePopUpDemo" />
+      <div 
+        class="arrow-down" 
+        @touchend.stop="hidePopUpDemo" />
       <gree-row v-if="g_funcDefine_btn">
         <gree-col
           v-for="(item, index) in g_funcDefine_btn"
@@ -16,10 +20,16 @@
             class="icon"
             @click="changeStatus(item.identifier, g_disableFuncArr.includes(item.identifier))"
           >
-            <img v-if="imgList[index].img" :src="imgList[index].img" />
-            <div v-else class="blank-btn">
+            <img 
+              v-if="imgList[index].img" 
+              :src="imgList[index].img" />
+            <div 
+              v-else 
+              class="blank-btn">
               <img src="@/assets/img/functionBtn/blank.png" />
-              <span v-html="imgList[index].text" class="blank-text" />
+              <span 
+                v-html="imgList[index].text" 
+                class="blank-text" />
             </div>
           </div>
           <span>{{ $language(`btn.${item.identifier}`) }}</span>
@@ -30,12 +40,12 @@
 </template>
 
 <script>
-import { Row, Col, Popup } from "gree-ui";
-import { mapState, mapMutations, mapActions } from "vuex";
-import PopupConfig from "@/mixins/config/popup.js";
-import LogicDefine from "@/logic/define";
-import LogicWatch from "@/logic/watch";
-import Customize from "@/logic/customize";
+import { Row, Col, Popup } from 'gree-ui';
+import { mapState, mapMutations, mapActions } from 'vuex';
+import PopupConfig from '@/mixins/config/popup.js';
+import LogicDefine from '@/logic/define';
+import LogicWatch from '@/logic/watch';
+import Customize from '@/logic/customize';
 
 export default {
   components: {
@@ -97,11 +107,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: "SET_DATA_OBJECT",
-      setState: "SET_STATE"
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
-      sendCtrl: "SEND_CTRL"
+      sendCtrl: 'SEND_CTRL'
     }),
     changeData(map) {
       this.setDataObject(map);
@@ -115,21 +125,21 @@ export default {
       const customize = this.g_NextStatusMap[identifier].customize;
       // 执行自定义函数 'before'
       switch (customize) {
-        case "replace":
-          this.customizeFunc(identifier);
+        case 'replace':
+          this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
           return;
-        case "before":
-          this.customizeFunc(identifier);
+        case 'before':
+          this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
           break;
-        case "after":
+        case 'after':
           setTimeout(() => {
-            this.customizeFunc(identifier);
+            this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
           }, 0);
           break;
         default:
           break;
       }
-      this.setState(["watchLock", false]);
+      this.setState(['watchLock', false]);
       const setData = this.g_NextStatusMap[identifier].setData;
       this.changeData(setData);
     }

@@ -3,6 +3,7 @@
 @import 'drawer';
 @import 'sweep';
 @import 'components/popup-bottom';
+@import 'components/swiper';
 
 @font-face {
   font-family: 'RobotoThin';
@@ -10,5 +11,6 @@
 }
 
 .hidden {
-  display: none !important;
+  // display: none !important;
+  opacity: 0;
 }

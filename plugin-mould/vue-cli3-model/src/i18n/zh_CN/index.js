@@ -114,11 +114,11 @@ module.exports = {
     detail: '查看详情'
   },
   mode: {
-    mode_cool: '制冷',
-    mode_auto: '自动',
-    mode_heat: '制热',
-    mode_fan: '送风',
-    mode_dry: '除湿',
+    cool: '制冷',
+    auto: '自动',
+    heat: '制热',
+    fan: '送风',
+    dry: '除湿',
     fan_turbo_auto_tips: '自动模式下不能设置强劲风。',
     fan_turbo_fan_tips: '送风模式下不能设置强劲风。',
     fan_quiet_auto_tips: '自动模式下不能设置静音。',
@@ -126,14 +126,14 @@ module.exports = {
     fan_dry_tips: '除湿模式下不可调节风速。'
   },
   fan: {
-    fan_auto: '自动风',
-    fan_low: '低风档',
-    fan_medium_low: '中低风档',
-    fan_medium: '中风档',
-    fan_medium_high: '中高风档',
-    fan_high: '高风档',
-    fan_turbo: '强劲档',
-    fan_quiet: '静音档'
+    auto: '自动风',
+    low: '低风档',
+    medium_low: '中低风档',
+    medium: '中风档',
+    medium_high: '中高风档',
+    high: '高风档',
+    turbo: '强劲档',
+    quiet: '静音档'
   },
   btn: {
     Sleep: '睡眠',
@@ -148,6 +148,7 @@ module.exports = {
     Dazzling: '炫光',
     AssHt: '辅热',
     cwz: '陈文中',
+    TemUn: '温度间隔'
   },
   sweep: {
     speedTitle: '扫风',
