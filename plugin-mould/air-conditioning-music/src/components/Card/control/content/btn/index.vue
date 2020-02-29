@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import { Row, Col, Popup } from 'gree-ui';
+import { Row, Col } from 'gree-ui';
 import { showLoading } from '@PluginInterface';
 
 export default {
   components: {
     [Row.name]: Row,
-    [Col.name]: Col,
-    [Popup.name]: Popup
+    [Col.name]: Col
   },
   props: {
     title: {

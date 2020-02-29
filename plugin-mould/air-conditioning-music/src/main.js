@@ -107,7 +107,7 @@ async function createVue() {
   // 挂载到#app上
   vm.$mount('#app');
   const userAgeInfo = window.storage.get('userAgeInfo');
-  if (userAgeInfo) {
+  if (userAgeInfo && userAgeInfo.year) {
     vm.$router.push('Home').catch(e => console.log(e));
   } else {
     vm.$router.push('UserAgeInfo').catch(e => console.log(e));
