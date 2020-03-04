@@ -4,12 +4,6 @@
     justify-content: center;
     align-items: center;
     opacity: 0;
-    nobr {
-      position: relative;
-      font-family: 'RobotoThin';
-      padding-top: 50px;
-      font-size: 200px;
-    }
     p {
       position: relative;
       font-family: 'RobotoThin';
@@ -63,4 +57,15 @@
   color: #fff;
   position: relative;
   top: 200px;
+}
+
+.swiper-text {
+  position: relative; 
+  align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  > nobr {
+    font-size: 200px;
+  }
 }

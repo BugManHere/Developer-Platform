@@ -170,7 +170,7 @@ export default {
     },
     // 监听canvas变化
     lineCanvas: {
-      handler(newVal) {
+      handler() {
         this.$nextTick(() => {
           this.initCanvas();
         })
@@ -371,7 +371,6 @@ export default {
 
       context.lineWidth = 1.5;
       context.strokeStyle = "#404657";
-      canvas.width = canvas.width;
 
       longArrow();
       const len = this.disAbleList.length + this.itemList.right.length;

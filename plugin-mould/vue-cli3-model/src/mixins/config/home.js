@@ -12,7 +12,7 @@
 const homeConfig = {
   data() {
     return {
-      functionList:[
+      functionList: [
         {
           url: require('../../assets/img/pow.png'),
           name: '开关'

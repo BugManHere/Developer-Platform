@@ -1,4 +1,10 @@
 import {
+  sendDataToDevice,
+  getInfo,
+  updateStates,
+  finishLoad
+} from '@PluginInterface'; // 主体接口
+import {
   GET_DEVICE_INFO,
   GET_ALL_STATES,
   SET_DEVICE_INFO,
@@ -8,19 +14,13 @@ import {
   SEND_CTRL
 } from './types';
 
-import {
-  sendDataToDevice,
-  getInfo,
-  updateStates,
-  finishLoad
-} from '../../../static/lib/PluginInterface.promise'; // 主体接口
 
 let _timer = 0; // 轮询定时器
 let _timer2 = null;
 let setData = {};
 let lastObject = {};
 let sendTime = 0;
-
+const jsonArr = JSON.parse(process.env.VUE_APP_JSON);
 /**
  * @description 封装发送指令代码
  */
@@ -32,7 +32,6 @@ function sendControl({ state, commit }, dataMap) {
   _timer2 = setTimeout(async () => {
     if (state.swiperHold) {
       sendControl({ state, commit }, {});
-      console.log('1');
       return;
     }
     commit(SET_STATE, ['watchLock', true]);
@@ -40,7 +39,7 @@ function sendControl({ state, commit }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
-      if (setData[key] !== lastObject[key]) {
+      if (setData[key] !== lastObject[key] && jsonArr.includes(key)) {
         setOpt.push(key);
         setP.push(setData[key]);
       }
@@ -122,6 +121,7 @@ function getStatusOfDev({ state, commit }) {
         commit(SET_CHECK_OBJECT, DataObject);
         commit(SET_DATA_OBJECT, DataObject);
       }
+      console.log(DataObject);
       return DataObject;
     })
     .catch(err => {

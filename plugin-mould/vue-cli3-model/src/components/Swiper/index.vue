@@ -7,6 +7,7 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
+      v-show="!isShowText"
     >
       <swiper-slide 
         v-for="(item, index) in slidesData.list" 
@@ -17,18 +18,18 @@
           <img :src="item.img">
         </template>
         <template v-else>
-          <nobr 
-            v-if="isShowText"
-            v-text="textContent" />
-          <template v-else>
-            <p v-text="item.integer" />
-            <span 
-              v-show="item.decimal" 
-              v-text="`.${item.decimal}`" />
-          </template>
+          <p v-text="item.integer" />
+          <span 
+            v-show="item.decimal" 
+            v-text="`.${item.decimal}`" />
         </template>
       </swiper-slide>
     </swiper>
+    <div class="swiper-text">
+      <nobr 
+        v-if="isShowText"
+        v-text="textContent" />
+    </div>
   </div>
 </template>
 
@@ -88,6 +89,8 @@ export default {
       this.swiperOption = Object.assign(this.swiperOption, {
         slidesPerView: 2,
         spaceBetween: 80,
+        preloadImages: true,
+        updateOnImagesReady: true,
         coverflowEffect: {
           rotate: 0,
           stretch: 0,
@@ -160,14 +163,14 @@ export default {
     removeSlide(index) {
       this.$refs[this.slidesData.key].swiper.removeSlide(index);
     },
-    touchControlAble(able) {
-      this.noSwiping = able;
+    removeAllSlides() {
+      this.$refs[this.slidesData.key].swiper.removeAllSlides();
     },
     showText(able, text = '') {
       this.textContent = text;
       this.isShowText = able;
       this.$forceUpdate();
-    }
+    },
   }
 };
 </script>

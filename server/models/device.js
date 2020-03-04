@@ -18,6 +18,7 @@ const funcSchema = new mongoose.Schema({
   order: [String],
   type: String,
   statusDefine: Object,
+  page: Object
 })
 
 // 创建子文档 hasDeviceList

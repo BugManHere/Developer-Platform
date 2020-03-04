@@ -148,7 +148,8 @@ module.exports = {
     Dazzling: '炫光',
     AssHt: '辅热',
     cwz: '陈文中',
-    TemUn: '温度间隔'
+    TemUn: '温度间隔',
+    AppTimer: '预约'
   },
   sweep: {
     speedTitle: '扫风',

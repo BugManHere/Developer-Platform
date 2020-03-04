@@ -8,6 +8,7 @@ import {
   SET_MAC,
   SET_DATA_OBJECT,
   SET_CHECK_OBJECT,
+  SET_REPAIR,
   IS_SCENE
 } from '../../store/types';
 import { getQueryStringByName } from '../../utils';
@@ -15,13 +16,20 @@ import { getQueryStringByName } from '../../utils';
 const mixin = {
   mixins: [updateStatus, LogicDefine], // 该mixin自定义初始化时检测故障等功能，需更改
   computed: {
-    ...mapState({ mac: state => state.mac })
+    ...mapState({ 
+      mac: state => state.mac,
+      dataObject: state => state.dataObject
+    })
+  },
+  mounted() {
+    console.log(this.dataObject);
   },
   methods: {
     ...mapMutations({
       setMac: SET_MAC,
       setDataObject: SET_DATA_OBJECT,
       setCheckObject: SET_CHECK_OBJECT,
+      setRepair: SET_REPAIR,
       updateIsScene: IS_SCENE
     }),
     ...mapActions({ getDeviceInfo: GET_DEVICE_INFO }),
@@ -36,14 +44,19 @@ const mixin = {
       const DataObject = dataArr;
       console.log(DataObject);
 
-      const isScene = getQueryStringByName('functype');
-      console.log(`functype: ${isScene}`);
+      const functype = getQueryStringByName('functype');
+      console.log(`functype: ${functype}`);
 
+      const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
+      hasReportedForRepair === 'true'
+        ? this.setRepair(true)
+        : this.setRepair(false);
+        
+      DataObject.functype = functype;
       this.setMac(mac);
       this.getDeviceInfo(mac);
       DataObject && this.setCheckObject(DataObject);
       DataObject && this.setDataObject(DataObject);
-      Number(isScene) ? this.updateIsScene(1) : this.updateIsScene(0); // 场景
     }
   }
 };

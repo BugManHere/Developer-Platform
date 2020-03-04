@@ -1,0 +1,31 @@
+{
+  "pageConfig": {
+    "SweepUd": {
+      "routerName": "Sweep",
+      "params": {
+        "id": 2
+      }
+    },
+    "SweepLr": {
+      "routerName": "Sweep",
+      "params": {
+        "id": 1
+      }
+    },
+    "AssHt": {
+      "routerName": "AssHt"
+    },
+    "Dazzling": {
+      "routerName": "Dazzling"
+    },
+    "Lig": {
+      "routerName": "Lig"
+    },
+    "NoBodySave": {
+      "routerName": "NoBodySave"
+    },
+    "SmartWind": {
+      "routerName": "SmartWind"
+    }
+  }
+}

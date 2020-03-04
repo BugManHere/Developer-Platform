@@ -17,15 +17,22 @@ const Home = r =>
 const Offline = r =>
   require.ensure([], () => r(require('./views/Offline')), 'offline');
 
+const ErrorPage = r =>
+  require.ensure([], () => r(require('./views/Error')), 'error');
+  
+// 高级功能倒三角进入
 const Sweep = r =>
-  require.ensure([], () => r(require('./views/Sweep')), 'Sweep');
-
-const Error = r =>
-  require.ensure(
-    [],
-    () => r(require('./views/Error')),
-    'Error'
-  );
+  require.ensure([], () => r(require('./views/functionPage/Sweep')));
+const SmartWind = r =>
+  require.ensure([], () => r(require('./views/functionPage/SmartWind')));
+const NoBodySave = r =>
+  require.ensure([], () => r(require('./views/functionPage/NoBodySave')));
+const Lig = r =>
+  require.ensure([], () => r(require('./views/functionPage/Lig')));
+const AssHt = r =>
+  require.ensure([], () => r(require('./views/functionPage/AssHt')));
+const Dazzling = r =>
+  require.ensure([], () => r(require('./views/functionPage/Dazzling')));
 
 Vue.use(Router);
 
@@ -51,14 +58,39 @@ export default new Router({
       component: Offline
     },
     {
+      path: '/Error',
+      name: 'Error',
+      component: ErrorPage
+    },
+    {
       path: '/Sweep',
       name: 'Sweep',
       component: Sweep
     },
     {
-      path: '/Error',
-      name: 'Error',
-      component: Error
-    }
+      path: '/SmartWind',
+      name: 'SmartWind',
+      component: SmartWind
+    },
+    {
+      path: '/NoBodySave',
+      name: 'NoBodySave',
+      component: NoBodySave
+    },
+    {
+      path: '/Lig',
+      name: 'Lig',
+      component: Lig
+    },
+    {
+      path: '/AssHt',
+      name: 'AssHt',
+      component: AssHt
+    },
+    {
+      path: '/Dazzling',
+      name: 'Dazzling',
+      component: Dazzling
+    },
   ]
 });

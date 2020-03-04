@@ -8,6 +8,7 @@
         </tr>
       </thead>
       <tbody>
+        <!-- 无内容的时候显示 -->
         <tr v-if="!funcOptions.content.length">
           <td v-for="(item, key) in ['', '', '', []]" :key="key">
             <p v-if="!Array.isArray(item)" v-text="item" />
@@ -23,14 +24,21 @@
             </p>
           </td>
         </tr>
-        <tr v-for="(content, index) in funcOptions.content" :key="index">
+        <!-- 有内容的时候显示 -->
+        <tr v-for="(content, index) in funcOptions.content" :key="index" 
+          @dragstart="dragItem(index)"
+          @dragenter="dragMove(index)"
+          @dragend="transPos"
+          draggable="true">
           <td v-for="(item, key) in content" :key="key">
+            <!-- 文本 -->
             <p
               v-if="!Array.isArray(item)"
               v-show="index !== editItem[0] || key !== editItem[1]"
               @click="showInput(index, key, item)"
               v-text="item"
             />
+            <!-- 点击文本后出现输入框 -->
             <p v-if="!Array.isArray(item)" v-show="index === editItem[0] && key === editItem[1]">
               <input
                 @blur="setValue"
@@ -42,6 +50,7 @@
                 spellcheck="false"
               />
             </p>
+            <!-- 状态简要 -->
             <span v-else class="definitions">
               <span
                 v-for="(val, statusIndex) in item"
@@ -51,9 +60,11 @@
               />
             </span>
           </td>
-          <td v-if="funcOptions.content">
+          <!-- 右边的按键 -->
+          <td v-if="funcOptions.content && funcDefine">
             <p>
-              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')"/>
+              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[index].page"/>
+              <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue"/>
               <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
               <span @click="$_delFun(realIndex[index])" v-text="'删除'" v-show="tableOptions.operate.includes('delete')"/>
             </p>
@@ -61,6 +72,7 @@
         </tr>
       </tbody>
     </table>
+    <!-- 弹出面板 -->
     <Panel :options="insertPageShow === false ? defPanelOptions : insertPageOptions" ref="panel" />
   </div>
 </template>
@@ -72,7 +84,7 @@ import Panel from "@components/Panel/index";
 
 export default {
   components: {
-    Panel
+    Panel,
   },
   props: {
     tableOptions: {
@@ -90,6 +102,9 @@ export default {
       timer: null,
       realIndex: [],
       insertPageShow: false,
+      insertPageList: [],
+      dragFromIndex: false,
+      dragToIndex: false,
     };
   },
   computed: {
@@ -250,7 +265,7 @@ export default {
   },
   created() {
     document.onkeyup = e => {
-      e.keyCode === 27 && this.currentFuncId !== false && this.editStatus();
+      e.keyCode === 27  && (this.currentFuncId !== false || (this.insertPageShow = false)) && this.editStatus();
     };
   },
   destroyed() {
@@ -357,6 +372,27 @@ export default {
         this.timer = null;
       }, this.animationSecond * 1000);
       return true;
+    },
+    dragItem(index) {
+      this.dragFromIndex = index;
+      this.dragToIndex = index;
+    },
+    dragMove(index) {
+      this.dragToIndex = index;
+    },
+    transPos() {
+      if (this.dragFromIndex === this.dragToIndex) return;
+      const trans = (from, to, arr) => {
+        const fromItem = deepCopy(arr[from]);
+        const toItem = deepCopy(arr[to]);
+        const arrCopy = deepCopy(arr);
+        arrCopy[to] = fromItem;
+        arrCopy[from] = toItem;
+        return arrCopy;
+      };
+      const funcDefine = trans(this.dragFromIndex, this.dragToIndex, this.funcDefine);
+      this.$set(this.funcOptions, 'content' , trans(this.dragFromIndex, this.dragToIndex, this.funcOptions.content));
+      this.setFuncDefine([this.deviceKey, funcDefine]);
     }
   }
 };

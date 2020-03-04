@@ -6,6 +6,7 @@ export const SET_SCROLL_Y = 'SET_SCROLL_Y'; // 设置滚动Y轴位置
 export const SET_DATA_OBJECT = 'SET_DATA_OBJECT'; // 设备的各种状态
 export const SET_CHECK_OBJECT = 'SET_CHECK_OBJECT'; // 用于检查的状态
 export const IS_SCENE = 'IS_SCENE'; // 是否场景模式
+export const SET_REPAIR = 'SET_REPAIR'; // 是否报修
 export const SET_STATE = 'SET_STATE'; // 
 
 // 根据业务逻辑修改

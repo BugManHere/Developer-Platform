@@ -14,12 +14,14 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import LogicDefine from '@/logic/define';
 import Swiper from './index';
 
 export default {
   components: {
     Swiper
   },
+  mixins: [LogicDefine],
   data() {
     return {
       ref: 'fanSwiper',
@@ -27,16 +29,6 @@ export default {
       swiperIndex: 5,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
-      imgList: [
-        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0},
-        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
-        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2},
-        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3},
-        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4},
-        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5},
-        {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6},
-        {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7},
-      ],
       fanName: 'auto'
     };
   },
@@ -46,6 +38,21 @@ export default {
       Tur: state => state.dataObject.Tur,
       Quiet: state => state.dataObject.Quiet
     }),
+    imgList() {
+      const list = [
+        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0},
+        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
+        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2},
+        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3},
+        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4},
+        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5}
+      ];
+      const hasTur = !this.g_disableFuncArr.includes('Fan_tur');
+      const hasQuiet = !this.g_disableFuncArr.includes('Fan_quiet');
+      hasTur && (list.push({img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6}));
+      hasQuiet && (list.push({img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7}));
+      return list;
+    },
     options() {
       return {
         key: 'fan',
@@ -71,31 +78,43 @@ export default {
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
       this.updateSwiper();
+    },
+    'imgList.length'() {
+      this.$nextTick(() => {
+        this.initSwiper();
+      });
     }
   },
   mounted() {
-    this.initList();
+    this.setList();
     this.setFanName();
     this.updateSwiper();
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT'
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
-    changeData(val) {
-      this.setDataObject(val);
-      this.sendCtrl(val);
+    changeData(map) {
+      this.setState(['watchLock', false]);
+      this.setDataObject(map);
+      this.sendCtrl(map);
+    },
+    // 初始化
+    initSwiper() {
+      this.removeAllSlide();
+      this.insertAllSlide();
     },
     // 给滑轮赋予初始区间
-    initList() {
+    setList() {
       this.swiperIndex = this.currentIndex;
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         const index = this.countIndex(this.swiperIndex, i);
-        list.push(this.imgList[index]);  
+        list.push(this.imgList[index]); 
       }
       this.itemList = list;
     },
@@ -110,7 +129,6 @@ export default {
     updateSwiper() {
       this.$nextTick(() => {
         this.$refs[this.ref].setIndex(this.leftLen); // 定位到中间
-        // console.log(this.$refs[this.ref].$refs[this.options.key].$el.getElementsByClassName('tem-slide')[this.leftLen].classList.add('swiper-slide-active'));
       });
     },
     // 计算滑轮向左（右）滑动moveLen个元素后的值                                                                                                              
@@ -142,11 +160,29 @@ export default {
       }); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
+    // 移除所有slide
+    removeAllSlide() {
+      const list = Array.from({length: this.swiperLen}, (v, index) => index);
+      list.splice(this.leftLen, 1);
+      this.$refs[this.ref].removeSlide(list);
+    },
+    // 根据情况填充slide 
+    insertAllSlide() {
+      for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
+        if (i) {
+          const direction = i / Math.abs(i); // false：往右滑，true：往左滑
+          const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
+          const moveLen = direction === 1 ? i : -i - (this.leftLen + 1);
+          const toIndex = this.countIndex(this.swiperIndex, moveLen);
+          this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imgList[toIndex].img}></div>`);
+        }
+      }
+    },
     // 滑动事件
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      switch (toIndex) {
+      switch (this.imgList[toIndex].index) {
         case 6: 
           this.changeData({Tur: 1, Quiet: 0});
           break;

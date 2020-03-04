@@ -138,9 +138,16 @@ export default {
           const logicType = this.logicMap[colKey] && this.logicMap[colKey].includes(rowKey);
           const disableType = this.disableMap[colKey] && this.disableMap[colKey].includes(rowKey);
           let str = '';
-          if (logicType || disableType) {
-            logicType && (str += '\u2714 ');
-            disableType && (str += '\u2716');
+          // if (logicType || disableType) {
+          //   logicType && (str += '\u2714 ');
+          //   disableType && (str += '\u2716');
+          // } else {
+          //   str = '-'
+          // }
+          if (disableType) {
+            str = '\u2716';
+          } else if (logicType) {
+            str = '\u2714';
           } else {
             str = '-'
           }
@@ -185,11 +192,9 @@ export default {
     setHoverClass(rowIndex, colIndex) {
       let isSetClass = false;
       if (this.hoverItem.includes(false) || this.hoverItem.includes(0)) return isSetClass;
-      if (rowIndex === this.hoverItem[0] && colIndex === 0) {
-        isSetClass = true;
-      } else if (colIndex === this.hoverItem[1] && rowIndex === 0) {
-        isSetClass = true;
-      } else if (rowIndex === this.hoverItem[0] && colIndex === this.hoverItem[1]) {
+      if ((rowIndex === this.hoverItem[0] && colIndex === 0)
+        || (colIndex === this.hoverItem[1] && rowIndex === 0)
+        || (rowIndex === this.hoverItem[0] && colIndex === this.hoverItem[1])) {
         isSetClass = true;
       }
       return isSetClass;

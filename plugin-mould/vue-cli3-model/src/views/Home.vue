@@ -1,5 +1,5 @@
 <template>
-  <gree-view>
+  <gree-view :bg-color="colorChange">
     <gree-page 
       no-navbar 
       class="page-home">
@@ -31,14 +31,14 @@
           </gree-row>
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-show="Pow" />
+        <modeSwiper v-if="Pow" />
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow"/>
         <!-- 风档滑轮 -->
-        <fanSwiper v-show="Pow" />
+        <fanSwiper v-if="Pow" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -67,7 +67,7 @@
 
 import { Header, PowerOff, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, showToast } from '@/../../static/lib/PluginInterface.promise';
+import { closePage, editDevice, showToast, changeBarColor } from '@PluginInterface';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
 import homeConfig from '@/mixins/config/home.js';
@@ -133,6 +133,30 @@ export default {
      */
     temImg() {
       return require('@/assets/img/c.png');
+    },
+    /**
+     * @description 主页面下更新状态栏颜色
+     */
+    colorChange() {
+      const Pow = this.Pow;
+      const Hot = this.Mod === this.$store.state.ModHeat;
+      const Adv = this.$refs.PopupBottom ? this.$refs.PopupBottom.showPopup : false;
+      let color = '#000';
+      if (this.$route.name === 'Home') {
+        if (Pow) {
+          if (Hot) {
+            color = Adv ? '#AE7022' : '#f9a130';
+          } else {
+            color = Adv ? '#4C719E' : '#6da2e2';
+          }
+        } else if (Hot) {
+          color = Adv ? '#AC6502' : '#f78d00';
+        } else {
+          color = Adv ? '#4C719E' : '#6ba0e2';
+        }
+      }
+      changeBarColor(color);
+      return color;
     },
     miniIcon() {
       const result = [];

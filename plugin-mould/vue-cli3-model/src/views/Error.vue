@@ -1,137 +1,102 @@
 <template>
   <gree-view>
-    <gree-header>故障详情</gree-header>
-    <gree-page>
-      <gree-error-page type="malfunction" :bg-url="BgUrl2" :text="errorMultiText" ></gree-error-page>
+    <gree-page class="page-error">
+      <gree-header
+        :left-options="{preventGoBack: true}"
+        @on-click-back="goBack"
+      >{{ $language('error.notify_fault_title') }}</gree-header>
+      <div class="error-box">
+        <img
+          v-if="hasReportedForRepair"
+          src="@/assets/img/progress-logo.png"
+        />
+        <img
+          v-else
+          src="@/assets/img/snag-logo.png"
+        />
+        <h3
+          class="reported-repair"
+          v-if="hasReportedForRepair"
+        >{{ $language('error.notify_Repaired') }}</h3>
+        <h3 v-else>{{ $language('error.notify_Not_Repaired') }}</h3>
+        <fieldset></fieldset>
+        <div class="error-main">
+          <p>{{ `${$language('error.notify_fault_code')}：${errorCode}` }}</p>
+          <p>{{ `${$language('error.notify_fault_name')}：${errorName}` }}</p>
+        </div>
+      </div>
+      <img
+        v-if="hasReportedForRepair"
+        src="@/assets/img/reservation.png"
+        class="error-snag"
+        @click="goPage(true)"
+      />
+      <img
+        v-else
+        src="@/assets/img/snagBook.png"
+        class="error-snag"
+        @click="goPage(false)"
+      />
+      <h1
+        @click="goPage(true)"
+        v-if="hasReportedForRepair"
+      >{{ $language('error.notify_repair_book') }}</h1>
+      <h1
+        class="no-repaired"
+        @click="goPage(false)"
+        v-else
+      >{{ $language('error.notify_repair_book') }}</h1>
     </gree-page>
-    <gree-toolbar position="bottom" class="footer">
-      <gree-row>
-        <gree-col v-for="(item, index) in options" :key="index" @click.native="setFunction(index)">
-          <div class="icon">
-            <img class="img" :src="require('../assets/img/' + item.ImgName + '.png')" />
-          </div>
-          <h3>{{ item.Name }}</h3>
-        </gree-col>
-      </gree-row>
-    </gree-toolbar>
   </gree-view>
 </template>
 
 <script>
+import { Header } from 'gree-ui';
+import { mapState } from 'vuex';
+import errorConfig from '@/mixins/utils/error';
 import {
-  Header,
-  Row,
-  Col,
-  Icon,
-  ToolBar,
-  ErrorPage
-} from "gree-ui";
-
-import {
+  closePage,
   toWebPage
-} from "../../../static/lib/PluginInterface.promise";
+} from '@PluginInterface';
 
 export default {
   components: {
-    [Header.name]: Header,
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [Icon.name]: Icon,
-    [ToolBar.name]: ToolBar,
-    [ErrorPage.name]: ErrorPage
+    [Header.name]: Header
   },
-  data() {
-    return {
-      BgUrl2: require("../assets/img/bg_error.png"),
-      errorMultiText: [
-        {
-          code: "F0",
-          headtitle: "故障名称：",
-          title: "PM2.5 传感器故障",
-          subtitle: "解除办法：",
-          text: "请联系指定服务商或服务中心"
-        },
-        {
-          code: "F1",
-          headtitle: "故障名称：",
-          title: "温湿度传感器故障",
-          subtitle: "解除办法：",
-          text: "请联系指定服务商或服务中心"
-        },
-        {
-          code: "F2",
-          headtitle: "故障名称：",
-          title: "甲醛传感器故障",
-          subtitle: "解除办法：",
-          text: "请联系指定服务商或服务中心"
-        },
-        {
-          code: "F3",
-          headtitle: "故障名称：",
-          title: "CO2 传感器故障",
-          subtitle: "解除办法：",
-          text: "请联系指定服务商或服务中心"
-        },
-        {
-          code: "F4",
-          headtitle: "故障名称：",
-          title: "与主控板通讯故障",
-          subtitle: "解除办法：",
-          text: "请联系指定服务商或服务中心"
-        }
-      ],
-      options: [
-        {
-          ImgName: "service",
-          Name: "智能客服"
-        },
-        {
-          ImgName: "subscribe",
-          Name: "服务预约"
-        },
-        {
-          ImgName: "search",
-          Name: "进度查询"
-        }
-      ]
-    };
+  mixins: [errorConfig],
+  computed: {
+    ...mapState({
+      Mod: state => state.dataObject.Mod,
+      ModHeat: state => state.ModHeat,
+      errorCode: state => state.errorCode,
+      hasReportedForRepair: state => state.hasReportedForRepair
+    }),
+    errorName() {
+      return this.errorList[this.errorCode];
+    }
   },
   methods: {
-    setFunction(index) {
-      console.log(index);
-      switch(index){
-        case 0: toWebPage="https://grih.gree.com/zixun/#/customerChats"; break;
-        case 1: toWebPage="http://pgxt.gree.com:7909/hjzx/bx/addbx.jsp?source=greejia"; break;
-        case 2: toWebPage="http://pgxt.gree.com:7909/hjzx/bx/chabx.jsp?source=greejia"; break;
-        default: console.log('Error，出错了！'); break;
+    /**
+     * @description 返回键
+     */
+    goBack() {
+      closePage();
+    },
+    goPage(val) {
+      let url;
+      let txt;
+      val
+        ? (url = 'http://pgxt.gree.com:7909/hjzx/bx/chabx.jsp')
+        : 'http://pgxt.gree.com:7909/hjzx/bx/addbx.jsp';
+      if (val) {
+        url = 'http://pgxt.gree.com:7909/hjzx/bx/chabx.jsp';
+        txt = this.$language('error.notify_repair_inquiries');
+      } else {
+        url = 'http://pgxt.gree.com:7909/hjzx/bx/addbx.jsp';
+        txt = this.$language('error.notify_repair_book');
       }
+      toWebPage(url, txt);
     }
   }
 };
 </script>
-
-<style lang="scss">
-.page-content {
-  padding-bottom: 324px !important;
-  overflow: scroll !important;
-}
-.toolbar { 
-    height: 324px !important;
-  .row {
-    width: 100%;
-    text-align: center;
-    }
-    .col {
-      .icon {
-        background: none;
-        border: none;
-        box-shadow: none;
-      }
-        .img {
-          width: 162px;
-          height: 162px;
-        }
-    }
-}
-
-</style>

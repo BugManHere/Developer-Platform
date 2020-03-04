@@ -150,10 +150,16 @@ const LogicDefine = {
 
     g_stateToId() {
       const result = {};
+      // this.g_funcDefine.forEach(funcItem => {
+      //   const order = funcItem.order;
+      //   ['undefined', 'default', ...order].forEach(item => {
+      //     const state = `${funcItem.identifier}_${item}`;
+      //     result[state] = funcItem.identifier;
+      //   });
+      // });
       this.g_funcDefine.forEach(funcItem => {
-        const order = funcItem.order;
-        ['undefined', 'default', ...order].forEach(item => {
-          const state = `${funcItem.identifier}_${item}`;
+        Object.keys(funcItem.statusDefine).forEach(statusItem => {
+          const state = `${funcItem.identifier}_${statusItem}`;
           result[state] = funcItem.identifier;
         });
       });
@@ -254,6 +260,21 @@ const LogicDefine = {
         };
       });
       return result;
+    },
+    // 登记的所有功能的JSON字段
+    jsonArr() {
+      const arr = [];
+      this.g_funcDefine.forEach(item => {
+        Object.keys(item.statusDefine).forEach(statusItem => {
+          statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || arr.includes(item.json) || (arr.push(item.json));
+          if (item.statusDefine[statusItem].moreCommand) {
+            Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
+              arr.includes(moreJson) || (arr.push(moreJson));
+            });
+          }
+        });
+      });
+      return arr;
     }
   },
   methods: {
@@ -295,12 +316,18 @@ const LogicDefine = {
       }
       return 4;
     },
+    /**
+     * @description 获取对象之间的关系
+     * @return Number 0.相离 1.相交 2.被包含 3.包含 4.相等
+     */
     g_checkDisable(stateArr, disableArr) {
       let result = true;
-      if (stateArr && disableArr) {
+      if (stateArr && disableArr && stateArr.length && disableArr.length) {
         stateArr.forEach(item => {
           !disableArr.includes(item) && (result = false);
         });
+      } else {
+        return false;
       }
       return result;
     }

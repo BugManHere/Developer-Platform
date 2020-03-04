@@ -36,6 +36,22 @@
         > span {
           font-size: 39px;
           padding-top: 29px;
+          &.triangle{
+            &:after {
+              content: '';
+              position: relative;
+              top: 1px;
+              left: 1px;
+              vertical-align: -2px;
+              display: inline-block;
+              padding-top: 1px !important;
+              border-color: transparent transparent #707070 transparent;
+              border-style: solid;
+              border-width: 0 0 20px 20px;
+              height: 0;
+              width: 0;
+            }
+          }
         }
         .blank-btn {
           position: relative;

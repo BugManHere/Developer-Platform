@@ -4,13 +4,13 @@ import VueI18n from 'vue-i18n';
 
 import { View, Page } from 'gree-ui';
 
+import { closePage, getInfo, changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
 import router from './router';
 import store from './store';
 
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
-import { closePage, getInfo, changeBarColor } from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
 import './assets/js/flexible';
 import './assets/scss/global.scss';

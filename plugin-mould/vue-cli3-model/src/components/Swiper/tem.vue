@@ -67,28 +67,19 @@ export default {
   },
   watch: {
     currentVal(newVal) {
-      if (newVal === this.swiperVal || this.banSwiping) return;
-      this.removeAllSlide();
-      this.insertAllSlide();
+      if (newVal === this.swiperVal) return;
+      this.initSwiper();
     },
-    has01(newVal) {
-      if (!newVal || this.banSwiping) return;
+    temStep() {
       this.currentTemStep = this.temStep;
-      this.removeAllSlide();
-      this.insertAllSlide();
-    },
-    has05(newVal) {
-      if (!newVal || this.banSwiping) return;
-      this.currentTemStep = this.temStep;
-      this.removeAllSlide();
-      this.insertAllSlide();
+      this.initSwiper();
     },
     banSwiping() {
       this.ableSwiping();
     }
   },
   mounted() {
-    this.initList();
+    this.setList();
     this.updateSwiper();
     this.ableSwiping();
   },
@@ -103,8 +94,13 @@ export default {
       this.setDataObject(val);
       this.sendCtrl(val);
     },
+    // 初始化
+    initSwiper() {
+      this.removeAllSlide();
+      this.insertAllSlide();
+    },
     // 给滑轮赋予初始区间
-    initList() {
+    setList() {
       this.currentTemStep = this.temStep;
       this.swiperVal = this.currentVal;
       const list = [];
@@ -187,12 +183,12 @@ export default {
       // 更新temList
       this.temList = [];
     },
-    // 根据需求新增slide 
+    // 根据情况填充slide 
     insertAllSlide() {
       const value = this.SetTem + (this.add01 * 0.1 || this.add05 * 0.5);
       const valueInteger = Math.floor(value);
       const valueDecimal = Math.round((value * 10) % 10);
-      const step = this.has01 ? 0.1 : (1 - this.has05 * 0.5);
+      const step = this.temStep;
       let leftTem = Math.floor(value * (1 / step)) / (1 / step);
       let rightTem = Math.ceil(value * (1 / step)) / (1 / step);
       if (leftTem === rightTem) {
@@ -245,8 +241,7 @@ export default {
       this.updateList(index); // 更新滑轮
       // 如果切换了温度跨度，需要处理
       if (this.changeStepFlag) {
-        this.removeAllSlide();
-        this.insertAllSlide();
+        this.initSwiper();
         this.changeStepFlag = false;
       }
     },
@@ -254,10 +249,8 @@ export default {
       const ref = this.$refs[this.ref];
       if (this.banSwiping) {
         ref.showText(true, this.$language('mode.auto'));
-        ref.touchControlAble(true);
       } else {
         ref.showText(false);
-        ref.touchControlAble(false);
       }
     }
   }

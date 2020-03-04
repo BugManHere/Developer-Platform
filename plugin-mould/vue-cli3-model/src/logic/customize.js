@@ -18,11 +18,12 @@ const Customize = {
         TemUn: status => {
           switch (status) {
             case 'default':
-              console.log(5);
+              this.setDataObject({has01: 1, has05: 0});
+              break;
+            case 'status_1':
               this.setDataObject({has01: 0, has05: 1});
               break;
             default:
-              console.log(1);
               this.setDataObject({has01: 1, has05: 0});
               break;
           }

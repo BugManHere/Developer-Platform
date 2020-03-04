@@ -7,14 +7,14 @@ export default {
   [type.SET_DEVICE_INFO](state, deviceInfo) {
     state.deviceInfo = deviceInfo;
   },
+  [type.SET_REPAIR](state, hasReportedForRepair) {
+    state.hasReportedForRepair = hasReportedForRepair;
+  },
   [type.SET_DATA_OBJECT](state, obj) {
     state.dataObject = { ...state.dataObject, ...obj };
   },
   [type.SET_CHECK_OBJECT](state, obj) {
     state.checkObject = { ...state.checkObject, ...obj };
-  },
-  [type.IS_SCENE](state, isScene) {
-    state.isScene = isScene;
   },
   [type.SET_STATE](state, [key, value]) {
     state[key] = value;

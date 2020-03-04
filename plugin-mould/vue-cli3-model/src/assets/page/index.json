@@ -1,10 +1,19 @@
 {
   "pageConfig": {
-    "Sweep": {
+    "SweepUd": {
       "routerName": "Sweep",
       "params": {
-        "id": "2"
+        "id": 2
       }
+    },
+    "SweepLr": {
+      "routerName": "Sweep",
+      "params": {
+        "id": 1
+      }
+    },
+    "Assht": {
+      "routerName": "Assht"
     }
   }
 }

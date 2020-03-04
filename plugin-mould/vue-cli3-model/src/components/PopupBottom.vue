@@ -29,10 +29,13 @@
               <img src="@/assets/img/functionBtn/blank.png" />
               <span 
                 v-html="imgList[index].text" 
-                class="blank-text" />
+                class="blank-text"/>
             </div>
           </div>
-          <span>{{ $language(`btn.${item.identifier}`) }}</span>
+          <span 
+            :class="{triangle: item.page}" 
+            @click="goPage(index, g_disableFuncArr.includes(item.identifier), item.page)"
+            v-text="$language(`btn.${item.identifier}`)"/>
         </gree-col>
       </gree-row>
     </div>
@@ -86,21 +89,23 @@ export default {
      */
     powDisableArr() {
       const result = [];
-      const identifier = this.g_Pow;
-      Object.keys(this.g_disableMap).forEach(item => {
-        if (this.g_stateToId[item] === identifier) {
-          const currentState = this.g_statusMap[identifier].state;
-          this.g_disableMap[item].forEach(stateItem => {
-            let pass = true;
-            const targetId = this.g_stateToId[stateItem];
-            const targetOrder = this.g_funcDefineMap[targetId].order;
-            targetOrder.forEach(statusItem => {
-              const targetState = `${targetId}_${statusItem}`;
-              !this.g_disableMap[item].includes(targetState) && (pass = false);
-            });
-            pass && currentState === item && result.push(this.g_stateToId[stateItem]);
-          });
-        }
+      const checkIdArr = []; // 需要检查的id
+      const identifier = this.g_Pow; // 获取在define.js里面定义的g_Pow
+      const powState = this.g_statusMap[identifier].state; // pow的当前状态
+      const disableStateArr = this.g_disableMap[powState]; // 被pow禁用的State
+      if (!disableStateArr) return [];
+      disableStateArr.forEach(stateItem => { // 挑选出需要检查的id
+        const checkId = this.g_stateToId[stateItem];
+        checkIdArr.includes(checkId) || checkIdArr.push(checkId);
+      });
+      checkIdArr.forEach(idItem => {
+        let pass = true; // 是否满足条件
+        const checkOrder = this.g_funcDefineMap[idItem].order; // id对应激活的status
+        checkOrder.forEach(statusItem => { // order下的所有status是否都被禁用
+          const checkState = `${idItem}_${statusItem}`;
+          !disableStateArr.includes(checkState) && (pass = false);
+        });
+        pass && result.push(idItem); // 如满足条件，记下
       });
       return result;
     }
@@ -114,6 +119,7 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(map) {
+      this.setState(['watchLock', false]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },
@@ -139,9 +145,16 @@ export default {
         default:
           break;
       }
-      this.setState(['watchLock', false]);
       const setData = this.g_NextStatusMap[identifier].setData;
       this.changeData(setData);
+    },
+    goPage(index, isGray, able) {
+      if (isGray || !able) return;
+      const { routerName, params } = this.g_funcDefine_btn[index].page;
+      this.$router.push({
+        name: routerName,
+        params,
+      });
     }
   }
 };

@@ -105,7 +105,7 @@
             position: absolute;
             right: 10px;
             font-family: 'Glyphicons Halflings';
-            content: "\e259";
+            content: "\e259" !important; 
           }
         }
         .edit-check {

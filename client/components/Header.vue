@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#Home" @click="updataPage">GDP</a>
+          <a class="navbar-brand" href="#Home" @click="updataPage">Gree配置化开发平台</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="user.identity">
           <ul class="nav navbar-nav">

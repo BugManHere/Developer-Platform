@@ -3,7 +3,7 @@
     <!-- 蒙版 -->
     <div class="overlay-backdrop" v-if="options.show" />
     <!-- 内容 -->
-    <div class="edit-box" :class="options.class" v-fade:show="options.show" :style="{top: `${documentHeight}px`}">
+    <div class="edit-box" :class="options.class" v-fade:show="options.show" :style="{top: `${options.class === 'big' ? documentHeight - 150 : documentHeight}px`}">
       <div class="panel panel-default" v-if="panelShow">
         <!-- 顶栏 -->
         <div class="panel-heading">

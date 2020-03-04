@@ -132,7 +132,7 @@ export default {
       switch (this.devSetStep) {
         case 0:
           return {
-            title: "功能-按钮",
+            title: "功能-参与布局",
             rightBtn: {
               name: "添加",
               method: this.$_addFunc
@@ -141,7 +141,7 @@ export default {
           };
         case 1:
           return {
-            title: "功能-非按钮",
+            title: "功能-不参与布局",
             rightBtn: {
               name: "添加",
               method: this.$_addFunc

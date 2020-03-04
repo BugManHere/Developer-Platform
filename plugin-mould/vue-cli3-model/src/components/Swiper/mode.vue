@@ -64,26 +64,28 @@ export default {
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
       this.updateSwiper();
-    }
+    },
   },
   mounted() {
-    this.initList();
+    this.setList();
     this.updateSwiper();
     this.setFanName();
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT'
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
-    changeData(val) {
-      this.setDataObject(val);
-      this.sendCtrl(val);
+    changeData(map) {
+      this.setState(['watchLock', false]);
+      this.setDataObject(map);
+      this.sendCtrl(map);
     },
     // 给滑轮赋予初始区间
-    initList() {
+    setList() {
       this.swiperIndex = this.currentIndex;
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {

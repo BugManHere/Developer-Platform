@@ -3,10 +3,30 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const browserslist = require('./package.json').browserslist;
+const xml2js = require('xml2js');
 
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
+
+// eslint-disable-next-line func-names
+(function () {
+  const { key } = require('./plugin.id.json');
+  const { funcDefine, productModel } = require(`../../output/${key}.json`);
+  const jsonArr = [];
+  funcDefine.forEach(item => {
+    Object.keys(item.statusDefine).forEach(statusItem => {
+      statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || jsonArr.includes(item.json) || (jsonArr.push(item.json));
+      if (item.statusDefine[statusItem].moreCommand) {
+        Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
+          jsonArr.includes(moreJson) || (jsonArr.push(moreJson));
+        });
+      }
+    });
+  });
+  process.env.VUE_APP_MID = productModel;
+  process.env.VUE_APP_JSON = JSON.stringify(jsonArr);
+}());
 
 module.exports = {
   publicPath: '',
@@ -59,7 +79,24 @@ module.exports = {
           to: path.resolve(
             __dirname,
             `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/config.xml`
-          )
+          ),
+          transform(content, contentPath) {
+            if (contentPath.indexOf('config.xml') !== -1) {
+              let xml;
+              const options = { explicitArray: false };
+              xml2js.parseString(content.toString(), options, (err, result) => {
+                const builder = new xml2js.Builder();
+                const outPut = result;
+                outPut.device.mid = process.env.VUE_APP_MID;
+                outPut.device.statueJson = process.env.VUE_APP_JSON;
+                outPut.device.statueJson2 = process.env.VUE_APP_JSON;
+                // eslint-disable-next-line new-cap
+                xml = new Buffer.from(builder.buildObject(outPut));
+              });
+              return xml;
+            }
+            return content;
+          }
         },
         {
           from: path.resolve(__dirname, '../static/plugin/'),
@@ -70,7 +107,7 @@ module.exports = {
           to: path.resolve(
             __dirname,
             `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/js/`
-          )
+          ),
         }
       ])
     ]
@@ -104,5 +141,5 @@ module.exports = {
     before: () => {},
     disableHostCheck: true
   },
-  pluginOptions: {}
+  pluginOptions: {},
 };
