@@ -4,14 +4,14 @@ import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插�
 
 const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
 const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidden');
-const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
+// const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
 
 // 高级功能倒三角进入
 export const functionPage = {
   Test: r => require.ensure([], () => r(require('./views/functionPage/Test'))),
   SweepConst: r => require.ensure([], () => r(require('./views/functionPage/SweepConst'))),
-  Electric: r => require.ensure([], () => r(require('./views/functionPage/Electric'))),
+  // Electric: r => require.ensure([], () => r(require('./views/functionPage/Electric'))),
   Noise: r => require.ensure([], () => r(require('./views/functionPage/Noise'))),
   AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
   UDFanPort: r => require.ensure([], () => r(require('./views/functionPage/UDFanPort'))),
@@ -50,11 +50,11 @@ const router = new Router({
       name: 'Hidden',
       component: Hidden
     },
-    {
-      path: '/ErrorWarning',
-      name: 'ErrorWarning',
-      component: ErrorWarning
-    },
+    // {
+    //   path: '/ErrorWarning',
+    //   name: 'ErrorWarning',
+    //   component: ErrorWarning
+    // },
     {
       path: '/Test',
       name: 'Test',
@@ -65,11 +65,11 @@ const router = new Router({
       name: 'SweepConst',
       component: functionPage.SweepConst
     },
-    {
-      path: '/Electric',
-      name: 'Electric',
-      component: functionPage.Electric
-    },
+    // {
+    //   path: '/Electric',
+    //   name: 'Electric',
+    //   component: functionPage.Electric
+    // },
     {
       path: '/Noise',
       name: 'Noise',

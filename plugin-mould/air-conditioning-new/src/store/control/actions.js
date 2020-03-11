@@ -1,6 +1,6 @@
 import { types, defineTypes } from '@/store/types';
 
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
 import { getQueryStringByName, isMqtt } from '../../utils/index';
 
 let _timer = null; // 轮询定时器
@@ -35,7 +35,17 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     });
     setData = {};
     if (!setOpt.length) return;
-    const mac = state.mac;
+    const { mac, mainMac } = state;
+    const sendMac = mainMac.length ? mainMac : mac; // 查询包需要传入主mac及子mac
+
+    try {
+      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
+      // 成功之后更新主体状态
+      updateStates(mac, JSON.stringify(_p));
+    } catch (err) {
+      err;
+    }
+
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
@@ -43,17 +53,9 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     console.table([opt, p]);
     console.log([opt, p]);
 
-    const json = JSON.stringify({ mac, t, opt, p });
+    const CMD_JSON = JSON.stringify({ mac: sendMac, t, opt, p, sub: mac });
 
-    try {
-      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
-      // 成功之后更新主体状态
-      updateStates(state.mac, JSON.stringify(_p));
-    } catch (err) {
-      err;
-    }
-
-    await sendDataToDevice(mac, json, false);
+    await sendDataToDevice(sendMac, CMD_JSON, false);
     // 3秒后重启轮询
     if (_timer) {
       dispatch(types.SET_POLLING, false, { root: true });
@@ -72,11 +74,11 @@ export default {
   [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      dispatch(types.INIT_DEVICE_DATA, { root: true });
+      dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO, { root: true });
+      dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
+      hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
@@ -100,8 +102,9 @@ export default {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
-      console.log('[url] mac:', mac);
-      commit(types.SET_MAC, mac, { root: true });
+      const mainMac = getQueryStringByName('mainMac');
+      console.log('[url] mac:', { mac, mainMac });
+      commit(types.SET_MAC, { mac, mainMac }, { root: true });
 
       // 获取小卡片提供第一包设备数据
       const data = getQueryStringByName('data');
@@ -160,23 +163,24 @@ export default {
       console.error(e);
     }
   },
+
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
   async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }) {
-    // dispatch(types.SET_POLLING, true);
     try {
       // 集中控制时数据不查询
       if (state.functype) return;
 
-      const { mac } = state;
+      const { mac, mainMac } = state;
+      const sendMac = mainMac.length ? mainMac : mac; // 查询包需要传入主mac及子mac
 
-      // 采用本地 SEARCH_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
+      // 采用本地 STATUS_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
       const cols = statueJson2;
       const t = 'status';
-      const SEARCH_JSON = JSON.stringify({ cols, mac, t });
+      const STATUS_JSON = JSON.stringify({ cols, mac, t });
 
-      const data = await sendDataToDevice(mac, SEARCH_JSON, false);
+      const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
 
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
@@ -203,8 +207,8 @@ export default {
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
-          hasMqtt || dispatch(types.GET_DEVICE_INFO, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_INFO, null, { root: true });
         }, 5000);
       }
     } else {

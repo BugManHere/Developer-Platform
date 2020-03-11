@@ -1,6 +1,6 @@
 <template>
   <div class="center-slider">
-    <div v-show="Pow" class="slider-main">
+    <div v-show="powType" class="slider-main">
       <div id="slider" :style="`opacity: ${temAbleSet ? 1 : 0.01}`" />
       <div class="layer" :style="{ width: lottieRadius / 1.5 + 'px', height: lottieRadius / 1.5 + 'px' }">
         <div class="rotate -one"></div>
@@ -23,11 +23,13 @@
         </gree-block>
         <!-- 显示插槽2 -->
         <h3 v-if="imshowSlot2" class="slider-slot-1" v-text="imshowSlot2" />
-        <!-- <h3 v-else class="tem" v-text="circleVal" /> -->
         <!-- 温度调节 -->
         <div v-else class="tem-value" :class="{ 'deci-tem': temStep < 1 }">
           <gree-animated-number :value="circleVal" :precision="Number(temStep < 1)" :duration="200" transition />
-          <span :class="{ 'unit-tem': temSetJson === 'SetTem' }" v-text="'℃'" />
+          <span
+            :class="{ 'unit-tem': temSetJson === 'SetTem', 'unit-humi': temSetJson === 'SetCoolHumi' }"
+            v-text="{ SetTem: '℃', SetCoolHumi: '%', undefined: '' }[temSetJson]"
+          />
         </div>
         <!-- 显示插槽1 -->
         <div v-if="imshowSlot1" class="slider-slot-2">
@@ -35,7 +37,7 @@
         </div>
       </article>
     </div>
-    <div class="pow-off" v-show="!Pow" :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
+    <div class="pow-off" v-show="!powType" :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
       <img src="@assets/img/off_bg.png" />
       <h3 v-text="'已关机'" />
     </div>
@@ -44,7 +46,7 @@
 
 <script>
 import { Block, AnimatedNumber } from 'gree-ui';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { types } from '@/store/types';
 
 export default {
@@ -70,9 +72,6 @@ export default {
     this.lottieRadius = this.svgRadius * 1.8;
   },
   computed: {
-    ...mapState('control', {
-      Pow: state => state.dataObject.Pow
-    }),
     ...mapGetters([
       'inputMap',
       'temSetVal',
@@ -85,7 +84,8 @@ export default {
       'modIdentifier',
       'fanIdentifier',
       'imshowSlot1',
-      'imshowSlot2'
+      'imshowSlot2',
+      'powType'
     ]),
     ...mapGetters('machine', ['funcDefineMap', 'statusMap'])
   },

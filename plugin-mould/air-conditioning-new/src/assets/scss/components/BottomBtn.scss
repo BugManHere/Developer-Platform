@@ -66,6 +66,9 @@
       .button-boder {
         background: rgb(244, 249, 252);
       }
+      .ripple {
+        display: inherit;
+      }
     }
     .button-boder {
       position: absolute;
@@ -79,6 +82,7 @@
       z-index: 1;
     }
     .ripple {
+      display: none;
       position: absolute;
       left: 50%;
       top: 50%;

@@ -2,10 +2,10 @@
   <!-- 底部按钮 -->
   <gree-toolbar position="bottom" no-hairline class="bottom-btn">
     <gree-row>
-      <div class="pow-button" :class="{ off: !Pow - 0 }" @click="switchPow">
+      <div class="pow-button" :class="{ off: !powType }" @click="switchPow">
         <span class="iconfont iconfont-kaiguan" />
         <div class="button-boder" />
-        <div class="ripple" v-show="!Pow" />
+        <div class="ripple" />
       </div>
       <gree-col
         v-for="(btn, index) in btnList"
@@ -28,7 +28,7 @@
 
 <script>
 import { Row, Col, ToolBar } from 'gree-ui';
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
 
 export default {
@@ -38,11 +38,7 @@ export default {
     [ToolBar.name]: ToolBar
   },
   computed: {
-    ...mapState('control', {
-      Pow: state => state.dataObject.Pow,
-      SwhSlp: state => state.dataObject.SwhSlp
-    }),
-    ...mapGetters(['popupDefine']),
+    ...mapGetters(['popupDefine', 'powType']),
     ...mapGetters('machine', ['statusMap', 'blindModelArr']),
     btnList() {
       if (!Object.keys(this.statusMap).length) return [];

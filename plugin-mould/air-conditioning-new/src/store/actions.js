@@ -6,20 +6,22 @@ const { cacheDataMap } = require('./userdef');
 export default {
   // 处理状态机初始化数据
   [defineTypes.STATE_MACHINE_INITDATA]({ commit }, { data }) {
-    if (!dev) return;
     commit(types.SET_DATA_OBJECT, data);
     commit(types.SET_CHECK_OBJECT, data);
   },
   // 处理状态机接口数据
   [defineTypes.STATE_MACHINE_INTERFACE]({ dispatch, getters }, { data, identifier, from, to }) {
     // 获取需要缓存的数据
-    const cacheData = getCache(getters.inputMap, identifier, `${identifier}_${from}`, `${identifier}_${to}`);
+    const fromStateName = `${identifier}_${from}`;
+    const toStateName = `${identifier}_${to}`;
+    const cacheData = getCache(getters.inputMap, identifier, fromStateName, toStateName);
     // 更新并发送
     dispatch(types.SEND_DATA, { ...data, ...cacheData });
   },
   // 发送数据接口
   [defineTypes.SEND_DATA](context, data) {
     const { commit, dispatch } = context;
+    // 处理需要发送的数据
     const sendData = dataHandle(context, data);
     // 更新并发送
     commit(types.SET_DATA_OBJECT, sendData);
@@ -97,15 +99,11 @@ function dataHandle({ state, getters }, data) {
     const temInt = Math.floor(temValue);
     // 温度小数
     const temDeci = (temValue % 1) * 10;
-    if (temStep === 0.5) {
-      // 处理0.5度逻辑
-      const temJson05 = state.jsonArr.tem05;
-      data[temJson05] = Number(temDeci >= 5);
-    } else if (temStep === 0.1) {
-      // 处理0.1度逻辑
-      const temJson05 = state.jsonArr.tem05;
+    // 处理小数逻辑
+    if (temStep < 1) {
+      // const temJson05 = state.jsonArr.tem05;
       const temJson01 = state.jsonArr.tem01;
-      data[temJson05] = Number(temDeci >= 5);
+      // data[temJson05] = Number(temDeci >= 5);
       data[temJson01] = Number(temDeci);
     }
     // 发送整数

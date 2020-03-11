@@ -23,7 +23,6 @@ export default {
   },
   computed: {
     ...mapState('control', {
-      Pow: state => state.dataObject.Pow,
       FuncPopup: state => state.dataObject.FuncPopup
     }),
     ...mapGetters(['buttonDefine']),
