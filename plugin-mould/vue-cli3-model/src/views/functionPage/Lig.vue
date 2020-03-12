@@ -64,7 +64,7 @@ export default {
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'});
+        this.$router.push({name: 'Home'}).catch(err => { err; });
         try {
           showToast('空调已被关闭，自动退出灯光设置。', 1);
         } catch (e) {
@@ -100,6 +100,7 @@ export default {
         default:
           break;
       }
+      this.setState(['ableSend', true]);
       this.setDataObject({
         Lig,
         LigSen

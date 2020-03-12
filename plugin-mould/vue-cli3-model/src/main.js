@@ -23,9 +23,11 @@ Vue.use(language);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
+
 // 使用语言包
 const i18n = new VueI18n({
   locale: 'zh_CN',
+  silentTranslationWarn: true,
   messages: {
     en: require('./i18n/en'),
     zh_CN: require('./i18n/zh_CN')
@@ -70,7 +72,7 @@ window.backButton = function backButton() {
   if (name === 'Error' || name === 'Home' || name === 'Offline') {
     closePage();
   } else if (name === 'Voice' || name === 'Sweep' || name === 'Air') {
-    router.push({ name: 'Home' });
+    router.push({ name: 'Home' }).catch(err => { err; });
   } else {
     router.back(-1);
   }

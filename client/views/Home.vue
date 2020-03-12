@@ -35,7 +35,7 @@
         >
           <div class="body">
             <div class="message-top">
-              <img :src="require(`@public/img/${productTypeList[item.productID].deviceTypeList[item.deviceID].img}`)">
+              <img :src="require(`@public/img/product/${productTypeList[item.productID].deviceTypeList[item.deviceID].img}`)">
               <div>
                 <span v-text="item.deviceName"/>
                 <span>创建时间：{{item.createTime}}</span>
@@ -93,7 +93,7 @@ export default {
       .fetchGet("/productType")
       .then(data => {
         const productTypeList = data.data.productTypeList;
-        this.setDevState(["productTypeList", productTypeList]);
+        this.setDevModule(["productTypeList", productTypeList]);
       })
       .catch(err => {
         console.log(err);
@@ -102,12 +102,12 @@ export default {
       .fetchPost("/device", { admin: this.admin })
       .then(data => {
         const hasDeviceList = data.data.hasDeviceList;
-        this.setDevState(["hasDeviceList", hasDeviceList]);
+        this.setDevModule(["hasDeviceList", hasDeviceList]);
         const funcDefineList = {};
         this.hasDeviceList.forEach(val => {
           funcDefineList[val._id] = val.funcDefineList;
         });
-        this.setFuncObject(['funcDefineList', funcDefineList]);
+        this.setFuncModule(['funcDefineList', funcDefineList]);
       })
       .catch(err => {
         console.log(err);
@@ -115,8 +115,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDevState: "SET_DEV_OBJECT",
-      setFuncObject: "SET_FUNC_OBJECT",
+      setDevModule: "SET_DEV_MODULE",
+      setFuncModule: "SET_FUNC_MODULE",
     }),
     setDialogType(val) {
       this.isShowDialog = val;

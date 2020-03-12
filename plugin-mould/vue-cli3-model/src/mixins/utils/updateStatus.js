@@ -18,7 +18,7 @@ const updateStatus = {
      */
     isOffline(newV) {
       if (newV === -1) {
-        this.$router.push({ name: 'Offline' });
+        this.$router.push({ name: 'Offline' }).catch(err => { err; });
       }
     },
     lang: {
@@ -34,9 +34,9 @@ const updateStatus = {
      */
     initApp() {
       if (this.isOffline === -1) {
-        this.$router.push({ name: 'Offline' });
+        this.$router.push({ name: 'Offline' }).catch(err => { err; });
       } else {
-        this.$router.push({ path: '/' });
+        this.$router.push({ path: '/' }).catch(err => { err; });
       }
     }
   }

@@ -39,6 +39,26 @@
   }
 }
 
+.air-fan-swiper {
+  position: relative;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+  z-index: inherit;
+}
+
+.air-fan-name {
+  position: relative;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 85px;
+  z-index: 2;
+}
+
 .fan-name, .mode-name {
   position: relative;
   display: flex;

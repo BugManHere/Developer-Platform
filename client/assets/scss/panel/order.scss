@@ -6,4 +6,37 @@
   .transfer-body {
     width: 100%;
   }
+  >.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    >.col {
+      height: 264px;
+      width: 40%;
+      border: 1px solid #ddd;
+      overflow-y: auto;
+      .list-group {
+        .list-group-item {
+          border-right: 0;
+          border-left: 0;
+          background-color: #f0f0f0;
+          cursor: -webkit-grab;
+        }
+      } 
+      h3 {
+        margin: 12px 0;
+        font-size: 16px;
+        padding-left: 15px;
+      }
+    }
+  }
+  > caption {
+    // padding-left: 1%;
+    text-align: left;
+    width: 90%;
+    padding-top: 0;
+    letter-spacing: 0;
+    border-bottom: 1px #ddd solid;
+    margin-bottom: 15px;
+  }
 }

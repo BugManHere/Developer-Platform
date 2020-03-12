@@ -149,7 +149,15 @@ module.exports = {
     AssHt: '辅热',
     cwz: '陈文中',
     TemUn: '温度间隔',
-    AppTimer: '预约'
+    AppTimer: '预约',
+    FanLR: '双侧出风',
+    FanLR_左侧: '左侧出风',
+    FanLR_右侧: '右侧出风',
+    Follow: '风随',
+    Avoid: '风避',
+    Air: '新风',
+    Air_智能: '智能新风',
+    NobodySave: '无人节能'
   },
   sweep: {
     speedTitle: '扫风',

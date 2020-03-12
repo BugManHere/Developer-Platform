@@ -23,7 +23,7 @@
         >:first-child {
           &:hover {
             color: #469dff;
-            &:after {
+            &::after {
               position: relative;
               top: 2px;
               right: -1px;
@@ -35,7 +35,7 @@
         }
       }
       > :nth-child(5) {
-        min-width: 100px !important;
+        min-width: 150px !important;
         p {
           span {
             padding-left: 2px;

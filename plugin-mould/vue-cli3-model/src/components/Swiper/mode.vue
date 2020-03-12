@@ -81,6 +81,7 @@ export default {
     }),
     changeData(map) {
       this.setState(['watchLock', false]);
+      this.setState(['ableSend', true]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },
@@ -140,7 +141,7 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      this.changeData({Mod: toIndex});
+      this.changeData({Mod: toIndex, Emod: 0});
       this.updateList(index);
     },
     setFanName(index) {

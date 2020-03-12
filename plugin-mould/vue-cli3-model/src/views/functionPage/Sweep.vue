@@ -142,7 +142,7 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     turnBack() {
-      this.$router.push({ name: 'Home' });
+      this.$router.push({ name: 'Home' }).catch(err => { err; });
     },
     sweepLrChangeHandler(val) {
       const val2 = [];
@@ -194,8 +194,9 @@ export default {
         typeof data.SwingLfRig !== 'undefined' &&
         this.SwingLfRig !== data.SwingLfRig
       ) {
-        this.setDataObject(data);
-        this.sendCtrl(data);
+        this.setState(['ableSend', true]);
+        this.setDataObject({...data, SmartWind: 0});
+        this.sendCtrl({...data, SmartWind: 0});
         if (data.SwingLfRig === 0) {
           try {
             showToast(this.$language('sweep.sweep_lr_turnoff_tips'), 0);
@@ -206,6 +207,7 @@ export default {
       }
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
+        this.setState(['ableSend', true]);
         this.setDataObject(data);
         this.sendCtrl(data);
         if (data.SwUpDn === 0) {

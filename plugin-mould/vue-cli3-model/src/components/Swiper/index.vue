@@ -103,14 +103,14 @@ export default {
         freeModeMomentumVelocityRatio: 1,
         freeModeMomentumBounce: false,
         freeModeSticky: true,
-        freeModeMinimumVelocity: 0.05,
+        freeModeMinimumVelocity: 0.12,
       });
     }
   },
   mounted() {
     setTimeout(() => {
       this.$forceUpdate();
-    }, 0);
+    }, 50);
   },
   methods: {
     ...mapMutations({

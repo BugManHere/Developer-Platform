@@ -48,7 +48,7 @@ export default {
         .fetchGet("/productType")
         .then(data => {
           const productTypeList = data.data.productTypeList;
-          this.setDevState(["productTypeList", productTypeList]);
+          this.setDevModule(["productTypeList", productTypeList]);
           this.getImg();
         })
         .catch(err => {
@@ -62,7 +62,7 @@ export default {
   methods: {
     ...mapMutations({
       setFuncDefine: "SET_FUNC_DEFINE",
-      setDevState: "SET_DEV_OBJECT"
+      setDevModule: "SET_DEV_MODULE"
     }),
     chooseOne(key) {
       this.imgKey = this.imgKey === key ? undefined : key;

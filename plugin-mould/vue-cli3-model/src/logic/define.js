@@ -6,26 +6,26 @@ const LogicDefine = {
     return {
       g_outputMap: {},
       g_funcDefine: [],
-      g_logicMap: {},
-      g_disableMap: {}
+      g_excludeMap: {},
+      g_hideMap: {}
     };
   },
   mounted() {
     const { key } = require('@/../plugin.id.json');
-    const { funcDefine, logicMap, disableMap } = require(`@/../../../output/${key}.json`);
+    const { funcDefine, excludeMap, hideMap } = require(`@/../../../output/${key}.json`);
     this.g_funcDefine = funcDefine;
-    this.g_logicMap = JSON.parse(logicMap.json);
-    this.g_disableMap = JSON.parse(disableMap.json);
+    this.g_excludeMap = JSON.parse(excludeMap.json);
+    this.g_hideMap = JSON.parse(hideMap.json);
     this.g_outputMap = this.g_init();
   },
   computed: {
     g_funcDefine_btn() {
       return this.g_funcDefine.filter(item => {
-        return item.type === 'btn';
+        return item.type === 'active';
       });
     },
     /**
-     * @description g_funcDefine的map版本
+     * @description g_funcDefine的数组版本
      * @return Object {identifier: func}
      */
     g_identifierArr() {
@@ -33,7 +33,7 @@ const LogicDefine = {
       return result;
     },
     /**
-     * @description g_funcDefine的map版本
+     * @description g_funcDefine的对象版本
      * @return Object {identifier: func}
      */
     g_funcDefineMap() {
@@ -188,30 +188,30 @@ const LogicDefine = {
       return result;
     },
     /**
-     * @description 禁用的state列表
+     * @description 隐藏的state列表
      * @return Array: [state]
      */
-    g_disaleStateArr() {
+    g_hideStateArr() {
       const result = [];
       this.g_identifierArr.forEach(id => {
         const status = this.g_statusMap[id].status;
         const state = `${id}_${status}`;
-        if (this.g_disableMap[state]) {
-          result.push(...this.g_disableMap[state]);
+        if (this.g_hideMap[state]) {
+          result.push(...this.g_hideMap[state]);
         }
       });
       return result;
     },
     /**
-     * @description 禁用的function列表
+     * @description 隐藏的function列表
      * @return Array: [identifier]
      */
-    g_disableFuncArr() {
+    g_hideFuncArr() {
       const result = [];
       this.g_funcDefine.forEach(item => {
         const identifier = item.identifier;
         const stateOrder = item.order.map(item => `${identifier}_${item}`);
-        if (this.g_checkDisable(stateOrder, this.g_disaleStateArr)) {
+        if (this.g_checkHide(stateOrder, this.g_hideStateArr)) {
           result.push(identifier);
         }
       });
@@ -239,7 +239,7 @@ const LogicDefine = {
         ) {
           const statusName = order[currentIndex + index];
           const state = `${item.identifier}_${statusName}`;
-          !this.g_disaleStateArr.includes(state) && (status = order[currentIndex + index]);
+          !this.g_hideStateArr.includes(state) && (status = order[currentIndex + index]);
           index += 1;
         }
         // if (![len - 1, -1].includes(currentIndex)) {
@@ -275,7 +275,33 @@ const LogicDefine = {
         });
       });
       return arr;
-    }
+    },
+    /**
+     * @description 开关机下隐藏的图标
+     * @return Array
+     */
+    powHideArr() {
+      const result = [];
+      const checkIdArr = []; // 需要检查的id
+      const identifier = this.g_Pow; // 获取在define.js里面定义的g_Pow
+      const powState = this.g_statusMap[identifier].state; // pow的当前状态
+      const hideStateArr = this.g_hideMap[powState]; // 被pow隐藏的State
+      if (!hideStateArr) return [];
+      hideStateArr.forEach(stateItem => { // 挑选出需要检查的id
+        const checkId = this.g_stateToId[stateItem];
+        checkIdArr.includes(checkId) || checkIdArr.push(checkId);
+      });
+      checkIdArr.forEach(idItem => {
+        let pass = true; // 是否满足条件
+        const checkOrder = this.g_funcDefineMap[idItem].order; // id对应激活的status
+        checkOrder.forEach(statusItem => { // order下的所有status是否都被隐藏
+          const checkState = `${idItem}_${statusItem}`;
+          !hideStateArr.includes(checkState) && (pass = false);
+        });
+        pass && result.push(idItem); // 如满足条件，记下
+      });
+      return result;
+    },
   },
   methods: {
     g_init() {
@@ -320,11 +346,11 @@ const LogicDefine = {
      * @description 获取对象之间的关系
      * @return Number 0.相离 1.相交 2.被包含 3.包含 4.相等
      */
-    g_checkDisable(stateArr, disableArr) {
+    g_checkHide(stateArr, hideArr) {
       let result = true;
-      if (stateArr && disableArr && stateArr.length && disableArr.length) {
+      if (stateArr && hideArr && stateArr.length && hideArr.length) {
         stateArr.forEach(item => {
-          !disableArr.includes(item) && (result = false);
+          !hideArr.includes(item) && (result = false);
         });
       } else {
         return false;

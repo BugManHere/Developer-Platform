@@ -10,10 +10,17 @@
         <gree-header 
           theme="transparent"
           :left-options="{ preventGoBack: true }" 
-          :right-options="{ showMore: true }" 
+          :right-options="{ showMore: !functype }" 
           @on-click-back="goBack" 
           @on-click-more="moreInfo">
           {{ devname }}
+          <a 
+            class="save"
+            slot="right" 
+            v-if="functype"
+            @click="sceneSave">
+            保存
+          </a>
         </gree-header>
         <!-- 设备状态小图标 -->
         <div class="bar-top">
@@ -35,10 +42,15 @@
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
+        <div 
+          v-show="!Pow"
+          v-text="$language(`${Air? 'btn.Air' : 'home.powerOff'}`)" 
+          class="poweroff-tip"/>
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow"/>
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow" />
+        <airFanSwiper v-else-if="Air" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -55,10 +67,9 @@
       <!-- 底部弹框 -->
       <PopupBottom ref="PopupBottom" />
       <!-- 关机页面 -->
-      <gree-power-off 
+      <gree-power-off
         v-model="showPowOff" 
-        text="已关机"
-        :style="{ backgroundImage: 'url(' + power_off_bg + ')' }"/>
+        :style="{ backgroundImage: 'url(' + power_off_bg + ')' }" />
     </gree-page>
   </gree-view>
 </template>
@@ -67,7 +78,7 @@
 
 import { Header, PowerOff, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, showToast, changeBarColor } from '@PluginInterface';
+import { closePage, editDevice, showToast, changeBarColor, getCCcmd } from '@PluginInterface';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
 import homeConfig from '@/mixins/config/home.js';
@@ -75,6 +86,7 @@ import LogicDefine from '@/logic/define';
 import modeSwiper from '@/components/Swiper/mode';
 import temSwiper from '@/components/Swiper/tem';
 import fanSwiper from '@/components/Swiper/fan';
+import airFanSwiper from '@/components/Swiper/airFan';
 
 const imgList = [
   require('@/assets/img/mode/bg_auto.png'),
@@ -95,6 +107,7 @@ export default {
     modeSwiper,
     temSwiper,
     fanSwiper,
+    airFanSwiper,
   },
   mixins: [homeConfig, LogicDefine],
   data() {
@@ -106,12 +119,13 @@ export default {
     ...mapState({
       dataObject: state => state.dataObject,
       devname: state => state.deviceInfo.name,
-      functype: state => state.functype,
+      functype: state => state.dataObject.functype,
       mac: state => state.mac,
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
-      WdSpd: state => state.dataObject.WdSpd
+      WdSpd: state => state.dataObject.WdSpd,
+      Air: state => state.dataObject.Air,
     }),
     showPowOff() {
       return !this.Pow;
@@ -120,7 +134,8 @@ export default {
       return imgList[this.Mod];
     },
     power_off_bg() {
-      return require('@/assets/img/bg_off.png');
+      const Hot = this.Mod === this.$store.state.ModHeat;
+      return Hot ? require('@/assets/img/bg_off_heat.png') : require('@/assets/img/bg_off.png');
     },
     modName() {
       return this.modeNameList[this.Mod];
@@ -162,6 +177,7 @@ export default {
       const result = [];
       this.g_funcDefine.forEach(item => {
         const id = item.identifier;
+        if (!this.Pow && this.powHideArr.includes(id)) return;
         const statusName = this.g_statusMap[id].define.name;
         const map = {};
         const imgName = `${item.name}_${statusName}`;
@@ -174,14 +190,47 @@ export default {
         result.push(map);
       });
       return result;
+    },
+    airFanShow() {
+      return Boolean(!this.Pow && this.Air);
     }
   },
   watch: {
+    airFanShow(newVal) {
+      if (newVal) {
+        localStorage.WdSpd = this.WdSpd;
+        if (localStorage.AirWdSpd === undefined) {
+          this.setState(['watchLock', false]);
+          this.setDataObject({ WdSpd: 1 });
+          this.sendCtrl({ WdSpd: 1 });
+        } else {
+          this.setState(['watchLock', false]);
+          this.setDataObject({ WdSpd: Number(localStorage.AirWdSpd) });
+          this.sendCtrl({ WdSpd: Number(localStorage.AirWdSpd) });
+        }
+      } else {
+        localStorage.AirWdSpd = this.WdSpd;
+        if (localStorage.WdSpd === undefined) {
+          this.setState(['watchLock', false]);
+          this.setDataObject({ WdSpd: 0 });
+          this.sendCtrl({ WdSpd: 0 });
+        } else {
+          this.setState(['watchLock', false]);
+          this.setDataObject({ WdSpd: Number(localStorage.WdSpd) });
+          this.sendCtrl({ WdSpd: Number(localStorage.WdSpd) });
+        }
+      }
+    }
   },
   mounted() {
     this.$nextTick(() => {
       this.setCheckObject(this.dataObject);
     });
+    if (!this.Pow && this.Air) {
+      localStorage.AirWdSpd = this.WdSpd;
+    } else {
+      localStorage.WdSpd = this.WdSpd;
+    }
   },
   methods: {
     ...mapMutations({
@@ -194,6 +243,7 @@ export default {
     }),
     changeData(val) {
       this.setState(['watchLock', false]);
+      this.setState(['ableSend', true]);
       this.setDataObject(val);
       this.sendCtrl(val);
     },
@@ -209,13 +259,33 @@ export default {
     moreInfo() {
       editDevice(this.mac);
     },
+    // 场景模式保存按钮
+    sceneSave() {
+      const remarks = '...';
+      const opt = JSON.parse(
+        process.env.VUE_APP_JSON
+      );
+      const p = opt.map(item => {
+        return this.dataObject[item];
+      });
+      const json = JSON.stringify({ opt, p, t: 'cmd' });
+      console.log(json);
+      getCCcmd(this.mac, json, remarks, JSON.stringify(p));
+    },
     /**
      * @description: 底部功能按钮的点击事件
      */
     footerFunction(index) {
+      const setData = {};
       switch (index) {
         case 0:
-          this.changeData({ Pow: !this.Pow - 0 });
+          setData.Pow = !this.Pow - 0;
+          if (this.Pow) {
+            setData.Air = 0;
+          } else {
+            setData.Air = this.Air ? 1 : 3;
+          }
+          this.changeData(setData);
           break;
         case 1:
           this.$refs.PopupBottom.showPopup = true;

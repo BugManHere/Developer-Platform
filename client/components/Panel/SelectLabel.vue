@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncObject: "SET_FUNC_OBJECT",
+      setFuncModule: "SET_FUNC_MODULE",
     }),
     selectItem(index) {
       if (index === 'all') {
@@ -78,7 +78,7 @@ export default {
     commitSelect() {
       const selectLabel = deepCopy(this.selectLabel);
       selectLabel[this.selectSide] = this.selectType.concat();
-      this.setFuncObject(['selectLabel', selectLabel]);
+      this.setFuncModule(['selectLabel', selectLabel]);
     }
   },
 }

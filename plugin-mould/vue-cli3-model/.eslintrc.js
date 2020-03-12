@@ -21,6 +21,7 @@ module.exports = {
       { code: 180, ignoreStrings: true, ignoreComments: true }
     ], // 强制执行最大行长度
     'object-curly-newline': 0,
+    'prefer-const': 0, // 建议使用const
     'function-paren-newline': 0,
     'no-trailing-spaces': 0, // 有些规则需要换行，与vue推荐规则有点冲突
     'object-curly-spacing': 0,
@@ -31,9 +32,12 @@ module.exports = {
     'object-shorthand': ['error', 'properties'], // 当键与属性名称一样的时候，强制使用对象字面量简写
     'arrow-parens': ['error', 'as-needed'], // 参数只有一个时，箭头函数允许省略括号
     'import/extensions': 0, // 取消对文件扩展名的验证
-    "import/no-dynamic-require": 0,
+    'import/no-dynamic-require': 0,
     'import/no-unresolved': 0,
     'import/prefer-default-export': 0,
+    'no-confusing-arrow': 0, // 禁止在可能与比较操作符相混淆的地方使用箭头函数
+    'no-new': 0, // 禁止使用 new 以避免产生副作用
+    'no-multi-assign': 0, // 禁止连续赋值
     // disallow reassignment of function parameters disallow parameter object
     // manipulation except for specific exclusions
     'no-param-reassign': [
@@ -50,6 +54,16 @@ module.exports = {
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'vue/html-self-closing': 0,
+    'vue/max-attributes-per-line': [
+      2,
+      {
+        singleline: 20,
+        multiline: {
+          max: 1,
+          allowFirstLine: false
+        }
+      }
+    ],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'

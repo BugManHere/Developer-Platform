@@ -1,15 +1,22 @@
 <template>
   <div class="product">
     <div>
+      <!-- 顶部信息栏 -->
       <div class="message">
+        <!-- 头部 -->
         <div class="frame-header">
+          <!-- 标题 -->
           <span v-text="'产品信息'" />
+          <!-- 按钮 -->
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default" v-text="'修改'" />
           </div>
         </div>
+        <!-- 内容 -->
         <div class="body">
-          <img src="@public/img/product/aircondition.png" />
+          <!-- 设备图片 -->
+          <img :src="imgPath" />
+          <!-- 设备目前状态 -->
           <div>
             <p v-text="deviceInfo.deviceName" />
             <p>
@@ -17,6 +24,7 @@
               <span> <i></i>量产：未量产 </span>
             </p>
           </div>
+          <!-- 设备信息 -->
           <div>
             <div v-for="(val, key) in deviceInfo" :key="key">
               <p v-text="key" />
@@ -25,23 +33,32 @@
           </div>
         </div>
       </div>
-      <!-- 主要内容 -->
+      <!-- 中间主要内容 -->
       <div class="panel-body" v-if="pageOption">
+        <!-- 头部 -->
         <div class="frame-header">
+          <!-- 标题 -->
           <span v-html="pageOption.title" />
-          <div class="btn-group" role="group" aria-label="..." v-if="pageOption.rightBtn">
+          <!-- 按钮组 -->
+          <div 
+            class="btn-group"
+            role="group"
+            aria-label="..."
+            v-for="(item, index) in pageOption.rightBtnList"
+            :key="index">
             <button
               type="button"
               class="btn btn-default"
-              v-show="pageOption.rightBtn.name"
-              @click="pageOption.rightBtn.method"
-              v-html="pageOption.rightBtn.name"
+              @click="item.method"
+              v-html="item.name"
             />
           </div>
         </div>
+        <!-- 内容 -->
         <component :is="pageOption.component"></component>
       </div>
     </div>
+    <!-- 底部按钮组 -->
     <div class="bottom-panel" v-show="currentFuncId === false">
       <button
         type="button"
@@ -57,44 +74,52 @@
         v-text="item.text"
       />
     </div>
+    <Panel :options="QuoteFuncOptions"/>
   </div>
 </template>
 
 <script>
 import { randomKey, deepCopy } from "@/utils";
-import BooleanTable from "@components/Table/Boolean";
-import EnumerateTable from "@components/Table/Enumerate";
+import ActiveTable from "@components/Table/ActiveFunc";
+import InertiaTable from "@components/Table/InertiaFunc";
 import LogicTable from "@components/Table/Logic";
+import OtherConfigTable from "@components/Table/OtherConfig";
+import Panel from "@components/Panel/index";
 import https from "@/https";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "ProductInfo",
   components: {
-    BooleanTable,
-    EnumerateTable,
-    LogicTable
+    ActiveTable,
+    InertiaTable,
+    LogicTable,
+    OtherConfigTable,
+    Panel
   },
   props: ["deviceKey"],
   data() {
     return {
       currentDev: {},
-      deviceInfo: {}
+      deviceInfo: {},
+      quoteShow: false,
+      imgPath: require('@public/img/product/Hangon.png')
     };
   },
   watch: {
     devSetStep(newVal) {
       if (newVal === 3) {
-        this.$router.push({ name: "Home" });
         this.$toast.info("保存成功");
+      } else if (newVal === 4) {
+        this.$router.push({ name: "Home" });
       }
     }
   },
   destroyed() {
-    this.setFuncObject(["devSetStep", 0]);
+    this.setFuncModule(["devSetStep", 0]);
   },
   created() {
-    this.setFuncObject(["deviceKey", this.deviceKey]);
+    this.setFuncModule(["deviceKey", this.deviceKey]);
   },
   mounted() {
     if (
@@ -107,7 +132,7 @@ export default {
     https
       .fetchPost("/device", { admin: this.admin })
       .then(data => {
-        this.setDevState(["hasDeviceList", data.data.hasDeviceList]);
+        this.setDevModule(["hasDeviceList", data.data.hasDeviceList]);
         this.init();
       })
       .catch(err => {
@@ -120,47 +145,99 @@ export default {
     ...mapState({
       admin: state => state.userModule.admin,
       productTypeList: state => state.devModule.productTypeList,
+      productFunc: state => state.devModule.productFunc,
       hasDeviceList: state => state.devModule.hasDeviceList,
       devSetStep: state => state.funcModule.devSetStep,
       currentFuncId: state => state.funcModule.currentFuncId,
+      excludeMap: state => state.funcModule.excludeMap,
+      hideMap: state => state.funcModule.hideMap,
+      disableMap: state => state.funcModule.disableMap,
       funcDefine: (state, getters) => getters.funcDefine,
-      logicMap: (state, getters) => getters.logicMap,
-      disableMap: (state, getters) => getters.disableMap,
-      labelList: (state, getters) => getters.labelList
+      // excludeMap: (state, getters) => getters.excludeMap,
+      // hideMap: (state, getters) => getters.hideMap,
+      // disableMap: (state, getters) => getters.disableMap,
+      labelList: (state, getters) => getters.labelList,
     }),
+    // 页面内容设置
     pageOption() {
       switch (this.devSetStep) {
         case 0:
           return {
-            title: "功能-参与布局",
-            rightBtn: {
-              name: "添加",
-              method: this.$_addFunc
-            },
-            component: "BooleanTable"
+            title: "活跃功能-按钮",
+            rightBtnList: [
+              {
+                name: "添加",
+                method: this.$_addFunc
+              },
+              {
+                name: '引入',
+                method: this.$_quote
+              }
+            ],
+            component: "ActiveTable"
           };
         case 1:
           return {
-            title: "功能-不参与布局",
-            rightBtn: {
-              name: "添加",
-              method: this.$_addFunc
-            },
-            component: "EnumerateTable"
+            title: "惰性功能",
+            rightBtnList: [
+              {
+                name: "添加",
+                method: this.$_addFunc
+              },
+              {
+                name: '引入',
+                method: this.$_addFunc
+              }
+            ],
+            component: "InertiaTable"
           };
         case 2:
           return {
-            title: "互斥",
-            rightBtn: {
-              name: "查看所有互斥",
-              method: this.showAllLogic
-            },
+            title: "逻辑",
+            rightBtnList: [
+              {
+                name: "查看所有逻辑",
+                method: this.showAllLogic
+              }
+            ],
             component: "LogicTable"
+          };
+        case 3:
+          return {
+            title: "其他配置",
+            component: "OtherConfigTable"
           };
         default:
           return {};
       }
     },
+    // 【引入功能】页面设置
+    QuoteFuncOptions() {
+      let options = {
+        show: this.quoteShow,
+        class: 'medium',
+        title: '引入功能',
+        miniBtn: {
+          close: {
+            method: () => {
+              // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+              this.quoteShow = false;
+            }
+          }
+        },
+        bottomBtn: {
+          done: {
+            selfMethod: ""
+          }
+        },
+        component: {
+          name: "QuoteFunc",
+          ref: "QuoteFunc"
+        }
+      };
+      return options;
+    },
+    // 底部按钮设置
     bottomBtnOptions() {
       const result = [];
       const save = {
@@ -214,8 +291,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDevState: "SET_DEV_OBJECT",
-      setFuncObject: "SET_FUNC_OBJECT"
+      setDevModule: "SET_DEV_MODULE",
+      setFuncModule: "SET_FUNC_MODULE"
     }),
     ...mapActions({
       postFunc: "POST_FUNC",
@@ -225,38 +302,54 @@ export default {
     init() {
       const hasDeviceList = this.hasDeviceList;
       const funcDefineList = {};
-      const logicMap = {};
-      const disableMap = {};
+      // const excludeMap = {};
+      // const hideMap = {};
+      // const disableMap = {};
       hasDeviceList.forEach(val => {
         funcDefineList[val._id] = val.funcDefine;
-        const logicRes = JSON.parse(val.logicMap.json);
-        const disableRes = JSON.parse(val.disableMap.json);
-        logicMap[val._id] = logicRes;
-        disableMap[val._id] = disableRes;
+        // const logicRes = JSON.parse(val.excludeMap.json);
+        // const hideRes = JSON.parse(val.disableMap.json);
+        // const disableRes = JSON.parse(val.disableMap.json);
+        // excludeMap[val._id] = logicRes;
+        // hideMap[val._id] = hideRes;
+        // disableMap[val._id] = disableRes;
       });
-      this.setFuncObject(["funcDefineList", funcDefineList]);
-      this.setFuncObject(["logicMap", logicMap]);
-      this.setFuncObject(["disableMap", disableMap]);
+      this.setFuncModule(["funcDefineList", funcDefineList]);
+      // this.setFuncModule(["excludeMap", excludeMap]);
+      // this.setFuncModule(["hideMap", hideMap]);
+      // this.setFuncModule(["disableMap", disableMap]);
       this.getInfo();
+      this.getProductFunc(); // 获取这个产品在其他地方定义过的功能
     },
     getInfo() {
       const hasDeviceList = deepCopy(this.hasDeviceList);
       this.currentDev = hasDeviceList.find(item => item._id === this.deviceKey);
       this.deviceInfo = {
         产品品牌: this.currentDev.brand,
-        产品品类: this.currentDev.deviceName,
+        产品类别: this.currentDev.productName,
+        产品名称: this.currentDev.deviceName,
         产品型号: this.currentDev.productModel,
         通讯协议: this.currentDev.protocol,
         创建时间: this.currentDev.createTime
       };
+      // @public/img/product/Hangon.png
+      this.imgPath = require(`@public/img/product/${this.currentDev.imgPath}`)
+      this.setFuncModule(['productID', this.currentDev.productID]);
     },
+    getProductFunc() {
+      https.fetchGet("/productFunc", {productID: this.currentDev.productID})
+        .then(res => {
+          this.setDevModule(['productFunc', res.data]);
+        })
+    },
+    // 点击添加
     $_addFunc() {
       const name = `未命名${randomKey(4)}`;
       const insertMap = {
         name: name,
         identifier: "-",
         json: "-",
-        type: "self",
+        type: "inertia",
         statusDefine: {
           default: {
             name: "默认",
@@ -274,7 +367,7 @@ export default {
         order: []
       };
       if (!this.devSetStep) {
-        insertMap.type = "btn";
+        insertMap.type = "active";
         insertMap.statusDefine.status_1 = {
           name: "开启",
           value: 1,
@@ -291,17 +384,17 @@ export default {
         res;
       });
     },
-    setStep(val = -1) {
-      this.setFuncObject(["devSetStep", this.devSetStep + val]);
+    $_quote() {
+      this.quoteShow = this.devSetStep ? 'inertia' : 'active';
     },
+    setStep(val = -1) {
+      this.setFuncModule(["devSetStep", this.devSetStep + val]);
+    },
+    // 点击暂存
     saveRes(nextStep = true) {
       const funcDefine = JSON.stringify(this.funcDefine);
-      const logicMap = JSON.stringify(this.logicMap);
-      const disableMap = JSON.stringify(this.disableMap);
       this.postFunc({
         funcDefine,
-        logicMap,
-        disableMap,
         key: this.deviceKey
       }).then(status => {
         status && (nextStep ? this.setStep(1) : this.$toast.info("保存成功"));
@@ -311,16 +404,17 @@ export default {
       const selectLabel = {};
       selectLabel.col = Array(this.labelList.length).fill(true);
       selectLabel.row = Array(this.labelList.length).fill(true);
-      this.setFuncObject(["selectLabel", selectLabel]);
+      this.setFuncModule(["selectLabel", selectLabel]);
     },
     settingDone() {
       const funcDefine = JSON.stringify(this.funcDefine);
-      const logicMap = JSON.stringify(this.logicMap);
-      const disableMap = JSON.stringify(this.disableMap);
+      const excludeMap = JSON.stringify(this.excludeMap);
+      const hideMap = JSON.stringify(this.hideMap);
+      this.setStep(1);
       this.setDone({
         funcDefine,
-        logicMap,
-        disableMap,
+        excludeMap,
+        hideMap,
         key: this.deviceKey
       });
     }

@@ -37,17 +37,17 @@
                 color: #a0a0a0;
               }
               :hover {
-                &:before {
+                &::before {
                   color: #7B7B7B;  
                 }
               }
               .edit-ok {
-                &:before {
+                &::before {
                   content: "\e013";
                 }
               }
               .edit-remove {
-                &:before {
+                &::before {
                   content: "\e014";
                 }
               }
@@ -60,7 +60,7 @@
           }
           &.selectable {
             cursor: pointer;
-            &:after {
+            &::after {
               position: absolute;
               right: 10px;
               font-family: 'Glyphicons Halflings';
@@ -73,7 +73,7 @@
         }
         &.must {
           .edit-header {
-            &:before {
+            &::before {
               content: '*';
               position: relative;
               font-family: SimSun;
@@ -101,7 +101,7 @@
           border-radius: 4px 4px 0 0;
           border: 1px solid #f5f5f5;
           border-bottom: 1px solid #D6DEE6;
-          &:after {
+          &::after {
             position: absolute;
             right: 10px;
             font-family: 'Glyphicons Halflings';

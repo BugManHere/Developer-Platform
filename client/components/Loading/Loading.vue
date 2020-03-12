@@ -8,21 +8,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  }
-}
-</script>
-
 <style lang="scss">
 .gr-loading {
   position: absolute;
-  top: 0;
+  top: 24px;
   left: 0;
   width: 100%;
   height: 80%;

@@ -1,13 +1,18 @@
 import { timerListDevice } from '@PluginInterface';
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 const Customize = {
   computed: {
+    ...mapState({
+      mac: state => state.mac
+    }),
     customize() {
       return {
         AppTimer: () => {
+          console.log('1');
           try {
-            timerListDevice();
+            console.log('2');
+            timerListDevice(this.mac);
           } catch (e) {
             console.log('%c running timerListDevice()', 'color: blue');
           }

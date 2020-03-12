@@ -9,6 +9,15 @@
     background-position: center;
     background-size: 100% 100%;
     overflow: hidden;
+    .gree-header-right {
+      height: 100%;
+      .save {
+        font-size: 48px;
+        line-height: 48px;
+        color: #fff;
+        font-weight: 500;
+      }
+    }
     .bar-top {
       position: absolute;
       top: 113px;
@@ -35,6 +44,15 @@
       left: 0;
       font-size: 140px;
       text-align: center;
+    }
+    .poweroff-tip {
+      position: relative;
+      z-index: 2;
+      color: hsla(0,0%,44%,.75);
+      font-size: 100px;
+      display: flex;
+      justify-content: center;
+      margin: 200px 0 100px 0;
     }
   }
   .page-footer {

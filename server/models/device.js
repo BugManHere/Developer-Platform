@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 // 创建孙子文档 
-const logicSchema = new mongoose.Schema({
+const excludeSchema = new mongoose.Schema({
   json: String
 })
 
 // 创建孙子文档 
-const disableSchema = new mongoose.Schema({
+const hideSchema = new mongoose.Schema({
   json: String
 })
 
@@ -24,14 +24,16 @@ const funcSchema = new mongoose.Schema({
 // 创建子文档 hasDeviceList
 const listSchema = new mongoose.Schema({
   productID: Number,
+  productName: String,
   deviceID: Number,
   brand: String,
   deviceName: String,
   productModel: String,
   protocol: String,
   createTime: String,
-  logicMap: logicSchema,
-  disableMap: disableSchema,
+  imgPath: String,
+  excludeMap: excludeSchema,
+  hideMap: hideSchema,
   funcDefine: [funcSchema],
 })
 

@@ -82,7 +82,7 @@ export default {
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'});
+        this.$router.push({name: 'Home'}).catch(err => { err; });
         try {
           showToast('空调已被关闭，自动退出智能新风设置。', 1);
         } catch (e) {
@@ -106,11 +106,13 @@ export default {
     }),
     switchSmartWind(active) {
       const setData = {SmartWind: Number(active)};
+      this.setState(['ableSend', true]);
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
     setSmartWind(option) {
       const setData = {SmartWind: option.value};
+      this.setState(['ableSend', true]);
       this.setDataObject(setData);
       this.sendCtrl(setData);
     }

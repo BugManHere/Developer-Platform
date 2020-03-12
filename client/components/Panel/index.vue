@@ -3,7 +3,7 @@
     <!-- 蒙版 -->
     <div class="overlay-backdrop" v-if="options.show" />
     <!-- 内容 -->
-    <div class="edit-box" :class="options.class" v-fade:show="options.show" :style="{top: `${options.class === 'big' ? documentHeight - 150 : documentHeight}px`}">
+    <div class="edit-box" :class="options.class" v-fade:show="options.show" :style="{top: `${ documentHeight - {big: 150, medium: 75, undefined: 0}[options.class]}px`}">
       <div class="panel panel-default" v-if="panelShow">
         <!-- 顶栏 -->
         <div class="panel-heading">
@@ -51,6 +51,7 @@ import StatusDef from "./StatusDef";
 import OrderDef from "./OrderDef";
 import SelectLabel from "./SelectLabel";
 import SelectPage from "./SelectPage";
+import QuoteFunc from "./QuoteFunc";
 import { mapMutations } from "vuex";
 
 export default {
@@ -58,7 +59,8 @@ export default {
     StatusDef,
     OrderDef,
     SelectLabel,
-    SelectPage
+    SelectPage,
+    QuoteFunc
   },
   props: {
     options: {
@@ -136,7 +138,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncObject: "SET_FUNC_OBJECT"
+      setFuncModule: "SET_FUNC_MODULE"
     }),
     btnFunc(key, type) {
       const methodKey = this.options[type][key].selfMethod;

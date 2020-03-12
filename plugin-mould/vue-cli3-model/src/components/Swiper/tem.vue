@@ -85,12 +85,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT'
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(val) {
+      this.setState(['ableSend', true]);
       this.setDataObject(val);
       this.sendCtrl(val);
     },

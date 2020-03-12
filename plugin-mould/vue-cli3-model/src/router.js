@@ -1,10 +1,3 @@
-/*
- * @Author: Jerry-Rain
- * @Date: 2019-09-10 15:34:24
- * @LastEditors: Jerry-Rain
- * @LastEditTime: 2019-12-13 00:44:36
- * @Description: 
- */
 import Vue from 'vue';
 import Router from 'vue-router';
 
@@ -29,6 +22,8 @@ const NoBodySave = r =>
   require.ensure([], () => r(require('./views/functionPage/NoBodySave')));
 const Lig = r =>
   require.ensure([], () => r(require('./views/functionPage/Lig')));
+const Air = r =>
+  require.ensure([], () => r(require('./views/functionPage/Air')));
 const AssHt = r =>
   require.ensure([], () => r(require('./views/functionPage/AssHt')));
 const Dazzling = r =>
@@ -76,6 +71,11 @@ export default new Router({
       path: '/NoBodySave',
       name: 'NoBodySave',
       component: NoBodySave
+    },
+    {
+      path: '/Air',
+      name: 'Air',
+      component: Air
     },
     {
       path: '/Lig',

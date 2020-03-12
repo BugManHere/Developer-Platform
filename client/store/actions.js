@@ -1,5 +1,5 @@
 import {
-  SET_DEV_OBJECT,
+  SET_DEV_MODULE,
   SET_FUNC_DEFINE,
   POST_FUNC,
   EDIT_FUNC,
@@ -13,11 +13,11 @@ import { deepCopy } from "@/utils";
 function updateDeviceList({ commit, state }, key, funcDefine) {
   const hasDeviceList = deepCopy(state.devModule.hasDeviceList)
   hasDeviceList.find(item => item._id = key).funcDefine = funcDefine;
-  commit(SET_DEV_OBJECT,['hasDeviceList', hasDeviceList]);
+  commit(SET_DEV_MODULE,['hasDeviceList', hasDeviceList]);
 }
 
 export default {
-  // 更新功能
+  // 用于更新功能
   // eslint-disable-next-line
   async [POST_FUNC]({ commit, state }, obj) {
     const funcDefine = JSON.parse(obj.funcDefine);

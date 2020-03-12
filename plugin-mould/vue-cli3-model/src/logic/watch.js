@@ -37,16 +37,6 @@ const LogicWatch = {
         });
       },
       deep: true
-    },
-    g_disaleStateArr: {
-      handler(newVal) {
-        if (this.watchLock || !newVal) return;
-        this.g_identifierArr.forEach(id => {
-          const state = this.g_statusMap[id].state;
-          newVal.includes(state) && this.g_runLogic(id);
-        });
-      },
-      deep: true
     }
   },
   methods: {
@@ -64,8 +54,8 @@ const LogicWatch = {
      * @description 检查互斥
      */
     g_checkLogic(state) {
-      if (this.g_logicMap[state] && this.g_logicMap[state].length) {
-        const itemLogicMap = this.g_logicMap[state];
+      if (this.g_excludeMap[state] && this.g_excludeMap[state].length) {
+        const itemLogicMap = this.g_excludeMap[state];
         itemLogicMap.forEach(item => {
           const id = this.g_stateToId[item];
           if (!id) return;

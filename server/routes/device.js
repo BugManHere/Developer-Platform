@@ -38,11 +38,7 @@ router.post('/', function(req, res, next) {
 router.post('/save', function(req, res, next) {
   const body = global.adminInfo.hasDeviceList.id(req.body.key);
   const funcDefine = JSON.parse(req.body.funcDefine);
-  const logicMap = req.body.logicMap;
-  const disableMap = req.body.disableMap;
   body.funcDefine = funcDefine;
-  body.logicMap.json = logicMap;
-  body.disableMap.json = disableMap;
   global.adminInfo.save()
     .then(v => {
       res.json(v);
@@ -101,11 +97,11 @@ router.post('/done', function(req, res, next) {
   const key = req.body.key;
   const body = global.adminInfo.hasDeviceList.id(key);
   const funcDefine = JSON.parse(req.body.funcDefine);
-  const logicMap = req.body.logicMap;
-  const disableMap = req.body.disableMap;
+  const excludeMap = req.body.excludeMap;
+  const hideMap = req.body.hideMap;
   body.funcDefine = funcDefine;
-  body.logicMap.json = logicMap;
-  body.disableMap.json = disableMap;
+  body.excludeMap.json = excludeMap;
+  body.hideMap.json = hideMap;
   global.adminInfo.save((err, product) => {
     if (err) {
       console.log(err);

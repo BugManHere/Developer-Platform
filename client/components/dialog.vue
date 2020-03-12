@@ -45,7 +45,7 @@
               @click="selectDevice(index)"
             >
               <p class="thumbnail">
-                <img :src="require(`@public/img/${item.img}`)">
+                <img :src="require(`@public/img/product/${item.img}`)">
                 <span v-text="item.devName"/>
               </p>
             </div>
@@ -58,7 +58,7 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">品类</label>
               <div class="col-sm-10">
-                <img :src="require(`@public/img/${productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].img}`)">
+                <img :src="require(`@public/img/product/${productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].img}`)">
                 <span class="form-control-static" v-text="productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].devName"/>
               </div>
             </div>
@@ -181,8 +181,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDevState: "SET_DEV_OBJECT",
-      setFuncObject: "SET_FUNC_OBJECT",
+      setDevModule: "SET_DEV_MODULE",
+      setFuncModule: "SET_FUNC_MODULE",
     }),
     hideDialog() {
       this.$emit("hideDialog", false);
@@ -196,6 +196,9 @@ export default {
     goState(index) {
       if (!this.productTypeList[this.deviceInfo.productID].deviceTypeList) return;
       this.currentStatus = index;
+      const productList = this.productTypeList[this.deviceInfo.productID].deviceTypeList[this.deviceInfo.deviceID];
+      this.deviceInfo.productName = productList.name; // 设置产品名字
+      this.deviceInfo.imgPath = productList.img; // 图片地址
     },
     setDeviceName(evt) {
       this.$set(this.deviceInfo, 'deviceName', evt.target.value);
@@ -207,7 +210,7 @@ export default {
       https.fetchPost('/productType', this.deviceInfo)
         .then((data) => {
           const hasDeviceList = data.data.hasDeviceList;
-          this.setDevState(['hasDeviceList', hasDeviceList]);
+          this.setDevModule(['hasDeviceList', hasDeviceList]);
         })
         .catch((err) => {
           console.log(err);

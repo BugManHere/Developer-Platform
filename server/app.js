@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var productTypeRouter = require('./routes/productType');
+var productFuncRouter = require('./routes/productFunc');
 var deviceRouter = require('./routes/device');
 // var httpsRouter = require('./routes/https');
 var usersRouter = require('./routes/users');
@@ -46,6 +47,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('/', indexRouter);
 app.use('/productType', productTypeRouter);
+app.use('/productFunc', productFuncRouter);
 app.use('/device', deviceRouter);
 // app.use('/https', httpsRouter);
 app.use('/users', usersRouter);

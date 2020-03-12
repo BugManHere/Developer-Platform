@@ -4,18 +4,19 @@ const state = {
   watchLock: true,
   autoAbleSetTem: false,
   swiperHold: false,
+  ableSend: false, // 是否允许发送命令
   dataObject: {
     Pow: 1,
-    Mod: 2,
-    SetTem: 17,
+    Mod: 1,
+    SetTem: 25,
     WdSpd: 4,
-    'Add0.5': 1,
-    'Add0.1': 6,
+    'Add0.5': 0,
+    'Add0.1': 0,
     Lig: 1,
     LigSen: 1,
-    has05: 0,
-    has01: 1,
-    functype: 1, // 0代表正常，1代表集中控制
+    has05: 1,
+    has01: 0,
+    functype: 0, // 0代表正常，1代表集中控制
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

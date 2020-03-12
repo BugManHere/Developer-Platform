@@ -1,26 +1,51 @@
 <template>
   <div>
     <div class="order-body" role="group">
-      <transfer v-if="statusSetStep === 1" class="transfer-body" :optionslList="optionslList" @itemList="getOrderList"/>
+      <caption>惰性状态：不参与互斥（禁用），不主动跳转到此状态<br/>
+      活跃状态：参与互斥（禁用），可<strong>按照排列顺序</strong>主动跳转到此状态（由上往下）</caption>
+      <div class="row">
+        <div class="col">
+          <h3>惰性状态</h3>
+          <draggable class="list-group" :list="leftList" group="people">
+            <div
+              class="list-group-item"
+              v-for="(element, index) in leftList"
+              :key="index"
+              v-text="element.name"
+            />
+          </draggable>
+        </div>
+        <div class="col">
+          <h3>活跃状态</h3>
+          <draggable class="list-group" :list="rightList" group="people">
+            <div
+              class="list-group-item"
+              v-for="(element, index) in rightList"
+              :key="index"
+              v-text="element.name"
+            />
+          </draggable>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import draggable from "vuedraggable";
 import { deepCopy } from "@/utils";
-import transfer from '@components/Transfer';
 import _difference from 'lodash/difference';
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
-    transfer,
+    draggable
   },
   data() {
     return {
-      constList: ['undefined', 'default'],
-      isTransferShow: true,
-      inputKey: {},
+      constKeys: ['default', 'undefined'], // 固定的状态
+      leftList: [], // 左边List
+      rightList: [], // 右边List
     }
   },
   computed: {
@@ -28,78 +53,53 @@ export default {
       currentFuncId: state => state.funcModule.currentFuncId,
       deviceKey: state => state.funcModule.deviceKey,
       statusSetStep: state => state.funcModule.statusSetStep,
-      allStatusList: state => state.funcModule.allStatusList,
-      selectStatusList: state => state.funcModule.selectStatusList,
-      orderList: state => state.funcModule.orderList,
+      currentStatusList: state => state.funcModule.currentStatusList,
+      activeStatusList: state => state.funcModule.activeStatusList,
       funcDefine: (state, getters) => getters.funcDefine,
     }),
-    rightList() {
-      // return _difference(this.funcDefine[this.currentFuncId].order, this.constList);
-      return this.selectStatusList.concat();
-    },
-    leftList() {
-
-      return _difference(this.allStatusList, [...this.rightList, ...this.constList]);
-    },
-    optionslList() {
+  },
+  mounted() {
+    // 填入左边List
+    const leftListKeys = _difference(this.currentStatusList, [...this.activeStatusList, ...this.constKeys]); // 所有的状态 - 活跃的状态 - 固定的状态 = 惰性状态
+    this.leftList = leftListKeys.map(key => {
       return {
-        left: this.keyToName(this.leftList, 'left'),
-        right: this.keyToName(this.rightList, 'right'),
-        const: this.keyToName(this.constList, 'const'),
-      }
-    }
+        name: this.funcDefine[this.currentFuncId].statusDefine[key].name, // 利用key获取状态名称
+        key
+      };
+    });
+    // 填入右边List
+    this.rightList = this.activeStatusList.map(key => {
+      return {
+        name: this.funcDefine[this.currentFuncId].statusDefine[key].name, // 利用key获取状态名称
+        key
+      };
+    });
   },
   methods: {
     ...mapMutations({
-      setFuncObject: "SET_FUNC_OBJECT",
-      setFuncDefine: "SET_FUNC_DEFINE"
+      setFuncModule: "SET_FUNC_MODULE",
     }),
     ...mapActions({
       editFunc: "EDIT_FUNC",
     }),
-    keyToName(arr, key) {
-      if (!this.funcDefine.length) return {};
-      switch (key) {
-        case 'left':
-        case 'right':
-          this.inputKey[key] = arr;
-          break;
-        default:
-          break;
-      }
-      return arr.map(item => {
-        console.log(arr);
-        console.log(item);
-        return this.funcDefine[this.currentFuncId].statusDefine[item].name;
-      });
-    },
-    getOrderList(val) {
-      const map = {};
-      val.right.forEach((item, index) => {
-        if (item !== -1) {
-          map[item] = this.inputKey.right[index];
-        }
-      })
-      val.left.forEach((item, index) => {
-        if (item !== -1) {
-          map[item] = this.inputKey.left[index];
-        }
-      })
-      const orderList = Object.values(map);
-      this.setFuncObject(['orderList', orderList]);
-      console.log(orderList);
-    },
     settingDone() {
+      // 根据右边List生成order
+      const order = this.rightList.map(item => {
+        return item.key;
+      });
+      // 深复制funcDefine
       const funcDefine = deepCopy(this.funcDefine);
-      funcDefine[this.currentFuncId].order = this.orderList;
+      funcDefine[this.currentFuncId].order = order;
+      // 改变state里的funcDefine
       this.editFunc({
         index: this.currentFuncId,
         key: this.deviceKey,
         funcDefine: JSON.stringify(funcDefine)
       })
-      this.setFuncObject(["currentFuncId", false]);
-      this.setFuncObject(["statusSetStep", 0]);
-      this.setFuncObject(["selectStatusList", null]);
+      // 设置完成，数据初始化
+      this.setFuncModule(["currentFuncId", false]);
+      this.setFuncModule(["statusSetStep", 0]);
+      this.setFuncModule(["activeStatusList", null]);
     }
   }
 }

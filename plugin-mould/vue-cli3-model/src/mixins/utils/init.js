@@ -21,9 +21,6 @@ const mixin = {
       dataObject: state => state.dataObject
     })
   },
-  mounted() {
-    console.log(this.dataObject);
-  },
   methods: {
     ...mapMutations({
       setMac: SET_MAC,
@@ -41,22 +38,26 @@ const mixin = {
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
 
-      const DataObject = dataArr;
+      const DataObject = JSON.parse(dataArr);
       console.log(DataObject);
+      console.log(typeof DataObject);
 
-      const functype = getQueryStringByName('functype');
+      const functype = JSON.parse(getQueryStringByName('functype'));
       console.log(`functype: ${functype}`);
 
       const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
       hasReportedForRepair === 'true'
         ? this.setRepair(true)
         : this.setRepair(false);
-        
+      
       DataObject.functype = functype;
+      console.log('setMac');
       this.setMac(mac);
+      console.log('getDeviceInfo');
       this.getDeviceInfo(mac);
       DataObject && this.setCheckObject(DataObject);
       DataObject && this.setDataObject(DataObject);
+      console.log('finish');
     }
   }
 };

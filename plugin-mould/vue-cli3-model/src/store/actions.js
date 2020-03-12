@@ -35,6 +35,7 @@ function sendControl({ state, commit }, dataMap) {
       return;
     }
     commit(SET_STATE, ['watchLock', true]);
+    commit(SET_STATE, ['ableSend', false]);
     sendTime = 0;
     const setOpt = [];
     const setP = [];
@@ -52,6 +53,7 @@ function sendControl({ state, commit }, dataMap) {
     const p = setP;
     const json = JSON.stringify({ mac, t, opt, p });
     console.table([opt, p]);
+    console.log([opt, p]);
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
         // 发送指令后暂停接收，过8秒后重启轮询
@@ -116,7 +118,7 @@ function getStatusOfDev({ state, commit }) {
       for (let i = 0, j = cols.length; i < j; i += 1) {
         DataObject[cols[i]] = res[i]; // 遍历查询到的数据，将值写入state中的DataObject，根据业务更改
       }
-      if (!state.functype && !state.uilock) {
+      if (!state.dataObject.functype && !state.uilock) {
         // 非场景时提交数据
         commit(SET_CHECK_OBJECT, DataObject);
         commit(SET_DATA_OBJECT, DataObject);
@@ -192,8 +194,10 @@ export default {
         dataMap[key] = DataObject[key];
       }
     });
-    if (!state.functype && p.length !== 0) {
+    if (!state.dataObject.functype && state.ableSend && p.length !== 0) {
       sendControl({ state, commit }, dataMap);
+    } else {
+      commit(SET_STATE, ['watchLock', true]);
     }
   }
 };

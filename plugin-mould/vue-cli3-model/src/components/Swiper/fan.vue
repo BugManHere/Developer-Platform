@@ -47,8 +47,8 @@ export default {
         {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4},
         {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5}
       ];
-      const hasTur = !this.g_disableFuncArr.includes('Fan_tur');
-      const hasQuiet = !this.g_disableFuncArr.includes('Fan_quiet');
+      const hasTur = !this.g_hideFuncArr.includes('Fan_tur');
+      const hasQuiet = !this.g_hideFuncArr.includes('Fan_quiet');
       hasTur && (list.push({img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6}));
       hasQuiet && (list.push({img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7}));
       return list;
@@ -100,6 +100,7 @@ export default {
     }),
     changeData(map) {
       this.setState(['watchLock', false]);
+      this.setState(['ableSend', true]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },
@@ -191,6 +192,7 @@ export default {
           break;
         default:
           this.changeData({Tur: 0, Quiet: 0, WdSpd: toIndex});
+          localStorage.WdSpd = toIndex;
           break; 
       }
       this.updateList(index);

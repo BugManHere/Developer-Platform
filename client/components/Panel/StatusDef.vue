@@ -3,7 +3,7 @@
     <div
       class="status"
       :class="{ unfold: currentStatusId === index }"
-      v-for="(item, index) in allStatusList"
+      v-for="(item, index) in currentStatusList"
       :key="index"
     >
       <div class="edit-optional" :class="{ must: isConstItem(item) }">
@@ -142,7 +142,7 @@ export default {
       $_funcDefine: [], // 所有功能定义
       currentStatusId: false, // 当前状态ID
       checkingStatus: [], // 状态对应的布尔值（是否被选中）
-      allStatusList: [], // 功能对应的状态列表
+      currentStatusList: [], // 功能对应的状态列表
       useCustomize: false, // 是否使用自定义指令
       customizeType: 0,
       addStatusType: false, // 是否处于添加状态
@@ -160,11 +160,11 @@ export default {
       currentFuncId: state => state.funcModule.currentFuncId,
       deviceKey: state => state.funcModule.deviceKey,
       delStatusType: state => state.funcModule.delStatusType,
-      selectStatusList: state => state.funcModule.selectStatusList,
+      activeStatusList: state => state.funcModule.activeStatusList,
       funcDefine: (state, getters) => getters.funcDefine,
     }),
     statusLen() {
-      return this.allStatusList.length;
+      return this.currentStatusList.length;
     },
     currentFun() {
       const id = this.currentFuncId;
@@ -176,7 +176,7 @@ export default {
     currentStatus() {
       const id = this.currentStatusId;
       if (isPositiveNum(id)) {
-        return this.currentFun.statusDefine[this.allStatusList[id]];
+        return this.currentFun.statusDefine[this.currentStatusList[id]];
       }
       return {};
     }
@@ -191,7 +191,7 @@ export default {
           this.customizeType = this.currentStatus.customize;
         }
       });
-      this.setFuncObject(["currentStatusId", newVal]);
+      this.setFuncModule(["currentStatusId", newVal]);
     },
     useCustomize(newVal) {
       this.customizeType = newVal ? 'before' : false;
@@ -205,7 +205,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncObject: "SET_FUNC_OBJECT",
+      setFuncModule: "SET_FUNC_MODULE",
       setFuncDefine: "SET_FUNC_DEFINE",
     }),
     init() {
@@ -216,13 +216,13 @@ export default {
         const keys = Object.keys(
           this.$_funcDefine[this.currentFuncId].statusDefine
         );
-        this.allStatusList = keys;
+        this.currentStatusList = keys;
       } else {
-        this.allStatusList.length = 0;
+        this.currentStatusList.length = 0;
       }
       // 初始化orderList
-      this.$_selectStatusList = this.selectStatusList || this.funcDefine[this.currentFuncId].order.concat();
-      this.setFuncObject(["selectStatusList", this.$_selectStatusList.concat()]);
+      this.$_selectStatusList = this.activeStatusList || this.funcDefine[this.currentFuncId].order.concat();
+      this.setFuncModule(["activeStatusList", this.$_selectStatusList.concat()]);
     },
     isConstItem(item) {
       return ['default', 'undefined'].includes(item);
@@ -233,25 +233,25 @@ export default {
       arr.forEach((val, i) => {
         const index = i - delNum;
         if (index !== 0 && val) {
-          const delKey = this.allStatusList[index];
-          this.$delete(this.allStatusList, index);
+          const delKey = this.currentStatusList[index];
+          this.$delete(this.currentStatusList, index);
           this.$delete(this.checkingStatus, index);
           this.$delete(
             this.$_funcDefine[this.currentFuncId].statusDefine,
             delKey
           );
           this.$_selectStatusList.remove(delKey);
-          this.setFuncObject(["selectStatusList", this.$_selectStatusList.concat()]);
+          this.setFuncModule(["activeStatusList", this.$_selectStatusList.concat()]);
           delNum += 1;
         }
       });
     },
     addStatus() {
       let key;
-      if (this.allStatusList.length === 2) {
+      if (this.currentStatusList.length === 2) {
         key = 'status_1';
       } else {
-        const str = this.allStatusList.toString();
+        const str = this.currentStatusList.toString();
         const num = Math.max(...str.match(/\d+/g).map(Number)) + 1; // 找最大值然后+1
         key = `status_${num}`;
       }
@@ -262,7 +262,7 @@ export default {
         isCheck: true,
         customize: false
       };
-      this.allStatusList.push(key);
+      this.currentStatusList.push(key);
       this.checkingStatus.push(false);
     },
     changeStatusName(key) {
@@ -311,7 +311,7 @@ export default {
       if (this.currentStatus.moreCommand) {
         this.$set(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.allStatusList[this.currentStatusId]
+            this.currentStatusList[this.currentStatusId]
           ].moreCommand,
           this.extraCmd,
           Number(this.extraCmdVal)
@@ -321,7 +321,7 @@ export default {
         map[this.extraCmd] = Number(this.extraCmdVal);
         this.$set(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.allStatusList[this.currentStatusId]
+            this.currentStatusList[this.currentStatusId]
           ],
           "moreCommand",
           map
@@ -335,7 +335,7 @@ export default {
       if (key in this.currentStatus.moreCommand) {
         this.$delete(
           this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.allStatusList[this.currentStatusId]
+            this.currentStatusList[this.currentStatusId]
           ].moreCommand,
           key
         );
@@ -354,14 +354,14 @@ export default {
     nextStep() {
       const nameMap = {};
       const statusDefine = this.currentFun.statusDefine;
-      for (let i = 0; i < this.allStatusList.length; i += 1) {
-        const name = statusDefine[this.allStatusList[i]].name;
+      for (let i = 0; i < this.currentStatusList.length; i += 1) {
+        const name = statusDefine[this.currentStatusList[i]].name;
         if (nameMap[name]) return this.$toast.warning('不允许存在同名状态');
         nameMap[name] = true;
       }
-      this.setFuncObject(['allStatusList', this.allStatusList.concat()]);
+      this.setFuncModule(['currentStatusList', this.currentStatusList.concat()]);
       this.setFuncDefine([this.deviceKey, deepCopy(this.$_funcDefine)]);
-      this.setFuncObject(["statusSetStep", 1]);
+      this.setFuncModule(["statusSetStep", 1]);
     },
     checknumber(String) {
       const reg = /^[0-9]+$/;

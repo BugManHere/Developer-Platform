@@ -15,13 +15,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  const map = {};
-  map.productID = req.body.productID;
-  map.deviceID = req.body.deviceID;
-  map.brand = req.body.brand;
-  map.deviceName = req.body.deviceName;
-  map.productModel = req.body.productModel;
-  map.protocol = req.body.protocol;
+  const map = req.body;
   map.logicMap = {json: "{}"};
   map.disableMap = {json: "{}"};
   map.createTime = dayjs().format('YYYY.MM.DD');

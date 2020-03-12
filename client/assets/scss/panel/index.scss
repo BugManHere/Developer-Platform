@@ -2,6 +2,7 @@
 @import 'order';
 @import 'selectLabel';
 @import 'selectPage';
+@import 'quoteFunc';
 
 .gr-panel {
   display: flex;
@@ -38,6 +39,9 @@
     }
     &.big {
       width: 1200px;
+    }
+    &.medium {
+      width: 900px;
     }
   }
 }

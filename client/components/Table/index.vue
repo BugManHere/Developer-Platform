@@ -27,9 +27,11 @@
         <!-- 有内容的时候显示 -->
         <tr v-for="(content, index) in funcOptions.content" :key="index" 
           @dragstart="dragItem(index)"
-          @dragenter="dragMove(index)"
+          @dragenter.prevent="dragMove(index)"
           @dragend="transPos"
-          draggable="true">
+          @dragover.prevent
+          draggable="true"
+          >
           <td v-for="(item, key) in content" :key="key">
             <!-- 文本 -->
             <p
@@ -117,7 +119,8 @@ export default {
       statusSetStep: state => state.funcModule.statusSetStep,
       devSetStep: state => state.funcModule.devSetStep,
       delStatusType: state => state.funcModule.delStatusType,
-      funcDefine: (state, getters) => getters.funcDefine
+      productFuncInfoById: (state, getters) => getters.productFuncInfoById,
+      funcDefine: (state, getters) => getters.funcDefine,
     }),
     currentComponent() {
       return ["StatusDef", "OrderDef"][this.statusSetStep];
@@ -151,7 +154,7 @@ export default {
         err;
       }
       return {
-        caption: "",
+        caption: this.tableOptions.caption,
         title: [...this.tableOptions.titleList, "状态简要", "操作"],
         content
       };
@@ -273,7 +276,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncObject: "SET_FUNC_OBJECT",
+      setFuncModule: "SET_FUNC_MODULE",
       setFuncDefine: "SET_FUNC_DEFINE"
     }),
     ...mapActions({
@@ -289,10 +292,10 @@ export default {
     // 编辑状态
     editStatus(index = false) {
       if (!this.$_throttle()) return;
-      this.setFuncObject(["currentFuncId", index]);
-      this.setFuncObject(["delStatusType", false]);
-      this.setFuncObject(["currentStatusId", false]);
-      !index && this.setFuncObject(["statusSetStep", 0]);
+      this.setFuncModule(["currentFuncId", index]);
+      this.setFuncModule(["delStatusType", false]);
+      this.setFuncModule(["currentStatusId", false]);
+      !index && this.setFuncModule(["statusSetStep", 0]);
     },
     // 删除功能
     $_delFun(index) {
@@ -301,42 +304,51 @@ export default {
         index
       });
     },
-    showInput(index, index2, item) {
-      const id = `input-${index}-${index2}`;
+    // 点击状态简要后跳转到该状态的设置
+    goThatStatus(index, statusIndex) {
+      if (!this.$_throttle()) return; // 节流
+      this.setFuncModule(["currentFuncId", index]); // 该功能在所有功能内的位置
+      const statusId = statusIndex ? statusIndex + 1 : 0; // 该状态在功能内的位置
+      this.$nextTick(() => {
+        this.$refs.panel.$refs["statusDef-0"].currentStatusId = statusId; // 显示指定状态
+      });
+    },
+    // 显示指定位置的输入框
+    showInput(index, index2, value) {
+      const id = `input-${index}-${index2}`; // 计算输入框的id
       const doc = document.getElementById(id);
+      // 显示此输入框
       this.editItem = [index, index2];
       setTimeout(() => {
-        doc.value = item;
+        doc.value = value;
         doc.focus();
         doc.select();
         this.isNext = false;
       }, 0);
     },
+    // 将输入框的输入值更新到表格上
     setValue(evt) {
-      if (this.isNext || this.editItem[0] === false || evt.target.value === '') return;
-      const valOrder = ["name", "identifier", "json"];
-      const fromValue = valOrder[this.editItem[1]];
-      const toValue = evt.target.value;
-      const funcDefine = deepCopy(this.funcDefine);
-      funcDefine[this.realIndex[this.editItem[0]]][fromValue] = toValue;
-      this.setFuncDefine([this.deviceKey, funcDefine]);
-      this.funcOptions.content[this.editItem[0]][this.editItem[1]] = toValue;
-      this.initInput();
+      if (this.isNext || this.editItem[0] === false || evt.target.value === '') return true;
+      const valOrder = ["name", "identifier", "json"]; // 输入框的顺序
+      const fromKey = valOrder[this.editItem[1]]; // 根据上面定义的顺序取得输入值的key
+      const toValue = evt.target.value; // 要输入的值
+      if (this.isSameFunc(toValue, this.editItem[0])) return false;
+      const funcDefine = deepCopy(this.funcDefine); // 深复制
+      funcDefine[this.realIndex[this.editItem[0]]][fromKey] = toValue; // 对应位置赋值
+      this.setFuncDefine([this.deviceKey, funcDefine]); // 更新到state
+      this.funcOptions.content[this.editItem[0]][this.editItem[1]] = toValue; // 更新显示内容
+      this.initInput(); // 取消选中
+      return true;
     },
-    goThatStatus(index, statusIndex) {
-      if (!this.$_throttle()) return;
-      const statusId = statusIndex ? statusIndex + 1 : 0;
-      this.setFuncObject(["currentFuncId", index]);
-      this.$nextTick(() => {
-        this.$refs.panel.$refs["statusDef-0"].currentStatusId = statusId;
-      });
-    },
+    // 清空输入框选中状态
     initInput() {
       this.editItem = [false, false];
     },
+    // 按table键后跳转到下一个输入框
     nextInput(evt) {
-      const xMax = 2;
-      const yMax = this.funcOptions.content.length - 1;
+      const xMax = 2; // 横向输入框数量
+      const yMax = this.funcOptions.content.length - 1; // 纵向输入框数量
+      // 计算下一个输入框的位置
       let nextItem = this.editItem.concat();
       if (this.editItem[1] < xMax) {
         nextItem[1] += 1;
@@ -346,24 +358,34 @@ export default {
       } else {
         nextItem = [0, 0];
       }
+      // 确定之前的输入值
+      if (!this.setValue(evt)) return;
+      // 跳转到下一个输入框
       this.$nextTick(() => {
         this.showInput(
           nextItem[0],
           nextItem[1],
-          this.funcOptions.content[nextItem[0]][nextItem[1]]
+          this.funcOptions.content[nextItem[0]][nextItem[1]] // 更新输入框内容
         );
       });
-      this.setValue(evt);
       this.isNext = true;
     },
+    // 判断是否存在同样的功能
+    isSameFunc(id, index) {
+      let hasSame = Boolean(this.productFuncInfoById[id]);
+      // const funcDefine = deepCopy(this.funcDefine); // 深复制
+      // funcDefine[index] = this.productFuncInfoById[id][0].define;
+      // this.setFuncDefine([this.deviceKey, funcDefine]); // 更新到state
+      return false;
+    },
     setDelType(type = false) {
-      this.setFuncObject(["delStatusType", type]);
+      this.setFuncModule(["delStatusType", type]);
     },
     minusFunc() {
       this.setDelType(true);
     },
     Previous() {
-      this.setFuncObject(["statusSetStep", 0]);
+      this.setFuncModule(["statusSetStep", 0]);
     },
     // 节流函数
     $_throttle() {
@@ -393,7 +415,8 @@ export default {
       const funcDefine = trans(this.dragFromIndex, this.dragToIndex, this.funcDefine);
       this.$set(this.funcOptions, 'content' , trans(this.dragFromIndex, this.dragToIndex, this.funcOptions.content));
       this.setFuncDefine([this.deviceKey, funcDefine]);
-    }
+      this.editItem = [false, false]; // 如果打开了输入框，要清掉
+    },
   }
 };
 </script>
