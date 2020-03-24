@@ -24,7 +24,7 @@ export default {
   mixins: [LogicDefine],
   data() {
     return {
-      ref: 'fanSwiper',
+      ref: 'airFanSwiper',
       itemList: [],
       swiperIndex: 3,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
@@ -104,7 +104,6 @@ export default {
     }),
     changeData(map) {
       this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },

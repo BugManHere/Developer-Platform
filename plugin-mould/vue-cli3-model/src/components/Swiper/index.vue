@@ -7,12 +7,11 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
+      :class="{'swiper-no-swiping': noSwiping}"
       v-show="!isShowText"
     >
       <swiper-slide 
         v-for="(item, index) in slidesData.list" 
-        class="tem-slide"
-        :class="{'swiper-no-swiping': noSwiping}"
         :key="index">
         <template v-if="item.img">
           <img :src="item.img">
@@ -63,31 +62,43 @@ export default {
         effect: 'coverflow',
         slidesPerView: 4,
         centeredSlides: true,
-        // loop: true,
-        speed: 10,
+        speed: 300,
         spaceBetween: 15,
         coverflowEffect: {
           rotate: 0,
           stretch: 0,
           slideShadows: false
         },
+        observer: true,
+        observeParents: true
       },
+      noSwiping: false,
       swiperPerView: {},
       currentIndex: NaN,
-      noSwiping: false,
       isShowText: false,
-      textContent: ''
+      textContent: '',
+      initTimer: null,
+      initTime: 0,
     };
   },
   computed: {
     ...mapState({
       swiperHold: state => state.swiperHold,
+      Pow: state => state.dataObject.Pow,
     }),
+  },
+  watch: {
+    Pow() {
+      setTimeout(() => {
+        this.$forceUpdate();
+      }, 20);
+    }
   },
   created() {
     if (this.slidesData.isNumber) {
       this.swiperOption = Object.assign(this.swiperOption, {
         slidesPerView: 2,
+        speed: 10,
         spaceBetween: 80,
         preloadImages: true,
         updateOnImagesReady: true,
@@ -98,58 +109,67 @@ export default {
           depth: Math.floor(document.body.clientWidth / 6.5 / 10) * 10,
           modifier: 3.2,
         },
-        freeMode: true,
-        freeModeMomentumRatio: 0.5,
-        freeModeMomentumVelocityRatio: 1,
-        freeModeMomentumBounce: false,
-        freeModeSticky: true,
-        freeModeMinimumVelocity: 0.12,
       });
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.$forceUpdate();
-    }, 50);
+    this.initTimer = setInterval(() => {
+      this.initTime >= 3 && (clearInterval(this.initTimer));
+      this.$refs[this.slidesData.key].swiper.update();
+      this.$nextTick(() => {
+        this.$forceUpdate();
+        this.initTime += 1;
+      }); 
+    }, 200);
   },
   methods: {
     ...mapMutations({
       setState: 'SET_STATE'
     }),
     setSwiperHold(key) {
-      !this.swiperHold && this.setState(['swiperHold', true]);
-      const ref = this.$refs[key];
-      this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
-      const realIndex = ref.swiper.realIndex;
-      if (this.currentIndex === realIndex) {
-        return;
-      }
-      this.currentIndex = realIndex;
-      !this.swiperPerView[key] && (this.swiperPerView[key] = []);
-      ['active', 'prev', 'next'].forEach(item => {
-        try {
-          const dom = ref.$el.getElementsByClassName(`swiper-slide-${item}`)[0];
-          !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.opacity = 1);
-        } catch (err) {
-          err;
+      this.$nextTick(() => {
+        !this.swiperHold && this.setState(['swiperHold', true]);
+        const ref = this.$refs[key];
+        this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
+        const realIndex = ref.swiper.realIndex;
+        if (this.currentIndex === realIndex) {
+          return;
         }
+        this.currentIndex = realIndex;
+        !this.swiperPerView[key] && (this.swiperPerView[key] = []);
+        ['active', 'prev', 'next'].forEach(item => {
+          try {
+            const dom = ref.$el.getElementsByClassName(`swiper-slide-${item}`)[0];
+            // !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.opacity = 1);
+            !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.visibility = 'visible');
+          } catch (err) {
+            err;
+          }
+        });
       });
     },
     clearSwiperHold(key) {
-      this.setState(['swiperHold', false]);
-      if (!this.swiperPerView[key]) return;
-      while (this.swiperPerView[key].length) {
-        const swiper = this.swiperPerView[key].pop();
-        swiper && (swiper.style.opacity = 0);
-      }
-      this.currentIndex = NaN;
-      this.emitIndex();
+      this.$nextTick(() => {
+        this.setState(['swiperHold', false]);
+        if (!this.swiperPerView[key]) return;
+        while (this.swiperPerView[key].length) {
+          const swiper = this.swiperPerView[key].pop();
+          // swiper && (swiper.style.opacity = 0);
+          swiper && (swiper.style.visibility = 'hidden');
+        }
+        this.currentIndex = NaN;
+        this.emitIndex();
+      });
     },
     emitIndex() {
       this.$nextTick(() => {
         this.$emit('realIndex', this.$refs[this.slidesData.key].swiper.realIndex);
         this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
       });
+      this.setState(['ableSend', true]);
+    },
+    updateSwiper() {
+      this.$refs[this.slidesData.key].swiper.update();
     },
     setIndex(index) {
       this.$refs[this.slidesData.key].swiper.slideTo(index);
@@ -171,6 +191,9 @@ export default {
       this.isShowText = able;
       this.$forceUpdate();
     },
+    banTouch(val) {
+      this.noSwiping = val;
+    }
   }
 };
 </script>

@@ -34,7 +34,8 @@
           padding: 8px 12px;
           margin: 6px 10px;
           position: relative;
-          background-color: PowDerBlue;
+          // background-color: PowDerBlue;
+          background-image: linear-gradient(to left, PowDerBlue, rgb(137, 217, 228));
           border: 1px #00D0D0 solid;
           border-radius: 3px;
           &:hover {

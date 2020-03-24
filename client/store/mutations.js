@@ -7,6 +7,9 @@ export default {
   [type.SET_FUNC_MODULE](state, [key, val]) {
     state.funcModule[key] = val;
   },
+  [type.SET_PULIC_MODULE](state, [key, val]) {
+    state.pulicModule[key] = val;
+  },
   [type.SET_FUNC_DEFINE](state, [key, val]) {
     state.funcModule.funcDefineList[key] = val;
   },

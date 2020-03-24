@@ -228,6 +228,9 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function(
     },
     getRoomDeviceSize: function(mac, callback) {
       exec(callback, null, 'PluginInterface', 'getRoomDeviceSize', [mac]);
-    }
+    },
+    startVoiceMainActivity: function(mac) {
+      exec(null, null, 'PluginInterface', 'startVoiceMainActivity', [mac]);
+    },
   };
 });

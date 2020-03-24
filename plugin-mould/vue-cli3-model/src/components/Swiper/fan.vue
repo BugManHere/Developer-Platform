@@ -26,15 +26,16 @@ export default {
     return {
       ref: 'fanSwiper',
       itemList: [],
-      swiperIndex: 5,
+      swiperIndex: 3,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
-      fanName: 'auto'
+      fanName: 'auto',
     };
   },
   computed: {
     ...mapState({
       WdSpd: state => state.dataObject.WdSpd,
+      Mod: state => state.dataObject.Mod,
       Tur: state => state.dataObject.Tur,
       Quiet: state => state.dataObject.Quiet
     }),
@@ -80,9 +81,14 @@ export default {
       this.updateSwiper();
     },
     'imgList.length'() {
-      this.$nextTick(() => {
-        this.initSwiper();
-      });
+      this.initSwiper();
+    },
+    Mod(newVal) {
+      if (newVal === 2) {
+        this.$refs[this.ref].banTouch(true);
+      } else {
+        this.$refs[this.ref].banTouch(false);
+      }
     }
   },
   mounted() {
@@ -100,14 +106,22 @@ export default {
     }),
     changeData(map) {
       this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },
     // 初始化
     initSwiper() {
-      this.removeAllSlide();
-      this.insertAllSlide();
+      setTimeout(() => {
+        this.removeAllSlide();
+        this.insertAllSlide();
+        this.$nextTick(() => {
+          this.updateSwiper();
+          setTimeout(() => {
+            this.$refs[this.ref].updateSwiper();
+            this.setFanName();
+          }, 0);
+        });
+      }, 0);
     },
     // 给滑轮赋予初始区间
     setList() {
@@ -132,7 +146,7 @@ export default {
         this.$refs[this.ref].setIndex(this.leftLen); // 定位到中间
       });
     },
-    // 计算滑轮向左（右）滑动moveLen个元素后的值                                                                                                              
+    // 计算滑轮向左（右）滑动moveLen个元素后的值
     countIndex(fromIndex, moveLen) {
       let toIndex = fromIndex + moveLen;
       const maxLen = this.imgList.length;
@@ -163,20 +177,15 @@ export default {
     },
     // 移除所有slide
     removeAllSlide() {
-      const list = Array.from({length: this.swiperLen}, (v, index) => index);
-      list.splice(this.leftLen, 1);
-      this.$refs[this.ref].removeSlide(list);
+      this.$refs[this.ref].removeAllSlides();
     },
     // 根据情况填充slide 
     insertAllSlide() {
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
-        if (i) {
-          const direction = i / Math.abs(i); // false：往右滑，true：往左滑
-          const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
-          const moveLen = direction === 1 ? i : -i - (this.leftLen + 1);
-          const toIndex = this.countIndex(this.swiperIndex, moveLen);
-          this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imgList[toIndex].img}></div>`);
-        }
+        const funcName = 'appendSlide';
+        const moveLen = i;
+        const toIndex = this.countIndex(this.swiperIndex, moveLen);
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imgList[toIndex].img}></div>`);
       }
     },
     // 滑动事件

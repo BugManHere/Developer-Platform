@@ -1,5 +1,5 @@
 <template>
-  <gree-view bg-color="#f4f4f4">
+  <gree-view bg-color="#404040">
     <gree-page class="page-nobodysave">
       <gree-header>{{ $language('btn.Dazzling') }}</gree-header>
       <gree-list>

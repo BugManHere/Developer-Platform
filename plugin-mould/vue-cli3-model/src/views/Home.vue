@@ -38,7 +38,7 @@
           </gree-row>
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow" />
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper"/>
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
@@ -47,10 +47,10 @@
           v-text="$language(`${Air? 'btn.Air' : 'home.powerOff'}`)" 
           class="poweroff-tip"/>
         <!-- 温度滑轮 -->
-        <temSwiper v-if="Pow"/>
+        <temSwiper v-if="Pow && !loading" key="temSwiper"/>
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow" />
-        <airFanSwiper v-else-if="Air" />
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
+        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -78,7 +78,7 @@
 
 import { Header, PowerOff, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, showToast, changeBarColor, getCCcmd } from '@PluginInterface';
+import { closePage, editDevice, showToast, changeBarColor, getCCcmd, startVoiceMainActivity } from '@PluginInterface';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
 import homeConfig from '@/mixins/config/home.js';
@@ -121,6 +121,7 @@ export default {
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
+      loading: state => state.loading,
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
@@ -135,7 +136,7 @@ export default {
     },
     power_off_bg() {
       const Hot = this.Mod === this.$store.state.ModHeat;
-      return Hot ? require('@/assets/img/bg_off_heat.png') : require('@/assets/img/bg_off.png');
+      return Hot ? require('@/assets/img/bg_off_heat.png') : require('@/assets/img/bg_off_cool.png');
     },
     modName() {
       return this.modeNameList[this.Mod];
@@ -170,7 +171,6 @@ export default {
           color = Adv ? '#4C719E' : '#6ba0e2';
         }
       }
-      changeBarColor(color);
       return color;
     },
     miniIcon() {
@@ -196,6 +196,14 @@ export default {
     }
   },
   watch: {
+    colorChange: {
+      handler(newVal) {
+        if (newVal && newVal !== '#000' && newVal !== '#000000') {
+          changeBarColor(newVal);
+        }
+      },
+      immediate: true
+    },
     airFanShow(newVal) {
       if (newVal) {
         localStorage.WdSpd = this.WdSpd;
@@ -285,12 +293,17 @@ export default {
           } else {
             setData.Air = this.Air ? 1 : 3;
           }
-          this.changeData(setData);
+          this.changeData({...setData});
           break;
         case 1:
           this.$refs.PopupBottom.showPopup = true;
           break;
         case 2:
+          try {
+            startVoiceMainActivity(this.mac);
+          } catch (e) {
+            console.log('%c running startVoiceMainActivity()', 'color: blue');
+          }
           break;
         default:
           break;

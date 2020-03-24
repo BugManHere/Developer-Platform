@@ -1,5 +1,5 @@
 <template>
-  <gree-view bg-color="#f4f4f4">
+  <gree-view bg-color="#404040">
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.Air') }}</gree-header>
       <gree-radio-list

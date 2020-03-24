@@ -21,6 +21,10 @@ const homeConfig = {
           url: require('../../assets/img/function.png'),
           name: '功能'
         },
+        {
+          url: require('../../assets/img/voiceSkill.png'),
+          name: '语音技能'
+        },
       ]
     };
   },

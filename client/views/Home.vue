@@ -20,12 +20,15 @@
                 p-id="7109"
               ></path>
             </svg>
-            <span>添加新产品</span>
+            <span v-show="developType === 0">添加新产品</span>
+            <span v-show="developType === 1">添加模板</span>
           </div>
         </div>
       </div>
+      <!-- 设备列表 -->
       <div
         v-for="(item, index) in hasDeviceList"
+         v-show="developType === 0"
         :key="index"
         @click="goProductPage(index)"
       >
@@ -63,6 +66,7 @@
       @hideDialog="setDialogType"
       v-fade:show="isShowDialog"
     />
+    {{deviceInfoList}}
   </div>
 </template>
 
@@ -84,15 +88,46 @@ export default {
   computed: {
     ...mapState({
       admin: state => state.userModule.admin,
+      developType: state => state.pulicModule.developType,
       productTypeList: state => state.devModule.productTypeList,
-      hasDeviceList: state => state.devModule.hasDeviceList
-    })
+      hasDeviceList: state => state.devModule.hasDeviceList,
+      templates: state => state.devModule.templates,
+    }),
+    deviceInfoList() {
+      const result = [];
+      if (this.developType === 0) {
+         
+      } else if (this.developType === 1) {
+        const keys = this.templates.map(item => {
+          return {
+            productKey: item.productKey,
+            deviceKey: item.deviceKey,
+          };
+        });
+        keys.forEach((keysItem, index) => {
+          result.push(this.productTypeList.find(productItem => productItem._id === keysItem.productKey)
+            .deviceTypeList.find(deviceItem => deviceItem._id === keysItem.deviceKey))
+        })
+      }
+      console.log(result);
+      return this.productTypeList;
+    }
+  },
+  watch: {
+    developType(newVal) {
+      if (newVal === 1) {
+        https.fetchGet("/template")
+          .then(data => {
+            this.setDevModule(["templates", data.data]);
+          });
+      }
+    }
   },
   mounted() {
     https
       .fetchGet("/productType")
       .then(data => {
-        const productTypeList = data.data.productTypeList;
+        const productTypeList = data.data;
         this.setDevModule(["productTypeList", productTypeList]);
       })
       .catch(err => {

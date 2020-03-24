@@ -128,7 +128,14 @@
           type="button"
           class="btn btn-primary"
           @click="goState(1)"
+          v-show="developType === 0"
         >下一步</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="createTemplate()"
+          v-show="developType === 1"
+        >创建模板</button>
       </div>
       <div
         class="btn-group"
@@ -175,6 +182,7 @@ export default {
   computed: {
     ...mapState({
       productTypeList: state => state.devModule.productTypeList,
+      developType: state => state.pulicModule.developType,
       hasDeviceList: state => state.devModule.hasDeviceList,
       funcDefineList: state => state.funcModule.funcDefineList
     }),
@@ -205,6 +213,24 @@ export default {
     },
     setProductModel(evt) {
       this.$set(this.deviceInfo, 'productModel', evt.target.value);
+    },
+    // 创建模板
+    createTemplate() {
+      const productID = this.deviceInfo.productID;
+      const deviceID = this.deviceInfo.deviceID;
+      const productKey = this.productTypeList[productID]._id;
+      const deviceKey = this.productTypeList[productID].deviceTypeList[deviceID]._id
+      https.fetchPost('/template/create', {productKey, deviceKey})
+        .then(data => {
+          if (data.status === 201) {
+            this.$toast.info("创建成功");
+          } else if (data.status === 200) {
+            this.$toast.warning("已存在该模板");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
     submit() {
       https.fetchPost('/productType', this.deviceInfo)

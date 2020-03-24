@@ -18,11 +18,11 @@ router.get('/', function(req, res, next) {
   })
 });
 
-router.post('/info', function(req, res, next) {
-  deviceModel.findOne({admin: global.admin}).then((params) => {
-    res.json(params.hasDeviceList[req.body.productKey]);
-  })
-});
+// router.post('/info', function(req, res, next) {
+//   deviceModel.findOne({admin: global.admin}).then((params) => {
+//     res.json(params.hasDeviceList[req.body.productKey]);
+//   })
+// });
 
 router.post('/', function(req, res, next) {
   let Signture  = crypto.createHmac('sha1', global.key);

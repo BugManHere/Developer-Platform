@@ -1,17 +1,18 @@
 const state = {
-  mac: '', // 设备mac
+  mac: '123456', // 设备mac
   ModHeat: 4, // 制热模式
   watchLock: true,
   autoAbleSetTem: false,
   swiperHold: false,
   ableSend: false, // 是否允许发送命令
+  loading: false,
   dataObject: {
     Pow: 1,
     Mod: 1,
-    SetTem: 25,
+    SetTem: 24,
     WdSpd: 4,
     'Add0.5': 0,
-    'Add0.1': 0,
+    'Add0.1': 8,
     Lig: 1,
     LigSen: 1,
     has05: 1,

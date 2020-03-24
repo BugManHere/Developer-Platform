@@ -37,15 +37,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Home'
+      redirect: '/Offline'
     },
     {
       path: '/Home',
       name: 'Home',
       component: Home,
-      meta: {
-        keepAlive: true
-      },
+      // meta: {
+      //   keepAlive: true
+      // },
     },
     {
       path: '/Offline',

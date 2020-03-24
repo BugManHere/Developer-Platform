@@ -23,7 +23,6 @@ Vue.use(language);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
-
 // 使用语言包
 const i18n = new VueI18n({
   locale: 'zh_CN',
@@ -53,14 +52,14 @@ function createVue() {
   console.info(`Current Running mid: ${process.env.VUE_APP_MID}`);
 }
 
-dev ? createVue() : '';
-
 /* 启用页面调试器 */
 if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
   const VConsole = require('vconsole/dist/vconsole.min.js');
   // eslint-disable-next-line no-new
   new VConsole();
 }
+
+dev ? createVue() : '';
 
 /* ********************************* Native Func ********************************* */
 
@@ -112,13 +111,11 @@ window.onResume = function onResume(msg) {
 window.init = function init() {
   createVue();
   router.beforeEach((to, from, next) => {
-    let color;
+    let color = '#404040';
     if (to.name === 'Error') {
       color = '#ddd5a3';
     } else if (to.name === 'Offline') {
       color = store.state.dataObject.Mod === 4 ? '#f78d00' : '#6ba0e2';
-    } else {
-      color = '#000000';
     }
     changeBarColor(color);
     next();

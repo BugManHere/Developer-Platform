@@ -1,28 +1,22 @@
 <template>
   <gree-view :bg-color="barColor">
-    <gree-page 
-      class="page-offline" 
-      no-navbar>
-      <gree-header
-        theme="transparent"
-        :left-options="{preventGoBack: true}"
-        @on-click-back="goBack"
-        :right-options="{showMore: !state.functype && state.editEnable}"
-        @on-click-more="moreInfo"
-      >{{ state.deviceInfo.name }}</gree-header>
-      <gree-error-page
-        type="offline"
-        :bg-url="HeaderImg"
-        :img-url="offlineImgUrl"
-        :text="$language('offline.prompt')"
-      >
-        <a
-          href="javascript:;"
-          class="link"
-          @click="offlineDialog"
-        >{{ $language('offline.detail') }}</a>
-      </gree-error-page>
-    </gree-page>
+    <gree-header
+      theme="transparent"
+      :left-options="{preventGoBack: true}"
+      @on-click-back="goBack"
+    >{{ state.deviceInfo.name }}</gree-header>
+    <gree-error-page
+      type="offline"
+      :bg-url="HeaderImg"
+      :img-url="offlineImgUrl"
+      :text="$language('offline.prompt')"
+    >
+      <a
+        href="javascript:;"
+        class="link"
+        @click="offlineDialog"
+      >{{ $language('offline.detail') }}</a>
+    </gree-error-page>
   </gree-view>
 </template>
 
@@ -44,7 +38,7 @@ export default {
   },
   data() {
     return {
-      BgUrl: require('@/assets/img/bg_off.png'),
+      BgUrl: require('@/assets/img/bg_off_cool.png'),
       offlineImgUrl: require('@/assets/img/offline.png'),
     };
   },
@@ -66,7 +60,7 @@ export default {
      * @description 更新背景图片
      */
     HeaderImg() {
-      return require(`@/assets/img/blur_${
+      return require(`@/assets/img/bg_off_${
         this.state.dataObject.Mod === this.state.ModHeat ? 'heat' : 'cool'
       }.png`);
     }

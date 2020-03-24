@@ -536,3 +536,15 @@ export const getRoomDeviceSize = mac => {
     }
   });
 };
+
+export const startVoiceMainActivity = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.startVoiceMainActivity(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

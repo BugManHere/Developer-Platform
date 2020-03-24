@@ -1,6 +1,6 @@
 <template>
   <!-- 扫风页 -->
-  <gree-view :bg-color="`#000`">
+  <gree-view :bg-color="`#404040`">
     <gree-page class="page-sweep">
       <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
       <gree-sweep-select
@@ -136,10 +136,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT'
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: 'SEND_CTRL',
     }),
     turnBack() {
       this.$router.push({ name: 'Home' }).catch(err => { err; });

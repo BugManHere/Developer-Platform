@@ -1,5 +1,5 @@
 <template>
-  <gree-view bg-color="#f4f4f4">
+  <gree-view bg-color="#404040">
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.SmartWind') }}</gree-header>
       <gree-list>
@@ -100,6 +100,7 @@ export default {
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'

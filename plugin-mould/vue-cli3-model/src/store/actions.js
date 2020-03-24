@@ -40,7 +40,7 @@ function sendControl({ state, commit }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
-      if (setData[key] !== lastObject[key] && jsonArr.includes(key)) {
+      if ((setData[key] !== lastObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) && jsonArr.includes(key)) {
         setOpt.push(key);
         setP.push(setData[key]);
       }
@@ -79,6 +79,10 @@ function sendControl({ state, commit }, dataMap) {
         state.dataObject.TemUn, state.dataObject.SetTem,
         state.dataObject['Add0.5'], state.dataObject['Add0.1'],
         state.dataObject.PctCle];
+      // const _p = [state.dataObject.Pow, state.dataObject.Mod,
+      //   state.dataObject.SetTem, state.dataObject.WdSpd,
+      //   state.dataObject['Add0.5'], state.dataObject.Air,
+      //   '', state.dataObject.TemUn, state.dataObject.TemRec];
       // 成功之后更新主体状态
       r === 200 && commit(SET_STATE, ['uilock', false]) &&
         (await updateStates(state.mac, JSON.stringify(_p))
@@ -169,6 +173,9 @@ export default {
   async [GET_ALL_STATES]({ state, commit }) {
     await getStatusOfDev({ state, commit }).then(res => res);
     finishLoad();
+    setTimeout(() => {
+      commit(SET_STATE, ['loading', false]);
+    }, 1000);
     if (_timer === 0) {
       _timer = setInterval(() => {
         getDeviceInfo({ state, commit });
@@ -187,7 +194,7 @@ export default {
     const dataMap = {};
     keys.forEach(key => {
       // 组装指令，根据业务更改
-      if (DataObject[key] !== state.checkObject[key]) {
+      if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) {
         opt.push(key);
         p.push(DataObject[key]);
         commit(SET_CHECK_OBJECT, JSON.parse(`{"${key}":${DataObject[key]}}`));

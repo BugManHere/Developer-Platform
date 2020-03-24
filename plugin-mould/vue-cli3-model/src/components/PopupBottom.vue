@@ -45,7 +45,6 @@
 <script>
 import { Row, Col, Popup } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import PopupConfig from '@/mixins/config/popup.js';
 import LogicDefine from '@/logic/define';
 import LogicWatch from '@/logic/watch';
 import Customize from '@/logic/customize';
@@ -56,7 +55,7 @@ export default {
     [Col.name]: Col,
     [Popup.name]: Popup
   },
-  mixins: [PopupConfig, LogicDefine, LogicWatch, Customize],
+  mixins: [LogicDefine, LogicWatch, Customize],
   data() {
     return {
       showPopup: false

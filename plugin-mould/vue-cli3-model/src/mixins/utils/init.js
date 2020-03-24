@@ -38,9 +38,8 @@ const mixin = {
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
 
-      const DataObject = JSON.parse(dataArr);
-      console.log(DataObject);
-      console.log(typeof DataObject);
+      const valArr = JSON.parse(dataArr);
+      console.log(dataArr);
 
       const functype = JSON.parse(getQueryStringByName('functype'));
       console.log(`functype: ${functype}`);
@@ -50,13 +49,21 @@ const mixin = {
         ? this.setRepair(true)
         : this.setRepair(false);
       
-      DataObject.functype = functype;
-      console.log('setMac');
       this.setMac(mac);
-      console.log('getDeviceInfo');
       this.getDeviceInfo(mac);
-      DataObject && this.setCheckObject(DataObject);
-      DataObject && this.setDataObject(DataObject);
+
+      const key = JSON.parse(process.env.VUE_APP_JSON);
+      console.log(key);
+      const DataObject = {};
+
+      key.forEach((item, index) => {
+        DataObject[item] = Number(valArr[index]);
+      });
+      DataObject.functype = functype;
+      
+      console.log(DataObject);
+      valArr && this.setCheckObject(DataObject);
+      valArr && this.setDataObject(DataObject);
       console.log('finish');
     }
   }

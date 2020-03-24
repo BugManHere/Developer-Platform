@@ -12,9 +12,14 @@
           </button>
           <a class="navbar-brand" href="#Home" @click="updataPage">Gree配置化开发平台</a>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="user.identity">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">产品开发 <span class="sr-only">(current)</span></a></li>
+            <li :class="{active: developType === 0}" @click="setDevelopType(0)">
+              <a href="#Home" @click="updataPage">产品开发</a>
+            </li>
+            <li :class="{active: developType === 1}" @click="setDevelopType(1)">
+              <a href="#Home">模板开发</a>
+            </li>
             <li><a href="#">设备管理</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">运营中心 <span class="caret"></span></a>
@@ -65,7 +70,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   props: {
@@ -74,11 +79,20 @@ export default {
   computed: {
     ...mapState({
       user: state => state.userModule.user,
+      developType: state => state.pulicModule.developType,
     })
   },
   methods: {
+    ...mapMutations({
+      setPulicMoule: 'SET_PULIC_MODULE'
+    }),
     updataPage() {
-      this.$router.push({name: 'Home'});
+      this.$router.push({name: 'Home'}).catch(err => {
+        console.log(err);
+      });
+    },
+    setDevelopType(val) {
+      this.setPulicMoule(['developType', val])
     }
   },
 }

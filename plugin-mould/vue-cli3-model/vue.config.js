@@ -17,7 +17,7 @@ const resolve = dir => {
   funcDefine.forEach(item => {
     Object.keys(item.statusDefine).forEach(statusItem => {
       statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || jsonArr.includes(item.json) || (jsonArr.push(item.json));
-      if (item.statusDefine[statusItem].moreCommand) {
+      if (item.statusDefine[statusItem].moreCommand && item.statusDefine[statusItem].customize !== 'replace') {
         Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
           jsonArr.includes(moreJson) || (jsonArr.push(moreJson));
         });

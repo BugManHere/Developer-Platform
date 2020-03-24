@@ -24,7 +24,7 @@ export default {
     return {
       ref: 'modeSwiper',
       itemList: [],
-      swiperIndex: 5,
+      swiperIndex: 3,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
       imgList: [
@@ -81,7 +81,6 @@ export default {
     }),
     changeData(map) {
       this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
       this.setDataObject(map);
       this.sendCtrl(map);
     },
@@ -141,7 +140,9 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      this.changeData({Mod: toIndex, Emod: 0});
+      const sendData = {Mod: toIndex, Emod: 0};
+      toIndex === 2 && (sendData.WdSpd = 1);
+      this.changeData(sendData);
       this.updateList(index);
     },
     setFanName(index) {

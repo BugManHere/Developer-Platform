@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var productTypeRouter = require('./routes/productType');
 var productFuncRouter = require('./routes/productFunc');
 var deviceRouter = require('./routes/device');
+var templateRouter = require('./routes/template');
 // var httpsRouter = require('./routes/https');
 var usersRouter = require('./routes/users');
 
@@ -49,6 +50,7 @@ app.use('/', indexRouter);
 app.use('/productType', productTypeRouter);
 app.use('/productFunc', productFuncRouter);
 app.use('/device', deviceRouter);
+app.use('/template', templateRouter);
 // app.use('/https', httpsRouter);
 app.use('/users', usersRouter);
 

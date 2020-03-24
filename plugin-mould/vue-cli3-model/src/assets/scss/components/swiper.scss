@@ -3,7 +3,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
+    // opacity: 0;
+    visibility: hidden;
     p {
       position: relative;
       font-family: 'RobotoThin';
@@ -19,12 +20,17 @@
       height: 130px;
     }
     &.swiper-slide-active {
-      opacity: 1 !important;
+      // opacity: 1 !important;
+      visibility: visible !important;
     }
-    *{ 
+    *{
       // outline: 1px solid green !important;
     }
   }
+}
+
+.slide-visbile {
+  visibility: visible !important;
 }
 
 .tem-swiper {

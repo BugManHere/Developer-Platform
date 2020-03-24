@@ -1,4 +1,5 @@
 .gree-error {
+  height: 100% !important;
   .gree-offline-content {
     .gree-offline-pic {
       width: 312px !important;
@@ -8,6 +9,10 @@
       font-size: 48px !important;
     }
   }
+}
+
+.gree-header {
+  color: transparent !important;
 }
 
 .tipList {

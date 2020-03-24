@@ -3,7 +3,7 @@ const state = {
   deviceKey: false, // 设备标识符
   currentFuncId: false,
   currentStatusId: false,
-  devSetStep: 0,
+  devSetStep: 3,
   delStatusType: false,
   statusSetStep: 0,
   currentStatusList: [], // 当前功能下的状态列表

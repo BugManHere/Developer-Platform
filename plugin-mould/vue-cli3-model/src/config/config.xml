@@ -5,6 +5,6 @@
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
   <statueJson>["Pow","Mod","TemUn","SetTem","Add0.5","Add0.1","PctCle"]</statueJson>
-  <statueJson2>["Pow","Mod","TemUn","SetTem","Add0.5","Add0.1","PctCle"]</statueJson2>
+  <statueJson2>["Pow","Mod","SetTem","Add0.5","Add0.1","SwUpDn","SwingLfRig","Health","SwhSlp","SlpMod","AssHt","Lig","WdSpd","Tur","Quiet","AppTimer","PctCle"]</statueJson2>
   <moduleVer>1</moduleVer>
 </device>

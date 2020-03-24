@@ -10,8 +10,20 @@ let data;
 router.get('/', function(req, res, next) {
   productTypeModel.find().then((params) => {
     data = params;
-    res.json(data[0]);
+    res.json(data);
+    // const deviceTypeList = data[0].deviceTypeList;
+    // deviceTypeList.push({
+    //   "name": "壁挂式空调",
+    //   "img": "Hangon.png",
+    // },
+    // {
+    //   "name": "立柜式空调",
+    //   "img": "Cabinet.png"
+    // });
+    // console.log(deviceTypeList);
+    // data[0].save();
   })
+  productTypeModel
 });
 
 router.post('/', function(req, res, next) {
@@ -24,13 +36,13 @@ router.post('/', function(req, res, next) {
 
   global.adminInfo.set({hasDeviceList: hasDeviceList});
   global.adminInfo.save()
-      .then((v) => {
-        res.json(v);
-        console.log(v);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    .then((v) => {
+      res.json(v);
+      console.log(v);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 });
 
 module.exports = router;
