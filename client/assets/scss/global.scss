@@ -1,5 +1,5 @@
 @import 'home';
-@import 'product';
+@import 'template';
 @import 'dialog';
 @import 'account';
 @import 'login';
@@ -25,18 +25,27 @@
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #000;
+  background-color: #000 !important;
   opacity: .2;
   z-index: 2;
 }
 
-@keyframes slowshow {
+@keyframes fadeShow {
   from {opacity: 0; transform: translateY(-100%);}
   to {opacity: 1;}
 }
 
-@keyframes slowhide {
+@keyframes fadeHide {
   from {opacity: 1;}
   to {opacity: 0; transform: translateY(-100%); display: none;}
 }
 
+@keyframes slowShow {
+  from {opacity: 0; transform: translateY(-100%); transform: translateX(50%);}
+  to {opacity: 1;}
+}
+
+@keyframes slowHide {
+  from {opacity: 1;}
+  to {opacity: 0; transform: translateY(-100%); transform: translateX(50%); display: none;}
+}

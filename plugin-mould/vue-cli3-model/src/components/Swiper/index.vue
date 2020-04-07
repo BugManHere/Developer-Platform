@@ -62,7 +62,7 @@ export default {
         effect: 'coverflow',
         slidesPerView: 4,
         centeredSlides: true,
-        speed: 300,
+        speed: 0,
         spaceBetween: 15,
         coverflowEffect: {
           rotate: 0,
@@ -98,7 +98,7 @@ export default {
     if (this.slidesData.isNumber) {
       this.swiperOption = Object.assign(this.swiperOption, {
         slidesPerView: 2,
-        speed: 10,
+        speed: 0,
         spaceBetween: 80,
         preloadImages: true,
         updateOnImagesReady: true,
@@ -113,14 +113,18 @@ export default {
     }
   },
   mounted() {
-    this.initTimer = setInterval(() => {
+    const init = () => {
       this.initTime >= 3 && (clearInterval(this.initTimer));
       this.$refs[this.slidesData.key].swiper.update();
       this.$nextTick(() => {
         this.$forceUpdate();
         this.initTime += 1;
       }); 
-    }, 200);
+    };
+    init();
+    this.initTimer = setInterval(() => {
+      init();
+    }, 150);
   },
   methods: {
     ...mapMutations({

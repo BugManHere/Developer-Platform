@@ -50,11 +50,10 @@ export default {
   },
   computed: {
     ...mapState({
-      currentFuncId: state => state.funcModule.currentFuncId,
-      deviceKey: state => state.funcModule.deviceKey,
-      statusSetStep: state => state.funcModule.statusSetStep,
-      currentStatusList: state => state.funcModule.currentStatusList,
-      activeStatusList: state => state.funcModule.activeStatusList,
+      currentFuncId: state => state.tempModule.currentFuncId,
+      statusSetStep: state => state.pulicModule.statusSetStep,
+      currentStatusList: state => state.tempModule.currentStatusList,
+      activeStatusList: state => state.tempModule.activeStatusList,
       funcDefine: (state, getters) => getters.funcDefine,
     }),
   },
@@ -77,29 +76,25 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncModule: "SET_FUNC_MODULE",
+      setTempModule: "SET_TEMP_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     ...mapActions({
-      editFunc: "EDIT_FUNC",
+      editTempFunc: "EDIT_TEMP_FUNC",
     }),
-    settingDone() {
+    async settingDone() {
       // 根据右边List生成order
       const order = this.rightList.map(item => {
         return item.key;
       });
       // 深复制funcDefine
-      const funcDefine = deepCopy(this.funcDefine);
-      funcDefine[this.currentFuncId].order = order;
-      // 改变state里的funcDefine
-      this.editFunc({
-        index: this.currentFuncId,
-        key: this.deviceKey,
-        funcDefine: JSON.stringify(funcDefine)
-      })
+      const subFuncDefine = deepCopy(this.funcDefine[this.currentFuncId]);
+      subFuncDefine.order = order;
+      await this.editTempFunc(subFuncDefine);
       // 设置完成，数据初始化
-      this.setFuncModule(["currentFuncId", false]);
-      this.setFuncModule(["statusSetStep", 0]);
-      this.setFuncModule(["activeStatusList", null]);
+      this.setTempModule(["currentFuncId", false]);
+      this.setTempModule(["activeStatusList", null]);
+      this.setPulicModule(["statusSetStep", 0]);
     }
   }
 }

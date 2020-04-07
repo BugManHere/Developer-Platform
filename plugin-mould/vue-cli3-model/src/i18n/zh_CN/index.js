@@ -87,6 +87,9 @@ module.exports = {
     notify_Fault_name_Fc: '头部升降故障',
     notify_Fault_name_J6: '显示板与驱动板通讯故障'
   },
+  warn: {
+    dirty: '过滤网已脏堵，请注意定期清洗！'
+  },
   voice: {
     voiceAssistant: '语音助手',
     prompt: '提示',
@@ -157,7 +160,8 @@ module.exports = {
     Avoid: '风避',
     Air: '新风',
     Air_智能: '智能新风',
-    NobodySave: '无人节能'
+    NobodySave: '无人节能',
+    FbidBloPer: '防直吹'
   },
   sweep: {
     speedTitle: '扫风',

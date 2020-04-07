@@ -157,10 +157,9 @@ export default {
   },
   computed: {
     ...mapState({
-      currentFuncId: state => state.funcModule.currentFuncId,
-      deviceKey: state => state.funcModule.deviceKey,
-      delStatusType: state => state.funcModule.delStatusType,
-      activeStatusList: state => state.funcModule.activeStatusList,
+      currentFuncId: state => state.tempModule.currentFuncId,
+      delStatusType: state => state.pulicModule.delStatusType,
+      activeStatusList: state => state.tempModule.activeStatusList,
       funcDefine: (state, getters) => getters.funcDefine,
     }),
     statusLen() {
@@ -191,22 +190,26 @@ export default {
           this.customizeType = this.currentStatus.customize;
         }
       });
-      this.setFuncModule(["currentStatusId", newVal]);
+      this.setTempModule(["currentStatusId", newVal]);
     },
     useCustomize(newVal) {
-      this.customizeType = newVal ? 'before' : false;
+      !newVal && (this.customizeType = false);
     },
     customizeType(newVal) {
       this.setCustomize(newVal);
     },
     delStatusType() {
       this.clearSelect();
+    },
+    'currentStatus.value'(newVal) {
+      console.log(typeof newVal);
     }
   },
   methods: {
     ...mapMutations({
-      setFuncModule: "SET_FUNC_MODULE",
-      setFuncDefine: "SET_FUNC_DEFINE",
+      setTempModule: "SET_TEMP_MODULE",
+      changeTemp: "CHANGE_TEMPLATE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     init() {
       // 复制funcDefine
@@ -222,7 +225,7 @@ export default {
       }
       // 初始化orderList
       this.$_selectStatusList = this.activeStatusList || this.funcDefine[this.currentFuncId].order.concat();
-      this.setFuncModule(["activeStatusList", this.$_selectStatusList.concat()]);
+      this.setTempModule(["activeStatusList", this.$_selectStatusList.concat()]);
     },
     isConstItem(item) {
       return ['default', 'undefined'].includes(item);
@@ -241,7 +244,7 @@ export default {
             delKey
           );
           this.$_selectStatusList.remove(delKey);
-          this.setFuncModule(["activeStatusList", this.$_selectStatusList.concat()]);
+          this.setTempModule(["activeStatusList", this.$_selectStatusList.concat()]);
           delNum += 1;
         }
       });
@@ -344,7 +347,6 @@ export default {
     },
     // 插入自定义函数
     setCustomize(val='before') {
-      console.log(val);
       this.$set(
         this.currentStatus,
         'customize',
@@ -359,9 +361,22 @@ export default {
         if (nameMap[name]) return this.$toast.warning('不允许存在同名状态');
         nameMap[name] = true;
       }
-      this.setFuncModule(['currentStatusList', this.currentStatusList.concat()]);
-      this.setFuncDefine([this.deviceKey, deepCopy(this.$_funcDefine)]);
-      this.setFuncModule(["statusSetStep", 1]);
+      console.log(this.$_funcDefine);
+      this.$_funcDefine.forEach(funcItem => {
+        Object.keys(funcItem.statusDefine).forEach(statusItem => {
+          if (statusItem === 'undefined') return;
+          const status = funcItem.statusDefine[statusItem];
+           status.value = Number(status.value);
+           if (status.moreCommand) {
+             Object.keys(status.moreCommand).forEach(comItem => {
+               status.moreCommand[comItem] = Number(status.moreCommand[comItem]);
+             });
+           }
+        });
+      });
+      this.setTempModule(['currentStatusList', this.currentStatusList.concat()]);
+      this.changeTemp({funcDefine: this.$_funcDefine});
+      this.setPulicModule(["statusSetStep", 1]);
     },
     checknumber(String) {
       const reg = /^[0-9]+$/;

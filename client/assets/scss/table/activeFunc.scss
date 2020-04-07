@@ -88,6 +88,9 @@
         line-height: 20px;
         border-radius: 5px;
         border: 1px Thistle solid;
+        &:hover {
+          border: 1px Violet solid;
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-.product {
+.template {
   position: relative;
   top: 0px;
   > div {
@@ -78,10 +78,12 @@
         width: 318px;
         height: 85px;
         float: left;
-        margin: 45px 0 0 18px;
+        margin: 40px 0 0 18px;
         p {
+          display: flex;
+          align-items: center;
           padding: 0;
-          margin: 0;
+          margin: 0 0 5px 0;
           span {
             color: #ffb533;
             padding-right: 16px;
@@ -96,6 +98,11 @@
               font-family: 'Glyphicons Halflings';
               content: "\e023"
             }
+            &.done { 
+              :before {
+                content: '\e089';
+              }
+            }
           }
         }
       }
@@ -104,9 +111,12 @@
         overflow: hidden;
         float: left;
         margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
         > div {
           float: left;
-          width: 129px;
+          width: 33%;
           text-align: center;
           height: 55px;
           > :nth-child(1) {

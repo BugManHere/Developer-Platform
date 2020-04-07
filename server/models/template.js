@@ -13,8 +13,12 @@ const funcSchema = new mongoose.Schema({
 
 // 创建Schema
 const templateSchema = new mongoose.Schema({
-  productKey: String,
-  deviceKey: String,
+  productID: String,
+  seriesID: String,
+  createTime: String,
+  editUser: String,
+  editTime: String,
+  useTime: Number,
   funcDefine: [funcSchema]
 });
 

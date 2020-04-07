@@ -42,6 +42,10 @@
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
+        <gree-notice-bar class="custom-notice-bar" v-if="Pow && PctCle">
+          <gree-icon slot="left" name="bell"></gree-icon>
+          {{ $language('warn.dirty') }}
+        </gree-notice-bar>
         <div 
           v-show="!Pow"
           v-text="$language(`${Air? 'btn.Air' : 'home.powerOff'}`)" 
@@ -76,7 +80,7 @@
 
 <script>
 
-import { Header, PowerOff, Row, Col } from 'gree-ui';
+import { Header, PowerOff, Row, Col, NoticeBar, Icon } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { closePage, editDevice, showToast, changeBarColor, getCCcmd, startVoiceMainActivity } from '@PluginInterface';
 import Carousel from '@/components/Carousel';
@@ -102,6 +106,8 @@ export default {
     [PowerOff.name]: PowerOff,
     [Row.name]: Row,
     [Col.name]: Col,
+    [NoticeBar.name]: NoticeBar,
+    [Icon.name]: Icon,
     Carousel,
     PopupBottom,
     modeSwiper,
@@ -122,11 +128,13 @@ export default {
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
       loading: state => state.loading,
+      hasAir: state => state.hasAir,
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
+      PctCle: state => state.dataObject.PctCle,
     }),
     showPowOff() {
       return !this.Pow;
@@ -168,7 +176,7 @@ export default {
         } else if (Hot) {
           color = Adv ? '#AC6502' : '#f78d00';
         } else {
-          color = Adv ? '#4C719E' : '#6ba0e2';
+          color = Adv ? '#366BA6' : '#4D99ED';
         }
       }
       return color;
@@ -288,11 +296,15 @@ export default {
       switch (index) {
         case 0:
           setData.Pow = !this.Pow - 0;
-          if (this.Pow) {
-            setData.Air = 0;
-          } else {
-            setData.Air = this.Air ? 1 : 3;
+          if (this.hasAir) {
+            if (this.Pow) {
+              setData.Air = 0;
+            } else {
+              setData.Air = this.Air ? 1 : 3;
+            }
           }
+          setData.SwhSlp = 0;
+          setData.SlpMod = 0;
           this.changeData({...setData});
           break;
         case 1:

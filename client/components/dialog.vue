@@ -26,7 +26,7 @@
               class="list-group-item"
               v-for="(item, index) in productTypeList"
               :key="index"
-              @click="selectProduct(index)"
+              @click="selectProduct(item._id)"
               v-text="item.name"/>
           </div>
         </div>
@@ -36,13 +36,13 @@
         >
           <div
             class="row"
-            v-if="productTypeList[deviceInfo.productID].deviceTypeList">
+            v-if="selectProductInfo && selectProductInfo.seriesList">
             <div
               class="col-xs-6 col-md-3"
-              :class="{select: deviceInfo.deviceID === index}"
-              v-for="(item, index) in productTypeList[deviceInfo.productID].deviceTypeList"
+              :class="{select: deviceInfo.seriesID === item._id}"
+              v-for="(item, index) in selectProductInfo.seriesList"
               :key="index"
-              @click="selectDevice(index)"
+              @click="selectDevice(item._id)"
             >
               <p class="thumbnail">
                 <img :src="require(`@public/img/product/${item.img}`)">
@@ -58,8 +58,8 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">品类</label>
               <div class="col-sm-10">
-                <img :src="require(`@public/img/product/${productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].img}`)">
-                <span class="form-control-static" v-text="productTypeList[deviceInfo.productID].deviceTypeList[deviceInfo.deviceID].devName"/>
+                <img :src="require(`@public/img/product/${selectDeviceInfo.img}`)">
+                <span class="form-control-static" v-text="selectDeviceInfo.devName"/>
               </div>
             </div>
             <div class="form-group">
@@ -171,7 +171,7 @@ export default {
       currentStatus: 0,
       deviceInfo: {
         productID: 0,
-        deviceID: 0,
+        seriesID: 0,
         brand: '格力',
         deviceName: '',
         productModel: '',
@@ -181,30 +181,48 @@ export default {
   },
   computed: {
     ...mapState({
-      productTypeList: state => state.devModule.productTypeList,
+      admin: state => state.userModule.admin,
+      productTypeList: state => state.pulicModule.productTypeList,
       developType: state => state.pulicModule.developType,
       hasDeviceList: state => state.devModule.hasDeviceList,
-      funcDefineList: state => state.funcModule.funcDefineList
     }),
+    // 当前被选中的产品信息
+    selectProductInfo() {
+      if (!this.productTypeList.length) return {};
+      return this.productTypeList.find(item => item._id === this.deviceInfo.productID);
+    },
+    // 当前被选中的产品信息
+    selectDeviceInfo() {
+      if (!this.productTypeList.length && this.selectProductInfo) return {};
+      return this.selectProductInfo.seriesList.find(item => item._id === this.deviceInfo.seriesID);
+    },
+  },
+  watch: {
+    productTypeList(newVal) {
+      // 获取到产品品类列表时赋予初值
+      this.deviceInfo.productID = newVal[0]._id;
+      this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;
+    }
   },
   methods: {
     ...mapMutations({
+      setTempModule: "SET_TEMP_MODULE",
       setDevModule: "SET_DEV_MODULE",
-      setFuncModule: "SET_FUNC_MODULE",
     }),
     hideDialog() {
       this.$emit("hideDialog", false);
     },
-    selectProduct(index) {
-      this.$set(this.deviceInfo, 'productID', index);
+    selectProduct(id) {
+      this.deviceInfo.productID = id;
     },
-    selectDevice(index) {
-      this.deviceInfo.deviceID = index;
+    selectDevice(id) {
+      this.deviceInfo.seriesID = id;
     },
+    // 下一步
     goState(index) {
-      if (!this.productTypeList[this.deviceInfo.productID].deviceTypeList) return;
+      if (!this.selectProductInfo || !this.selectProductInfo.seriesList) return; 
       this.currentStatus = index;
-      const productList = this.productTypeList[this.deviceInfo.productID].deviceTypeList[this.deviceInfo.deviceID];
+      const productList = this.selectDeviceInfo;
       this.deviceInfo.productName = productList.name; // 设置产品名字
       this.deviceInfo.imgPath = productList.img; // 图片地址
     },
@@ -217,13 +235,14 @@ export default {
     // 创建模板
     createTemplate() {
       const productID = this.deviceInfo.productID;
-      const deviceID = this.deviceInfo.deviceID;
-      const productKey = this.productTypeList[productID]._id;
-      const deviceKey = this.productTypeList[productID].deviceTypeList[deviceID]._id
-      https.fetchPost('/template/create', {productKey, deviceKey})
+      const seriesID = this.deviceInfo.seriesID;
+      https.fetchPost('/template/create', {productID, seriesID})
         .then(data => {
           if (data.status === 201) {
             this.$toast.info("创建成功");
+            console.log(data.data);
+            this.setTempModule(['templates', data.data]);
+            this.$emit("hideDialog", false);
           } else if (data.status === 200) {
             this.$toast.warning("已存在该模板");
           }
@@ -232,10 +251,12 @@ export default {
           console.log(err);
         })
     },
+    // 提交
     submit() {
-      https.fetchPost('/productType', this.deviceInfo)
+      const deviceInfo = JSON.stringify(this.deviceInfo);
+      https.fetchPost('/userDevice/create', {deviceInfo, admin: this.admin})
         .then((data) => {
-          const hasDeviceList = data.data.hasDeviceList;
+          const hasDeviceList = data.data;
           this.setDevModule(['hasDeviceList', hasDeviceList]);
         })
         .catch((err) => {

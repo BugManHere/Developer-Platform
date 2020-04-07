@@ -1,4 +1,4 @@
-import Toast from './Toast.vue'
+import Toast from './index.vue'
 
 const TOAST = {
   duration: 3000, // 显示的时间 ms
@@ -56,20 +56,24 @@ const TOAST = {
 
     Vue.prototype.$toast = {
       info(text, callBack) {
-        if (!text) return;
+        if (!text) return false;
         msg('info', text, callBack);
+        return true;
       },
       warning(text, callBack) {
-        if (!text) return;
+        if (!text) return false;
         msg('warning', text, callBack);
+        return true;
       },
       message(text, callBack) {
-        if (!text) return;
+        if (!text) return false;
         msg('message', text, callBack);
+        return true;
       },
       error(text, callBack) {
-        if (!text) return;
+        if (!text) return false;
         msg('error', text, callBack);
+        return true;
       },
     }
   }

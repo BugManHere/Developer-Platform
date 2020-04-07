@@ -7,17 +7,21 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import vToast from '@components/Toast/index';
 import vLoading from '@components/Loading/index';
+import vConfirm from '@components/Confirm/index';
 import './assets/scss/global.scss';
 import store from './store';
 
 import transitionFade from './directives/transition-fade';
+import transitionSlow from './directives/transition-slow';
 import './directives/transition-fade';
 
 Vue.use(Vuex);
 Vue.use(vToast);
 Vue.use(vLoading);
+Vue.use(vConfirm);
 // 注册全局指令
 Vue.directive('fade', transitionFade);
+Vue.directive('slow', transitionSlow);
 
 Vue.config.productionTip = false
 

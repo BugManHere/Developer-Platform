@@ -9,7 +9,7 @@ const infoSchema = new mongoose.Schema({
 // 创建Schema
 const productTypeSchema = new mongoose.Schema({
   name: String,
-  deviceTypeList: [infoSchema],
+  seriesList: [infoSchema],
   plugin: String
 });
 

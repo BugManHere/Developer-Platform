@@ -83,8 +83,9 @@
             height: 80px;
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             background-color: #fcfcfc;
+            border-top: 0.5px #efefef solid;
             // padding-bottom: 0px;
             div {
               width: 124px;

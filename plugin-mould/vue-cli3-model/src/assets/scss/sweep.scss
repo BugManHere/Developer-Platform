@@ -1,6 +1,11 @@
 .page-sweep {
   position: relative;
+  user-select: none;
+  overflow: hidden;
   background-color: #fff;
+  .page-content {
+    overflow: hidden;
+  }
   .gree-sweep-select {
     position: absolute;
     left: 0;

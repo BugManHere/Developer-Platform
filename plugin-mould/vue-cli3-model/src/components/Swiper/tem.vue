@@ -66,19 +66,32 @@ export default {
     }
   },
   watch: {
-    currentVal(newVal) {
-      if (newVal === this.swiperVal) return;
-      console.log('currentVal');
+    currentVal() {
+      // if (newVal === this.swiperVal) return;
       this.initSwiper();
     },
     temStep() {
+      localStorage.has01 = this.has01;
+      localStorage.has05 = this.has05;
       this.currentTemStep = this.temStep;
-      console.log('temStep');
       this.initSwiper();
     },
     banSwiping() {
       this.ableSwiping();
     },
+  },
+  created() {
+    if (!localStorage.has01 && !localStorage.has05) {
+      this.setDataObject({
+        has01: 0,
+        has05: 1,
+      });
+    } else {
+      this.setDataObject({
+        has01: Number(localStorage.has01),
+        has05: Number(localStorage.has05),
+      });
+    }
   },
   mounted() {
     this.setList();
@@ -103,8 +116,11 @@ export default {
     // 初始化
     initSwiper() {
       this.removeAllSlide();
-      this.insertAllSlide();
-      this.updateSwiper();
+      this.$nextTick(() => {
+        this.updateSwiper();
+        if (this.temList.length) return;
+        this.insertAllSlide();
+      });
     },
     // 给滑轮赋予初始区间
     setList() {
@@ -125,12 +141,10 @@ export default {
       this.temList = JSON.parse(JSON.stringify(list));
     },
     // 更新滑轮的显示区间
-    updateList(index) {
-      const moveLen = index - this.leftLen;
-      this.$nextTick(() => {
-        this.insertSlide(moveLen);
-        this.removeSlide(moveLen);
-      });
+    updateList() {
+      // const moveLen = index - this.leftLen;
+      // this.removeSlide(moveLen);
+      // this.insertSlide(moveLen);
       this.swiperVal = this.currentVal;
     },
     // 滑轮定位到当前位置
@@ -142,12 +156,16 @@ export default {
     // 计算滑轮向左（右）滑动moveLen后的值                                                                                                              
     countVal(fromVal, moveLen) {
       let toVal = fromVal + moveLen;
+      // 四舍五入，精确到小数点后两位
+      const round100 = val => {
+        return Math.round(val * 100) / 100;
+      };
       if (toVal < this.minVal) {
         toVal += (this.maxVal - this.minVal) + this.currentTemStep;
       } else if (toVal > this.maxVal) {
         toVal -= (this.maxVal - this.minVal) + this.currentTemStep;
       }
-      return Math.abs(toVal * 10) / 10;
+      return round100(Math.abs(toVal * 10) / 10);
     },
     // 移除slide
     removeSlide(moveLen) {
@@ -171,11 +189,8 @@ export default {
       const len = direction === 1 ? this.rightLen : this.leftLen;
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       const startIndex = Math.abs(moveLen) <= this.swiperLen ? 1 : Math.abs(moveLen) - this.swiperLen + 1;
-      const round100 = val => {
-        return Math.round(val * 100) / 100;
-      };
       for (let i = startIndex; i <= Math.abs(moveLen); i += 1) {
-        const value = round100(this.countVal(this.swiperVal, ((i + len) * this.currentTemStep * direction) - moveLen * this.currentTemStep));
+        const value = this.countVal(this.swiperVal, ((i + len) * this.currentTemStep * direction) - moveLen * this.currentTemStep);
         const decimal = Math.round((value * 10) % 10);
         const integer = Math.floor(value);
         if (!this.temList.map(item => item.value).includes(value)) {
@@ -265,7 +280,8 @@ export default {
       } else {
         ref.showText(false);
       }
-    }
+    },
+
   }
 };
 </script>

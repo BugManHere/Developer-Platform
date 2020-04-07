@@ -10,17 +10,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#Home" @click="updataPage">Gree配置化开发平台</a>
+          <a class="navbar-brand" href="#Home" @click="updataPage">Plugin自动化开发平台</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav">
             <li :class="{active: developType === 0}" @click="setDevelopType(0)">
-              <a href="#Home" @click="updataPage">产品开发</a>
+              <a href="#Home" @click="updataPage">设备管理</a>
             </li>
             <li :class="{active: developType === 1}" @click="setDevelopType(1)">
-              <a href="#Home">模板开发</a>
+              <a href="#Home" @click="updataPage">模板定义</a>
             </li>
-            <li><a href="#">设备管理</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">运营中心 <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -82,6 +81,11 @@ export default {
       developType: state => state.pulicModule.developType,
     })
   },
+  watch: {
+    '$route.name'(newVal) {
+      newVal === 'Template' && this.setPulicMoule(['developType', 1]);
+    }
+  },
   methods: {
     ...mapMutations({
       setPulicMoule: 'SET_PULIC_MODULE'
@@ -92,7 +96,7 @@ export default {
       });
     },
     setDevelopType(val) {
-      this.setPulicMoule(['developType', val])
+      this.setPulicMoule(['developType', val]);
     }
   },
 }

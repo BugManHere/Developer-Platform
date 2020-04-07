@@ -27,31 +27,27 @@
       </div>
       <!-- 设备列表 -->
       <div
-        v-for="(item, index) in hasDeviceList"
-         v-show="developType === 0"
+        v-for="(item, index) in deviceInfoList"
         :key="index"
-        @click="goProductPage(index)"
+        @click="goProductPage(item.id1, item.id2)"
       >
-        <div
-          class="main"
-          v-if="hasDeviceList.length && productTypeList.length"
-        >
+        <div class="main">
           <div class="body">
             <div class="message-top">
-              <img :src="require(`@public/img/product/${productTypeList[item.productID].deviceTypeList[item.deviceID].img}`)">
+              <img :src="require(`@public/img/product/${item.imgPath}`)">
               <div>
                 <span v-text="item.deviceName"/>
                 <span>创建时间：{{item.createTime}}</span>
               </div>
-              <span v-text="'删除设备'"/>
+              <span v-text="'删除设备'" v-show="developType === 0" @click.stop="delDevice(item.id1)"/>
             </div>
             <div class="message-bottom">
               <div
-                v-for="(val, key) in productInfo(item)"
+                v-for="(val, key) in item.productImshow"
                 :key="key"
               >
                 <span v-text="key"/>
-                <span v-text="val"/>
+                <span contenteditable v-text="val"/>
               </div>
             </div>
           </div>
@@ -66,14 +62,13 @@
       @hideDialog="setDialogType"
       v-fade:show="isShowDialog"
     />
-    {{deviceInfoList}}
   </div>
 </template>
 
 <script>
 import Dialog from "@components/Dialog";
 import https from "@/https";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "home",
@@ -88,87 +83,145 @@ export default {
   computed: {
     ...mapState({
       admin: state => state.userModule.admin,
-      developType: state => state.pulicModule.developType,
-      productTypeList: state => state.devModule.productTypeList,
+      developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
+      productTypeList: state => state.pulicModule.productTypeList,
       hasDeviceList: state => state.devModule.hasDeviceList,
-      templates: state => state.devModule.templates,
+      templates: state => state.tempModule.templates,
+      funcDefine: (state, getters) => getters.funcDefine,
     }),
     deviceInfoList() {
-      const result = [];
+      let result = [];
       if (this.developType === 0) {
-         
+         result = this.hasDeviceList.map(item => {
+           return {
+             imgPath: item.imgPath,
+             deviceName: item.deviceName,
+             createTime: item.createTime,
+             id1: item._id,
+             productImshow: this.productImshow(item)
+            };
+         });
       } else if (this.developType === 1) {
-        const keys = this.templates.map(item => {
+        result = this.templates.map(item => {
+          if (!this.productTypeList.length) return {};
+          const info = this.productTypeList.find(productItem => productItem._id === item.productID)
+          .seriesList.find(deviceItem => deviceItem._id === item.seriesID);
           return {
-            productKey: item.productKey,
-            deviceKey: item.deviceKey,
-          };
-        });
-        keys.forEach((keysItem, index) => {
-          result.push(this.productTypeList.find(productItem => productItem._id === keysItem.productKey)
-            .deviceTypeList.find(deviceItem => deviceItem._id === keysItem.deviceKey))
+            imgPath: info.img,
+            deviceName: info.name,
+            createTime: item.createTime,
+            id1: item.productID,
+            id2: item.seriesID,
+            productImshow: this.productImshow(item)
+          }
         })
       }
-      console.log(result);
-      return this.productTypeList;
+      return result;
     }
   },
   watch: {
-    developType(newVal) {
-      if (newVal === 1) {
-        https.fetchGet("/template")
-          .then(data => {
-            this.setDevModule(["templates", data.data]);
-          });
-      }
+    developType: {
+      async handler(newVal) {
+        if (newVal === 1) {
+          // 进入页面时判断是否存在数据，不存在就获取
+          if (!this.funcDefine) {
+            const res = await https.fetchGet("/template");
+            this.setTempModule(["templates", res.data]);
+          }
+          if (!Object.keys(this.productTypeList).length) {
+            const res = await https.fetchGet("/productType");
+            this.setPulicModule(["productTypeList", res.data]);
+          }
+        }
+      },
+      immediate: true
     }
   },
   mounted() {
     https
       .fetchGet("/productType")
-      .then(data => {
-        const productTypeList = data.data;
-        this.setDevModule(["productTypeList", productTypeList]);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    https
-      .fetchPost("/device", { admin: this.admin })
-      .then(data => {
-        const hasDeviceList = data.data.hasDeviceList;
-        this.setDevModule(["hasDeviceList", hasDeviceList]);
-        const funcDefineList = {};
-        this.hasDeviceList.forEach(val => {
-          funcDefineList[val._id] = val.funcDefineList;
+        .then(data => {
+          const productTypeList = data.data;
+          this.setPulicModule(["productTypeList", productTypeList]);
+        })
+        .catch(err => {
+          console.log(err);
         });
-        this.setFuncModule(['funcDefineList', funcDefineList]);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    https
+      .fetchPost("/userDevice", { admin: this.admin })
+        .then(data => {
+          const hasDeviceList = data.data;
+          this.setDevModule(["hasDeviceList", hasDeviceList]);
+        })
+        .catch(err => {
+          console.log(err);
+        });
   },
   methods: {
     ...mapMutations({
       setDevModule: "SET_DEV_MODULE",
-      setFuncModule: "SET_FUNC_MODULE",
+      setFuncModule: "SET_TEMP_MODULE",
+      setTempModule: "SET_TEMP_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
+    }),
+    ...mapActions({
+      delDev: "DEL_DEV",
     }),
     setDialogType(val) {
       this.isShowDialog = val;
     },
-    goProductPage(val) {
-      this.$router.push({
-        path: `Product/${this.hasDeviceList[val]._id}`
-      });
+    // 跳转到设备定义页面
+    goProductPage(id1, id2) {
+      if (this.developType === 0) {
+        this.$router.push({
+          path: `Device/${id1}`
+        });
+      } else if (this.developType === 1) {
+        this.$router.push({
+          path: `Template/${id1}&${id2}`
+        });
+      }
     },
-    productInfo(item) {
-      return {
-        产品品牌: item.brand,
-        产品品类: this.productTypeList[item.productID].deviceTypeList[item.deviceID]
-          .name,
-        产品型号: item.productModel,
-        通信协议: item.protocol
-      };
+    // 根据id获取产品信息
+    getProductInfo(productID) {
+      if (!this.productTypeList.length) return {};
+      return this.productTypeList.find(item => item._id === productID);
+    },
+    // 根据id获取产品信息
+    getDeviceInfo(productID, seriesID) {
+      if (!this.productTypeList.length) return {};
+      return this.getProductInfo(productID).seriesList.find(item => item._id === seriesID);
+    },
+    // 显示用产品信息
+    productImshow(item) {
+      let result = {};
+      if (this.developType === 0) {
+        result = {
+          产品品牌: item.brand,
+          产品品类: item.productName,
+          产品型号: item.productModel,
+          通信协议: item.protocol
+        }
+      } else if (this.developType === 1) {
+        result = {
+          修改时间: item.editTime.split(' ').reduce((a ,b) => `${b} ${a}`), // 日期倒过来显示比较好看
+          // 修改人: item.editUser,
+          修改人: item.editUser,
+          引用次数: item.useTime,
+          功能数量: item.funcDefine.length
+        }
+      }
+      return result;
+    },
+    // 删除设备
+    delDevice(id) {
+      this.$confirm.show({
+        contnet: '确认删除',
+        onConfirm: () => {
+          this.delDev(id);
+        },
+      });
+
     }
   }
 };

@@ -65,10 +65,10 @@
           <!-- 右边的按键 -->
           <td v-if="funcOptions.content && funcDefine">
             <p>
-              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[index].page"/>
+              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[realIndex[index]].page"/>
               <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue"/>
               <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
-              <span @click="$_delFun(realIndex[index])" v-text="'删除'" v-show="tableOptions.operate.includes('delete')"/>
+              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete')"/>
             </p>
           </td>
         </tr>
@@ -102,7 +102,6 @@ export default {
       editItem: [false, false],
       isNext: false,
       timer: null,
-      realIndex: [],
       insertPageShow: false,
       insertPageList: [],
       dragFromIndex: false,
@@ -111,32 +110,51 @@ export default {
   },
   computed: {
     ...mapState({
-      hasDeviceList: state => state.devModule.hasDeviceList,
+      admin: state => state.userModule.admin,
       animationSecond: state => state.pulicModule.animationSecond,
-      deviceKey: state => state.funcModule.deviceKey,
-      currentFuncId: state => state.funcModule.currentFuncId,
-      currentStatusId: state => state.funcModule.currentStatusId,
-      statusSetStep: state => state.funcModule.statusSetStep,
-      devSetStep: state => state.funcModule.devSetStep,
-      delStatusType: state => state.funcModule.delStatusType,
+      developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
+      hasDeviceList: state => state.devModule.hasDeviceList,
+      tempID: state => state.tempModule.tempID,
+      currentFuncId: state => state.tempModule.currentFuncId,
+      currentStatusId: state => state.tempModule.currentStatusId,
+      statusSetStep: state => state.pulicModule.statusSetStep,
+      // setTempStep: state => state.pulicModule.setTempStep,
+      delStatusType: state => state.pulicModule.delStatusType,
       productFuncInfoById: (state, getters) => getters.productFuncInfoById,
       funcDefine: (state, getters) => getters.funcDefine,
+      funcImport: (state, getters) => getters.funcImport,
     }),
     currentComponent() {
       return ["StatusDef", "OrderDef"][this.statusSetStep];
     },
-    funcOptions() {
-      const realIndex = [];
-      let content = [];
-      let funcDefine = [];
-      try {
-        funcDefine = this.hasDeviceList.find(item => item._id === this.deviceKey).funcDefine;
-        const filterArr = funcDefine.filter((item, index) => {
-          return this.tableOptions.type.includes(item.type) && realIndex.push(index);
+    // 显示的index 跟 数据库中的index 的对应关系
+    realIndex() {
+      const result = [];
+      if (!this.funcDefine) return result;
+      this.funcDefine.forEach((item, index) => {
+        this.tableOptions.type.includes(item.type) && result.push(index);
+      });
+      return result;
+    },
+    // 要显示的func
+    imshowFunc() {
+      if (!this.funcDefine) return [];
+      if (this.developType === 1) {
+        return this.realIndex.map(item => {
+          return this.funcDefine[item];
         });
-        this.setRealIndex(realIndex);
-        if (filterArr.length) {
-          content = filterArr.map(val => {
+      } 
+      const result = this.funcImport.map(funcId => {
+        return this.funcDefine.find(item => item._id === funcId);
+      });
+      return result;
+    },
+    // 显示用
+    funcOptions() {
+      let content = [];
+      try {
+        if (this.imshowFunc.length) {
+          content = this.imshowFunc.map(val => {
             const res = this.tableOptions.keyList.map(item => {
               return val[item];
             });
@@ -276,11 +294,14 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncModule: "SET_FUNC_MODULE",
-      setFuncDefine: "SET_FUNC_DEFINE"
+      setTempModule: "SET_TEMP_MODULE",
+      changeTemp: "CHANGE_TEMPLATE",
+      setDevModule: "SET_DEV_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     ...mapActions({
-      delFunc: "DEL_FUNC"
+      delTempFunc: "DEL_TEMP_FUNC",
+      delDevFunc: "DEL_DEV_FUNC",
     }),
     setRealIndex(index) {
       this.realIndex = index;
@@ -292,22 +313,23 @@ export default {
     // 编辑状态
     editStatus(index = false) {
       if (!this.$_throttle()) return;
-      this.setFuncModule(["currentFuncId", index]);
-      this.setFuncModule(["delStatusType", false]);
-      this.setFuncModule(["currentStatusId", false]);
-      !index && this.setFuncModule(["statusSetStep", 0]);
+      this.setTempModule(["currentFuncId", index]);
+      this.setTempModule(["currentStatusId", false]);
+      this.setPulicModule(["delStatusType", false]);
+      !index && this.setPulicModule(["statusSetStep", 0]);
     },
     // 删除功能
     $_delFun(index) {
-      this.delFunc({
-        key: this.deviceKey,
-        index
-      });
+      if (this.developType === 1) {
+        this.delTempFunc(this.realIndex[index]);
+      } else {
+        this.delDevFunc(index);
+      }
     },
     // 点击状态简要后跳转到该状态的设置
     goThatStatus(index, statusIndex) {
       if (!this.$_throttle()) return; // 节流
-      this.setFuncModule(["currentFuncId", index]); // 该功能在所有功能内的位置
+      this.setTempModule(["currentFuncId", index]); // 该功能在所有功能内的位置
       const statusId = statusIndex ? statusIndex + 1 : 0; // 该状态在功能内的位置
       this.$nextTick(() => {
         this.$refs.panel.$refs["statusDef-0"].currentStatusId = statusId; // 显示指定状态
@@ -332,10 +354,9 @@ export default {
       const valOrder = ["name", "identifier", "json"]; // 输入框的顺序
       const fromKey = valOrder[this.editItem[1]]; // 根据上面定义的顺序取得输入值的key
       const toValue = evt.target.value; // 要输入的值
-      if (this.isSameFunc(toValue, this.editItem[0])) return false;
       const funcDefine = deepCopy(this.funcDefine); // 深复制
       funcDefine[this.realIndex[this.editItem[0]]][fromKey] = toValue; // 对应位置赋值
-      this.setFuncDefine([this.deviceKey, funcDefine]); // 更新到state
+      this.changeTemp({funcDefine}); // 更新到state
       this.funcOptions.content[this.editItem[0]][this.editItem[1]] = toValue; // 更新显示内容
       this.initInput(); // 取消选中
       return true;
@@ -370,22 +391,14 @@ export default {
       });
       this.isNext = true;
     },
-    // 判断是否存在同样的功能
-    isSameFunc(id, index) {
-      let hasSame = Boolean(this.productFuncInfoById[id]);
-      // const funcDefine = deepCopy(this.funcDefine); // 深复制
-      // funcDefine[index] = this.productFuncInfoById[id][0].define;
-      // this.setFuncDefine([this.deviceKey, funcDefine]); // 更新到state
-      return false;
-    },
     setDelType(type = false) {
-      this.setFuncModule(["delStatusType", type]);
+      this.setPulicModule(["delStatusType", type]);
     },
     minusFunc() {
       this.setDelType(true);
     },
     Previous() {
-      this.setFuncModule(["statusSetStep", 0]);
+      this.setPulicModule(["statusSetStep", 0]);
     },
     // 节流函数
     $_throttle() {
@@ -404,6 +417,7 @@ export default {
     },
     transPos() {
       if (this.dragFromIndex === this.dragToIndex) return;
+      // 定义换位函数
       const trans = (from, to, arr) => {
         const fromItem = deepCopy(arr[from]);
         const toItem = deepCopy(arr[to]);
@@ -412,9 +426,9 @@ export default {
         arrCopy[from] = toItem;
         return arrCopy;
       };
-      const funcDefine = trans(this.dragFromIndex, this.dragToIndex, this.funcDefine);
+      const funcDefine = trans(this.realIndex[this.dragFromIndex], this.realIndex[this.dragToIndex], this.funcDefine);
       this.$set(this.funcOptions, 'content' , trans(this.dragFromIndex, this.dragToIndex, this.funcOptions.content));
-      this.setFuncDefine([this.deviceKey, funcDefine]);
+      this.changeTemp({funcDefine});
       this.editItem = [false, false]; // 如果打开了输入框，要清掉
     },
   }

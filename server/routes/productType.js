@@ -11,8 +11,8 @@ router.get('/', function(req, res, next) {
   productTypeModel.find().then((params) => {
     data = params;
     res.json(data);
-    // const deviceTypeList = data[0].deviceTypeList;
-    // deviceTypeList.push({
+    // const seriesList = data[0].seriesList;
+    // seriesList.push({
     //   "name": "壁挂式空调",
     //   "img": "Hangon.png",
     // },
@@ -20,17 +20,16 @@ router.get('/', function(req, res, next) {
     //   "name": "立柜式空调",
     //   "img": "Cabinet.png"
     // });
-    // console.log(deviceTypeList);
+    // console.log(seriesList);
     // data[0].save();
   })
-  productTypeModel
 });
 
 router.post('/', function(req, res, next) {
   const map = req.body;
   map.logicMap = {json: "{}"};
   map.disableMap = {json: "{}"};
-  map.createTime = dayjs().format('YYYY.MM.DD');
+  map.createTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   const hasDeviceList = global.adminInfo.hasDeviceList;
   hasDeviceList.push(map);
 

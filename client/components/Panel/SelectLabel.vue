@@ -41,9 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      deviceKey: state => state.funcModule.deviceKey,
-      selectPanel: state => state.funcModule.selectPanel,
-      selectLabel: state => state.funcModule.selectLabel,
+      selectPanel: state => state.pulicModule.selectPanel,
+      selectLabel: state => state.pulicModule.selectLabel,
       labelList: (state, getters) => getters.labelList,
     }),
     isAllSelect() {
@@ -57,7 +56,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncModule: "SET_FUNC_MODULE",
+      setTempModule: "SET_TEMP_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     selectItem(index) {
       if (index === 'all') {
@@ -78,7 +78,7 @@ export default {
     commitSelect() {
       const selectLabel = deepCopy(this.selectLabel);
       selectLabel[this.selectSide] = this.selectType.concat();
-      this.setFuncModule(['selectLabel', selectLabel]);
+      this.setPulicModule(['selectLabel', selectLabel]);
     }
   },
 }

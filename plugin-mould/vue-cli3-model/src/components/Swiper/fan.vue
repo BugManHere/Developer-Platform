@@ -40,6 +40,14 @@ export default {
       Quiet: state => state.dataObject.Quiet
     }),
     imgList() {
+      if (this.Mod === 2) {
+        return [
+          {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
+          {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
+          {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
+          {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
+          {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1}];
+      }
       const list = [
         {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0},
         {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1},
@@ -83,12 +91,18 @@ export default {
     'imgList.length'() {
       this.initSwiper();
     },
-    Mod(newVal) {
-      if (newVal === 2) {
-        this.$refs[this.ref].banTouch(true);
-      } else {
-        this.$refs[this.ref].banTouch(false);
-      }
+    Mod: {
+      handler(newVal) {
+        this.$nextTick(() => {
+          if (newVal === 2) {
+            this.$refs[this.ref].banTouch(true);
+          } else {
+            this.$refs[this.ref].banTouch(false);
+          }
+          this.initSwiper();
+        });
+      },
+      immediate: true
     }
   },
   mounted() {
@@ -116,10 +130,10 @@ export default {
         this.insertAllSlide();
         this.$nextTick(() => {
           this.updateSwiper();
-          setTimeout(() => {
-            this.$refs[this.ref].updateSwiper();
-            this.setFanName();
-          }, 0);
+          // setTimeout(() => {
+          this.$refs[this.ref].updateSwiper();
+          this.setFanName();
+          // }, 0);
         });
       }, 0);
     },
@@ -177,6 +191,9 @@ export default {
     },
     // 移除所有slide
     removeAllSlide() {
+      // const index = this.imgList.map((item, index) => index);
+      // index.splice(this.leftLen, 1);
+      // this.$refs[this.ref].removeSlide(index);
       this.$refs[this.ref].removeAllSlides();
     },
     // 根据情况填充slide 

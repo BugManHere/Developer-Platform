@@ -78,21 +78,20 @@ export default {
         if (this.funcDefine) {
           this.funcDefineCopy = deepCopy(this.funcDefine);
           clearInterval(this.getFuncDefineTimer);
-          this.setFuncModule(['excludeMap', deepCopy(this.excludeMap)]); // 更新到state.js
-          this.setFuncModule(['hideMap', deepCopy(this.hideMap)]); // 更新到state.js
+          this.setTempModule(['excludeMap', deepCopy(this.excludeMap)]); // 更新到state.js
+          this.setTempModule(['hideMap', deepCopy(this.hideMap)]); // 更新到state.js
         }
       }, 50);
     } else {
       this.funcDefineCopy = deepCopy(this.funcDefine);
-      this.setFuncModule(['excludeMap', deepCopy(this.excludeMap)]); // 更新到state.js
-      this.setFuncModule(['hideMap', deepCopy(this.hideMap)]); // 更新到state.js
+      this.setTempModule(['excludeMap', deepCopy(this.excludeMap)]); // 更新到state.js
+      this.setTempModule(['hideMap', deepCopy(this.hideMap)]); // 更新到state.js
     }
   },
   computed: {
     ...mapState({
-      deviceKey: state => state.funcModule.deviceKey,
-      selectPanel: state => state.funcModule.selectPanel,
-      selectLabel: state => state.funcModule.selectLabel,
+      selectPanel: state => state.pulicModule.selectPanel,
+      selectLabel: state => state.pulicModule.selectLabel,
       funcDefine: (state, getters) => getters.funcDefine,
       labelList: (state, getters) => getters.labelList,
     }),
@@ -237,27 +236,26 @@ export default {
       col: [],
       row: []
     };
-    this.setFuncModule(['selectLabel', selectLabel]);
+    this.setPulicModule(['selectLabel', selectLabel]);
   },
   methods: {
     ...mapMutations({
-      setFuncModule: "SET_FUNC_MODULE",
-      setExcludeMap: "SET_EXCLUDE_MAP",
-      setDisableMap: "SET_DISABLE_MAP",
-      setFuncDefine: "SET_FUNC_DEFINE"
+      setTempModule: "SET_TEMP_MODULE",
+      changeTemp: "CHANGE_TEMPLATE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     panelShow(val=false) {
-      this.setFuncModule(['selectPanel', val]);
+      this.setPulicModule(['selectPanel', val]);
     },
     removeOneLabel(type, index) {
       const selectLabel = deepCopy(this.selectLabel);
       selectLabel[type][index] = false;
-      this.setFuncModule(['selectLabel', selectLabel]);
+      this.setPulicModule(['selectLabel', selectLabel]);
     },
     removeLabel(type) {
       const selectLabel = deepCopy(this.selectLabel);
       selectLabel[type].fill(false);
-      this.setFuncModule(['selectLabel', selectLabel]);
+      this.setPulicModule(['selectLabel', selectLabel]);
     },
     settingDone() {
       this.panelShow();
@@ -303,8 +301,8 @@ export default {
         } else { // 如果否，存入该逻辑
           this.$set(this.funcDefineCopy[funcIndex].statusDefine[colStatusName], arrName, [rowKey]);
         }
-        this.setFuncDefine([this.deviceKey, deepCopy(this.funcDefineCopy)]); // 更新到state.js
-        this.setFuncModule([mapName, deepCopy(this[mapName])]); // 更新到state.js
+        this.changeTemp({funcDefine: this.funcDefineCopy}); // 更新到state
+        this.setTempModule([mapName, deepCopy(this[mapName])]); // 更新到state
       }
     },
   },

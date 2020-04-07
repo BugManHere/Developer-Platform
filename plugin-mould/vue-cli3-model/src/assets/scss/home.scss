@@ -36,7 +36,15 @@
     }
   }
   .page-main {
+    position: relative;
     user-select: none;
+    .custom-notice-bar {
+      position: absolute;
+      top: -10px;
+      .gree-icon {
+        color: #77A49E;
+      }
+    }
     .auto-text {
       position: absolute;
       top: 119px;

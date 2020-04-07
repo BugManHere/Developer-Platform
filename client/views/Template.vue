@@ -1,12 +1,12 @@
 <template>
-  <div class="product">
+  <div class="template">
     <div>
       <!-- 顶部信息栏 -->
       <div class="message">
         <!-- 头部 -->
         <div class="frame-header">
           <!-- 标题 -->
-          <span v-text="'产品信息'" />
+          <span v-text="'模板信息'" />
           <!-- 按钮 -->
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default" v-text="'修改'" />
@@ -20,8 +20,12 @@
           <div>
             <p v-text="deviceInfo.deviceName" />
             <p>
-              <span> <i></i>产品：开发中 </span>
-              <span> <i></i>量产：未量产 </span>
+              <span> <i></i>文本：文本文 </span>
+              <span> <i></i>文本：开发中 </span>
+            </p>
+            <p>
+              <span class="done"> <i></i>文本：文本文 </span>
+              <span class="done"> <i></i>文本：已完成 </span>
             </p>
           </div>
           <!-- 设备信息 -->
@@ -65,7 +69,7 @@
         v-for="(item, index) in bottomBtnOptions"
         class="btn"
         :class="item.class"
-        :key="devSetStep * 10 + index"
+        :key="setTempStep * 10 + index"
         @click="
           item.func.parameter !== undefined
             ? item.func.defined(item.func.parameter)
@@ -79,7 +83,7 @@
 </template>
 
 <script>
-import { randomKey, deepCopy } from "@/utils";
+import { randomKey } from "@/utils";
 import ActiveTable from "@components/Table/ActiveFunc";
 import InertiaTable from "@components/Table/InertiaFunc";
 import LogicTable from "@components/Table/Logic";
@@ -97,77 +101,58 @@ export default {
     OtherConfigTable,
     Panel
   },
-  props: ["deviceKey"],
+  props: ["tempID"],
   data() {
     return {
-      currentDev: {},
-      deviceInfo: {},
       quoteShow: false,
-      imgPath: require('@public/img/product/Hangon.png')
     };
   },
-  watch: {
-    devSetStep(newVal) {
-      if (newVal === 3) {
-        this.$toast.info("保存成功");
-      } else if (newVal === 4) {
-        this.$router.push({ name: "Home" });
-      }
-    }
-  },
   destroyed() {
-    this.setFuncModule(["devSetStep", 0]);
+    this.setPulicModule(["setTempStep", 0]);
   },
   created() {
-    this.setFuncModule(["deviceKey", this.deviceKey]);
+    const productID = this.tempID.split('&')[0];
+    const seriesID = this.tempID.split('&')[1];
+    this.setTempModule(["tempID", this.tempID]); // 模板id
+    this.setTempModule(['productID', productID]); // 模板id对应的productID
+    this.setTempModule(['seriesID', seriesID]);  // 模板id对应的deviceID
   },
-  mounted() {
-    if (
-      Object.keys(this.hasDeviceList).length &&
-      this.hasDeviceList.find(item => item._id === this.deviceKey)
-    ) {
-      this.init();
-      return;
+  async mounted() {
+    // 进入页面时判断是否存在数据，不存在就获取
+    if (!this.funcDefine) {
+      const res = await https.fetchGet("/template");
+      this.setTempModule(["templates", res.data]);
     }
-    https
-      .fetchPost("/device", { admin: this.admin })
-      .then(data => {
-        this.setDevModule(["hasDeviceList", data.data.hasDeviceList]);
-        this.init();
-      })
-      .catch(err => {
-        this.$toast.warning("设备不存在，请重新添加");
-        this.$router.push({ name: "Home" });
-        console.log(err);
-      });
+    if (!Object.keys(this.productTypeList).length) {
+      const res = await https.fetchGet("/productType");
+      this.setPulicModule(["productTypeList", res.data]);
+    }
   },
   computed: {
     ...mapState({
-      admin: state => state.userModule.admin,
-      productTypeList: state => state.devModule.productTypeList,
-      productFunc: state => state.devModule.productFunc,
-      hasDeviceList: state => state.devModule.hasDeviceList,
-      devSetStep: state => state.funcModule.devSetStep,
-      currentFuncId: state => state.funcModule.currentFuncId,
-      excludeMap: state => state.funcModule.excludeMap,
-      hideMap: state => state.funcModule.hideMap,
-      disableMap: state => state.funcModule.disableMap,
+      productTypeList: state => state.pulicModule.productTypeList,
+      productID: state => state.tempModule.productID,
+      seriesID: state => state.tempModule.seriesID,
+      setTempStep: state => state.pulicModule.setTempStep,
+      currentFuncId: state => state.tempModule.currentFuncId,
+      productInfo: (state, getters) => getters.productInfo,
       funcDefine: (state, getters) => getters.funcDefine,
-      // excludeMap: (state, getters) => getters.excludeMap,
-      // hideMap: (state, getters) => getters.hideMap,
-      // disableMap: (state, getters) => getters.disableMap,
       labelList: (state, getters) => getters.labelList,
     }),
+    templateFuncNum() {
+      if (!this.funcDefine) return 0;
+      return this.funcDefine.length;
+    },
     // 页面内容设置
     pageOption() {
-      switch (this.devSetStep) {
+      switch (this.setTempStep) {
         case 0:
           return {
-            title: "活跃功能-按钮",
+            title: "显性功能-按钮",
             rightBtnList: [
               {
                 name: "添加",
-                method: this.$_addFunc
+                method: this.$_addTempFunc
               },
               {
                 name: '引入',
@@ -178,15 +163,15 @@ export default {
           };
         case 1:
           return {
-            title: "惰性功能",
+            title: "隐性功能",
             rightBtnList: [
               {
                 name: "添加",
-                method: this.$_addFunc
+                method: this.$_addTempFunc
               },
               {
                 name: '引入',
-                method: this.$_addFunc
+                method: this.$_addTempFunc
               }
             ],
             component: "InertiaTable"
@@ -202,11 +187,11 @@ export default {
             ],
             component: "LogicTable"
           };
-        case 3:
-          return {
-            title: "其他配置",
-            component: "OtherConfigTable"
-          };
+        // case 3:
+        //   return {
+        //     title: "其他配置",
+        //     component: "OtherConfigTable"
+        //   };
         default:
           return {};
       }
@@ -243,7 +228,7 @@ export default {
       const save = {
         text: "暂存",
         func: {
-          defined: this.saveRes,
+          defined: this.saveTempFunc,
           parameter: false
         },
         class: "btn-default"
@@ -256,20 +241,22 @@ export default {
         class: "btn-default"
       };
       const saveAndNext = {
-        text: "保存并进入下一步",
+        text: "下一步",
         func: {
-          defined: this.saveRes
+          defined: () => {
+            this.setStep(1);
+          }
         },
         class: "btn-primary"
       };
       const done = {
-        text: "完成配置",
+        text: "保存配置",
         func: {
-          defined: this.settingDone
+          defined: this.setTempDone
         },
         class: "btn-primary"
       };
-      switch (this.devSetStep) {
+      switch (this.setTempStep) {
         case 0:
           result.push(save, saveAndNext);
           return result;
@@ -287,63 +274,40 @@ export default {
           result.push(lastStep, done);
           return result;
       }
+    },
+    selectTempInfo() {
+      if (!this.productTypeList || !this.productTypeList.length || !this.productID || !this.seriesID) return {};
+      return this.productTypeList.find(item => item._id === this.productID).seriesList.find(item => item._id === this.seriesID);
+    },
+    imgPath() {
+      if (!this.selectTempInfo || !this.selectTempInfo.img) return require('@public/img/product/Hangon.png');
+      return require(`@public/img/product/${this.selectTempInfo.img}`);
+    },
+    deviceInfo() {
+      const deviceName = this.selectTempInfo.name;
+      return {
+        设备品类: deviceName,
+        创建时间: this.productInfo.createTime,
+        引用次数: this.productInfo.useTime,
+        修改人: this.productInfo.editUser,
+        修改时间: this.productInfo.editTime,
+        功能数量: this.templateFuncNum,
+      };
     }
   },
   methods: {
     ...mapMutations({
       setDevModule: "SET_DEV_MODULE",
-      setFuncModule: "SET_FUNC_MODULE"
+      setTempModule: "SET_TEMP_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     ...mapActions({
-      postFunc: "POST_FUNC",
-      addFunc: "ADD_FUNC",
-      setDone: "SET_DONE"
+      saveTempFunc: "SAVE_TEMP_FUNC", // 暂存功能
+      setTempDone: "SET_TEMP_DONE", // 保存某一功能
+      addTempFunc: "ADD_TEMP_FUNC", // 添加功能
     }),
-    init() {
-      const hasDeviceList = this.hasDeviceList;
-      const funcDefineList = {};
-      // const excludeMap = {};
-      // const hideMap = {};
-      // const disableMap = {};
-      hasDeviceList.forEach(val => {
-        funcDefineList[val._id] = val.funcDefine;
-        // const logicRes = JSON.parse(val.excludeMap.json);
-        // const hideRes = JSON.parse(val.disableMap.json);
-        // const disableRes = JSON.parse(val.disableMap.json);
-        // excludeMap[val._id] = logicRes;
-        // hideMap[val._id] = hideRes;
-        // disableMap[val._id] = disableRes;
-      });
-      this.setFuncModule(["funcDefineList", funcDefineList]);
-      // this.setFuncModule(["excludeMap", excludeMap]);
-      // this.setFuncModule(["hideMap", hideMap]);
-      // this.setFuncModule(["disableMap", disableMap]);
-      this.getInfo();
-      this.getProductFunc(); // 获取这个产品在其他地方定义过的功能
-    },
-    getInfo() {
-      const hasDeviceList = deepCopy(this.hasDeviceList);
-      this.currentDev = hasDeviceList.find(item => item._id === this.deviceKey);
-      this.deviceInfo = {
-        产品品牌: this.currentDev.brand,
-        产品类别: this.currentDev.productName,
-        产品名称: this.currentDev.deviceName,
-        产品型号: this.currentDev.productModel,
-        通讯协议: this.currentDev.protocol,
-        创建时间: this.currentDev.createTime
-      };
-      // @public/img/product/Hangon.png
-      this.imgPath = require(`@public/img/product/${this.currentDev.imgPath}`)
-      this.setFuncModule(['productID', this.currentDev.productID]);
-    },
-    getProductFunc() {
-      https.fetchGet("/productFunc", {productID: this.currentDev.productID})
-        .then(res => {
-          this.setDevModule(['productFunc', res.data]);
-        })
-    },
     // 点击添加
-    $_addFunc() {
+    $_addTempFunc() {
       const name = `未命名${randomKey(4)}`;
       const insertMap = {
         name: name,
@@ -366,7 +330,7 @@ export default {
         },
         order: []
       };
-      if (!this.devSetStep) {
+      if (!this.setTempStep) {
         insertMap.type = "active";
         insertMap.statusDefine.status_1 = {
           name: "开启",
@@ -376,48 +340,20 @@ export default {
         };
         insertMap.order.push("status_1");
       }
-      const insertStr = JSON.stringify(insertMap);
-      this.addFunc({
-        insertMap: insertStr,
-        key: this.deviceKey
-      }).then(res => {
-        res;
-      });
+      this.addTempFunc(insertMap);
     },
     $_quote() {
-      this.quoteShow = this.devSetStep ? 'inertia' : 'active';
+      this.quoteShow = this.setTempStep ? 'inertia' : 'active';
     },
     setStep(val = -1) {
-      this.setFuncModule(["devSetStep", this.devSetStep + val]);
-    },
-    // 点击暂存
-    saveRes(nextStep = true) {
-      const funcDefine = JSON.stringify(this.funcDefine);
-      this.postFunc({
-        funcDefine,
-        key: this.deviceKey
-      }).then(status => {
-        status && (nextStep ? this.setStep(1) : this.$toast.info("保存成功"));
-      });
+      this.setPulicModule(["setTempStep", this.setTempStep + val]);
     },
     showAllLogic() {
       const selectLabel = {};
       selectLabel.col = Array(this.labelList.length).fill(true);
       selectLabel.row = Array(this.labelList.length).fill(true);
-      this.setFuncModule(["selectLabel", selectLabel]);
+      this.setPulicModule(["selectLabel", selectLabel]);
     },
-    settingDone() {
-      const funcDefine = JSON.stringify(this.funcDefine);
-      const excludeMap = JSON.stringify(this.excludeMap);
-      const hideMap = JSON.stringify(this.hideMap);
-      this.setStep(1);
-      this.setDone({
-        funcDefine,
-        excludeMap,
-        hideMap,
-        key: this.deviceKey
-      });
-    }
   }
 };
 </script>

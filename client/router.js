@@ -3,8 +3,10 @@ import Router from 'vue-router';
 
 const Home = r =>
   require.ensure([], () => r(require('./views/Home.vue')));
-const Product = r =>
-  require.ensure([], () => r(require('./views/Product.vue')));
+const Template = r =>
+  require.ensure([], () => r(require('./views/Template.vue')));
+const Device = r =>
+  require.ensure([], () => r(require('./views/Device.vue')));
 const Account = r =>
   require.ensure([], () => r(require('./views/Account.vue')));
 
@@ -33,9 +35,15 @@ export default new Router({
       props: true
     },
     {
-      path: '/Product/:deviceKey',
-      name: 'Product',
-      component: Product,
+      path: '/Template/:tempID',
+      name: 'Template',
+      component: Template,
+      props: true
+    },
+    {
+      path: '/Device/:deviceKey',
+      name: 'Device',
+      component: Device,
       props: true
     },
   ]

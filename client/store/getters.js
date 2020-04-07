@@ -1,13 +1,28 @@
 const getters = {
+  productInfo: state => {
+    if (!state.tempModule.templates.length || !state.tempModule.productID || !state.tempModule.seriesID) return {};
+    return state.tempModule.templates.filter(item => item.productID === state.tempModule.productID).find(item => item.seriesID === state.tempModule.seriesID);
+  },
+  funcDefine: (state, getters) => {
+    return getters.productInfo.funcDefine;
+  },
+  currentDevice: state => {
+    return state.devModule.hasDeviceList.find(item => item._id === state.devModule.deviceKey);
+  },
+  funcImport: (state, getters) => {
+    if (!getters.currentDevice) return [];
+    return getters.currentDevice.funcImport;
+  },
   // 根据id进行搜索的功能列表
-  productFuncInfoById: state => {
+  productFuncInfoById: (state, getters) => {
     const result = {};
-    state.devModule.productFunc.forEach(item => {
+    getters.funcDefine.forEach(item => {
       const map = {
         identifier: item.identifier, 
         name: item.name, 
-        json: item.json, 
-        define: item
+        json: item.json,
+        _id: item._id,
+        define: item,
       };
       if (result[item.identifier]) {
         result[item.identifier].push(map);
@@ -17,13 +32,14 @@ const getters = {
     });
     return result;
   },
-  productFuncInfoByName: state => {
+  productFuncInfoByName: (state, getters) => {
     const result = {};
-    state.devModule.productFunc.forEach(item => {
+    getters.funcDefine.forEach(item => {
       const map = {
         identifier: item.identifier, 
         name: item.name, 
         json: item.json, 
+        _id: item._id,
         define: item
       };
       if (result[item.name]) {
@@ -34,13 +50,14 @@ const getters = {
     });
     return result;
   },
-  productFuncInfoByJson: state => {
+  productFuncInfoByJson: (state, getters) => {
     const result = {};
-    state.devModule.productFunc.forEach(item => {
+    getters.funcDefine.forEach(item => {
       const map =  {
         identifier: item.identifier, 
         name: item.name, 
         json: item.json, 
+        _id: item._id,
         define: item
       };
       if (result[item.json]) {
@@ -51,18 +68,6 @@ const getters = {
     });
     return result;
   },
-  funcDefine: state => {
-    return state.funcModule.funcDefineList[state.funcModule.deviceKey];
-  },
-  // excludeMap: state => {
-  //   return state.funcModule.excludeMap[state.funcModule.deviceKey];
-  // },
-  // hideMap: state => {
-  //   return state.funcModule.hideMap[state.funcModule.deviceKey];
-  // },
-  // disableMap: state => {
-  //   return state.funcModule.disableMap[state.funcModule.deviceKey];
-  // },
   labelList: (state, getters) => {
     const result = [];
     getters.funcDefine.forEach((funcItem, funcIndex) => {

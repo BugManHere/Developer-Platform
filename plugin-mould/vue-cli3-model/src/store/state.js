@@ -6,13 +6,14 @@ const state = {
   swiperHold: false,
   ableSend: false, // 是否允许发送命令
   loading: false,
+  hasAir: JSON.parse(process.env.VUE_APP_JSON).includes('Air'),
   dataObject: {
     Pow: 1,
-    Mod: 1,
+    Mod: 2,
     SetTem: 24,
-    WdSpd: 4,
+    WdSpd: 3,
     'Add0.5': 0,
-    'Add0.1': 8,
+    'Add0.1': 0,
     Lig: 1,
     LigSen: 1,
     has05: 1,

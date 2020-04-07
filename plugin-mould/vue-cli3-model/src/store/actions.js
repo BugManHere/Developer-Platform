@@ -51,9 +51,9 @@ function sendControl({ state, commit }, dataMap) {
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
-    const json = JSON.stringify({ mac, t, opt, p });
-    console.table([opt, p]);
     console.log([opt, p]);
+    console.table([opt, p]);
+    const json = JSON.stringify({ mac, t, opt, p });
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
         // 发送指令后暂停接收，过8秒后重启轮询
@@ -126,6 +126,7 @@ function getStatusOfDev({ state, commit }) {
         // 非场景时提交数据
         commit(SET_CHECK_OBJECT, DataObject);
         commit(SET_DATA_OBJECT, DataObject);
+        lastObject = state.checkObject;
       }
       console.log(DataObject);
       return DataObject;

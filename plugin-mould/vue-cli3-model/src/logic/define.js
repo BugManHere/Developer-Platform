@@ -7,7 +7,8 @@ const LogicDefine = {
       g_outputMap: {},
       g_funcDefine: [],
       g_excludeMap: {},
-      g_hideMap: {}
+      g_hideMap: {},
+      g_hideState: '[]',
     };
   },
   mounted() {
@@ -25,7 +26,7 @@ const LogicDefine = {
       });
     },
     /**
-     * @description g_funcDefine的数组版本
+     * @description g_funcDefine的identifier
      * @return Object {identifier: func}
      */
     g_identifierArr() {
@@ -51,11 +52,16 @@ const LogicDefine = {
     g_valToStatus() {
       const result = {};
       this.g_funcDefine.forEach(funcItem => {
+        const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
         const key = funcItem.identifier;
         const order = Object.keys(funcItem.statusDefine);
         result[key] = {};
         order.forEach(statusName => {
           if (statusName === 'undefined') return;
+          const state = `${key}_${statusName}`;
+          if (hideState.includes(state)) { // 被隐藏的state不参与计算
+            return;
+          }
           const val = funcItem.statusDefine[statusName].value;
           const beforeStatus = result[key][val];
           // 是否存在同源状态（JSON取值相等）
@@ -302,6 +308,13 @@ const LogicDefine = {
       });
       return result;
     },
+  },
+  watch: {
+    g_hideStateArr(newVal) {
+      this.$nextTick(() => {
+        this.g_hideState = JSON.stringify(newVal);
+      });
+    }
   },
   methods: {
     g_init() {

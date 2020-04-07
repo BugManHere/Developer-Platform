@@ -1,10 +1,10 @@
 <template>
   <div class="select-page">
-    <div 
-      @click="chooseOne(key)" 
+    <div
+      @click="chooseOne(key)"
       :class="{hold: key === imgKey}"
-      class="panel" 
-      v-for="(item, key) in imgMap" 
+      class="panel"
+      v-for="(item, key) in imgMap"
       :key="key">
       <img :src="item" />
     </div>
@@ -26,9 +26,8 @@ export default {
   },
   computed: {
     ...mapState({
-      productTypeList: state => state.devModule.productTypeList,
+      productTypeList: state => state.pulicModule.productTypeList,
       funcDefine: (state, getters) => getters.funcDefine,
-      deviceKey: state => state.funcModule.deviceKey,
     }),
     imgMap() {
       const result = {};
@@ -43,12 +42,12 @@ export default {
     }
   },
   mounted() {
-    if (!Object.keys(this.productTypeList).length) {
+    if (!this.productTypeList.length) {
       https
         .fetchGet("/productType")
         .then(data => {
           const productTypeList = data.data.productTypeList;
-          this.setDevModule(["productTypeList", productTypeList]);
+          this.setPulicModule(["productTypeList", productTypeList]);
           this.getImg();
         })
         .catch(err => {
@@ -61,8 +60,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setFuncDefine: "SET_FUNC_DEFINE",
-      setDevModule: "SET_DEV_MODULE"
+      changeTemp: "CHANGE_TEMPLATE",
+      setDevModule: "SET_DEV_MODULE",
+      setPulicModule: "SET_PULIC_MODULE",
     }),
     chooseOne(key) {
       this.imgKey = this.imgKey === key ? undefined : key;
@@ -78,7 +78,6 @@ export default {
     },
     settingDone() {
       const index = this.funcIndex;
-      console.log(this.funcDefine[index]);
       const funcDefine = deepCopy(this.funcDefine);
       if (this.imgKey) {
         funcDefine[index].page = this.pageConfig[this.imgKey];
@@ -87,7 +86,7 @@ export default {
         funcDefine[index].page = undefined;
       }
       console.log(funcDefine[index].page);
-      this.setFuncDefine([this.deviceKey, funcDefine]);
+      this.changeTemp({funcDefine});
       this.$parent.$parent.insertPageShow = false;
     }
   }

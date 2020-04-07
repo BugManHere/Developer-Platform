@@ -10,37 +10,27 @@ const hideSchema = new mongoose.Schema({
   json: String
 })
 
-// 创建孙子文档 funcDefine
-const funcSchema = new mongoose.Schema({
-  name: String,
-  identifier: String,
-  json: String,
-  order: [String],
-  type: String,
-  statusDefine: Object,
-  page: Object
-})
-
 // 创建子文档 hasDeviceList
 const listSchema = new mongoose.Schema({
-  productID: Number,
+  productID: String,
   productName: String,
-  deviceID: Number,
+  seriesID: String,
   brand: String,
   deviceName: String,
   productModel: String,
   protocol: String,
   createTime: String,
+  editTime: String,
   imgPath: String,
   excludeMap: excludeSchema,
   hideMap: hideSchema,
-  funcDefine: [funcSchema],
+  funcImport: [String],
 })
 
 // 创建Schema
-const deviceSchema = new mongoose.Schema({
+const userDeviceSchema = new mongoose.Schema({
   admin: String,
   hasDeviceList: [listSchema],
 });
 
-module.exports = mongoose.model("device", deviceSchema);
+module.exports = mongoose.model("user-device", userDeviceSchema);

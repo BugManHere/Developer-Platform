@@ -3,10 +3,10 @@ import Vuex from 'vuex';
 import getters from './getters';
 import actions from './actions';
 import mutations from './mutations';
-import devModule from './devModule/module';
-import funcModule from './funcModule/module';
-import userModule from './userModule/module';
-import pulicModule from './pulicModule/module';
+import devModule from './module/dev';
+import tempModule from './module/temp';
+import pulicModule from './module/pulic';
+import userModule from './module/user';
 
 Vue.use(Vuex);
 
@@ -16,7 +16,7 @@ export default new Vuex.Store({
   mutations,
   modules: {
     devModule,
-    funcModule,
+    tempModule,
     userModule,
     pulicModule
   },
