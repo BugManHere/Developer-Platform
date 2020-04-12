@@ -1,7 +1,7 @@
 import { types, defineTypes } from '@/store/types';
-
+import { getConfig } from '@/utils/getConfig';
+import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
-import { getQueryStringByName, isMqtt } from '../../utils/index';
 
 let _timer = null; // 轮询定时器
 let _timer2 = null; // 延时发送指令定时器
@@ -10,8 +10,7 @@ let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
 let hasMqtt = isMqtt();
 
-const { key } = require('@/../plugin.id.json');
-const { moreOption } = require(`@/../../../output/${key}.json`);
+const { moreOption } = getConfig({ isLocal: true });
 const statueJson2 = moreOption.statueJson2;
 
 // 自定义数据，根据业务更改

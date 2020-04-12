@@ -1,8 +1,8 @@
-import { types, defineTypes } from '../types';
-
 import Vue from 'vue';
 
-const { customizeFunction, customizeInit } = require('../userdef');
+import { types, defineTypes } from '@/store/types';
+import { getConfig } from '@/utils/getConfig';
+const { customizeFunction, customizeInit } = require('@/store/userdef');
 
 export default {
   /**
@@ -10,7 +10,7 @@ export default {
    */
   [defineTypes.MACHINE_INIT](context) {
     // 获取配置
-    const baseData = getConfig();
+    const baseData = getConfig({ storage: window.storage });
     // 更新配置到vuex
     updateConfig(context, baseData);
     // 创建状态机
@@ -155,27 +155,6 @@ function runCustomizeInit(context) {
     // 先判断是否存在，如果存在，传入content执行
     customizeInit[identifier] && customizeInit[identifier](context);
   });
-}
-
-/**
- * @description 获取配置
- * @returns json配置
- */
-function getConfig() {
-  // 配置key
-  const { key } = require('@/../plugin.id.json');
-  // localconfig模式下强制启用本地配置
-  const getLocalConfig = () => {
-    const isLocalConfig = process.env.VUE_APP_MODE === 'local';
-    return isLocalConfig && require(`@/../../../output/${key}.json`);
-  };
-  // 如果是development环境，获取线上配置
-  const getServeConfig = () => {
-    const isServeConfig = process.env.NODE_ENV === 'development';
-    return isServeConfig ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
-  };
-  // 本地模式下优先获取本地配置
-  return getLocalConfig() || getServeConfig();
 }
 
 /**
