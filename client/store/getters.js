@@ -7,7 +7,7 @@ const getters = {
     return getters.productInfo.funcDefine;
   },
   currentDevice: state => {
-    return state.devModule.hasDeviceList.find(item => item._id === state.devModule.deviceKey);
+    return state.devModule.userDeviceList.find(item => item._id === state.devModule.deviceKey);
   },
   funcImport: (state, getters) => {
     if (!getters.currentDevice) return [];

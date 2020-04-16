@@ -201,9 +201,6 @@ export default {
     delStatusType() {
       this.clearSelect();
     },
-    'currentStatus.value'(newVal) {
-      console.log(typeof newVal);
-    }
   },
   methods: {
     ...mapMutations({
@@ -361,7 +358,6 @@ export default {
         if (nameMap[name]) return this.$toast.warning('不允许存在同名状态');
         nameMap[name] = true;
       }
-      console.log(this.$_funcDefine);
       this.$_funcDefine.forEach(funcItem => {
         Object.keys(funcItem.statusDefine).forEach(statusItem => {
           if (statusItem === 'undefined') return;

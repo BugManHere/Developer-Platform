@@ -6,7 +6,7 @@
         <!-- 头部 -->
         <div class="frame-header">
           <!-- 标题 -->
-          <span v-text="'模板信息'" />
+          <span v-text="'设备信息'" />
           <!-- 按钮 -->
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default" v-text="'修改'" />
@@ -83,10 +83,10 @@
 </template>
 
 <script>
-import ActiveTable from "@components/Table/ActiveFunc";
-import ImportFuncTable from "@components/Table/ImportFunc";
-import OtherConfigTable from "@components/Table/OtherConfig";
-import Panel from "@components/Panel/index";
+import ActiveTable from "@components/layout/Table/ActiveFunc";
+import ImportFuncTable from "@components/layout/Table/ImportFunc";
+import OtherConfigTable from "@components/layout/Table/OtherConfig";
+import Panel from "@components/layout/Panel/index";
 import https from "@/https";
 import { mapState, mapMutations, mapActions } from "vuex";
 
@@ -120,10 +120,11 @@ export default {
   },
   async mounted() {
     // 进入页面时判断是否存在数据，不存在就获取
-    if (!this.hasDeviceList.length) {
+    if (!this.userDeviceList.length) {
       const admin = this.admin;
       const res = await https.fetchPost("/userDevice", { admin });
-      this.setDevModule(['hasDeviceList', res.data]);
+      this.setDevModule(['userDeviceList', res.data]);
+      this.setDevModule(['moreOption', this.currentDevice.moreOption]);
     }
     if (!Object.keys(this.productTypeList).length) {
       const res = await https.fetchGet("/productType");
@@ -143,11 +144,10 @@ export default {
       admin: state => state.userModule.admin,
       developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
       productTypeList: state => state.pulicModule.productTypeList,
-      hasDeviceList: state => state.devModule.hasDeviceList,
+      userDeviceList: state => state.devModule.userDeviceList,
       setDevStep: state => state.pulicModule.setDevStep,
       currentFuncId: state => state.tempModule.currentFuncId,
       currentDevice: (state, getters) => getters.currentDevice, // hasDeviceList下对应的设备
-      funcImport: (state, getters) => getters.funcImport, // currentDevice里的funcImport
       funcDefine: (state, getters) => getters.funcDefine, // currentDevice里的funcImport
     }),
     // 页面内容设置
@@ -224,7 +224,7 @@ export default {
       const done = {
         text: "保存配置",
         func: {
-          defined: this.settingDone
+          defined: this.setDevDone
         },
         class: "btn-primary"
       };
@@ -285,9 +285,6 @@ export default {
     saveRes() {
       this.setStep(1);
     },
-    settingDone() {
-      this.setDevDone();
-    }
   }
 };
 </script>

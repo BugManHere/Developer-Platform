@@ -140,7 +140,7 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      const sendData = {Mod: toIndex, Emod: 0};
+      const sendData = {Mod: toIndex, Emod: 0, UDFanPort: 0};
       toIndex === 2 && (sendData.WdSpd = 1);
       this.changeData(sendData);
       this.updateList(index);

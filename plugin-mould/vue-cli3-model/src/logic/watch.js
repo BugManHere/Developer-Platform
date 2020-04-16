@@ -9,6 +9,36 @@ const LogicWatch = {
     })
   },
   watch: {
+    'g_moreOption.temStep': {
+      handler(newVal) {
+        switch (newVal) {
+          case '1':
+            this.setDataObject({
+              has01: 0,
+              has05: 0,
+            });
+            break;
+          case '0.5':
+            this.setDataObject({
+              has01: 0,
+              has05: 1,
+            });
+            break;
+          case '0.1':
+            this.setDataObject({
+              has01: 1,
+              has05: 0,
+            });
+            break;
+          default:
+            this.setDataObject({
+              has01: 0,
+              has05: 0,
+            });
+            break;
+        }
+      }
+    },
     g_outputMap: {
       handler(newVal) {
         if (newVal) {

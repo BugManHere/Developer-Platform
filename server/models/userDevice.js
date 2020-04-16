@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 // 创建孙子文档 
-const excludeSchema = new mongoose.Schema({
-  json: String
+const optionSchema = new mongoose.Schema({
+  voiceSkill: Boolean,
+  temUnChange: Boolean,
+  temStep: String,
+  fanRange: String,
+  statueJson: [String],
+  statueJson2: [String],
 })
 
-// 创建孙子文档 
-const hideSchema = new mongoose.Schema({
-  json: String
-})
-
-// 创建子文档 hasDeviceList
+// 创建子文档 userDeviceList
 const listSchema = new mongoose.Schema({
   productID: String,
   productName: String,
@@ -22,15 +22,14 @@ const listSchema = new mongoose.Schema({
   createTime: String,
   editTime: String,
   imgPath: String,
-  excludeMap: excludeSchema,
-  hideMap: hideSchema,
+  moreOption: optionSchema,
   funcImport: [String],
 })
 
 // 创建Schema
 const userDeviceSchema = new mongoose.Schema({
   admin: String,
-  hasDeviceList: [listSchema],
+  userDeviceList: [listSchema],
 });
 
 module.exports = mongoose.model("user-device", userDeviceSchema);

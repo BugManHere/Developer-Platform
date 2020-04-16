@@ -52,7 +52,7 @@
 <script>
 import { deepCopy } from '@/utils';
 import { mapState, mapMutations } from "vuex";
-import Panel from '@components/Panel/index'
+import Panel from '@components/layout/Panel/index'
 
 export default {
   components: {
@@ -301,7 +301,7 @@ export default {
         } else { // 如果否，存入该逻辑
           this.$set(this.funcDefineCopy[funcIndex].statusDefine[colStatusName], arrName, [rowKey]);
         }
-        this.changeTemp({funcDefine: this.funcDefineCopy}); // 更新到state
+        this.changeTemp({funcDefine: deepCopy(this.funcDefineCopy)}); // 更新到state
         this.setTempModule([mapName, deepCopy(this[mapName])]); // 更新到state
       }
     },

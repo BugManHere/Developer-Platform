@@ -47,7 +47,7 @@
                 :key="key"
               >
                 <span v-text="key"/>
-                <span contenteditable v-text="val"/>
+                <span v-text="val"/>
               </div>
             </div>
           </div>
@@ -67,7 +67,6 @@
 
 <script>
 import Dialog from "@components/Dialog";
-import https from "@/https";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
@@ -85,14 +84,14 @@ export default {
       admin: state => state.userModule.admin,
       developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
       productTypeList: state => state.pulicModule.productTypeList,
-      hasDeviceList: state => state.devModule.hasDeviceList,
+      userDeviceList: state => state.devModule.userDeviceList,
       templates: state => state.tempModule.templates,
       funcDefine: (state, getters) => getters.funcDefine,
     }),
     deviceInfoList() {
       let result = [];
       if (this.developType === 0) {
-         result = this.hasDeviceList.map(item => {
+         result = this.userDeviceList.map(item => {
            return {
              imgPath: item.imgPath,
              deviceName: item.deviceName,
@@ -123,39 +122,16 @@ export default {
     developType: {
       async handler(newVal) {
         if (newVal === 1) {
-          // 进入页面时判断是否存在数据，不存在就获取
-          if (!this.funcDefine) {
-            const res = await https.fetchGet("/template");
-            this.setTempModule(["templates", res.data]);
-          }
-          if (!Object.keys(this.productTypeList).length) {
-            const res = await https.fetchGet("/productType");
-            this.setPulicModule(["productTypeList", res.data]);
-          }
+          this.getUserDeviceList(); // 获取用户设备列表
+          this.getTemplates();
         }
       },
       immediate: true
     }
   },
   mounted() {
-    https
-      .fetchGet("/productType")
-        .then(data => {
-          const productTypeList = data.data;
-          this.setPulicModule(["productTypeList", productTypeList]);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    https
-      .fetchPost("/userDevice", { admin: this.admin })
-        .then(data => {
-          const hasDeviceList = data.data;
-          this.setDevModule(["hasDeviceList", hasDeviceList]);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    this.getProductTypeList(); // 获取产品类别列表
+    this.getUserDeviceList(); // 获取用户设备列表
   },
   methods: {
     ...mapMutations({
@@ -166,6 +142,9 @@ export default {
     }),
     ...mapActions({
       delDev: "DEL_DEV",
+      getProductTypeList: "GET_PRODUCT_TYPE_LIST", // 获取产品类别列表
+      getUserDeviceList: "GET_USERDEVICE_LIST", // 获取用户设备列表
+      getTemplates: "GET_TEMPLATES", // 获取用户设备列表
     }),
     setDialogType(val) {
       this.isShowDialog = val;

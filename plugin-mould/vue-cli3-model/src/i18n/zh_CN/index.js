@@ -12,7 +12,11 @@ module.exports = {
     smart: '智能',
     timing: '定时',
     CO2: '二氧化碳浓度',
-    Electric: '电量查询'
+    Electric: '电量查询',
+  },
+  ban: {
+    Auto: '自动',
+    StHt: '8'
   },
   error: {
     notify_fault_title: '故障通知',
@@ -161,7 +165,8 @@ module.exports = {
     Air: '新风',
     Air_智能: '智能新风',
     NobodySave: '无人节能',
-    FbidBloPer: '防直吹'
+    FbidBloPer: '防直吹',
+    UDFanPort: '下出风'
   },
   sweep: {
     speedTitle: '扫风',

@@ -10,7 +10,7 @@
       <tbody>
         <!-- 无内容的时候显示 -->
         <tr v-if="!funcOptions.content.length">
-          <td v-for="(item, key) in ['', '', '', []]" :key="key">
+          <td v-for="(item, key) in ['', '', '', '', []]" :key="key">
             <p v-if="!Array.isArray(item)" v-text="item" />
             <span v-else class="definitions">
               <span v-for="(val, index) in item" :key="index" v-text="val" />
@@ -25,7 +25,10 @@
           </td>
         </tr>
         <!-- 有内容的时候显示 -->
-        <tr v-for="(content, index) in funcOptions.content" :key="index" 
+        <tr v-for="(content, index) in funcOptions.content" 
+          :class="{develop: developType === 1}"
+          v-show="content"
+          :key="index" 
           @dragstart="dragItem(index)"
           @dragenter.prevent="dragMove(index)"
           @dragend="transPos"
@@ -68,7 +71,7 @@
               <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[realIndex[index]].page"/>
               <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue"/>
               <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
-              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete')"/>
+              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete') && content[1] !== 'Pow'" />
             </p>
           </td>
         </tr>
@@ -82,7 +85,8 @@
 <script>
 import { deepCopy } from "@/utils";
 import { mapMutations, mapState, mapActions } from "vuex";
-import Panel from "@components/Panel/index";
+import Panel from "@components/layout/Panel/index";
+import https from "@/https";
 
 export default {
   components: {
@@ -113,12 +117,12 @@ export default {
       admin: state => state.userModule.admin,
       animationSecond: state => state.pulicModule.animationSecond,
       developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
-      hasDeviceList: state => state.devModule.hasDeviceList,
+      userDeviceList: state => state.devModule.userDeviceList,
       tempID: state => state.tempModule.tempID,
       currentFuncId: state => state.tempModule.currentFuncId,
       currentStatusId: state => state.tempModule.currentStatusId,
+      deviceKey: state => state.devModule.deviceKey,
       statusSetStep: state => state.pulicModule.statusSetStep,
-      // setTempStep: state => state.pulicModule.setTempStep,
       delStatusType: state => state.pulicModule.delStatusType,
       productFuncInfoById: (state, getters) => getters.productFuncInfoById,
       funcDefine: (state, getters) => getters.funcDefine,
@@ -132,7 +136,11 @@ export default {
       const result = [];
       if (!this.funcDefine) return result;
       this.funcDefine.forEach((item, index) => {
-        this.tableOptions.type.includes(item.type) && result.push(index);
+        if (this.developType === 0) {
+          result.push(index);
+        } else if (this.developType === 1 && this.tableOptions.type.includes(item.type)) {
+          result.push(index);
+        }
       });
       return result;
     },
@@ -155,7 +163,9 @@ export default {
       try {
         if (this.imshowFunc.length) {
           content = this.imshowFunc.map(val => {
+            if (!val) return undefined;
             const res = this.tableOptions.keyList.map(item => {
+              if (item === 'type' ) return {active: '显性功能-按钮', inertia: '隐性功能'}[val[item]]
               return val[item];
             });
             res.push([]);
@@ -328,7 +338,7 @@ export default {
     },
     // 点击状态简要后跳转到该状态的设置
     goThatStatus(index, statusIndex) {
-      if (!this.$_throttle()) return; // 节流
+      if (!this.$_throttle() || this.developType === 0) return; // 节流,设备管理页面不可进入
       this.setTempModule(["currentFuncId", index]); // 该功能在所有功能内的位置
       const statusId = statusIndex ? statusIndex + 1 : 0; // 该状态在功能内的位置
       this.$nextTick(() => {
@@ -337,6 +347,7 @@ export default {
     },
     // 显示指定位置的输入框
     showInput(index, index2, value) {
+      if (this.developType === 0) return; // 设备管理页面不可进入
       const id = `input-${index}-${index2}`; // 计算输入框的id
       const doc = document.getElementById(id);
       // 显示此输入框
@@ -415,21 +426,32 @@ export default {
     dragMove(index) {
       this.dragToIndex = index;
     },
-    transPos() {
+    async transPos() {
       if (this.dragFromIndex === this.dragToIndex) return;
-      // 定义换位函数
-      const trans = (from, to, arr) => {
-        const fromItem = deepCopy(arr[from]);
-        const toItem = deepCopy(arr[to]);
-        const arrCopy = deepCopy(arr);
-        arrCopy[to] = fromItem;
-        arrCopy[from] = toItem;
-        return arrCopy;
-      };
-      const funcDefine = trans(this.realIndex[this.dragFromIndex], this.realIndex[this.dragToIndex], this.funcDefine);
-      this.$set(this.funcOptions, 'content' , trans(this.dragFromIndex, this.dragToIndex, this.funcOptions.content));
-      this.changeTemp({funcDefine});
-      this.editItem = [false, false]; // 如果打开了输入框，要清掉
+      if (this.developType === 0) {
+        const idList = deepCopy(this.funcImport);
+        console.log(idList);
+
+        const toID = idList[this.dragToIndex];
+        idList[this.dragToIndex] = idList[this.dragFromIndex];
+        idList[this.dragFromIndex] = toID;
+        const res = await https.fetchPost('/userDevice/save', {idList: JSON.stringify(idList), id: this.deviceKey, admin: this.admin});
+        this.setDevModule(['userDeviceList', res.data]);
+      } else if (this.developType === 1) {
+        // 定义换位函数
+        const trans = (from, to, arr) => {
+          const fromItem = deepCopy(arr[from]);
+          const toItem = deepCopy(arr[to]);
+          const arrCopy = deepCopy(arr);
+          arrCopy[to] = fromItem;
+          arrCopy[from] = toItem;
+          return arrCopy;
+        };
+        const funcDefine = trans(this.realIndex[this.dragFromIndex], this.realIndex[this.dragToIndex], this.funcDefine);
+        this.$set(this.funcOptions, 'content' , trans(this.dragFromIndex, this.dragToIndex, this.funcOptions.content));
+        this.changeTemp({funcDefine});
+        this.editItem = [false, false]; // 如果打开了输入框，要清掉
+      }
     },
   }
 };

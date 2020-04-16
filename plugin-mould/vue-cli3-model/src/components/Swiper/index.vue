@@ -24,7 +24,9 @@
         </template>
       </swiper-slide>
     </swiper>
-    <div class="swiper-text">
+    <div 
+      class="swiper-text"
+      :class="{isNumber}">
       <nobr 
         v-if="isShowText"
         v-text="textContent" />
@@ -79,6 +81,7 @@ export default {
       textContent: '',
       initTimer: null,
       initTime: 0,
+      isNumber: false,
     };
   },
   computed: {
@@ -190,9 +193,10 @@ export default {
     removeAllSlides() {
       this.$refs[this.slidesData.key].swiper.removeAllSlides();
     },
-    showText(able, text = '') {
+    showText(able, text = '', isNumber = false) {
       this.textContent = text;
       this.isShowText = able;
+      this.isNumber = isNumber;
       this.$forceUpdate();
     },
     banTouch(val) {

@@ -234,7 +234,7 @@ export default {
     // 点击完成
     async importDone() {
       const res = await https.fetchPost('/userDevice/save', {idList: JSON.stringify(this.selectFuncID), id: this.deviceKey ,admin: this.admin});
-      this.setDevModule(['hasDeviceList', res.data]);
+      this.setDevModule(['userDeviceList', res.data]);
     },
   },
 };

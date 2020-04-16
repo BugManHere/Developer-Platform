@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     commit() {
-      if (isNaN(this.movePos) || this.movePos > 0) {
+      if (isNaN(this.movePos) || this.movePos >= 0) {
         // 【点击事件】或者【拖动距离为正数】，通过
         this.onConfirm(); // 执行自定义事件
         this.isConfirm = true;
@@ -84,7 +84,7 @@ export default {
       }
     },
     cancel() {
-      if (isNaN(this.movePos) || this.movePos <= 0) {
+      if (isNaN(this.movePos) || this.movePos < 0) {
         // 【点击事件】或者【拖动距离为负数】，不通过
         this.onCancel(); // 执行自定义事件
         this.isCancel = true;

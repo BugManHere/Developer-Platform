@@ -6,6 +6,8 @@ export const CHANGE_TEMPLATE = 'CHANGE_TEMPLATE'; // 更新模板
 
 // 获取信息
 export const GET_PRODUCT_TYPE_LIST = 'GET_PRODUCT_TYPE_LIST'; // 获取产品类别列表
+export const GET_USERDEVICE_LIST = 'GET_USERDEVICE_LIST'; // 获取用户设备列表
+export const GET_TEMPLATES = 'GET_TEMPLATES';  // 获取模板信息
 
 // 模板相关接口
 export const SAVE_TEMP_FUNC = 'SAVE_TEMP_FUNC'; // 

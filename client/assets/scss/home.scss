@@ -30,10 +30,10 @@
           margin: 0;
           height: 100%;
           flex-direction: column;
-          // flex-wrap: wrap;
           align-items: center;
           justify-content: flex-end;
           text-align: center;
+          user-select: none;
           .plus {
             width: 25px;
             height: 25px;

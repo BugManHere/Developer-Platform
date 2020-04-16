@@ -35,6 +35,7 @@ export default {
       SetTem: state => state.dataObject.SetTem,
       Mod: state => state.dataObject.Mod,
       Pow: state => state.dataObject.Pow,
+      StHt: state => state.dataObject.StHt,
       has01: state => state.dataObject.has01,
       has05: state => state.dataObject.has05,
       autoAbleSetTem: state => state.autoAbleSetTem,
@@ -62,7 +63,18 @@ export default {
     },
     // 显示文本，禁止滑动
     banSwiping() {
-      return !this.Mod || this.autoAbleSetTem;
+      if (this.StHt) {
+        return {
+          txt: 'StHt',
+          isNumber: true,
+        };
+      } else if (!this.Mod || this.autoAbleSetTem) {
+        return {
+          txt: 'Auto',
+          isNumber: false
+        };
+      }
+      return false;
     }
   },
   watch: {
@@ -276,7 +288,7 @@ export default {
     ableSwiping() {
       const ref = this.$refs[this.ref];
       if (this.banSwiping) {
-        ref.showText(true, this.$language('mode.auto'));
+        ref.showText(true, this.$language(`ban.${this.banSwiping.txt}`), this.banSwiping.isNumber);
       } else {
         ref.showText(false);
       }

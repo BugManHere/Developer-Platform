@@ -9,6 +9,15 @@
   <moduleVer>1</moduleVer>
 </device>
 <device>
+  <mid>11012</mid>
+  <version>1.0</version>
+  <iconpath>/images/icon.png</iconpath>
+  <iconpath2>/images/iconGroup.png</iconpath2>
+  <statueJson>["Pow","Mod","TemUn","SetTem","Add0.5"]</statueJson>
+  <statueJson2>["UDFanPort","Mod","WdSpd","Quiet","Pow","SwingLfRig","SmartWind","SwUpDn","Lig","SwhSlp","SlpMod","AppTimer","SetTem","Add0.5"]</statueJson2>
+  <moduleVer>1</moduleVer>
+</device>
+<device>
   <mid>11005</mid>
   <version>2.5</version>
   <iconpath>/images/icon.png</iconpath>

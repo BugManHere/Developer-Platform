@@ -184,7 +184,7 @@ export default {
       admin: state => state.userModule.admin,
       productTypeList: state => state.pulicModule.productTypeList,
       developType: state => state.pulicModule.developType,
-      hasDeviceList: state => state.devModule.hasDeviceList,
+      userDeviceList: state => state.devModule.userDeviceList,
     }),
     // 当前被选中的产品信息
     selectProductInfo() {
@@ -251,13 +251,13 @@ export default {
           console.log(err);
         })
     },
-    // 提交
+    // 创建设备
     submit() {
       const deviceInfo = JSON.stringify(this.deviceInfo);
       https.fetchPost('/userDevice/create', {deviceInfo, admin: this.admin})
         .then((data) => {
-          const hasDeviceList = data.data;
-          this.setDevModule(['hasDeviceList', hasDeviceList]);
+          const userDeviceList = data.data;
+          this.setDevModule(['userDeviceList', userDeviceList]);
         })
         .catch((err) => {
           console.log(err);

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import GrTable from "@components/Table/index";
+import GrTable from "@components/layout/Table/index";
 
 export default {
   components: {

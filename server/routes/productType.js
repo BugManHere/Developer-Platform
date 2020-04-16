@@ -30,10 +30,10 @@ router.post('/', function(req, res, next) {
   map.logicMap = {json: "{}"};
   map.disableMap = {json: "{}"};
   map.createTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
-  const hasDeviceList = global.adminInfo.hasDeviceList;
-  hasDeviceList.push(map);
+  const userDeviceList = global.adminInfo.userDeviceList;
+  userDeviceList.push(map);
 
-  global.adminInfo.set({hasDeviceList: hasDeviceList});
+  global.adminInfo.set({userDeviceList: userDeviceList});
   global.adminInfo.save()
     .then((v) => {
       res.json(v);

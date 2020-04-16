@@ -84,11 +84,11 @@
 
 <script>
 import { randomKey } from "@/utils";
-import ActiveTable from "@components/Table/ActiveFunc";
-import InertiaTable from "@components/Table/InertiaFunc";
-import LogicTable from "@components/Table/Logic";
-import OtherConfigTable from "@components/Table/OtherConfig";
-import Panel from "@components/Panel/index";
+import ActiveTable from "@components/layout/Table/ActiveFunc";
+import InertiaTable from "@components/layout/Table/InertiaFunc";
+import LogicTable from "@components/layout/Table/Logic";
+import OtherConfigTable from "@components/layout/Table/OtherConfig";
+import Panel from "@components/layout/Panel/index";
 import https from "@/https";
 import { mapState, mapMutations, mapActions } from "vuex";
 

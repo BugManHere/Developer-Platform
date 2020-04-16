@@ -4,6 +4,7 @@ const LogicDefine = {
   mixins: [LogicPort],
   data() {
     return {
+      g_moreOption: {},
       g_outputMap: {},
       g_funcDefine: [],
       g_excludeMap: {},
@@ -13,10 +14,11 @@ const LogicDefine = {
   },
   mounted() {
     const { key } = require('@/../plugin.id.json');
-    const { funcDefine, excludeMap, hideMap } = require(`@/../../../output/${key}.json`);
+    const { funcDefine, excludeMap, hideMap, moreOption } = require(`@/../../../output/${key}.json`);
+    this.g_moreOption = moreOption;
     this.g_funcDefine = funcDefine;
-    this.g_excludeMap = JSON.parse(excludeMap.json);
-    this.g_hideMap = JSON.parse(hideMap.json);
+    this.g_excludeMap = excludeMap;
+    this.g_hideMap = hideMap;
     this.g_outputMap = this.g_init();
   },
   computed: {
@@ -295,7 +297,7 @@ const LogicDefine = {
       if (!hideStateArr) return [];
       hideStateArr.forEach(stateItem => { // 挑选出需要检查的id
         const checkId = this.g_stateToId[stateItem];
-        checkIdArr.includes(checkId) || checkIdArr.push(checkId);
+        checkId && (checkIdArr.includes(checkId) || checkIdArr.push(checkId));
       });
       checkIdArr.forEach(idItem => {
         let pass = true; // 是否满足条件

@@ -40,6 +40,7 @@ function sendControl({ state, commit }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
+      // 温度命令需要一组一起发送
       if ((setData[key] !== lastObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) && jsonArr.includes(key)) {
         setOpt.push(key);
         setP.push(setData[key]);
@@ -51,6 +52,13 @@ function sendControl({ state, commit }, dataMap) {
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
+    // 所有操作都需要关掉8度制热，所以直接在这写好了
+    if (lastObject.StHt !== 0 && !opt.includes('StHt')) {
+      opt.push('StHt');
+      p.push(0);
+      commit(SET_DATA_OBJECT, {StHt: 0});
+      commit(SET_CHECK_OBJECT, {StHt: 0});
+    }
     console.log([opt, p]);
     console.table([opt, p]);
     const json = JSON.stringify({ mac, t, opt, p });
@@ -77,8 +85,11 @@ function sendControl({ state, commit }, dataMap) {
       // const _p = result.p;
       const _p = [state.dataObject.Pow, state.dataObject.Mod,
         state.dataObject.TemUn, state.dataObject.SetTem,
-        state.dataObject['Add0.5'], state.dataObject['Add0.1'],
-        state.dataObject.PctCle];
+        state.dataObject['Add0.5']];
+      // const _p = [state.dataObject.Pow, state.dataObject.Mod,
+      //   state.dataObject.TemUn, state.dataObject.SetTem,
+      //   state.dataObject['Add0.5'], state.dataObject['Add0.1'],
+      //   state.dataObject.PctCle];
       // const _p = [state.dataObject.Pow, state.dataObject.Mod,
       //   state.dataObject.SetTem, state.dataObject.WdSpd,
       //   state.dataObject['Add0.5'], state.dataObject.Air,

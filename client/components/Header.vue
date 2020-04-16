@@ -10,15 +10,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#Home" @click="updataPage">Plugin自动化开发平台</a>
+          <a class="navbar-brand" href="#Home" @click="updataPage('Home')">Plugin自动化开发平台</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav">
             <li :class="{active: developType === 0}" @click="setDevelopType(0)">
-              <a href="#Home" @click="updataPage">设备管理</a>
+              <a href="#Home" @click="updataPage('Home')">设备管理</a>
             </li>
             <li :class="{active: developType === 1}" @click="setDevelopType(1)">
-              <a href="#Home" @click="updataPage">模板定义</a>
+              <a href="#Home" @click="updataPage('Home')">模板定义</a>
             </li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">运营中心 <span class="caret"></span></a>
@@ -82,18 +82,21 @@ export default {
     })
   },
   watch: {
-    '$route.name'(newVal) {
-      newVal === 'Template' && this.setPulicMoule(['developType', 1]);
+    '$route.name'(newVal, oldVal) {
+      (newVal === 'Template' || oldVal === 'Template') && this.setPulicMoule(['developType', 1]);
+      (newVal === 'Device' || oldVal === 'Device') && this.setPulicMoule(['setDevStep', 0]);
     }
   },
   methods: {
     ...mapMutations({
       setPulicMoule: 'SET_PULIC_MODULE'
     }),
-    updataPage() {
-      this.$router.push({name: 'Home'}).catch(err => {
-        console.log(err);
-      });
+    updataPage(routeName) {
+      if (this.$route.name !== routeName) {
+        this.$router.push({name: routeName}).catch(err => {
+          console.log(err);
+        });
+      }
     },
     setDevelopType(val) {
       this.setPulicMoule(['developType', val]);
@@ -101,8 +104,3 @@ export default {
   },
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
