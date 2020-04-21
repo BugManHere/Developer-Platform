@@ -26,6 +26,12 @@
     },
     "SvSt": {
       "routerName": "SvSt"
+    },
+    "SmartSleep": {
+      "routerName": "Sleep",
+      "params": {
+        "id": 2
+      }
     }
   }
 }
