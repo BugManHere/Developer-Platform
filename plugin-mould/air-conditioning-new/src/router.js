@@ -15,7 +15,8 @@ export const functionPage = {
   Noise: r => require.ensure([], () => r(require('./views/functionPage/Noise'))),
   AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
   UDFanPort: r => require.ensure([], () => r(require('./views/functionPage/UDFanPort'))),
-  AreaFan: r => require.ensure([], () => r(require('./views/functionPage/AreaFan')))
+  AreaFan: r => require.ensure([], () => r(require('./views/functionPage/AreaFan'))),
+  SvSt: r => require.ensure([], () => r(require('./views/functionPage/SvSt')))
 };
 
 Vue.use(Router);
@@ -85,6 +86,11 @@ const router = new Router({
       path: '/UDFanPort',
       name: 'UDFanPort',
       component: functionPage.UDFanPort
+    },
+    {
+      path: '/SvSt',
+      name: 'SvSt',
+      component: functionPage.SvSt
     },
     {
       path: '/AreaFan',
