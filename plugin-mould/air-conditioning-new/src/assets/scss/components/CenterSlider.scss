@@ -78,9 +78,11 @@
       h3 {
         position: relative;
         top: 5px;
-        &.tem {
-          font-family: 'Roboto-Light';
-          font-weight: 500;
+      }
+      .tem-value {
+        font-family: 'Roboto-Light';
+        font-weight: 500;
+        &.unit-tem {
           &::before {
             content: '°';
             position: absolute;
@@ -100,6 +102,34 @@
             bottom: 0;
             left: auto;
             font-size: 66px;
+            font-weight: 100;
+            text-align: left;
+          }
+          &.deci-tem {
+            position: relative;
+            left: -40px;
+            font-size: 200px;
+            &::before {
+              position: absolute;
+              top: 40px;
+              right: -14px;
+            }
+            &::after {
+              position: absolute;
+              top: 30px;
+              right: -54px;
+            }
+          }
+        }
+        &.unit-wet {
+          &::after {
+            content: '%';
+            position: relative;
+            top: -10px;
+            right: -20px;
+            bottom: 0;
+            left: auto;
+            font-size: 100px;
             font-weight: 100;
             text-align: left;
           }
