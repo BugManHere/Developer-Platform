@@ -13,14 +13,14 @@ export const customizeFunction = {
       console.log('%c running timerListDevice()', 'color: blue');
     }
   },
-  ConstUD: ({ dispatch }, currentStatus) => {
+  ConstUD: ({ dispatch }, currentStatusName) => {
     const goSweep = id => {
       window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
     };
-    if (!['undefined', undefined].includes(currentStatus)) {
+    if (!['undefined', undefined].includes(currentStatusName)) {
       goSweep(2);
       return;
     }
@@ -30,14 +30,14 @@ export const customizeFunction = {
       dispatch('STATE_MACHINE_INTERFACE', { SwUpDn: funcData.ConstUD }, { root: true });
     } else goSweep(2);
   },
-  ConstLR: ({ dispatch }, currentStatus) => {
+  ConstLR: ({ dispatch }, currentStatusName) => {
     const goSweep = id => {
       window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
     };
-    if (!['undefined', undefined].includes(currentStatus)) {
+    if (!['undefined', undefined].includes(currentStatusName)) {
       goSweep(1);
       return;
     }
@@ -59,8 +59,8 @@ export const customizeFunction = {
   FuncPopup: ({ commit }) => {
     commit('control/SET_DATA_OBJECT', { FuncPopup: 1 }, { root: true });
   },
-  BottomSleep: (_, currentStatus) => {
-    switch (currentStatus) {
+  BottomSleep: (_, currentStatusName) => {
+    switch (currentStatusName) {
       case 'status_1':
         showToast('睡眠已关闭', 0);
         break;
@@ -71,8 +71,8 @@ export const customizeFunction = {
         break;
     }
   },
-  'BottomSleep(ordinary)': (_, currentStatus) => {
-    switch (currentStatus) {
+  'BottomSleep(ordinary)': (_, currentStatusName) => {
+    switch (currentStatusName) {
       case 'status_1':
         showToast('睡眠已关闭', 0);
         break;
