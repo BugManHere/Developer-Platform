@@ -54,6 +54,7 @@
     </script>
     <!-- <script src="http://iotfe.gree.com/cordovainit.js"></script> -->
     <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
+    <script defer src="//192.168.31.94:8091/target.js"></script>
     <% } else if (NODE_ENV === 'production') { %>
     <script src="./../../cordova.js"></script>
     <script src="./js/cordovainit.js"></script>
@@ -90,7 +91,6 @@
       <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <script src="//192.168.31.94:8091/target.js"></script>
     <!-- built files will be auto injected -->
   </body>
 </html>
