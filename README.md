@@ -1,4 +1,4 @@
-# gdp
+# Gree Developer Platform
 
 ## Project setup
 ```
