@@ -10,7 +10,8 @@
       <tbody>
         <!-- 无内容的时候显示 -->
         <tr v-if="!funcOptions.content.length">
-          <td v-for="(item, key) in ['', '', '', '', []]" :key="key">
+          <!-- 根据标题数量填充空内容 -->
+          <td v-for="(item, key) in [...Array.from({length: funcOptions.title.length - 2}, () => ''), []]" :key="key">
             <p v-if="!Array.isArray(item)" v-text="item" />
             <span v-else class="definitions">
               <span v-for="(val, index) in item" :key="index" v-text="val" />
@@ -71,7 +72,7 @@
               <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[realIndex[index]].page"/>
               <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue"/>
               <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
-              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete') && content[1] !== 'Pow'" />
+              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete') && content && content[1] !== 'Pow'" />
             </p>
           </td>
         </tr>

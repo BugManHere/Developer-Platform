@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
+const productTypeModel = require('../models/productType');
 const userDeviceModel = require('../models/userDevice');
 const templateFuncModel = require("../models/template");
 const dayjs = require('dayjs');
@@ -10,8 +11,6 @@ const path = require('path');
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
-
-let data;
 
 router.get('/', async function(req, res, next) {
   const admin = req.body.admin;
@@ -81,7 +80,6 @@ router.post('/save', async function(req, res, next) {
   const id = req.body.id;
   const idList = JSON.parse(req.body.idList);
   const userDevice = await getAdminDevice(admin);
-  console.log(idList);
   const device = await userDevice.userDeviceList.id(id);
   device.funcImport = idList;
   device.funcImport = Array(...new Set(device.funcImport))
@@ -114,7 +112,8 @@ router.post('/done', async function(req, res, next) {
   const productID = device.productID;
   const seriesID = device.seriesID;
   const template = await templateFuncModel.findOne({productID, seriesID}); // 寻找对应模板
-
+  const { plugin } = await productTypeModel.findById(productID); // 模板地址
+  
   const funcDefine = device.funcImport.map(key => {
     return template.funcDefine.id(key);
   })
@@ -126,6 +125,7 @@ router.post('/done', async function(req, res, next) {
     excludeMap: {},
     hideMap: {},
     productModel: device.productModel,
+    deviceName: device.deviceName,
     funcDefine,
     moreOption
   };
@@ -152,9 +152,10 @@ router.post('/done', async function(req, res, next) {
     });
   });
 
+  // 写入文件
   fs.writeFile(resolve(`../../output/${id}.json`), JSON.stringify(output), err => {
     if (err) throw err;
-    fs.writeFile(resolve('../../plugin-mould/vue-cli3-model/plugin.id.json'), JSON.stringify({key: id}), err => {
+    fs.writeFile(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({key: id}), err => {
       if (err) throw err;
     });
   });

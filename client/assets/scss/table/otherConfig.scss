@@ -112,7 +112,7 @@
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       span {
         margin-right: 15px;
         font-size: 20px;
@@ -120,7 +120,8 @@
       .optional {
         display: flex;
         align-items: center;
-        padding: 10px 60px;
+        width: 33%;
+        padding: 15px 0px 15px 15px;
         label {
           position: relative;
           cursor: pointer;

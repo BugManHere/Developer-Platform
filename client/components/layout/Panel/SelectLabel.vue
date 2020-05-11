@@ -11,7 +11,7 @@
       </div>
       <!-- 标签 -->
       <div class="label-group">
-        <div v-for="(item, index) in this.labelList" :key="index">
+        <div v-for="(item, index) in labelList" :key="index">
           <div class="label-item" :class="{select: selectType[index]}" @click="selectItem(index)" v-text="item.name"/>
         </div>
       </div>

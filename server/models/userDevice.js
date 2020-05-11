@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const optionSchema = new mongoose.Schema({
   voiceSkill: Boolean,
   temUnChange: Boolean,
+  autoAbleTem: Boolean,
   temStep: String,
   fanRange: String,
   statueJson: [String],

@@ -13,12 +13,8 @@ router.get('/', function(req, res, next) {
     res.json(data);
     // const seriesList = data[0].seriesList;
     // seriesList.push({
-    //   "name": "壁挂式空调",
-    //   "img": "Hangon.png",
-    // },
-    // {
-    //   "name": "立柜式空调",
-    //   "img": "Cabinet.png"
+    //   "name": "商用挂机",
+    //   "img": "Hangon.png"
     // });
     // console.log(seriesList);
     // data[0].save();
@@ -37,7 +33,6 @@ router.post('/', function(req, res, next) {
   global.adminInfo.save()
     .then((v) => {
       res.json(v);
-      console.log(v);
     })
     .catch((err) => {
       console.log(err);

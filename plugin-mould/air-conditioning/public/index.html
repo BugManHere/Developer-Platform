@@ -1,0 +1,77 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+     <meta charset="utf-8" />
+     <meta name="apple-mobile-web-app-capable" content="yes" />
+     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+     <meta name="format-detection" content="telephone=no,address=no,email=no" />
+     <meta
+       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
+       name="viewport"
+     />
+     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+     <title>iotfe</title>
+     <% if (NODE_ENV === 'testing') { %>
+     <script>
+       function trigger() {
+         var re = /OS ((\d{1,2})_\d{1,2}||(\d{1,2})_\d{1,2}_\d{1,2}) like Mac OS X/i;
+         var result = re.exec(window.navigator.userAgent);
+         var ver = result && result[1] && result[1].substr(0, 2);
+         return parseInt(ver) >= 8;
+       }
+       var script = document.createElement("script");
+       if (trigger()) {
+        //  script.src = "http://gree-iot.test.upcdn.net/ios/cordova.js";
+         script.src = "<%= BASE_URL %>static/plugin/ios/cordova.js"; // 本地调试
+       } else {
+        //  script.src = "http://gree-iot.test.upcdn.net/cordova.js";
+         script.src = "<%= BASE_URL %>static/plugin/cordova.js"; // 本地调试
+       }
+       document.head.appendChild(script);
+     </script>
+     <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
+     <style>
+       @font-face {
+         font-family: 'appleUltralight';
+         src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+       }
+       @font-face {
+         font-family: 'appleLight';
+         src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+       }
+     </style>
+     <% } else if (NODE_ENV === 'development') { %>
+     <style>
+       @font-face {
+         font-family: 'appleUltralight';
+         src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+       }
+       @font-face {
+         font-family: 'appleLight';
+         src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+       }
+     </style>
+     <% } else if (NODE_ENV === 'production') { %>
+     <script src="./../../cordova.js"></script>
+     <script src="./js/cordovainit.js"></script>
+     <style>
+       @font-face {
+         font-family: 'appleUltralight';
+         src: url('./../../font/SF-UI-Display-Ultralight.otf');
+       }
+       @font-face {
+         font-family: 'appleLight';
+         src: url('./../../font/SF-UI-Display-Light.otf');
+       }
+     </style>
+     <% } %>
+   </head>
+   <body>
+     <noscript>
+       <strong
+         >We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript
+         enabled. Please enable it to continue.</strong
+       >
+     </noscript>
+     <div id="app"></div>
+ </html>

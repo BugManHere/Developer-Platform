@@ -57,6 +57,16 @@
             <div class="toggle-inner" :class="{right: temUnChange}"></div>
           </label>
         </div>
+        <!-- 自动模式温度可控 -->
+        <div class="optional">
+          <span v-text="'自动模式温度可控'"/>
+          <label for="config-input-auto">
+            <input id="config-input-auto" type="checkbox" v-model="autoAbleTem">
+            <span class="on" :class="{'on-hide': !autoAbleTem}">ON</span>
+            <span class="off" :class="{'off-hide': autoAbleTem}">OFF</span>
+            <div class="toggle-inner" :class="{right: autoAbleTem}"></div>
+          </label>
+        </div>
         <!-- 风速范围 -->
         <div class="optional">
           <span v-text="'风速范围'"/>
@@ -118,6 +128,7 @@ export default {
     return {
       voiceSkill: false, // 是否有'语音技能'
       temUnChange: false, // 是否有'华氏度'
+      autoAbleTem: false, // 自动模式下是否可设置温度
       temStep: '0.5', // 温度间隔
       fanRange: '7', // 多少档风
       statueJson: [], // 小卡片字段
@@ -134,6 +145,7 @@ export default {
     // 初始化数据，从服务器获取
     this.voiceSkill = this.moreOption.voiceSkill;
     this.temUnChange = this.moreOption.temUnChange;
+    this.autoAbleTem = this.moreOption.autoAbleTem;
     this.temStep = this.moreOption.temStep;
     this.fanRange = this.moreOption.fanRange;
     this.statueJson = this.moreOption.statueJson;
@@ -143,16 +155,13 @@ export default {
       const jsonArr = [];
       this.funcImport.forEach(id => {
         const func = this.funcDefine.find(item => item._id === id);
+        jsonArr.includes(func.json) || (jsonArr.push(func.json));
         Object.keys(func.statusDefine).forEach(statusItem => {
-          // 'undefined'状态不记录字段；状态为'replace'时不记录字段
-          statusItem === 'undefined' || func.statusDefine[statusItem].customize === 'replace' || jsonArr.includes(func.json) || (jsonArr.push(func.json));
           // 判断更多命令是否需要记录字段
           const moreCommand = func.statusDefine[statusItem].moreCommand;
-          if (moreCommand && func.statusDefine[statusItem].customize !== 'replace') {
-            Object.keys(moreCommand).forEach(moreJson => {
-              jsonArr.includes(moreJson) || (jsonArr.push(moreJson));
-            });
-          }
+          moreCommand && Object.keys(moreCommand).forEach(moreJson => {
+            jsonArr.includes(moreJson) || (jsonArr.push(moreJson));
+          });
         });
       });
       this.statueJson = jsonArr;
@@ -169,6 +178,7 @@ export default {
       return {
         voiceSkill: this.voiceSkill,
         temUnChange: this.temUnChange,
+        autoAbleTem: this.autoAbleTem,
         temStep: this.temStep,
         fanRange: this.fanRange,
         statueJson: this.statueJson,

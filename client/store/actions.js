@@ -61,12 +61,12 @@ export default {
   async [SAVE_TEMP_FUNC]({ state, getters, commit }) {
     const funcDefine = getters.funcDefine;
     const len = funcDefine.length;
-    const nameMap = new Map;
+    // const nameMap = new Map;
     const idMap = new Map;
     // 查重
     for (let i = 0; i < len; i += 1) {
-      if (nameMap.get(funcDefine[i].name)) return window.myvm.$toast.error(`保存失败，功能名称重复：“${funcDefine[i].name}”`);
-      else nameMap.set(funcDefine[i].name, true);
+      // if (nameMap.get(funcDefine[i].name)) return window.myvm.$toast.error(`保存失败，功能名称重复：“${funcDefine[i].name}”`);
+      // else nameMap.set(funcDefine[i].name, true);
       if (idMap.get(funcDefine[i].identifier)) return window.myvm.$toast.error(`保存失败，标识符重复：“${funcDefine[i].identifier}”`);
       else idMap.set(funcDefine[i].identifier, true);
     }

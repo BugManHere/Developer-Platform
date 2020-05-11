@@ -68,6 +68,7 @@ const getters = {
     });
     return result;
   },
+  // 标签池
   labelList: (state, getters) => {
     const result = [];
     getters.funcDefine.forEach((funcItem, funcIndex) => {
