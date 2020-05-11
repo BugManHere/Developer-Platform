@@ -5,19 +5,24 @@
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### 启动客户端
 ```
-yarn run serve
+yarn serve
+```
+
+### 启动服务器
+```
+yarn start
+```
+
+### 启动服务器与客户端
+```
+yarn dev
 ```
 
 ### Compiles and minifies for production
 ```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
+yarn build
 ```
 
 ### Lints and fixes files
