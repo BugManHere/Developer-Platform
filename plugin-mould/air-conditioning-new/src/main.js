@@ -5,6 +5,8 @@ import Vuex from 'vuex';
 // 引入第三方
 import { Page, View } from 'gree-ui';
 import axios from 'axios';
+import IotfeComponents from 'iotfe-components';
+import 'iotfe-components/dist/iotfeComponents.css';
 import 'jquery';
 import 'round-slider';
 import '../node_modules/round-slider/dist/roundslider.min.css';
@@ -25,9 +27,6 @@ import Storage from './utils/storage';
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
-
-import IotfeComponents from 'iotfe-components';
-import 'iotfe-components/dist/iotfeComponents.css';
 
 // 安装插件
 Vue.use(VueI18n);

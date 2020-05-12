@@ -1,4 +1,4 @@
-import { types, defineTypes } from '../types';
+import { types, defineTypes } from '@/store/types';
 
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
 import { getQueryStringByName, isMqtt } from '../../utils/index';
@@ -69,7 +69,7 @@ export default {
   /**
    * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  async [defineTypes.CONTROL_INIT]({ dispatch, state }) {
+  [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA, { root: true });

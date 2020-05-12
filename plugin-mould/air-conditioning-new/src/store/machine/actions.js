@@ -289,5 +289,5 @@ function initData({ state, dispatch, rootGetters }) {
     }
   });
   // 输出初始化数据
-  dispatch('STATE_MACHINE_INITDATA', { data, type: 'init' }, { root: true });
+  dispatch(types.STATE_MACHINE_INITDATA, { data, type: 'init' }, { root: true });
 }

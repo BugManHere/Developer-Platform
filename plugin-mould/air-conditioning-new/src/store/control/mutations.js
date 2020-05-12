@@ -1,4 +1,4 @@
-import { defineTypes } from '../types';
+import { defineTypes } from '@/store/types';
 // 同步操作放这里
 export default {
   [defineTypes.SET_MAC](state, mac) {
