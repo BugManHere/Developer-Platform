@@ -193,6 +193,7 @@ export default {
       this.setState(['ableSend', true]);
     },
     updateSwiper() {
+      this.setIndex(3);
       this.$refs[this.slidesData.key].swiper.update();
     },
     setIndex(index) {

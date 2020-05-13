@@ -60,7 +60,6 @@ const Customize = {
           }
         },
         'UDFanPort(Auto)': status => {
-          console.log(status);
           switch (status) {
             case 'status_1':
               this.changeData({UDFanPort: 1});
@@ -75,7 +74,28 @@ const Customize = {
               this.changeData({UDFanPort: 0});
               break;
           }
-        }
+        },
+        FanLR: status => {
+          console.log(status);
+          switch (status) {
+            case 'status_1':
+              this.changeData({UDFanPort: 3});
+              break;
+            case 'status_2':
+              this.changeData({UDFanPort: 1});
+              break;
+            case 'default':
+              if (this.dataObject.UDFanPort === 3) {
+                this.changeData({UDFanPort: 2});
+              } else {
+                this.changeData({UDFanPort: 1});
+              }
+              break;
+            default:
+              this.changeData({UDFanPort: 2});
+              break;
+          }
+        },
       };
     }
   },

@@ -4121,6 +4121,11 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
+gojs@^2.1.16:
+  version "2.1.16"
+  resolved "https://registry.npm.taobao.org/gojs/download/gojs-2.1.16.tgz#f3e9eb92560d6b56511dd43b4478d5bcf67f9a0e"
+  integrity sha1-8+nrklYNa1ZRHdQ7RHjVvPZ/mg4=
+
 good-listener@^1.2.2:
   version "1.2.2"
   resolved "https://registry.npm.taobao.org/good-listener/download/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"

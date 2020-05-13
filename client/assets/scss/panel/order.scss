@@ -3,30 +3,54 @@
   justify-content: center;
   flex-wrap: wrap;
   padding: 15px 0;
-  .transfer-body {
-    width: 100%;
-  }
   >.row {
     width: 100%;
     display: flex;
     justify-content: space-between;
     >.col {
       height: 264px;
-      width: 40%;
-      border: 1px solid #ddd;
+      width: 42.5%;
+      // border: 1px solid #ddd;
+      padding-right: 5px;
       overflow-y: auto;
-      .list-group {
-        .list-group-item {
-          border-right: 0;
-          border-left: 0;
-          background-color: #f0f0f0;
-          cursor: -webkit-grab;
+      .order-input {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        span {
+          width: 43%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          display: flex;
+          justify-content: center;
         }
-      } 
-      h3 {
-        margin: 12px 0;
-        font-size: 16px;
-        padding-left: 15px;
+        .input-name {
+          border-right: 1px solid #ddd;
+          background-color: #EDEDED;
+          color: #8A8A8A;
+          cursor: no-drop;
+        }
+        .input-value {
+          border-left: 1px solid #ddd;
+          background-color: #EDEDED;
+          color: #8A8A8A;
+          cursor: pointer;
+          &:hover {
+            background-color: #d0d0d0;
+          }
+        }
+        div {
+          display: flex;
+          align-items: center;
+          &::before {
+            font-size: 24px;
+            color: rgb(117, 89, 89);
+            width: 10%;
+            content: "\21E8";
+          }
+        }
       }
     }
   }

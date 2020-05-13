@@ -14,7 +14,11 @@ export default {
     return true;
   },
   [type.SET_DATA_OBJECT](state, obj) {
-    state.dataObject = { ...state.dataObject, ...obj };
+    const map = {};
+    Object.keys(obj).forEach(key => {
+      map[key] = Number(obj[key]);
+    });
+    state.dataObject = { ...state.dataObject, ...map };
     return true;
   },
   [type.SET_CHECK_OBJECT](state, obj) {

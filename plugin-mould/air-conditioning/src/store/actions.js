@@ -42,7 +42,7 @@ function sendControl({ state, commit }, dataMap) {
       // 温度命令需要一组一起发送
       if ((setData[key] !== lastObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) && state.devOptions.statueJson2.includes(key)) {
         setOpt.push(key);
-        setP.push(setData[key]);
+        setP.push(Number(setData[key]));
       }
     });
     setData = {};
@@ -112,6 +112,9 @@ function getStatusOfDev({ state, commit }) {
     .then(_res => {
       const DataObject = {};
       const res = JSON.parse(_res);
+      console.log('----------------------');
+      console.log(cols);
+      console.log(res);
       for (let i = 0, j = cols.length; i < j; i += 1) {
         DataObject[cols[i]] = res[i]; // 遍历查询到的数据，将值写入state中的DataObject，根据业务更改
       }

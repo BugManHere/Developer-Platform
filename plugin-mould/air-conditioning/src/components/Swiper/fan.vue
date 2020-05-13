@@ -31,9 +31,14 @@ export default {
       rightLen: 3,
       fanName: 'auto',
       fanList: [
+        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0, key: 'Fan_auto'},
         {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low'},
-        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 2, key: 'Fan_medium'},
-        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 3, key: 'Fan_high'},
+        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2, key: 'Fan_medium_low'},
+        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3, key: 'Fan_medium'},
+        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4, key: 'Fan_medium_high'},
+        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5, key: 'Fan_high'},
+        {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'},
+        {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
       ]
     };
   },
@@ -78,6 +83,7 @@ export default {
     currentIndex(newVal) {
       const moveLen = newVal - this.swiperIndex;
       const toIndex = this.leftLen + moveLen;
+      // this.initSwiper();
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
       this.updateSwiper();

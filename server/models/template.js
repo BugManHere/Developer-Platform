@@ -6,6 +6,7 @@ const funcSchema = new mongoose.Schema({
   identifier: String,
   json: String,
   order: [String],
+  map: Object,
   type: String,
   statusDefine: Object,
   page: Object
