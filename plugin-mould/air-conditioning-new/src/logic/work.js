@@ -37,18 +37,28 @@ const LogicPort = {
     work_popupDefine() {
       return this.g_funcDefine_active.filter(module => module.type === `active-${this.work_popupsKey}`);
     },
-    // 显示插槽1, 存在被隐藏的状态就不显示
+    // 显示插槽1, 隐藏的状态被禁用就显示
     work_imshowSlot1() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === 'inertia-imshowSlot1')
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
+        .filter(module => this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 存在多个的情况时，只取第一个，其他不处理
       if (modules.length) {
         const json = modules[0].json;
         const value = this.g_inputMap[json];
         const id = modules[0].identifier;
-        const text = this.$language(`slot1.${id}`).replace('%s', value);
-        return text;
+        // 处理字符串内运算
+        const text = this.$language(`slot1.${id}`);
+        let result = text;
+        const textMatch = text.match(/{{(%s.*)}}/);
+        if (textMatch) {
+          const matchContent = textMatch[1].replace('%s', value);
+          // 不推荐此写法，可优化
+          result = text.replace(/{{(%s.*)}}/, eval(matchContent));
+        } else {
+          result = text.replace('%s', value);
+        }
+        return result;
       }
       return undefined;
     },
@@ -62,8 +72,18 @@ const LogicPort = {
         const json = modules[0].json;
         const value = this.g_inputMap[json];
         const id = modules[0].identifier;
-        const text = this.$language(`slot2.${id}`).replace('%s', value);
-        return text;
+        // 处理字符串内运算
+        const text = this.$language(`slot2.${id}`);
+        let result = text;
+        const textMatch = text.match(/{{(%s.*)}}/);
+        if (textMatch) {
+          const matchContent = textMatch[1].replace('%s', value);
+          // 不推荐此写法，可优化
+          result = text.replace(/{{(%s.*)}}/, eval(matchContent));
+        } else {
+          result = text.replace('%s', value);
+        }
+        return result;
       }
       return undefined;
     },
