@@ -49,17 +49,21 @@
             <!-- 显示内容 -->
             <div class="content" v-slow="!hideLetter.includes(letter)" :key="letter + 0">
               <!-- 根据sortMap定义的顺序显示 -->
-              <!-- <transition-group name="slow" @after-enter="log"> -->
-              <div class="list-col" v-for="funcIndex in indexArr" :key="funcIndex" @click="selectFunc(funcIndex)" v-slow="!hideContent.includes(funcIndex)">
+              <div
+                class="list-col"
+                v-for="(funcIndex, index) in indexArr"
+                :key="`${funcIndex}_${index}`"
+                @click="selectFunc(funcIndex)"
+                v-slow="!hideContent.includes(funcIndex)"
+              >
                 <!-- 筛选条件优先排列 -->
                 <div
                   v-for="(titleItem, key) in filterList"
                   :style="{ order: key === filterBy ? -1 : 1 }"
                   :key="`${indexArr}_${key}`"
-                  v-text="indexTofunc[funcIndex][key]"
+                  v-text="indexTofunc[funcIndex] && indexTofunc[funcIndex][key]"
                 />
               </div>
-              <!-- </transition-group> -->
             </div>
           </div>
         </div>
@@ -150,8 +154,7 @@ export default {
     // 用于搜索
     searchMap() {
       if (!this.filterList) return {};
-      const searchKey = 'identifier';
-      const selectMapName = this.filterList[searchKey].mapName; // 用于搜索的对象
+      const selectMapName = this.filterList.identifier.mapName; // 用于搜索的对象
       return this[selectMapName];
     },
     // 已选择的功能的id
