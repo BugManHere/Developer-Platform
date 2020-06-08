@@ -16,7 +16,8 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast
+  showToast,
+  hideLoading
 } from '@PluginInterface';
 
 export default {
@@ -43,11 +44,11 @@ export default {
     modes() {
       return [
         {
-          value: this.mid === '10010' ? 0 : 1,
+          value: 0,
           text: '开',
         },
         {
-          value: this.mid === '10010' ? 1 : 0,
+          value: 1,
           text: '关',
         },
         {
@@ -72,6 +73,9 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    hideLoading();
   },
   methods: {
     ...mapMutations({

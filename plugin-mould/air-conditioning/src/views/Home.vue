@@ -6,16 +6,16 @@
       <!-- 头部 -->
       <div 
         class="page-header" 
-        :style="{backgroundImage: 'url(' + `${require('@/assets/img/mode/mode_bg.png')}` + ')', 'background-size': '500% 100%', 'background-position': `${Mod * 25}% 0%`}">
+        :style="headerBg">
         <gree-header 
           theme="transparent"
           :left-options="{ preventGoBack: true }" 
           :right-options="{ showMore: !functype }" 
           @on-click-back="goBack" 
           @on-click-more="moreInfo">
-          <span 
+          <span
             v-text="devname" 
-            @click="onTest('stepOne')"/>
+            @click="onTest"/>
           <a 
             class="save"
             slot="right" 
@@ -25,9 +25,7 @@
           </a>
         </gree-header>
         <!-- 设备状态小图标 -->
-        <div 
-          class="bar-top" 
-          @click="onTest('stepTwo')">
+        <div class="bar-top">
           <gree-row>
             <gree-col>
               <div 
@@ -40,6 +38,10 @@
               </div>
             </gree-col>
           </gree-row>
+        </div>
+        <div class="bar-co2" v-if="!functype && Air && devOptions.statueJson2.includes('CO2')">
+          <img :src="co2Img">
+          <span v-text="'CO2浓度等级'" @click="showCO2"/>
         </div>
         <!-- 模式滑轮 -->
         <modeSwiper v-if="Pow && !loading" key="modeSwiper"/>
@@ -78,17 +80,30 @@
       <PopupBottom ref="PopupBottom" />
       <!-- 关机页面 -->
       <gree-power-off
-        v-model="showPowOff" 
-        :style="{ backgroundImage: 'url(' + power_off_bg + ')' }" />
+        v-model="showPowOff"
+        :style="backgroundStyle" />
+      <!-- CO2浓度查看 -->
+      <gree-dialog v-model="dialogOpen" :mask-closable="true" class="dialog-co2">
+        <div class="dialog-co2-header">
+          <img :src="currentCO2Img" >
+          <span v-text="`CO2浓度 ${currentCO2}ppm`"/>
+        </div>
+        <div class="dialog-co2-content">
+          <span v-text="'优：CO2浓度较低，建议继续保持。'"/>
+          <span v-text="'中：CO2浓度中等，建议继续保持或升高风档。'"/>
+          <span v-text="'差：CO2浓度较高，建议升高风档，或适当打'"/>
+          <span v-text="'开门窗。'"/>
+        </div>
+      </gree-dialog>
     </gree-page>
   </gree-view>
 </template>
 
 <script>
 
-import { Header, PowerOff, Row, Col, NoticeBar, Icon } from 'gree-ui';
+import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, changeBarColor, getCCcmd, startVoiceMainActivity, showLoading } from '@PluginInterface';
+import { closePage, editDevice, changeBarColor, getCCcmd, startVoiceMainActivity, showLoading, getCurrentMode } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
@@ -106,6 +121,7 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
     [NoticeBar.name]: NoticeBar,
+    [Dialog.name]: Dialog,
     [Icon.name]: Icon,
     Carousel,
     PopupBottom,
@@ -118,6 +134,10 @@ export default {
   data() {
     return {
       onTestFlag: 0,
+      dialogOpen: false, 
+      currentCO2: 0,
+      currentCO2Level: 0,
+      currentCO2Img: 0,
     };
   },
   computed: {
@@ -135,13 +155,32 @@ export default {
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
       PctCle: state => state.dataObject.PctCle,
+      CO2: state => state.dataObject.CO2,
+      CO2Level: state => state.dataObject.CO2Level,
     }),
+    isB() {
+      return ['10f04'].includes(this.devOptions.mid); // B分体特殊ui
+    },
+    headerBg() {
+      if (!this.Pow) return {};
+      const isB = this.isB;
+      const backgroundImage = `url(${require(`@/assets/img/mode/${isB ? 'bg_b' : 'mode_bg'}.png`)})`;
+      return {
+        backgroundImage,
+        'background-size': `${isB ? 1 : 5}00% 100%`,
+        'background-position': `${isB ? 0 : this.Mod * 25}% 0%`
+      };
+    },
     showPowOff() {
       return !this.Pow;
     },
-    power_off_bg() {
+    backgroundStyle() {
       const Hot = this.Mod === this.$store.state.ModHeat;
-      return Hot ? require('@/assets/img/bg_off_heat.png') : require('@/assets/img/bg_off_cool.png');
+      return this.isB ? {
+        backgroundImage: `url(${require('@/assets/img/mode/bg_b_off.png')})`,
+      } : {
+        backgroundImage: `url(${require(`@/assets/img/bg_off_${Hot ? 'heat' : 'cool'}.png`)})`,
+      };
     },
     modName() {
       return this.modeNameList[this.Mod];
@@ -156,6 +195,20 @@ export default {
       if (this.TemUn) return require('@/assets/img/f.png');
       return require('@/assets/img/c.png');
     },
+    // 二氧化碳浓度图片
+    co2Img() {
+      const CO2Level = this.dialogOpen ? this.currentCO2Level : this.CO2Level;
+      switch (CO2Level) {
+        case 1:
+          return require('@/assets/img/good.png');
+        case 2:
+          return require('@/assets/img/medium.png');
+        case 3:
+          return require('@/assets/img/bad.png');
+        default:
+          return require('@/assets/img/good.png');
+      }
+    },
     /**
      * @description 主页面下更新状态栏颜色
      */
@@ -165,7 +218,13 @@ export default {
       const Adv = this.$refs.PopupBottom ? this.$refs.PopupBottom.showPopup : false;
       let color = '#000';
       if (this.$route.name === 'Home') {
-        if (Pow) {
+        if (this.isB) {
+          if (Pow) {
+            color = Adv ? '#1B7BA0' : '#27B0E5';
+          } else {
+            color = Adv ? '#1E7C9E' : '#2BB2E3';
+          }
+        } else if (Pow) {
           if (Hot) {
             color = Adv ? '#AE7022' : '#f9a130';
           } else {
@@ -217,11 +276,10 @@ export default {
       immediate: true
     },
     airFanShow(newVal) {
+      if (!this.$store.state.ableSend) return;
       if (newVal) {
         // 更新到localStorage
         window.storage.set('WdSpd', this.WdSpd);
-        console.log(this.WdSpd);
-        console.log(window.storage.get('WdSpd'));
         if (window.storage.get('AirWdSpd') === undefined) {
           this.setState(['watchLock', false]);
           this.setDataObject({ WdSpd: 1 });
@@ -289,10 +347,15 @@ export default {
         this.devOptions.statueJson2
       );
       const p = opt.map(item => {
+        // 兼容炫光
+        if (item === 'Dazzling') {
+          return this.Pow;
+        }
         return this.dataObject[item];
       });
+
       const json = JSON.stringify({ opt, p, t: 'cmd' });
-      // console.log(p);
+      console.log(json);
       getCCcmd(this.mac, json, remarks, JSON.stringify(p));
     },
     /**
@@ -303,6 +366,7 @@ export default {
       switch (key) {
         case 'Pow':
           setData.Pow = !this.Pow - 0;
+          setData.Dazzling = !this.Pow - 0;
           if (this.hasAir) {
             if (this.Pow) {
               setData.Air = 0;
@@ -310,8 +374,6 @@ export default {
               setData.Air = this.Air ? 1 : 3;
             }
           }
-          // setData.SwhSlp = 0;
-          // setData.SlpMod = 0;
           this.changeData({...setData});
           break;
         case 'Func':
@@ -340,24 +402,24 @@ export default {
     },
     // 切换温度单位
     changeTemUn() {
-      this.g_moreOption.temUnChange && this.changeData({TemUn: !this.TemUn - 0});
+      this.$store.state.devOptions.statueJson2.includes('TemUn') && this.changeData({TemUn: !this.TemUn - 0});
+    },
+    // 显示CO2弹框
+    showCO2() {
+      this.currentCO2 = this.CO2;
+      this.currentCO2Level = this.CO2Level;
+      this.currentCO2Img = this.co2Img;
+      this.dialogOpen = true;
     },
     // 点击10次进入调试模式
-    onTest(key) {
-      switch (key) {
-        case 'stepOne':
-          this.onTestFlag >= 10 ? this.onTestFlag = 0 : (this.onTestFlag += 1);
-          break;
-        case 'stepTwo':
-          this.onTestFlag < 10 ? this.onTestFlag = 0 : this.onTestFlag += 1;
-          break;
-        default:
-          this.onTestFlag = 0;
-          break;
-      }
-      if (this.onTestFlag === 20) {
-        new VConsole();
-      }
+    onTest() {
+      getCurrentMode().then(res => {
+        if (res === '0') {
+          this.onTestFlag += 1;
+          this.onTestFlag === 10 && new VConsole();
+          this.onTestFlag === 20 && this.$router.push({name: 'Test'});
+        }
+      });
     },
   }
 };

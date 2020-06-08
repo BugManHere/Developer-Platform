@@ -1,4 +1,4 @@
-import { timerListDevice } from '@PluginInterface';
+import { timerListDevice, showLoading } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
@@ -16,11 +16,12 @@ const Customize = {
             console.log('%c running timerListDevice()', 'color: blue');
           }
         },
-        Sleep: () => {
-          console.log('click sleep');
+        SmartSleep: () => {
+          showLoading();
+          this.$router.push({name: 'Sleep'}).catch(e => { console.log(e); });
         },
-        TemStep: status => {
-          switch (status) {
+        TemStep: (currentStatus, afterStatus) => {
+          switch (afterStatus) {
             case 'default':
               this.setDataObject({has01: 1, has05: 0});
               break;
@@ -32,8 +33,8 @@ const Customize = {
               break;
           }
         },
-        Avoid: status => {
-          switch (status) {
+        Avoid: (currentStatus, afterStatus) => {
+          switch (afterStatus) {
             case 'default':
               if (this.dataObject.SmartWind === 3) {
                 this.changeData({SmartWind: 0});
@@ -45,9 +46,8 @@ const Customize = {
               break;
           }
         },
-        Follow: status => {
-          console.log(status);
-          switch (status) {
+        Follow: (currentStatus, afterStatus) => {
+          switch (afterStatus) {
             case 'default':
               if (this.dataObject.SmartWind === 2) {
                 this.changeData({SmartWind: 0});
@@ -59,10 +59,10 @@ const Customize = {
               break;
           }
         },
-        'UDFanPort(Auto)': status => {
-          switch (status) {
+        'UDFanPort(Auto)': (currentStatus, afterStatus) => {
+          switch (afterStatus) {
             case 'status_1':
-              this.changeData({UDFanPort: 1});
+              this.changeData({UDFanPort: 2});
               break;
             case 'status_2':
               this.changeData({UDFanPort: 1});
@@ -75,9 +75,8 @@ const Customize = {
               break;
           }
         },
-        FanLR: status => {
-          console.log(status);
-          switch (status) {
+        FanLR: (currentStatus, afterStatus) => {
+          switch (afterStatus) {
             case 'status_1':
               this.changeData({UDFanPort: 3});
               break;
@@ -90,6 +89,48 @@ const Customize = {
               } else {
                 this.changeData({UDFanPort: 1});
               }
+              break;
+            default:
+              this.changeData({UDFanPort: 2});
+              break;
+          }
+        },
+        Humi: (currentStatus, afterStatus) => {
+          switch (afterStatus) {
+            case 'status_1':
+              this.$router.push({name: 'Humi'}).catch(e => { console.log(e); });
+              break;
+            default:
+              break;
+          }
+        },
+        RFan: currentStatus => {
+          switch (currentStatus) {
+            case 'default':
+            case undefined:
+              this.changeData({UDFanPort: 3});
+              break;
+            default:
+              this.changeData({UDFanPort: 2});
+              break;
+          }
+        },
+        LFan: currentStatus => {
+          switch (currentStatus) {
+            case 'default':
+            case undefined:
+              this.changeData({UDFanPort: 1});
+              break;
+            default:
+              this.changeData({UDFanPort: 2});
+              break;
+          }
+        },
+        LRFan: currentStatus => {
+          switch (currentStatus) {
+            case 'default':
+            case undefined:
+              this.changeData({UDFanPort: 2});
               break;
             default:
               this.changeData({UDFanPort: 2});
@@ -116,9 +157,9 @@ const Customize = {
     /**
      * @description 执行自定义函数
      */
-    customizeFunc(key, status) {
+    customizeFunc(key, currentStatus, afterStatus) {
       try {
-        this.customize[key](status);
+        this.customize[key](currentStatus, afterStatus);
       } catch (e) {
         console.log(`%c 找不到${key}的自定义函数`, 'color: blue');
       }

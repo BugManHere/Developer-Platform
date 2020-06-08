@@ -39,22 +39,17 @@
       <div class="row" v-show="!isFold.optional">
         <!-- 语音技能 -->
         <div class="optional">
+          <span v-text="'插件版本'"/>
+          <input type="text"  class="form-control" id="inputText" v-model="pluginVer" style="text-align: center;">
+        </div>
+        <!-- 语音技能 -->
+        <div class="optional">
           <span v-text="'语音技能'"/>
           <label for="config-input-voice">
             <input id="config-input-voice" type="checkbox" v-model="voiceSkill">
             <span class="on" :class="{'on-hide': !voiceSkill}">ON</span>
             <span class="off" :class="{'off-hide': voiceSkill}">OFF</span>
             <div class="toggle-inner" :class="{right: voiceSkill}"></div>
-          </label>
-        </div>
-        <!-- 华氏度切换 -->
-        <div class="optional">
-          <span v-text="'华氏度切换'"/>
-          <label for="config-input-tem">
-            <input id="config-input-tem" type="checkbox" v-model="temUnChange">
-            <span class="on" :class="{'on-hide': !temUnChange}">ON</span>
-            <span class="off" :class="{'off-hide': temUnChange}">OFF</span>
-            <div class="toggle-inner" :class="{right: temUnChange}"></div>
           </label>
         </div>
         <!-- 自动模式温度可控 -->
@@ -66,15 +61,6 @@
             <span class="off" :class="{'off-hide': autoAbleTem}">OFF</span>
             <div class="toggle-inner" :class="{right: autoAbleTem}"></div>
           </label>
-        </div>
-        <!-- 风速范围 -->
-        <div class="optional">
-          <span v-text="'风速范围'"/>
-            <select class="form-control" v-model="fanRange">
-              <option value="7">7档风</option>
-              <option value="5">5档风</option>
-              <option value="3">3档风</option>
-            </select>
         </div>
         <!-- 温度间隔 -->
         <div class="optional">
@@ -126,8 +112,8 @@ export default {
   },
   data() {
     return {
+      pluginVer: '1.0',
       voiceSkill: false, // 是否有'语音技能'
-      temUnChange: false, // 是否有'华氏度'
       autoAbleTem: false, // 自动模式下是否可设置温度
       temStep: '0.5', // 温度间隔
       fanRange: '7', // 多少档风
@@ -143,8 +129,8 @@ export default {
   },
   mounted() {
     // 初始化数据，从服务器获取
+    this.pluginVer = this.moreOption.pluginVer;
     this.voiceSkill = this.moreOption.voiceSkill;
-    this.temUnChange = this.moreOption.temUnChange;
     this.autoAbleTem = this.moreOption.autoAbleTem;
     this.temStep = this.moreOption.temStep;
     this.fanRange = this.moreOption.fanRange;
@@ -176,8 +162,8 @@ export default {
     }),
     input() {
       return {
+        pluginVer: this.pluginVer,
         voiceSkill: this.voiceSkill,
-        temUnChange: this.temUnChange,
         autoAbleTem: this.autoAbleTem,
         temStep: this.temStep,
         fanRange: this.fanRange,

@@ -1,9 +1,9 @@
 <template>
   <gree-view bg-color="#404040">
     <gree-page class="page-nobodysave">
-      <gree-header>{{ $language('btn.Dazzling') }}</gree-header>
+      <gree-header>{{ $language('humidify.title') }}</gree-header>
       <gree-list>
-        <gree-list-item title="炫光">
+        <gree-list-item title="加湿设置">
           <gree-switch
             slot="after"
             v-model="isActive"
@@ -11,23 +11,44 @@
           ></gree-switch>
         </gree-list-item>
       </gree-list>
-      <gree-radio-list
-        :options="modes"
-        :value="DazzlingStatus"
-        icon-size="md"
-        @change="setDazzling"
-        v-show="isActive"
-      ></gree-radio-list>
+
+      <div
+        class="humi-wheel"
+        :style="{ backgroundImage: 'url(' + humi_bg + ')' }"
+        v-if="Humi"
+      >
+        <span class="humi-value">{{ Humi }}</span>
+        <span class="humi-unit">%</span>
+      </div>
+
+      <gree-row class="humi-btn" v-show="Humi">
+        <gree-col class="humi-col">
+          <gree-button round type="default" style="width: 50%" :disabled="Humi===30" @click="changeHumiValue('subtract')">-</gree-button>
+        </gree-col>
+        <gree-col class="humi-col">
+          <gree-button round type="default" style="width: 50%" :disabled="Humi===70" @click="changeHumiValue('add')">+</gree-button>
+        </gree-col>
+      </gree-row>
     </gree-page>
   </gree-view>
 </template>
 
 <script>
-import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast
-} from '@PluginInterface';
+  Header,
+  Toast,
+  Radio,
+  RadioList,
+  Switch,
+  List,
+  Item,
+  Dialog,
+  Row,
+  Col,
+  Button
+} from 'gree-ui';
+import { mapState, mapMutations, mapActions } from 'vuex';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   name: 'Dazzling',
@@ -39,66 +60,45 @@ export default {
     [List.name]: List,
     [Item.name]: Item,
     [Toast.name]: Toast,
+    [Dialog.name]: Dialog,
+    [Row.name]: Row,
+    [Col.name]: Col,
+    [Button.name]: Button,
   },
   data() {
     return {
-      isActive: true,
+      isActive: true
     };
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      Dazzling: state => state.dataObject.Dazzling,
+      Humi: state => state.dataObject.Humi
     }),
-    modes() {
-      return [
-        {
-          value: 1,
-          text: '炫光模式',
-        },
-        {
-          value: 9,
-          text: '流光模式',
-        },
-        {
-          value: 10,
-          text: '小夜灯模式',
-        },
-      ];
-    },
-    DazzlingStatus() {
-      const Dazzling = this.Dazzling;
-      switch (true) {
-        case Dazzling === 0:
-          return 0;
-        case Dazzling <= 4:
-          return 1;
-        case Dazzling <= 8:
-          return 5;
-        case Dazzling === 9:
-        case Dazzling === 10:
-          return Dazzling;
-        default:
-          return 0;
-      }
+    humi_bg() {
+      console.log('this.Humi', this.Humi);
+      return require(`@/assets/img/functionBtn/humi/humi_${this.Humi}.png`);
     }
   },
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
         try {
-          showToast('空调已被关闭，自动退出炫光设置。', 1);
+          showToast('设备已被关闭，自动退出加湿设置。', 1);
         } catch (e) {
           Toast({
-            content: '空调已被关闭，自动退出炫光设置。',
+            content: '设备已被关闭，自动退出加湿设置。',
             position: 'bottom'
           });
         }
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
       }
     }
   },
   mounted() {
+    hideLoading();
     this.isActive = Boolean(this.Dazzling);
   },
   methods: {
@@ -109,14 +109,39 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
+
     switchDazzling(active) {
-      const setData = {Dazzling: Number(active)};
+      if (active) {
+        Dialog.confirm({
+          title: '提示',
+          content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
+          confirmText: '确定',
+          onConfirm: () => this.setHumi(50),
+          cancelText: '取消',
+          onCancel: () => {
+            this.isActive = false;
+          }
+        });
+      } else {
+        this.setHumi(0);
+      }
+    },
+
+    setHumi(value) {
+      const setData = { Humi: value };
       this.setState(['ableSend', true]);
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
-    setDazzling(option) {
-      const setData = {Dazzling: option.value};
+
+    changeHumiValue(type) {
+      const setData = {};
+      if (type === 'add') {
+        setData.Humi = this.Humi + 5;
+      }
+      if (type === 'subtract') {
+        setData.Humi = this.Humi - 5;
+      }
       this.setState(['ableSend', true]);
       this.setDataObject(setData);
       this.sendCtrl(setData);
@@ -132,7 +157,36 @@ export default {
     margin-bottom: 0.1rem;
   }
   .gree-switch {
-    font-size: 50px;
+    font-size: 60px;
+  }
+  .humi-wheel {
+    margin: 148px auto 0;
+    height: 557px;
+    width: 755px;
+    text-align: center;
+    background-size: 100% 100%;
+    font-family: 'RoBoto';
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    .humi-value {
+      font-size: 295px;
+      color: #404657;
+    }
+    .humi-unit {
+      position: absolute;
+      bottom: 70px;
+      left: 70%;
+      font-size: 100px;
+      color: #404657;
+      }
+  }
+  .humi-btn{
+    margin-top: 90px;
+    .humi-col{
+      text-align: center;
+    }
   }
 }
 </style>

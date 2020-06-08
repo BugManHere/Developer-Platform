@@ -11,7 +11,8 @@ import {
   SET_DATA_OBJECT,
   SET_CHECK_OBJECT,
   SET_STATE,
-  SEND_CTRL
+  SEND_CTRL,
+  UPDATE_DATAOBJECT
 } from './types';
 
 
@@ -25,16 +26,14 @@ let sendTime = 0;
  */
 function sendControl({ state, commit }, dataMap) {
   _timer2 && clearTimeout(_timer2) && (_timer2 = null);
-  !state.uilock && commit(SET_STATE, ['uilock', true]); // ui锁
   (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]); // 互斥锁
   setData = {...setData, ...dataMap};
+  commit(SET_STATE, ['uilock', true]); // ui锁
   _timer2 = setTimeout(async () => {
     if (state.swiperHold) {
       sendControl({ state, commit }, {});
       return;
     }
-    commit(SET_STATE, ['watchLock', true]);
-    commit(SET_STATE, ['ableSend', false]);
     sendTime = 0;
     const setOpt = [];
     const setP = [];
@@ -52,8 +51,23 @@ function sendControl({ state, commit }, dataMap) {
     const opt = setOpt;
     const p = setP;
     console.table([opt, p]);
-    const json = JSON.stringify({ mac, t, opt, p });
+
+    // 8度制热相关操作
     state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
+    if (!setOpt.includes('StHt')) {
+      setOpt.push('StHt');
+      setP.push(0);
+    }
+
+    const json = JSON.stringify({ mac, t, opt, p });
+    
+    if (state.dataObject.functype || !state.ableSend) {
+      commit(SET_STATE, ['uilock', false]); // ui锁
+      return;
+    }
+    commit(SET_STATE, ['watchLock', true]);
+    commit(SET_STATE, ['ableSend', false]);
+
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
         // 发送指令后暂停接收，过8秒后重启轮询
@@ -74,7 +88,8 @@ function sendControl({ state, commit }, dataMap) {
     try {
       const result = JSON.parse(res);
       const { r } = result;
-      const _p = JSON.parse(state.devOptions.statueJson2).map(json => state.dataObject[json]);
+      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] === undefined ? 0 : state.dataObject[json]);
+
       // 成功之后更新主体状态
       commit(SET_STATE, ['swiperHold', false]);
       r === 200 && commit(SET_STATE, ['uilock', false]) &&
@@ -112,12 +127,15 @@ function getStatusOfDev({ state, commit }) {
     .then(_res => {
       const DataObject = {};
       const res = JSON.parse(_res);
-      console.log('----------------------');
-      console.log(cols);
-      console.log(res);
-      for (let i = 0, j = cols.length; i < j; i += 1) {
-        DataObject[cols[i]] = res[i]; // 遍历查询到的数据，将值写入state中的DataObject，根据业务更改
+      cols.forEach((json, index) => {
+        DataObject[json] = res[index];
+      });
+
+      // 兼容辅热，如果开启了八度制热，则不更新辅热
+      if (cols.includes('AssHt') && DataObject.StHt) {
+        DataObject.AssHt = 1;
       }
+
       if (!state.dataObject.functype && !state.uilock) {
         // 非场景时提交数据
         commit(SET_CHECK_OBJECT, DataObject);
@@ -192,22 +210,32 @@ export default {
     keys.forEach(key => {
       // 组装指令，根据业务更改，温度值需要整套发送
       if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) {
+        const val = isNaN(DataObject[key]) ? 0 : DataObject[key];
         opt.push(key);
-        p.push(DataObject[key]);
-        commit(SET_CHECK_OBJECT, JSON.parse(`{"${key}":${DataObject[key]}}`));
-        dataMap[key] = DataObject[key];
+        p.push(val);
+        commit(SET_CHECK_OBJECT, JSON.parse(`{"${key}":${val}}`));
+        dataMap[key] = val;
       }
     });
     // 所有操作都需要关掉8度制热，所以直接在这写好了
-    if (!state.isStHt) {
+    if (!state.isStHt && state.ableSend) {
       dataMap.StHt = 0;
       commit(SET_DATA_OBJECT, {StHt: 0});
       commit(SET_CHECK_OBJECT, {StHt: 0});
     }
-    if (!state.dataObject.functype && state.ableSend && p.length !== 0) {
+    if (p.length !== 0) {
       sendControl({ state, commit }, dataMap);
     } else {
       !_timer2 && commit(SET_STATE, ['watchLock', true]);
     }
+  },
+
+  /**
+   * @description 更新本地数据
+   */
+  [UPDATE_DATAOBJECT]({ state, commit }, DataObject) {
+    commit(SET_DATA_OBJECT, DataObject);
+    commit(SET_CHECK_OBJECT, DataObject);
+    lastObject = state.checkObject;
   }
 };

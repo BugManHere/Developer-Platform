@@ -16,3 +16,4 @@ export const SET_CHART_DATA = 'SET_CHART_DATA'; //
 export const GET_DEVICE_INFO = 'GET_DEVICE_INFO'; // 获取设备信息
 export const GET_ALL_STATES = 'GET_ALL_STATES'; // 获取全部状态
 export const SEND_CTRL = 'SEND_CTRL'; // 发送控制指令
+export const UPDATE_DATAOBJECT = 'UPDATE_DATAOBJECT'; // 

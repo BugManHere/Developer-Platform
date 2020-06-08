@@ -16,7 +16,8 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast
+  showToast,
+  hideLoading
 } from '@PluginInterface';
 import LogicWatch from '@/logic/watch';
 
@@ -77,6 +78,9 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    hideLoading();
   },
   methods: {
     ...mapMutations({

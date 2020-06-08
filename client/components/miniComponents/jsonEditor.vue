@@ -151,7 +151,7 @@ export default {
             // 插入文本
             range.insertNode(textNode);
             // 移动光标
-            range.collapse(false);
+            // range.collapse(false);
           }
         }
       });

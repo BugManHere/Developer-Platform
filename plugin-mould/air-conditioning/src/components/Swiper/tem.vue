@@ -29,6 +29,8 @@ export default {
       rightLen: 3,
       currentTemStep: 1,
       changeStepFlag: false,
+      minTem: 16,
+      maxTem: 30,
     };
   },
   computed: {
@@ -73,6 +75,8 @@ export default {
     currentVal() {
       let result = this.SetTem + ((this.add01 * 0.1) || (this.add05 * 0.5)) || 0;
       this.TemUn && (result = this.tempC2F(result, this.TemRec));
+      if (result >= this.maxTem) return this.maxTem;
+      if (result <= this.minTem) return this.minTem;
       return result;
     },
     // 显示文本，禁止滑动
@@ -226,7 +230,7 @@ export default {
       // 更新temList
       this.temList = [];
     },
-    // 根据情况填充slide 
+    // 根据情况填充slide
     insertAllSlide() {
       const value = this.currentVal;
       const valueInteger = Math.floor(value);

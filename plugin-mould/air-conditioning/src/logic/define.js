@@ -25,6 +25,7 @@ const LogicDefine = {
     this.g_hideMap = hideMap;
     this.g_mid = productModel;
     this.setState(['devOptions', {
+      pluginVer: moreOption.pluginVer,
       mid: productModel,
       statueJson: JSON.stringify(moreOption.statueJson),
       statueJson2: JSON.stringify(moreOption.statueJson2),
@@ -64,79 +65,20 @@ const LogicDefine = {
     g_valToStatus() {
       const result = {};
       this.g_funcDefine.forEach(funcItem => {
-        const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
         const key = funcItem.identifier;
-        const order = Object.keys(funcItem.statusDefine);
-        result[key] = {};
-        order.forEach(statusName => {
-          if (statusName === 'undefined') return;
-          const state = `${key}_${statusName}`;
-          if (hideState.includes(state)) { // 被隐藏的state不参与计算
-            return;
-          }
-          const val = funcItem.statusDefine[statusName].value;
-          const beforeStatus = result[key][val];
-          // 是否存在同源状态（JSON取值相等）
-          if (beforeStatus) {
-            const commandBefore = funcItem.statusDefine[beforeStatus].moreCommand;
-            const commandCurrent = funcItem.statusDefine[statusName].moreCommand;
-            const currentType = this.g_mapRelation(commandCurrent, this.g_inputMap);
-            // 同源状态是否有moreCommand
-            if (commandBefore) {
-              const beforeType = this.g_mapRelation(commandBefore, this.g_inputMap); // 状态是否满足
-              let isCurrent = false;
-              // 判断两个同源状态之间的关系
-              switch (this.g_mapRelation(commandCurrent, commandBefore)) {
-                // 难点重点，看悟性了
-                case 0:
-                case 1:
-                  switch (currentType) {
-                    case 0:
-                      isCurrent = beforeType === 0;
-                      break;
-                    case 1:
-                      isCurrent = beforeType !== 2;
-                      break;
-                    default:
-                      isCurrent = true;
-                      break;
-                  }
-                  break;
-                case 2:
-                  switch (currentType) {
-                    case 0:
-                      isCurrent = beforeType === 0;
-                      break;
-                    case 2:
-                      isCurrent = beforeType !== 2;
-                      break;
-                    default:
-                      isCurrent = true;
-                      break;
-                  }
-                  break;
-                case 3:
-                  switch (currentType) {
-                    case 1:
-                      isCurrent = beforeType !== 2;
-                      break;
-                    default:
-                      isCurrent = true;
-                      break;
-                  }
-                  break;
-                default:
-                  isCurrent = true;
-                  break;
-              }
-              isCurrent && (result[key][val] = statusName);
-            } else {
-              currentType === 2 && (result[key][val] = statusName);
-            }
-          } else {
-            result[key][val] = statusName;
-          }
-        });
+        result[key] = this.g_getStatus(funcItem, true);
+      });
+      return result;
+    },
+    /**
+     * @description 根据identifier与value获取当前伪状态（没经过隐藏处理）
+     * @return Object {identifier: {value: status}}
+     */
+    g_valToRealStatus() {
+      const result = {};
+      this.g_funcDefine.forEach(funcItem => {
+        const key = funcItem.identifier;
+        result[key] = this.g_getStatus(funcItem, false);
       });
       return result;
     },
@@ -153,10 +95,16 @@ const LogicDefine = {
         const status = this.g_valToStatus[id][currentVal];
         const state = `${id}_${status}`;
         const define = item.statusDefine[status];
+        const realStatus = this.g_valToRealStatus[id][currentVal];
+        const realState = `${id}_${realStatus}`;
+        const realDefine = item.statusDefine[realStatus];
         result[id] = {
           status,
           state,
-          define
+          define,
+          realStatus,
+          realState,
+          realDefine
         };
       });
       return result;
@@ -369,6 +317,83 @@ const LogicDefine = {
       } else {
         return false;
       }
+      return result;
+    },
+    g_getStatus(funcItem, isHide = false) {
+      const result = {};
+      const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
+      const key = funcItem.identifier;
+      const order = Object.keys(funcItem.statusDefine);
+      // result[key] = {};
+      order.forEach(statusName => {
+        if (statusName === 'undefined') return;
+        const state = `${key}_${statusName}`;
+        if (isHide && hideState.includes(state)) { // 被隐藏的state不参与计算
+          return;
+        }
+        const val = funcItem.statusDefine[statusName].value;
+        const beforeStatus = result[val];
+        // 是否存在同源状态（JSON取值相等）
+        if (beforeStatus) {
+          const commandBefore = funcItem.statusDefine[beforeStatus].moreCommand;
+          const commandCurrent = funcItem.statusDefine[statusName].moreCommand;
+          const currentType = this.g_mapRelation(commandCurrent, this.g_inputMap);
+          // 同源状态是否有moreCommand
+          if (commandBefore) {
+            const beforeType = this.g_mapRelation(commandBefore, this.g_inputMap); // 状态是否满足
+            let isCurrent = false;
+            // 判断两个同源状态之间的关系
+            switch (this.g_mapRelation(commandCurrent, commandBefore)) {
+              // 难点重点，看悟性了
+              case 0:
+              case 1:
+                switch (currentType) {
+                  case 0:
+                    isCurrent = beforeType === 0;
+                    break;
+                  case 1:
+                    isCurrent = beforeType !== 2;
+                    break;
+                  default:
+                    isCurrent = true;
+                    break;
+                }
+                break;
+              case 2:
+                switch (currentType) {
+                  case 0:
+                    isCurrent = beforeType === 0;
+                    break;
+                  case 2:
+                    isCurrent = beforeType !== 2;
+                    break;
+                  default:
+                    isCurrent = true;
+                    break;
+                }
+                break;
+              case 3:
+                switch (currentType) {
+                  case 1:
+                    isCurrent = beforeType !== 2;
+                    break;
+                  default:
+                    isCurrent = true;
+                    break;
+                }
+                break;
+              default:
+                isCurrent = true;
+                break;
+            }
+            isCurrent && (result[val] = statusName);
+          } else {
+            currentType === 2 && (result[val] = statusName);
+          }
+        } else {
+          result[val] = statusName;
+        }
+      });
       return result;
     }
   }

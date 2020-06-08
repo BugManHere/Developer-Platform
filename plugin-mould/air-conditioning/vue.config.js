@@ -15,6 +15,7 @@ const resolve = dir => {
   const { productModel, moreOption } = require(`../../output/${key}.json`);
   const statueJson = moreOption.statueJson;
   const statueJson2 = moreOption.statueJson2;
+  process.env.VUE_APP_VER = moreOption.pluginVer;
   process.env.VUE_APP_MID = productModel;
   process.env.VUE_APP_JSON = JSON.stringify(statueJson);
   process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
@@ -79,6 +80,7 @@ module.exports = {
               xml2js.parseString(content.toString(), options, (err, result) => {
                 const builder = new xml2js.Builder();
                 const outPut = result;
+                outPut.device.version = process.env.VUE_APP_VER;
                 outPut.device.mid = process.env.VUE_APP_MID;
                 outPut.device.statueJson = process.env.VUE_APP_JSON;
                 outPut.device.statueJson2 = process.env.VUE_APP_JSON2;

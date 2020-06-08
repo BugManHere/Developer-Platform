@@ -150,7 +150,12 @@ export default {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
       const sendData = {Mod: toIndex, Emod: 0, UDFanPort: 0};
-      // toIndex === 2 && (sendData.WdSpd = 1);
+
+      // M3在WiFi处作了特殊处理，app要兼容
+      if (sendData.Mod === 4 && this.$store.state.devOptions.mid === '10010') {
+        sendData.AssHt = 0;
+      }
+
       this.changeData(sendData);
       this.updateList(index);
     },

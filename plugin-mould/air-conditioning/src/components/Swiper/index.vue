@@ -78,7 +78,8 @@ export default {
           slideShadows: false
         },
         observer: true,
-        observeParents: true
+        observeParents: true,
+        touchAngle: 90,
       },
       noSwiping: false,
       swiperPerView: {},
@@ -192,9 +193,15 @@ export default {
       });
       this.setState(['ableSend', true]);
     },
-    updateSwiper() {
-      this.setIndex(3);
-      this.$refs[this.slidesData.key].swiper.update();
+    updateSwiper(index) {
+      this.$nextTick(() => {
+        this.setIndex(index); // 定位到中间
+        this.$refs[this.slidesData.key].swiper.update();
+      });
+      setTimeout(() => {
+        this.$refs[this.slidesData.key].swiper.update();
+        this.setIndex(index); // 定位到中间
+      }, 0);
     },
     setIndex(index) {
       this.$refs[this.slidesData.key].swiper.slideTo(index);

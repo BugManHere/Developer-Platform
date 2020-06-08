@@ -14,6 +14,8 @@ const ErrorPage = r =>
   require.ensure([], () => r(require('./views/Error')), 'error');
   
 // 高级功能倒三角进入
+const Test = r =>
+  require.ensure([], () => r(require('./views/functionPage/Test')));
 const Sweep = r =>
   require.ensure([], () => r(require('./views/functionPage/Sweep')));
 const SmartWind = r =>
@@ -36,6 +38,8 @@ const Humi = r =>
   require.ensure([], () => r(require('./views/functionPage/Humi')));
 const Loop = r =>
   require.ensure([], () => r(require('./views/functionPage/Loop')));
+const Sleep = r =>
+  require.ensure([], () => r(require('./views/functionPage/Sleep')));
 
 Vue.use(Router);
 
@@ -64,6 +68,11 @@ export default new Router({
       path: '/Error',
       name: 'Error',
       component: ErrorPage
+    },
+    {
+      path: '/Test',
+      name: 'Test',
+      component: Test
     },
     {
       path: '/Sweep',
@@ -119,6 +128,11 @@ export default new Router({
       path: '/Loop',
       name: 'Loop',
       component: Loop
+    },
+    {
+      path: '/Sleep',
+      name: 'Sleep',
+      component: Sleep
     },
   ]
 });

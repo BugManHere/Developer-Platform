@@ -2,11 +2,10 @@ const mongoose = require("mongoose");
 
 // 创建孙子文档 
 const optionSchema = new mongoose.Schema({
+  pluginVer: String,
   voiceSkill: Boolean,
-  temUnChange: Boolean,
   autoAbleTem: Boolean,
   temStep: String,
-  fanRange: String,
   statueJson: [String],
   statueJson2: [String],
 })

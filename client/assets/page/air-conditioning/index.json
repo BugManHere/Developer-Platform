@@ -38,6 +38,9 @@
     },
     "Loop": {
       "routerName": "Loop"
+    },
+    "Sleep": {
+      "routerName": "Sleep"
     }
   }
 }

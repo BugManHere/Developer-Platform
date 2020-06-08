@@ -20,14 +20,14 @@
             class="icon"
             @click="changeStatus(item.identifier, g_hideFuncArr.includes(item.identifier))"
           >
-            <img 
+            <img
               v-if="imgList[index].img" 
               :src="imgList[index].img" />
-            <div 
-              v-else 
+            <div
+              v-else
               class="blank-btn">
               <img src="@/assets/img/functionBtn/blank.png" />
-              <span 
+              <span
                 v-html="imgList[index].text" 
                 class="blank-text"/>
             </div>
@@ -48,6 +48,9 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import LogicDefine from '@/logic/define';
 import LogicWatch from '@/logic/watch';
 import Customize from '@/logic/customize';
+import {
+  showLoading,
+} from '@PluginInterface';
 
 export default {
   components: {
@@ -69,8 +72,8 @@ export default {
       if (!this.g_funcDefine_btn) return [];
       const result = [];
       this.g_funcDefine_btn.forEach(item => {
-        const id = item.identifier;
-        const statusName = this.g_statusMap[id].define.name;
+        let id = item.identifier;
+        const statusName = this.g_hideFuncArr.includes(id) ? 'default' : this.g_statusMap[id].define.name;
         const map = {};
         // 如果有图片就显示图片，没有图片就显示文字
         try {
@@ -120,17 +123,19 @@ export default {
     changeStatus(identifier, isGray) {
       if (isGray) return;
       const customize = this.g_NextStatusMap[identifier].customize;
+      const currentStatus = this.g_statusMap[identifier].status; // 当前状态
+      const afterStatus = this.g_NextStatusMap[identifier].status; // 下一状态
       // 执行自定义函数 'before'
       switch (customize) {
         case 'replace':
-          this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
+          this.customizeFunc(identifier, currentStatus, afterStatus);
           return;
         case 'before':
-          this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
+          this.customizeFunc(identifier, currentStatus, afterStatus);
           break;
         case 'after':
           setTimeout(() => {
-            this.customizeFunc(identifier, this.g_NextStatusMap[identifier].status);
+            this.customizeFunc(identifier, currentStatus, afterStatus);
           }, 0);
           break;
         default:
@@ -148,6 +153,7 @@ export default {
     goPage(index, isGray, able) {
       if (isGray || !able) return;
       const { routerName, params } = this.g_funcDefine_btn[index].page;
+      showLoading();
       this.$router.push({
         name: routerName,
         params,

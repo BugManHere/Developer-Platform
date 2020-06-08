@@ -34,6 +34,27 @@
         }
       }
     }
+    .bar-co2 {
+      position: absolute;
+      width: 100%;
+      top: 180px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      z-index: 3;
+      img {
+        margin-right: 20px;
+        height: 61px;
+      }
+      span {
+        font-family: 'FZLTHJW--GB1-0';
+        font-size: 38px;
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 1px;
+      }
+    }
   }
   .page-main {
     position: relative;
@@ -90,6 +111,50 @@
         font-size: 45px;
         margin-top: 2px;
       }
+    }
+  }
+}
+
+.dialog-co2 {
+  .gree-dialog-content {
+    position: relative;
+    width: 970px !important;
+    height: 613px;
+    font-weight: 600;
+    .gree-dialog-body {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      .dialog-co2-header {
+        position: relative;
+        width: 100%;
+        height: 157px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          height: 61px !important;
+          margin-right: 29px;
+        }
+        span {
+          font-size: 45px;
+        }
+      }
+      .dialog-co2-content {
+        position: relative;
+        padding: 0 60px;
+        line-height: 75px;
+        display: flex;
+        flex-wrap: wrap;
+        >:last-child {
+          margin-left: 78px;
+        }
+      }
+    }
+    .gree-dialog-actions {
+      display: none;
     }
   }
 }

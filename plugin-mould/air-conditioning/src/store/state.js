@@ -11,15 +11,14 @@ const state = {
     Pow: 1,
     Mod: 1,
     SetTem: 24,
-    WdSpd: 2,
+    WdSpd: 1,
     'Add0.5': 0,
     'Add0.1': 0,
-    Lig: 1,
-    LigSen: 1,
     has05: 1,
     has01: 0,
     ElcEn: 1, // 电量统计
-    functype: 0 // 0代表正常，1代表集中控制
+    functype: 0, // 0代表正常，1代表集中控制
+    CO2: 401,
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

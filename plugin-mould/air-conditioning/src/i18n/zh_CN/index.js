@@ -145,9 +145,11 @@ module.exports = {
   },
   btn: {
     Sleep: '睡眠',
+    SmartSleep: '智眠',
     SwingUD: '上下扫风',
     SwingLR: '左右扫风',
     Health: '健康',
+    AutoLig: '自动灯光',
     Lig: '灯光',
     'Lig(Auto)': '灯光',
     StHt: '8℃制热',
@@ -157,6 +159,7 @@ module.exports = {
     Dazzling: '炫光',
     AssHt: '辅热',
     'AssHt(Auto)': '辅热',
+    'AssHt(Reverse)': '辅热',
     'AssHt(M3)': '辅热',
     cwz: '陈文中',
     TemStep: '温度间隔',
@@ -173,13 +176,16 @@ module.exports = {
     FbidBloPer: '防直吹',
     UDFanPort: '下出风',
     'UDFanPort(Auto)': '下出风',
+    AntiDirectBlow: '防直吹',
+    // 商用
     OutHome: '外出模式',
     LoopMod: '循环风',
     LoopMod_混合风: '混合风',
     LoopMod_全新风: '全新风',
     SvSt: '节能',
     Blo: '干燥',
-    
+    Humi: '除湿',
+    x: '再热除湿',
   },
   sweep: {
     speedTitle: '扫风',

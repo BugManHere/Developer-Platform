@@ -83,7 +83,6 @@ export default {
     currentIndex(newVal) {
       const moveLen = newVal - this.swiperIndex;
       const toIndex = this.leftLen + moveLen;
-      // this.initSwiper();
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
       this.updateSwiper();
@@ -106,7 +105,6 @@ export default {
   mounted() {
     this.setList();
     this.setFanName();
-    this.updateSwiper();
   },
   methods: {
     ...mapMutations({
@@ -127,11 +125,8 @@ export default {
         this.removeAllSlide();
         this.insertAllSlide();
         this.$nextTick(() => {
-          this.updateSwiper();
-          // setTimeout(() => {
-          this.$refs[this.ref].updateSwiper();
+          this.$refs[this.ref].updateSwiper(this.leftLen);
           this.setFanName();
-          // }, 0);
         });
       }, 0);
     },
@@ -147,7 +142,13 @@ export default {
     },
     // 更新滑轮的显示区间
     updateList(index) {
-      const moveLen = index - this.leftLen;
+      const maxLen = this.imshowList.length;
+      let moveLen = index - this.leftLen;
+      if (moveLen >= maxLen - this.rightLen) {
+        moveLen -= maxLen;
+      } else if (moveLen <= this.leftLen - maxLen) {
+        moveLen += maxLen;
+      }
       this.removeSlide(moveLen);
       this.insertSlide(moveLen);
       this.swiperIndex = this.currentIndex;
@@ -172,8 +173,9 @@ export default {
     },
     insertSlide(moveLen) {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
-      for (let i = 1; i <= Math.abs(moveLen); i += 1) {
+      for (let i = 1; i <= Math.abs(removeLen); i += 1) {
         const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
         this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
@@ -193,6 +195,8 @@ export default {
     },
     // 根据情况填充slide 
     insertAllSlide() {
+      const swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
+      if (swiperNum >= this.leftLen + this.leftLen + 1) return;
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         const funcName = 'appendSlide';
         const moveLen = i;
@@ -207,10 +211,10 @@ export default {
       const realIndex = this.imshowList[toIndex].index;
       switch (realIndex) {
         case 6: 
-          this.changeData({Tur: 1, Quiet: 0});
+          this.changeData({Tur: 1, Quiet: 0, WdSpd: 5});
           break;
         case 7:
-          this.changeData({Tur: 0, Quiet: 2});
+          this.changeData({Tur: 0, Quiet: 2, WdSpd: 1});
           break;
         default:
           this.changeData({Tur: 0, Quiet: 0, WdSpd: realIndex});

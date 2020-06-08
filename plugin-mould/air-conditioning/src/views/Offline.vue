@@ -28,6 +28,7 @@ import {
   editDevice,
   changeBarColor
 } from '@PluginInterface';
+import LogicDefine from '@/logic/define';
 
 export default {
   components: {
@@ -36,9 +37,9 @@ export default {
     [Dialog.name]: Dialog,
     [ErrorPage.name]: ErrorPage
   },
+  mixins: [LogicDefine],
   data() {
     return {
-      BgUrl: require('@/assets/img/bg_off_cool.png'),
       offlineImgUrl: require('@/assets/img/offline.png'),
     };
   },
@@ -46,9 +47,17 @@ export default {
     ...mapState({
       state: state => state,
       isOffline: state => state.deviceInfo.deviceState,
+      devOptions: state => state.devOptions,
       Mod: state => state.dataObject.Mod,
     }),
+    isB() {
+      return ['10f04'].includes(this.devOptions.mid); // B分体特殊ui
+    },
     barColor() {
+      if (this.isB) {
+        changeBarColor('#2BB2E3');
+        return '#2BB2E3';
+      }
       if (this.Mod === 4) {
         changeBarColor('#f78d00');
         return '#f78d00';
@@ -60,6 +69,9 @@ export default {
      * @description 更新背景图片
      */
     HeaderImg() {
+      if (this.isB) {
+        return require('@/assets/img/mode/bg_b_off.png');
+      }
       return require(`@/assets/img/bg_off_${
         this.state.dataObject.Mod === this.state.ModHeat ? 'heat' : 'cool'
       }.png`);

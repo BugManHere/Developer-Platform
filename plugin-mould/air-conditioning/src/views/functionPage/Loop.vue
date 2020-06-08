@@ -1,32 +1,26 @@
 <template>
   <gree-view bg-color="#404040">
     <gree-page class="page-nobodysave">
-      <gree-header>{{ $language('btn.Dazzling') }}</gree-header>
-      <gree-list>
-        <gree-list-item title="炫光">
-          <gree-switch
-            slot="after"
-            v-model="isActive"
-            @change="switchDazzling(isActive)"
-          ></gree-switch>
-        </gree-list-item>
-      </gree-list>
-      <gree-radio-list
-        :options="modes"
-        :value="DazzlingStatus"
-        icon-size="md"
-        @change="setDazzling"
-        v-show="isActive"
-      ></gree-radio-list>
+      <gree-header>{{ $language('btn.LoopMod') }}</gree-header>
+
+      <div class="Loop-btn-block"> 
+        <gree-row v-for="(item, index) in LoopModList" :key="index">
+          <gree-col>
+            <gree-button round :type="LoopMod === index + 1 ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
+          </gree-col>
+        </gree-row>
+      </div>
+
     </gree-page>
   </gree-view>
 </template>
 
 <script>
-import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
+import { Header, Toast, Radio, RadioList, Switch, List, Item, Button, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast
+  showToast,
+  hideLoading
 } from '@PluginInterface';
 
 export default {
@@ -39,67 +33,54 @@ export default {
     [List.name]: List,
     [Item.name]: Item,
     [Toast.name]: Toast,
+    [Button.name]: Button,
+    [Row.name]: Row,
+    [Col.name]: Col,
   },
   data() {
     return {
-      isActive: true,
+      LoopModList: ['全新风', '混合风', '循环风'],
     };
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
+      Mod: state => state.dataObject.Mod,
+      LoopMod: state => state.dataObject.LoopMod,
       Dazzling: state => state.dataObject.Dazzling,
     }),
-    modes() {
-      return [
-        {
-          value: 1,
-          text: '炫光模式',
-        },
-        {
-          value: 9,
-          text: '流光模式',
-        },
-        {
-          value: 10,
-          text: '小夜灯模式',
-        },
-      ];
-    },
-    DazzlingStatus() {
-      const Dazzling = this.Dazzling;
-      switch (true) {
-        case Dazzling === 0:
-          return 0;
-        case Dazzling <= 4:
-          return 1;
-        case Dazzling <= 8:
-          return 5;
-        case Dazzling === 9:
-        case Dazzling === 10:
-          return Dazzling;
-        default:
-          return 0;
-      }
-    }
   },
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
         try {
-          showToast('空调已被关闭，自动退出炫光设置。', 1);
+          showToast('设备已被关闭，自动退出循环模式设定。', 1);
         } catch (e) {
           Toast({
-            content: '空调已被关闭，自动退出炫光设置。',
+            content: '设备已被关闭，自动退出循环模式设定。',
             position: 'bottom'
           });
         }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
+      }
+    },
+
+    Mod(newVal) {
+      if (newVal === 5) {
+        try {
+          showToast('设备被设定为自动模式，自动退出循环模式设定。', 1);
+        } catch (e) {
+          Toast({
+            content: '设备被设定为自动模式，自动退出循环模式设定。',
+            position: 'bottom'
+          });
+        }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
       }
     }
   },
   mounted() {
-    this.isActive = Boolean(this.Dazzling);
+    hideLoading();
   },
   methods: {
     ...mapMutations({
@@ -109,18 +90,12 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
-    switchDazzling(active) {
-      const setData = {Dazzling: Number(active)};
+    changeLoopMod(index) {
+      const obj = {LoopMod: index + 1};
       this.setState(['ableSend', true]);
-      this.setDataObject(setData);
-      this.sendCtrl(setData);
+      this.setDataObject(obj);
+      this.sendCtrl(obj);
     },
-    setDazzling(option) {
-      const setData = {Dazzling: option.value};
-      this.setState(['ableSend', true]);
-      this.setDataObject(setData);
-      this.sendCtrl(setData);
-    }
   }
 };
 </script>
@@ -133,6 +108,18 @@ export default {
   }
   .gree-switch {
     font-size: 50px;
+  }
+  .Loop-btn-block{
+    margin-top: 110px;
+    text-align: center;    
+    .gree-button{
+      width: 478px;
+      height: 160px;
+      font-size: 56px;
+    }
+    .gree-button:nth-of-type(1){
+        margin-top: 110px;
+    }
   }
 }
 </style>

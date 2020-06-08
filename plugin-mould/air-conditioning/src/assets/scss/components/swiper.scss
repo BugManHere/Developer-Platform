@@ -85,6 +85,7 @@
   color: #fff;
   position: relative;
   top: 200px;
+  text-shadow: 0 0 10px #FFFFFF;
 }
 
 .swiper-text {
@@ -94,7 +95,7 @@
   display: flex;
   justify-content: center;
   > nobr {
-    font-weight: 100;
+    font-weight: 400;
     font-size: 190px;
   }
 }

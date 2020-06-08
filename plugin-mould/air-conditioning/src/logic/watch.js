@@ -68,7 +68,7 @@ const LogicWatch = {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
-    changeData(map) {
+    g_changeData(map) {
       this.setDataObject(map);
       this.sendCtrl(map);
     },
@@ -76,15 +76,14 @@ const LogicWatch = {
      * @description 检查互斥
      */
     g_checkLogic(state) {
-      if (this.g_excludeMap[state] && this.g_excludeMap[state].length) {
-        const itemLogicMap = this.g_excludeMap[state];
+      if (this.g_excludeMap[state] && this.g_excludeMap[state].length) { // 如果存在排斥的状态
+        const itemLogicMap = this.g_excludeMap[state]; // 需要排斥的状态数组
         itemLogicMap.forEach(item => {
-          const id = this.g_stateToId[item];
-          if (!id) return;
-          const currentStatus = this.g_statusMap[id].status;
-          // item为需要互斥的state currentState为当前state
-          const currentState = `${id}_${currentStatus}`;
-          item === currentState && this.g_defaultStatusMap[id] && this.g_runLogic(id);
+          const id = this.g_stateToId[item]; // 状态对应的功能id
+          if (!id) return; // 如果功能id不存在于这个插件，则不处理
+          const currentStatus = this.g_statusMap[id].realStatus; 
+          const currentState = `${id}_${currentStatus}`; // 该功能id的当前状态
+          item === currentState && this.g_defaultStatusMap[id] && this.g_runLogic(id); // 如果当前状态为需要互斥的状态，则执行互斥
         });
       }
     },
@@ -93,7 +92,7 @@ const LogicWatch = {
      */
     g_runLogic(id) {
       const setData = this.g_defaultStatusMap[id].setData;
-      this.changeData(setData);
+      this.g_changeData(setData);
     }
   }
 };

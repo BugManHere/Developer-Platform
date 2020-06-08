@@ -32,7 +32,7 @@
 <script>
 import { Header, SweepSelect, Toast } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { showToast } from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   components: {
@@ -133,6 +133,9 @@ export default {
       this.originUd.x = 8 * rem;
       this.originUd.y = 6.5 * rem;
     }
+  },
+  mounted() {
+    hideLoading();
   },
   methods: {
     ...mapMutations({
