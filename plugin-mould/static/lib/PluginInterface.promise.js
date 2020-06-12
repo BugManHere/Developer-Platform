@@ -58,7 +58,8 @@ export const sendDataToDevice = (mac, json, isFollowSysVibration) => {
         }
       );
     } catch (err) {
-      reject(err);
+      // reject(err);
+      err;
     }
   });
 };
@@ -807,7 +808,7 @@ export const showLoading = () => {
   try {
     return navigator.PluginInterface.showLoading();
   } catch (e) {
-    console.error(e);
+    e;
   }
 };
 
@@ -818,7 +819,7 @@ export const hideLoading = () => {
   try {
     return navigator.PluginInterface.hideLoading();
   } catch (e) {
-    console.error(e);
+    e;
   }
 };
 

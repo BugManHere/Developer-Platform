@@ -42,6 +42,7 @@ export default {
   computed: {
     ...mapState({
       Mod: state => state.dataObject.Mod,
+      devOptions: state => state.devOptions,
     }),
     imshowList() {
       const result = this.modeList.filter(item => {
@@ -152,7 +153,7 @@ export default {
       const sendData = {Mod: toIndex, Emod: 0, UDFanPort: 0};
 
       // M3在WiFi处作了特殊处理，app要兼容
-      if (sendData.Mod === 4 && this.$store.state.devOptions.mid === '10010') {
+      if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {
         sendData.AssHt = 0;
       }
 

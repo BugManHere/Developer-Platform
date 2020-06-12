@@ -13,7 +13,7 @@
       </gree-header>
       <div class="sleep-body">
         <!-- 顶部按钮 -->
-        <div v-if="imshowType === 1" class="body-top">
+        <div class="body-top">
           <!-- 列表 -->
           <gree-list>
             <gree-list-item title="睡眠" style="font-size: 18px">
@@ -25,6 +25,22 @@
               ></gree-switch>
             </gree-list-item>
           </gree-list>
+          <gree-radio-list
+            :options="radioList"
+            :value="selectRadio"
+            icon-size="md"
+            @change="clickRadio"
+            v-show="sleepActive"
+            icon-disabled=""
+            v-if="imshowType === 2"
+          >
+            <template slot-scope="{ option }">
+              <div class="custom-title" v-if="!isNaN(option.value)">{{ option.text }}</div>
+              <div class="custom-brief" v-else>
+                <span v-for="(text, index) in ['偏寒体质', '平和体质', '偏热体质']" :key="index" v-text="text" @click="clickBody(index)" :class="{select: selectBody === index}"/>
+              </div>
+            </template>
+          </gree-radio-list>
           <!-- 按钮组 -->
           <div v-if="imshowType === 1" class="body-big-btn">
             <div v-for="(btn, key) in bigBtnOptions" :key="key" class="big-btn-item" @click="selectStyle(btn.key, btn.type)" :class="{select: selectItem === btn.key}">
@@ -34,13 +50,6 @@
         </div>
         <!-- 图表 -->
         <div v-show="showEchart" class="body-chart" id="echart" ref="mychart" :style="{height: `${clientHeight * .55}px`}"/>
-        <!-- 底部按钮 -->
-        <div v-if="imshowType === 0" class="body-btn" :style="{bottom: `${150 * clientHeight / 736}px`}">
-          <div v-for="(btn, key) in btnOptions" :key="key" class="btn-item" @click="changeSlp(btn.key, btn.type)">
-            <img :src="btn.img" alt="">
-            <span v-text="btn.name"/>
-          </div>
-        </div>
         <!-- 列表 -->
         <div v-if="imshowType === 1" class="body-bottom">
           <gree-list>
@@ -70,8 +79,8 @@
 
 <script>
 import echarts from 'echarts';
-import { Header, Toast, Switch, List, Item } from 'gree-ui';
-import { mapState, mapActions } from 'vuex';
+import { Header, Toast, Switch, List, Item, RadioList } from 'gree-ui';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import {
   showToast,
   hideLoading,
@@ -86,10 +95,11 @@ export default {
     [Toast.name]: Toast,
     [List.name]: List,
     [Item.name]: Item,
+    [RadioList.name]: RadioList,
   },
   data() {
     return {
-      imshowType: 1,
+      imshowType: 2,
       sleepActive: true,
       blowActive: false,
       ligActive: true,
@@ -119,7 +129,25 @@ export default {
         tradition: [[1, 26], [2, 27], [3, 27], [4, 27], [5, 27], [6, 27], [7, 27], [8, 27]],
         diy: [[1, 25], [2, 26], [3, 27], [4, 27], [5, 27], [6, 27], [7, 27], [8, 26]]
       },
+      slpModExJson: ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx',
+        'StSlp1C', 'StSlp1CInc', 'StSlp1CSp', 'StSlp1H', 'StSlp1HInc', 'StSlp1HSp',
+        'StSlp2C', 'StSlp2CInc', 'StSlp2CSp', 'StSlp2H', 'StSlp2HInc', 'StSlp2HSp',
+        'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',
+        'StSlp4C', 'StSlp4CInc', 'StSlp4CSp', 'StSlp4H', 'StSlp4HInc', 'StSlp4HSp'],
+      slpModExVal: [
+        [1, 2, 4, 1, 1, 133, 1, 1, 133, 1, 300, 10, 6, 300, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 2, 1, 138, 1, 1, 138, 1, 300, 10, 6, 300, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 3, 1, 143, 1, 1, 143, 1, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 4, 1, 133, 1, 1, 133, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 5, 1, 138, 1, 1, 138, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 7, 60, 130, 1, 60, 130, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
+        [1, 2, 4, 8, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
+        [1, 2, 4, 9, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1]
+      ],
       selectItem: '',
+      selectRadio: 1,
+      selectBody: 1,
     };
   },
   computed: {
@@ -128,6 +156,7 @@ export default {
       SwhSlp: state => state.dataObject.SwhSlp,
       SlpMod: state => state.dataObject.SlpMod,
       SmartSlpMod: state => state.dataObject.SmartSlpMod,
+      SmartSlpModEx: state => state.dataObject.SmartSlpModEx,
       functype: state => state.dataObject.functype,
       Lig: state => state.dataObject.Lig,
       AntiDirectBlow: state => state.dataObject.AntiDirectBlow,
@@ -147,14 +176,51 @@ export default {
       });
     },
     showEchart() {
-      return this.imshowType !== 1 || this.currentMod === 3;
+      return this.currentMod === 3;
+    },
+    currentAge() {
+      if (this.SlpMod === 1) return 4;
+      if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
+      if (this.SmartSlpModEx === 0) return 1; 
+      return Math.ceil(this.SmartSlpModEx / 3) - 1;
+    },
+    currentBody() {
+      if (this.SmartSlpModEx === 0) {
+        return 1;
+      }
+      return (this.SmartSlpModEx - 1) % 3;
     },
     currentMod() {
       if (!this.SwhSlp) return false;
-      if (this.imshowType === 0) return this.SlpMod;
       if (this.SlpMod === 2) return this.SmartSlpMod * 10;
       if (this.SlpMod === 3) return 3;
       return false;
+    },
+    radioList() {
+      const result = [
+        {
+          value: 0,
+          text: '青少年模式'
+        },
+        {
+          value: 1,
+          text: '成年模式'
+        },
+        {
+          value: 2,
+          text: '老年模式'
+        },
+        {
+          value: 3,
+          text: 'DIY模式'
+        },
+      ];
+      this.selectRadio === 3 || this.SlpMod === 2 && result.splice(this.selectRadio + 1, 0, {
+        value: NaN,
+        text: 'test',
+        disabled: true
+      });
+      return result;
     },
     opt() {
       let image = document.createElement('img');
@@ -311,36 +377,6 @@ export default {
       };
       return obj;
     },
-    btnOptions() {
-      const currentMod = this.currentMod;
-      let result = [
-        {
-          img: currentMod === 2 ? require('@/assets/img/functionBtn/sleep/expert_selected.png') : require('@/assets/img/functionBtn/sleep/expert.png'),
-          name: '专家模式',
-          key: 'expert',
-          type: currentMod === 2 ? 'on' : 'off'
-        },
-        {
-          img: currentMod === 4 ? require('@/assets/img/functionBtn/sleep/nap_selected.png') : require('@/assets/img/functionBtn/sleep/nap.png'),
-          name: '午睡模式',
-          key: 'nap',
-          type: currentMod === 4 ? 'on' : 'off'
-        },
-        {
-          img: currentMod === 1 ? require('@/assets/img/functionBtn/sleep/tradition_selected.png') : require('@/assets/img/functionBtn/sleep/tradition.png'),
-          name: '传统模式',
-          key: 'tradition',
-          type: currentMod === 1 ? 'on' : 'off'
-        },
-        {
-          img: currentMod === 3 ? require('@/assets/img/functionBtn/sleep/diy_selected.png') : require('@/assets/img/functionBtn/sleep/diy.png'),
-          name: 'Diy模式',
-          key: 'diy',
-          type: currentMod === 3 ? 'on' : 'off'
-        },
-      ];
-      return result;
-    },
     bigBtnOptions() {
       const currentMod = this.currentMod;
       let result = [
@@ -408,6 +444,20 @@ export default {
       },
       immediate: true
     },
+    currentAge: {
+      handler(newVal) {
+        if (isNaN(newVal)) return;
+        this.selectRadio = newVal;
+      },
+      immediate: true
+    },
+    currentBody: {
+      handler(newVal) {
+        if (isNaN(newVal)) return;
+        this.selectBody = newVal;
+      },
+      immediate: true
+    },
     SwhSlp: {
       handler(newVal) {
         this.sleepActive = Boolean(newVal);
@@ -425,7 +475,10 @@ export default {
         this.blowActive = Boolean(newVal) && this.Mod === 1;
       },
       immediate: true
-    }
+    },
+  },
+  created() {
+    this.imshowType = this.$route.params.id;
   },
   mounted() {
     hideLoading();
@@ -436,13 +489,20 @@ export default {
     });
   },
   methods: {
+    ...mapMutations({
+      setState: 'SET_STATE',
+    }),
     ...mapActions({
       updateDataObject: 'UPDATE_DATAOBJECT',
     }),
-    changeDataObject(obj) {
+    async changeDataObject(obj, hasToast = false) {
       const control = obj;
       if (obj.SwhSlp && this.Mod === 1) {
         control.AntiDirectBlow = 1;
+        control.Tur = 0;
+        control.Quiet = 2;
+        control.WdSpd = 1;
+      } else if (this.Mod === 4) {
         control.Tur = 0;
         control.Quiet = 2;
         control.WdSpd = 1;
@@ -458,15 +518,24 @@ export default {
       console.table([opt, p]);
       this.updateDataObject(obj);
       if (this.functype) return;
-      sendDataToDevice(this.mac, json, false);
+      this.setState(['uilock', true]);
+      const res = await sendDataToDevice(this.mac, json, false);
+      this.setState(['uilock', false]);
+      const { r } = JSON.parse(res);
+      if (r === 200 && hasToast) {
+        showToast(hasToast);
+      }
     },
     async getSlpVal() {
-      const cols = ['SwhSlp', 'SlpMod', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; const statueJson = JSON.stringify({
+      const cols = ['SwhSlp', 'SlpMod', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
+      const statueJson = JSON.stringify({
         mac: this.mac,
         t: 'status',
         cols
       });
+      this.setState(['uilock', true]);
       const res = await sendDataToDevice(this.mac, statueJson, false);
+      this.setState(['uilock', false]);
       const _res = JSON.parse(res);
       const dataObject = {};
       _res.forEach((item, index) => {
@@ -569,10 +638,7 @@ export default {
           });
           break;
         case 'diy':
-          this.changeDataObject({
-            SwhSlp: 1,
-            SlpMod: 3,
-          });
+          this.setDiy();
           break;
         default:
           break;
@@ -650,7 +716,7 @@ export default {
         const opt = this.temToVal[this.temArr[index]];
         [setData[keyL], setData[keyH]] = opt;
       });
-      this.changeDataObject(setData);
+      this.changeDataObject(setData, '保存成功');
     },
     selectStyle(key, type) {
       if (type === 'on') {
@@ -685,11 +751,7 @@ export default {
             });
             break;
           case 'diy':
-            this.changeDataObject({
-              SwhSlp: 1,
-              SlpMod: 3,
-              SmartSlpMod: 0,
-            });
+            this.setDiy();
             break;
           default:
             break;
@@ -697,19 +759,34 @@ export default {
       }
     },
     sleepBtn(type) {
-      if (type) {
-        this.changeDataObject({
-          SwhSlp: 1,
-          SlpMod: 1,
-          SmartSlpMod: 0,
-        });
-      } else {
-        this.changeDataObject({
-          SwhSlp: 0,
-          SlpMod: 0,
-          SmartSlpMod: 0,
-        });
-        this.selectItem = '';
+      if (this.imshowType === 1) {
+        if (type) {
+          this.changeDataObject({
+            SwhSlp: 1,
+            SlpMod: 1,
+            SmartSlpMod: 0,
+          });
+        } else {
+          this.changeDataObject({
+            SwhSlp: 0,
+            SlpMod: 0,
+            SmartSlpMod: 0,
+          });
+          this.selectItem = '';
+        }
+      } else if (this.imshowType === 2) {
+        if (type) {
+          if (isNaN(this.currentAge) || this.currentAge === 3) {
+            this.setDiy();
+          } else {
+            this.sendSlpModEx();
+          }
+        } else {
+          this.changeDataObject({
+            SwhSlp: 0,
+            SlpMod: 0,
+          });
+        }
       }
     },
     blowBtn(type) {
@@ -722,7 +799,65 @@ export default {
         Lig: type - 0,
       });
     },
-
+    clickRadio(e) {
+      if (this.selectRadio === e.value) return;
+      this.selectRadio = e.value;
+      if (e.value === 3) {
+        this.setDiy();
+        return;
+      }
+      this.sendSlpModEx();
+    },
+    clickBody(index) {
+      if (this.selectBody === index) return;
+      this.selectBody = index;
+      this.sendSlpModEx();
+    },
+    setDiy() {
+      let setData = {
+        SwhSlp: 1,
+        SlpMod: 3,
+        SmartSlpMod: 0,
+      };
+      if (!this.$store.state.dataObject.Slp1L1) {
+        setData = {
+          ...setData,
+          Slp1L1: 250, 
+          Slp1H1: 0,
+          Slp1L2: 4, 
+          Slp1H2: 1, 
+          Slp1L3: 14, 
+          Slp1H3: 1, 
+          Slp1L4: 14, 
+          Slp1H4: 1, 
+          Slp1L5: 14, 
+          Slp1H5: 1, 
+          Slp1L6: 14, 
+          Slp1H6: 1, 
+          Slp1L7: 14, 
+          Slp1H7: 1, 
+          Slp1L8: 4, 
+          Slp1H8: 1,
+        };
+      }
+      this.changeDataObject(setData);
+      this.$nextTick(() => {
+        this.updateEchart();
+        this.$nextTick(() => {
+          this.updateLocal(this.dataObject);
+        });
+      });
+    },
+    sendSlpModEx() {
+      const index = this.selectRadio * 3 + this.selectBody;
+      const opt = this.slpModExJson;
+      const p = this.slpModExVal[index];
+      const setData = {};
+      opt.forEach((json, index) => {
+        setData[json] = p[index];
+      });
+      this.changeDataObject(setData);
+    }
   }
 };
 </script>
@@ -734,12 +869,32 @@ export default {
 .page-sleep {
   position: relative;
   overflow: hidden;
+  background-color: #fff;
   .gree-header {
     border-bottom: 1px solid #ddd;
   }
   .sleep-body {
     background-color: #fff;
     overflow: hidden;
+    .gree-radio-list {
+      padding: 0 46px;
+      border-bottom: 1px solid #ddd;
+    }
+    .custom-brief {
+      display: flex;
+      justify-content: space-around;
+      span {
+        font-size: 42px;
+        color: #404657;
+        border: 1px solid #404657;
+        border-radius: 40px;
+        padding: 12px 60px;
+        &.select {
+          color: rgb(0, 174, 255);
+          border: 1px solid rgb(0, 174, 255);
+        }
+      }
+    }
     .list {
       margin: 0;
     }

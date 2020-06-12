@@ -7,6 +7,7 @@ const LogicWatch = {
     ...mapState({
       watchLock: state => state.watchLock,
       deviceInfo: state => state.deviceInfo,
+      devOptions: state => state.devOptions,
     })
   },
   watch: {
@@ -58,12 +59,21 @@ const LogicWatch = {
           this.setDeviceInfo(deviceInfo);
         }
       }
+    },
+    g_identifierArr: {
+      handler(newVal) {
+        this.setState(['devOptions', {
+          ...this.devOptions,
+          identifierArr: newVal
+        }]);
+      },
     }
   },
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
-      setDeviceInfo: 'SET_DEVICE_INFO'
+      setDeviceInfo: 'SET_DEVICE_INFO',
+      setState: 'SET_STATE',
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'

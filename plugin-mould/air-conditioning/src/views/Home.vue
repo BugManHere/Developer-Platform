@@ -414,10 +414,10 @@ export default {
     // 点击10次进入调试模式
     onTest() {
       getCurrentMode().then(res => {
-        if (res === '0') {
+        if (res === '0' || res === 0) {
           this.onTestFlag += 1;
-          this.onTestFlag === 10 && new VConsole();
-          this.onTestFlag === 20 && this.$router.push({name: 'Test'});
+          this.onTestFlag === 5 && new VConsole();
+          this.onTestFlag === 10 && this.$router.push({name: 'Test'});
         }
       });
     },

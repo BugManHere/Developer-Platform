@@ -39,8 +39,17 @@
     "Loop": {
       "routerName": "Loop"
     },
-    "Sleep": {
-      "routerName": "Sleep"
+    "BabySleep": {
+      "routerName": "Sleep",
+      "params": {
+        "id": 1
+      }
+    },
+    "SmartSleep": {
+      "routerName": "Sleep",
+      "params": {
+        "id": 2
+      }
     }
   }
 }

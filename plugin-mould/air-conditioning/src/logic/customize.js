@@ -16,9 +16,23 @@ const Customize = {
             console.log('%c running timerListDevice()', 'color: blue');
           }
         },
+        BabySleep: () => {
+          showLoading();
+          this.$router.push({
+            name: 'Sleep',
+            params: {
+              id: 1
+            }
+          }).catch(e => { console.log(e); });
+        },
         SmartSleep: () => {
           showLoading();
-          this.$router.push({name: 'Sleep'}).catch(e => { console.log(e); });
+          this.$router.push({
+            name: 'Sleep',
+            params: {
+              id: 2
+            }
+          }).catch(e => { console.log(e); });
         },
         TemStep: (currentStatus, afterStatus) => {
           switch (afterStatus) {

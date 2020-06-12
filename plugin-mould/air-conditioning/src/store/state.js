@@ -19,6 +19,7 @@ const state = {
     ElcEn: 1, // 电量统计
     functype: 0, // 0代表正常，1代表集中控制
     CO2: 401,
+    SmartSlpModEx: 0
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
@@ -32,7 +33,8 @@ const state = {
   devOptions: {
     mid: '',
     statueJson: '[]',
-    statueJson2: '[]'
+    statueJson2: '[]',
+    identifierArr: []
   },
   // 图标的数据缓存
   chartData: {

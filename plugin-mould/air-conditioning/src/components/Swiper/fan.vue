@@ -30,16 +30,6 @@ export default {
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
       fanName: 'auto',
-      fanList: [
-        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0, key: 'Fan_auto'},
-        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low'},
-        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2, key: 'Fan_medium_low'},
-        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3, key: 'Fan_medium'},
-        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4, key: 'Fan_medium_high'},
-        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5, key: 'Fan_high'},
-        {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'},
-        {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
-      ]
     };
   },
   computed: {
@@ -49,7 +39,22 @@ export default {
       Mod: state => state.dataObject.Mod,
       Tur: state => state.dataObject.Tur,
       Quiet: state => state.dataObject.Quiet,
+      SwhSlp: state => state.dataObject.SwhSlp,
     }),
+    fanList() {
+      const result = [
+        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0, key: 'Fan_auto'},
+        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low'},
+        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2, key: 'Fan_medium_low'},
+        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3, key: 'Fan_medium'},
+        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4, key: 'Fan_medium_high'},
+        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5, key: 'Fan_high'},
+        {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
+      ];
+      // 如果开启智眠，则不能开启强劲档
+      (this.g_identifierArr.includes('SmartSleep') && this.SwhSlp) || result.splice(6, 0, {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'});
+      return result;
+    },
     imshowList() {
       const result = this.fanList.filter(item => {
         return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);

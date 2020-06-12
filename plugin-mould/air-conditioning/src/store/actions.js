@@ -50,15 +50,19 @@ function sendControl({ state, commit }, dataMap) {
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
+    
     console.table([opt, p]);
-
+    
     // 8度制热相关操作
     state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
-    if (!setOpt.includes('StHt')) {
+    if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
+      setOpt.push('AssHt');
+      setP.push(1);
+    } else if (!setOpt.includes('StHt')) {
       setOpt.push('StHt');
       setP.push(0);
     }
-
+    
     const json = JSON.stringify({ mac, t, opt, p });
     
     if (state.dataObject.functype || !state.ableSend) {
@@ -92,11 +96,10 @@ function sendControl({ state, commit }, dataMap) {
 
       // 成功之后更新主体状态
       commit(SET_STATE, ['swiperHold', false]);
-      r === 200 && commit(SET_STATE, ['uilock', false]) &&
-        (await updateStates(state.mac, JSON.stringify(_p))
-          .then(res => res)
-          .catch(err => err));
+      commit(SET_STATE, ['uilock', false]);
+      r === 200 && updateStates(state.mac, JSON.stringify(_p));
     } catch (err) {
+      commit(SET_STATE, ['swiperHold', false]);
       commit(SET_STATE, ['uilock', false]);
       err;
     }
@@ -122,17 +125,18 @@ function getDeviceInfo({ state, commit }) {
  * @description 返回一个向整机查询数据的promise，这个promise执行成功后返回查到的数据DataObject
  */
 function getStatusOfDev({ state, commit }) {
-  const { cols } = JSON.parse(state.deviceInfo.fullstatueJson);
-  return sendDataToDevice(state.mac, state.deviceInfo.fullstatueJson, false)
+  const fullstatueJson = JSON.parse(state.deviceInfo.fullstatueJson);
+  fullstatueJson.cols = JSON.parse(state.devOptions.statueJson2);
+  return sendDataToDevice(state.mac, JSON.stringify(fullstatueJson), false)
     .then(_res => {
       const DataObject = {};
       const res = JSON.parse(_res);
-      cols.forEach((json, index) => {
+      fullstatueJson.cols.forEach((json, index) => {
         DataObject[json] = res[index];
       });
 
       // 兼容辅热，如果开启了八度制热，则不更新辅热
-      if (cols.includes('AssHt') && DataObject.StHt) {
+      if (state.devOptions.identifierArr.includes('AssHt(Auto)') && DataObject.StHt) {
         DataObject.AssHt = 1;
       }
 
@@ -142,6 +146,7 @@ function getStatusOfDev({ state, commit }) {
         commit(SET_DATA_OBJECT, DataObject);
         lastObject = state.checkObject;
       }
+      console.log('--------轮询的字段值--------');
       console.log(DataObject);
       return DataObject;
     })

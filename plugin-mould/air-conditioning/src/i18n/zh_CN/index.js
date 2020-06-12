@@ -146,6 +146,7 @@ module.exports = {
   btn: {
     Sleep: '睡眠',
     SmartSleep: '智眠',
+    BabySleep: '智眠',
     SwingUD: '上下扫风',
     SwingLR: '左右扫风',
     Health: '健康',

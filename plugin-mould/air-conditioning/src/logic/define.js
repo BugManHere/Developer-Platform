@@ -29,6 +29,7 @@ const LogicDefine = {
       mid: productModel,
       statueJson: JSON.stringify(moreOption.statueJson),
       statueJson2: JSON.stringify(moreOption.statueJson2),
+      identifierArr: this.$store.state.devOptions.identifierArr,
     }]);
     this.g_outputMap = this.g_init();
   },

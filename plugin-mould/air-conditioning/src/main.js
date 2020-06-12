@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
+import VueClipboard from 'vue-clipboard2';
 
 import { View, Page } from 'gree-ui';
 
@@ -20,6 +21,7 @@ import language from './utils/language'; // 对i18n的封装
 Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.use(language);
+Vue.use(VueClipboard);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
