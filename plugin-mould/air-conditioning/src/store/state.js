@@ -10,7 +10,7 @@ const state = {
   dataObject: {
     Pow: 1,
     Mod: 1,
-    SetTem: 24,
+    SetTem: 18,
     WdSpd: 1,
     'Add0.5': 0,
     'Add0.1': 0,

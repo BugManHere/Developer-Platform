@@ -113,6 +113,8 @@ function getDeviceInfo({ state, commit }) {
   return getInfo(state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
+      console.log(deviceInfo.deviceState);
+
       commit(SET_DEVICE_INFO, deviceInfo);
       return res;
     })
@@ -146,8 +148,8 @@ function getStatusOfDev({ state, commit }) {
         commit(SET_DATA_OBJECT, DataObject);
         lastObject = state.checkObject;
       }
-      console.log('--------轮询的字段值--------');
-      console.log(DataObject);
+      // console.log('--------轮询的字段值--------');
+      // console.log(DataObject);
       return DataObject;
     })
     .catch(err => {

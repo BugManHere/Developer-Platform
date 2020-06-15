@@ -232,6 +232,9 @@ export default {
     },
     // 根据情况填充slide
     insertAllSlide() {
+      if (this.$refs[this.ref].$el.getElementsByClassName('swiper-slide').length) {
+        this.removeAllSlide();
+      }
       const value = this.currentVal;
       const valueInteger = Math.floor(value);
       const valueDecimal = Math.round((value * 10) % 10);

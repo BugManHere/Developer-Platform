@@ -6,7 +6,14 @@
         <a class="header-clear" v-text="'清空字段'" slot="right" @click="clearAll"/>
       </gree-header>
       <div class="json-list">
-        <div class="json-item" v-for="(json, index) in imshowJson" :key="index" @click="delJsonItem(json, delJson)" v-clipboard:copy="json" v-clipboard:success="onCopy" v-clipboard:error="onError">
+        <div 
+          class="json-item" 
+          v-for="(json, index) in imshowJson" 
+          :key="index" 
+          @click="delJsonItem(json, delJson)" 
+          v-clipboard:copy="json" 
+          v-clipboard:success="onCopy" 
+          v-clipboard:error="onError">
           <span v-text="json" class="json-name"/>
           <span v-text="[undefined, ''].includes(jsonValue[json]) ? '无数据' : jsonValue[json]" class="json-value" :class="{change: changeItem.includes(index)}"/>
           <gree-icon name="close" size="md" v-show="delJson"></gree-icon>
