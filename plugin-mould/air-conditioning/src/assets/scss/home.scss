@@ -1,0 +1,160 @@
+.page-home {
+  overflow: hidden !important;
+  .page-header {
+    position: relative;
+    width: 100%;
+    height: 669px;
+    margin-bottom: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    overflow: hidden;
+    .gree-header-right {
+      height: 100%;
+      .save {
+        font-size: 48px;
+        line-height: 48px;
+        color: #fff;
+        font-weight: 500;
+      }
+    }
+    .bar-top {
+      position: absolute;
+      top: 113px;
+      left: 30px;
+      width: calc(100vw - 30px);
+      z-index: 998;
+      .mini-icon {
+        width: 60px;
+        float: left;
+        margin-right: 15px;
+        img {
+          display: inline-block;
+          width: 100%;
+        }
+      }
+    }
+    .bar-co2 {
+      position: absolute;
+      width: 100%;
+      top: 180px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      z-index: 3;
+      img {
+        margin-right: 20px;
+        height: 61px;
+      }
+      span {
+        font-family: 'FZLTHJW--GB1-0';
+        font-size: 38px;
+        color: #fff;
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 1px;
+      }
+    }
+  }
+  .page-main {
+    position: relative;
+    user-select: none;
+    .custom-notice-bar {
+      position: absolute;
+      top: -10px;
+      .gree-icon {
+        color: #77A49E;
+      }
+    }
+    // 关机文案
+    .poweroff-tip {
+      position: relative;
+      z-index: 2;
+      color: hsla(0,0%,44%,.75);
+      font-size: 100px;
+      display: flex;
+      justify-content: center;
+      margin: 200px 0 100px 0;
+    }
+    // 温度单位图标
+    .tem-unit {
+      position: absolute;
+      top: 100px;
+      right: 255px;
+      height: 92px;
+      z-index: 999;
+    }
+  }
+  .page-footer {
+    z-index: 100;
+    position: absolute;
+    bottom: 0;
+    height: 320px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .item:first-child {
+      margin-left: 50px; 
+    }
+    .item:last-child {
+      margin-right: 50px; 
+    }
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      img {
+        width: 190px;
+        height: 190px;
+      }
+      span {
+        font-size: 45px;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+.dialog-co2 {
+  .gree-dialog-content {
+    position: relative;
+    width: 970px !important;
+    height: 613px;
+    font-weight: 600;
+    .gree-dialog-body {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      .dialog-co2-header {
+        position: relative;
+        width: 100%;
+        height: 157px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          height: 61px !important;
+          margin-right: 29px;
+        }
+        span {
+          font-size: 45px;
+        }
+      }
+      .dialog-co2-content {
+        position: relative;
+        padding: 0 60px;
+        line-height: 75px;
+        display: flex;
+        flex-wrap: wrap;
+        >:last-child {
+          margin-left: 78px;
+        }
+      }
+    }
+    .gree-dialog-actions {
+      display: none;
+    }
+  }
+}

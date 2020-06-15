@@ -1,0 +1,66 @@
+.order-body {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 15px 0;
+  >.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    >.col {
+      height: 264px;
+      width: 42.5%;
+      // border: 1px solid #ddd;
+      padding-right: 5px;
+      overflow-y: auto;
+      .order-input {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        span {
+          width: 43%;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          display: flex;
+          justify-content: center;
+        }
+        .input-name {
+          border-right: 1px solid #ddd;
+          background-color: #EDEDED;
+          color: #8A8A8A;
+          cursor: no-drop;
+        }
+        .input-value {
+          border-left: 1px solid #ddd;
+          background-color: #EDEDED;
+          color: #8A8A8A;
+          cursor: pointer;
+          &:hover {
+            background-color: #d0d0d0;
+          }
+        }
+        div {
+          display: flex;
+          align-items: center;
+          &::before {
+            font-size: 24px;
+            color: rgb(117, 89, 89);
+            width: 10%;
+            content: "\21E8";
+          }
+        }
+      }
+    }
+  }
+  > caption {
+    // padding-left: 1%;
+    text-align: left;
+    width: 90%;
+    padding-top: 0;
+    letter-spacing: 0;
+    border-bottom: 1px #ddd solid;
+    margin-bottom: 15px;
+  }
+}

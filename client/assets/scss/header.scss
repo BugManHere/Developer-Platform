@@ -1,0 +1,32 @@
+.header {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  .navbar {
+    border-radius: 0;
+  }
+  .register {
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      > :first-child {
+        a {
+          padding-right: 0;
+          &:hover {
+            color: #777 !important;
+          }
+        }
+      }
+      > :nth-child(2) {
+        a {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          margin-right: 15px;
+          padding: 0;
+          color: #469dff;
+        }
+      }
+    }
+  }
+}

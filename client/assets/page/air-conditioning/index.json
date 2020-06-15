@@ -1,0 +1,55 @@
+{
+  "pageConfig": {
+    "SweepUd": {
+      "routerName": "Sweep",
+      "params": {
+        "id": 2
+      }
+    },
+    "SweepLr": {
+      "routerName": "Sweep",
+      "params": {
+        "id": 1
+      }
+    },
+    "AssHt": {
+      "routerName": "AssHt"
+    },
+    "Dazzling": {
+      "routerName": "Dazzling"
+    },
+    "Lig": {
+      "routerName": "Lig"
+    },
+    "Air": {
+      "routerName": "Air"
+    },
+    "NoBodySave": {
+      "routerName": "NoBodySave"
+    },
+    "SmartWind": {
+      "routerName": "SmartWind"
+    },
+    "UDFanPort": {
+      "routerName": "UDFanPort"
+    },
+    "Humi": {
+      "routerName": "Humi"
+    },
+    "Loop": {
+      "routerName": "Loop"
+    },
+    "BabySleep": {
+      "routerName": "Sleep",
+      "params": {
+        "id": 1
+      }
+    },
+    "SmartSleep": {
+      "routerName": "Sleep",
+      "params": {
+        "id": 2
+      }
+    }
+  }
+}

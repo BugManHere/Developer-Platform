@@ -1,0 +1,129 @@
+.gree-table {
+  > table {
+    width: 1040px;
+    margin: 0 auto;
+    border: 1px #d6dee6 solid;
+    .develop {
+      > :nth-child(1),
+      > :nth-child(2),
+      > :nth-child(3) {
+        max-width: 100px !important;
+        min-width: 100px !important;
+        >:first-child {
+          &:hover {
+            color: #469dff;
+            &::after {
+              position: relative;
+              top: 2px;
+              right: -1px;
+              font-family: "Glyphicons Halflings";
+              font-size: 12px;
+              content: "\270f";
+            }
+          }
+        }
+      }
+      td,th {
+        p {
+          cursor: pointer;
+        }
+      }
+      .definitions {
+        > span {
+          cursor: pointer;
+          &:hover {
+            border: 1px Violet solid;
+          }
+        }
+      }
+    }
+    tr {
+      > :first-child {
+        text-align: left;
+      }
+      > :last-child {
+        text-align: right;
+        & span {
+          margin-left: 5px;
+          color: #469dff;
+          cursor: pointer;
+        }
+      }
+      > :nth-child(5) {
+        min-width: 150px !important;
+        p {
+          span {
+            padding-left: 2px;
+          }
+        }
+      }
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+    td,
+    th {
+      text-align: center;
+      vertical-align: middle !important;
+      p {
+        position: relative;
+        top: 5px;
+        input {
+          width: auto;
+          color: #404657 !important;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 2;
+          transform: translateY(-50%);
+        }
+        &:last-child {
+          cursor: auto;
+        }
+      }
+    }
+    .definitions {
+      top: 0;
+      text-align: center;
+      padding: 12px 16px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      > span {
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        color: #11191c;
+        border: 0;
+        font-size: 14px;
+        background-color: #f4f6f9;
+        padding: 6px 8px;
+        line-height: 20px;
+        border-radius: 5px;
+        border: 1px Thistle solid;
+      }
+    }
+  }
+  .edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .edit-box {
+      position: absolute;
+      top: 150px;
+      z-index: 3;
+      width: 549px;
+      .panel-title {
+        display: flex;
+        justify-content: space-between;
+        div {
+          display: flex;
+          justify-content: flex-end;
+          button {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+}

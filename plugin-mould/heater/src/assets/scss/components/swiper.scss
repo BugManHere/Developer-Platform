@@ -1,0 +1,85 @@
+.gr-swiper {
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // opacity: 0;
+    visibility: hidden;
+    p {
+      position: relative;
+      font-family: 'RobotoThin';
+      font-size: 300px;
+    }
+    span {
+      position: relative;
+      font-family: 'RobotoThin';
+      font-size: 150px;
+      margin-top: 75px;
+    }
+    img {
+      height: 130px;
+    }
+    &.swiper-slide-active {
+      // opacity: 1 !important;
+      visibility: visible !important;
+    }
+    *{
+      // outline: 1px solid green !important;
+    }
+  }
+}
+
+.slide-visbile {
+  visibility: visible !important;
+}
+
+.tem-swiper {
+  position: relative;
+  top: 200px;
+  height: 400px;
+}
+
+.mode-swiper {
+  display: flex;
+  justify-content: center;
+  > div {
+    padding-bottom: 130px;
+  }
+}
+
+.mode-name {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 85px;
+  top: -110px;
+}
+
+.mode-swiper {
+  position: relative;
+  top: 300px;
+}
+
+.mode-name {
+  color: #fff;
+  position: relative;
+  top: 200px;
+}
+
+.swiper-text {
+  position: relative; 
+  align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  > nobr {
+    font-size: 200px;
+  }
+}
+.isNumber {
+  font-family: 'RobotoThin';
+  > nobr {
+    font-size: 300px;
+  }
+}
