@@ -200,11 +200,11 @@ export default {
       const result = [
         {
           value: 0,
-          text: '青少年模式'
+          text: '儿童模式'
         },
         {
           value: 1,
-          text: '成年模式'
+          text: '青年模式'
         },
         {
           value: 2,
