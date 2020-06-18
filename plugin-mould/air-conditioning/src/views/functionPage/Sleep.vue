@@ -618,7 +618,11 @@ export default {
         hasToast && showToast(hasToast, 1);
         return;
       }
+      console.log('---------------------sendDataToDevice---start-');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const res = await sendDataToDevice(this.mac, json, false);
+      console.log('---------------------sendDataToDevice---end-');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
@@ -671,7 +675,8 @@ export default {
       });
 
       if (this.disableUpdate || !this.getSlpTimer || this.waitCallBack) return;
-
+      console.log('---------------------updateLocal----');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
     },
