@@ -243,6 +243,8 @@ export default {
       dataObject = customizeDataObject({ state }, dataObject);
       // 更新本地数据
       dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      console.log('------------GET_DEVICE_DATA----------');
+      console.log(dataObject);
       commit(types.SET_STATE, ['loading', false]);
     } catch (e) {
       console.error(e);
