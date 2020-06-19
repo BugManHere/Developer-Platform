@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { timerListDevice, showToast } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
