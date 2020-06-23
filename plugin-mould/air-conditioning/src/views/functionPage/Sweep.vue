@@ -212,8 +212,8 @@ export default {
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
         this.setState(['ableSend', true]);
-        this.setDataObject(data);
-        this.sendCtrl(data);
+        this.setDataObject({...data, SmartWind: 0, AntiDirectBlow: 0});
+        this.sendCtrl({...data, SmartWind: 0, AntiDirectBlow: 0});
         if (data.SwUpDn === 0) {
           showToast(this.$language('sweep.sweep_ud_turnoff_tips'), 0);
           try {

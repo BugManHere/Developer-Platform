@@ -1,5 +1,5 @@
 <template>
-  <div class="components-header header" style="z-index: 1;">
+  <div class="components-header header" style="z-index: 10;">
     <nav 
       class="navbar navbar-default" style="margin-bottom: 0">
       <div class="container-fluid">

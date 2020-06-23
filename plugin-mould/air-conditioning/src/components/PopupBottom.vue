@@ -148,6 +148,7 @@ export default {
         this.setState(['isStHt', false]);
       }
       const setData = this.g_NextStatusMap[identifier].setData;
+      console.log(setData);
       this.changeData(setData);
     },
     goPage(index, isGray, able) {

@@ -151,10 +151,11 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
+      // const sendData = {Mod: toIndex, Emod: 0, UDFanPort: 0};
 
       // 缓存温度
       const temSetting = window.storage.get('temSetting') || {};
-      let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0, UDFanPort: 0};
+      let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
       temSetting[this.dataObject.Mod] = {
         SetTem: this.dataObject.SetTem,
         'Add0.5': this.dataObject['Add0.5'],

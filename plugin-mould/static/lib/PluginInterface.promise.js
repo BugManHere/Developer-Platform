@@ -1432,3 +1432,31 @@ export const getGridConList = (mac, range) => {
   });
 };
 
+// 故障查询
+export const getDevRealTimeFault = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getDevRealTimeFault(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+
+/**
+ * 获取消息提醒列表
+ */
+export const getMsg = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getMsg((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      error;
+    }
+  });
+};

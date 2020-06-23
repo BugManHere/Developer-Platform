@@ -2,6 +2,11 @@ import { timerListDevice, showLoading } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
+  mounted() {
+    this.g_identifierArr.forEach(id => {
+      this.initFunc[id] && this.initFunc[id]();
+    });
+  },
   computed: {
     ...mapState({
       mac: state => state.mac,
@@ -118,41 +123,28 @@ const Customize = {
               break;
           }
         },
-        RFan: currentStatus => {
-          switch (currentStatus) {
-            case 'default':
-            case undefined:
-              this.changeData({UDFanPort: 3});
-              break;
-            default:
-              this.changeData({UDFanPort: 2});
-              break;
-          }
+        RFan: () => {
+          this.changeData({UDFanPort: 3});
         },
-        LFan: currentStatus => {
-          switch (currentStatus) {
-            case 'default':
-            case undefined:
-              this.changeData({UDFanPort: 1});
-              break;
-            default:
-              this.changeData({UDFanPort: 2});
-              break;
-          }
+        LFan: () => {
+          this.changeData({UDFanPort: 1});
         },
-        LRFan: currentStatus => {
-          switch (currentStatus) {
-            case 'default':
-            case undefined:
-              this.changeData({UDFanPort: 2});
-              break;
-            default:
-              this.changeData({UDFanPort: 2});
-              break;
-          }
+        LRFan: () => {
+          this.changeData({UDFanPort: 2});
         },
       };
-    }
+    },
+    /**
+     * @description 自执行函数
+     */
+    initFunc() {
+      return {
+        SmartSleep: () => {
+          console.log(
+          );
+        }
+      };
+    },
   },
   methods: {
     ...mapMutations({
@@ -177,7 +169,7 @@ const Customize = {
       } catch (e) {
         console.log(`%c 找不到${key}的自定义函数`, 'color: blue');
       }
-    }
+    },
   }
 };
 export default Customize;
