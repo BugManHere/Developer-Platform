@@ -123,11 +123,11 @@ export default {
     statusMap: {
       handler(newVal) {
         if (!newVal) return;
-        const fanStateName = this.getStateNameByKey(this.fanIdentifier);
+        const fanStateName = this.getStateNameById(this.fanIdentifier);
         if (fanStateName) {
           this.fanName = this.$language(`fan.${fanStateName}`);
         }
-        const modStateName = this.modDefine ? this.getStateNameByKey(this.modIdentifier) : '';
+        const modStateName = this.modDefine ? this.getStateNameById(this.modIdentifier) : '';
         if (modStateName) {
           this.modName = this.$language(`mod.${modStateName}`);
         }
@@ -186,7 +186,7 @@ export default {
     temSetMethod(value) {
       value === this.temSetVal || this.changeData({ [this.temSetJson]: value });
     },
-    getStateNameByKey(identifier) {
+    getStateNameById(identifier) {
       const map = this.statusMap[identifier];
       if (map) {
         const statusName = map.statusName;
