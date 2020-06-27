@@ -328,7 +328,8 @@ export default {
             customize: false
           }
         },
-        order: []
+        order: [],
+        map: {}
       };
       if (!this.setTempStep) {
         insertMap.type = "active";

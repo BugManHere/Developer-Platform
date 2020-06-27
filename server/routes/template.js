@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
 const templateFuncModel = require('../models/template');
+const { Object } = require('core-js');
 
 require('../mongoose.js');
 
@@ -37,6 +38,20 @@ router.post('/create', async function(req, res) {
 router.post('/save', async function(req, res) {
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
+  funcDefine.forEach(funcItem => {
+    const map = {
+      default: String(funcItem.order[0]),
+      undefined: 'default'
+    };
+    console.log(funcItem.order);
+    funcItem.order.forEach((statusName, index) => {
+      map[statusName] = funcItem.order[index + 1] || 'default';
+    });
+    Object.keys(funcItem.statusDefine).forEach(statusName => {
+      map[statusName] || (map[statusName] =  'default');
+    });
+    funcItem.map = map;
+  });
   productInfo.funcDefine = funcDefine;
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
