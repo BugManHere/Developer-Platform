@@ -103,7 +103,16 @@
 
 import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, changeBarColor, getCCcmd, startVoiceMainActivity, showLoading, getCurrentMode, getMsg } from '@PluginInterface';
+import { 
+  closePage, 
+  editDevice, 
+  changeBarColor, 
+  getCCcmd, 
+  startVoiceMainActivity, 
+  showLoading, 
+  getCurrentMode, 
+  // getMsg 
+} from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
@@ -312,20 +321,20 @@ export default {
     } else {
       window.storage.set('WdSpd', this.WdSpd);
     }
-    getMsg().then(res => {
-      console.log('-------------------getMsg---------------------');
-      console.log(res);
-      const msgs = JSON.parse(res);
-      console.log('-----------------parse------------------------');
-      console.log(msgs);
-      console.log('-----------------------m-----------------------');
-      console.log(msgs.msgs);
-      if (msgs && msgs.msgs && msgs.msgs.length) {
-        const msg = msgs.msgs.find(item => { return item.data.notice.extras.ext.data.t === 'warn' && item.data.notice.extras.ext.mac === this.mac; });
-        this.warnningText = msg.data.notice.extras.msg;
-        // const title = msg.data.notice.extras.title;
-      }
-    });
+    // getMsg().then(res => {
+    //   console.log('-------------------getMsg---------------------');
+    //   console.log(res);
+    //   const msgs = JSON.parse(res);
+    //   console.log('-----------------parse------------------------');
+    //   console.log(msgs);
+    //   console.log('-----------------------m-----------------------');
+    //   console.log(msgs.msgs);
+    //   if (msgs && msgs.msgs && msgs.msgs.length) {
+    //     const msg = msgs.msgs.find(item => { return item.data.notice.extras.ext.data.t === 'warn' && item.data.notice.extras.ext.mac === this.mac; });
+    //     this.warnningText = msg.data.notice.extras.msg;
+    //     // const title = msg.data.notice.extras.title;
+    //   }
+    // });
   },
   methods: {
     ...mapMutations({
