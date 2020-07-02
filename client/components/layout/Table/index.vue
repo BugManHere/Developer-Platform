@@ -218,75 +218,21 @@ export default {
         case 0:
           result = {
             show: this.currentFuncId !== false,
-            title: "状态定义",
-            miniBtn: {
-              plus: {
-                selfMethod: "addStatus"
-              },
-              minus: {
-                method: this.minusFunc
-              },
-              close: {
-                method: this.editStatus
-              }
-            },
-            bottomBtn: {
-              down: {
-                selfMethod: "nextStep"
-              }
-            },
-            component: {
-              name: "StatusDef",
-              ref: "statusDef-0"
-            }
-          };
-          if (this.delStatusType) {
-            result = Object.assign(result, {
-              miniBtn: {
-                close: {
-                  method: this.editStatus
-                }
-              },
-              bottomBtn: {
-                del: {
-                  selfMethod: "delStatus"
-                },
-                cancel: {
-                  method: this.setDelType
-                }
-              }
-            });
-          } else if (this.currentStatusId !== false) {
-            result = Object.assign(result, {
-              miniBtn: {
-                close: {
-                  method: this.editStatus
-                }
-              },
-            });
-          }
-          break;
-        case 1:
-          result = {
-            show: this.currentFuncId !== false,
             class:  'big',
-            title: "状态定义",
+            title: this.funcDefine && this.funcDefine.length && this.funcDefine[this.currentFuncId] && this.funcDefine[this.currentFuncId].name || '', 
             miniBtn: {
               close: {
                 method: this.editStatus
               }
             },
             bottomBtn: {
-              up: {
-                method: this.Previous
-              },
               done: {
                 selfMethod: "settingDone"
               }
             },
             component: {
               name: "OrderDef",
-              ref: "statusDef-1"
+              ref: "statusDef"
             }
           };
           break;
@@ -344,7 +290,7 @@ export default {
       this.setTempModule(["currentFuncId", index]); // 该功能在所有功能内的位置
       const statusId = statusIndex ? statusIndex + 1 : 0; // 该状态在功能内的位置
       this.$nextTick(() => {
-        this.$refs.panel.$refs["statusDef-0"].currentStatusId = statusId; // 显示指定状态
+        this.$refs.panel.$refs["statusDef"].currentStatusId = statusId; // 显示指定状态
       });
     },
     // 显示指定位置的输入框

@@ -1,70 +1,73 @@
-.order-body {
+.status-page {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 15px 0;
-  >.row {
-    width: 100%;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  margin: 15px 0;
+  height: 100%;
+  border-bottom: 1px #ddd solid;
+  caption {
+    text-align: left;
+    height: 7%;
+    width: 90%;
+    padding-top: 0;
+    letter-spacing: 0;
+    border-bottom: 1px #ddd solid;
+  }
+  .status-input {
+    position: relative;
+    width: 25%;
+    height: 500px;
+    border-right: 1px #ddd solid;
     display: flex;
-    justify-content: space-between;
-    >.col {
-      height: 264px;
-      width: 42.5%;
-      // border: 1px solid #ddd;
-      padding-right: 5px;
-      overflow-y: auto;
-      .order-input {
-        width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    .status-info {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      padding-top: 15px;
+      height: 93%;
+      width: 90%;
+      >div {
         display: flex;
         justify-content: space-between;
-        border: 1px solid #ddd;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
         margin-bottom: 10px;
-        span {
-          width: 43%;
-          padding-top: 10px;
-          padding-bottom: 10px;
-          display: flex;
-          justify-content: center;
+        >:first-child {
+          color: #aaa;
+          background-color: #eee;
+          padding: 0 10px;
+          border-radius: 5px;
         }
-        .input-name {
-          border-right: 1px solid #ddd;
-          background-color: #EDEDED;
-          color: #8A8A8A;
-          cursor: no-drop;
+        input {
+          text-align: center;
+          width: 30%;
         }
-        .input-value {
-          border-left: 1px solid #ddd;
-          background-color: #EDEDED;
-          color: #8A8A8A;
-          cursor: pointer;
-          &:hover {
-            background-color: #d0d0d0;
-          }
-        }
-        div {
-          display: flex;
-          align-items: center;
-          &::before {
-            font-size: 24px;
-            color: rgb(117, 89, 89);
-            width: 10%;
-            content: "\21E8";
+        select {
+          text-align: center;
+          width: 25%;
+          &.select-medium {
+            width: 35%;
           }
         }
       }
     }
   }
-  > caption {
-    // padding-left: 1%;
-    text-align: left;
-    width: 90%;
-    padding-top: 0;
-    letter-spacing: 0;
-    border-bottom: 1px #ddd solid;
-    margin-bottom: 15px;
-  }
-  .body-chart {
-    width: 100%;
-    height: 400px;
+  .status-order {
+    position: relative;
+    width: 75%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    .order-chart {
+      position: relative;
+      padding-top: 15px;
+      height: 93%;
+      width: 100%;
+    }
   }
 }
