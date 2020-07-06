@@ -188,7 +188,7 @@ module.exports = {
     LoopMod_全新风: '全新风',
     SvSt: '节能',
     Blo: '干燥',
-    Humi: '除湿',
+    Humi: '加湿',
     x: '再热除湿',
   },
   sweep: {

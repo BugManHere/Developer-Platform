@@ -30,11 +30,12 @@ export default {
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
       modeList: [
-        {img: require('@/assets/img/mode/auto.png'), name: this.$language('mode.auto'), index: 0, key: 'Mod_auto'},
-        {img: require('@/assets/img/mode/cool.png'), name: this.$language('mode.cool'), index: 1, key: 'Mod_cool'},
-        {img: require('@/assets/img/mode/dry.png'), name: this.$language('mode.dry'), index: 2, key: 'Mod_dry'},
-        {img: require('@/assets/img/mode/fan.png'), name: this.$language('mode.fan'), index: 3, key: 'Mod_fan'},
-        {img: require('@/assets/img/mode/heat.png'), name: this.$language('mode.heat'), index: 4, key: 'Mod_heat'},
+        {img: require('@/assets/img/mode/auto.png'), name: this.$language('mode.auto'), value: 0, key: 'Mod_auto'},
+        {img: require('@/assets/img/mode/auto.png'), name: this.$language('mode.auto'), value: 5, key: 'Mod_auto_b'},
+        {img: require('@/assets/img/mode/cool.png'), name: this.$language('mode.cool'), value: 1, key: 'Mod_cool'},
+        {img: require('@/assets/img/mode/dry.png'), name: this.$language('mode.dry'), value: 2, key: 'Mod_dry'},
+        {img: require('@/assets/img/mode/fan.png'), name: this.$language('mode.fan'), value: 3, key: 'Mod_fan'},
+        {img: require('@/assets/img/mode/heat.png'), name: this.$language('mode.heat'), value: 4, key: 'Mod_heat'},
       ],
       modeName: 'auto'
     };
@@ -151,20 +152,20 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      // const sendData = {Mod: toIndex, Emod: 0, UDFanPort: 0};
+      const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
 
       // 缓存温度
-      const temSetting = window.storage.get('temSetting') || {};
-      let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
-      temSetting[this.dataObject.Mod] = {
-        SetTem: this.dataObject.SetTem,
-        'Add0.5': this.dataObject['Add0.5'],
-        'Add0.1': this.dataObject['Add0.1'],
-      };
-      window.storage.set('temSetting', temSetting);
+      // const temSetting = window.storage.get('temSetting') || {};
+      // let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
+      // temSetting[this.dataObject.Mod] = {
+      //   SetTem: this.dataObject.SetTem,
+      //   'Add0.5': this.dataObject['Add0.5'],
+      //   'Add0.1': this.dataObject['Add0.1'],
+      // };
+      // window.storage.set('temSetting', temSetting);
 
       // 自动模式需要发送温度
-      toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
+      // toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
 
       // M3在WiFi处作了特殊处理，app要兼容
       if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {

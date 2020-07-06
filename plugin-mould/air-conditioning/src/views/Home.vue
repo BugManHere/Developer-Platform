@@ -177,7 +177,7 @@ export default {
       return {
         backgroundImage,
         'background-size': `${isB ? 1 : 5}00% 100%`,
-        'background-position': `${isB ? 0 : this.Mod * 25}% 0%`
+        'background-position': `${isB ? 0 : (this.Mod % 5) * 25}% 0%`
       };
     },
     showPowOff() {
