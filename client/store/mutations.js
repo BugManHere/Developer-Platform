@@ -19,4 +19,14 @@ export default {
     val.editTime && (template.editTime = val.editTime);
     val.editUser && (template.editUser = val.editUser);
   },
+  // 设置是否授权
+  [type.SET_AUTHENTICATED](state, isAuthenticated) {
+    if(isAuthenticated) state.userModule.isAuthenticated = isAuthenticated;
+    else state.userModule.isAuthenticated = false;
+  },
+  // 设置用户
+  [type.SET_USER](state, user) {
+    if(user) state.userModule.user = user;
+    else state.userModule.user = {};
+  }
 };

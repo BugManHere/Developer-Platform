@@ -1,4 +1,6 @@
 .login {
+  position: relative;
+  top: 100px;
   .form_container {
     width: 400px;
     height: 600px;
@@ -10,7 +12,7 @@
       background-color: #fff;
       padding: 20px 20px 20px 20px;
       border-radius: 5px;
-      box-shadow: 0px 5px 10px #cccc;
+      box-shadow: 0px 0px 15px #888;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;

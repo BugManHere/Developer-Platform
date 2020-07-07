@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <section class="form_container">
-      <span class="title">研发四所开发平台</span>
+      <!-- <span class="title">格力风驰平台</span> -->
       <form class="form-horizontal">
         <div class="form-group">
           <div class="col-sm-16">
@@ -9,7 +9,7 @@
               type="email"
               class="form-control"
               id="inputEmail3"
-              placeholder="请输入邮箱号"
+              placeholder="请输入账号/邮箱号"
               v-model="loginUser.email"
             >
           </div>
@@ -30,7 +30,7 @@
             type="submit"
             class="btn btn-primary"
             @click="submitForm('loginForm')"
-          >登陆</button>
+          >登录</button>
         </div>
       </form>
     </section>
@@ -40,6 +40,7 @@
 <script>
 import jwt_decode from "jwt-decode";
 import https from '../https';
+import { mapMutations } from 'vuex';
 
 export default {
   data() {
@@ -72,18 +73,31 @@ export default {
     };
   },
   methods: {
+    ...mapMutations({
+      setAuthenticated: 'SET_AUTHENTICATED',
+      setUser: 'SET_USER',
+    }),
     //  提交表单
     submitForm() {
-      https.fetchPost("users/login", this.loginUser).then(res => {
+      https.fetchPost("users/login", this.loginUser)
+      .then(res => {
+        console.log(res);
         // 获取token
-        const { token } = res.data;
-        localStorage.setItem("eleToken", token);
-        // 解析token
-        const decoded = jwt_decode(token);
-        // token储存在vuex中
-        this.$store.dispatch("setAuthenticated", !this.isEmpty(decoded));
-        this.$store.dispatch("setUser", decoded);
-        this.$router.push("/Home");
+        const { status, data } = res;
+        if (status === 200) {
+          const { token } = data;
+          localStorage.setItem("eleToken", token);
+          // 解析token
+          const decoded = jwt_decode(token);
+          // token储存在vuex中
+          this.setAuthenticated(!this.isEmpty(decoded));
+          this.setUser(decoded);
+          this.$router.push("/Home");
+        } else {
+          this.$toast.error(data);
+        }
+      }).catch(e => {
+        console.log(e);
       });
     },
     isEmpty(value) {

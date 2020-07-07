@@ -112,6 +112,7 @@ export default {
   },
   // 模板配置完毕
   async [SET_TEMP_DONE]({ state, getters, commit }) {
+    console.log(getters.funcDefine);
     const res = await https.fetchPost("/template/done", {
       funcDefine: JSON.stringify(getters.funcDefine),
       tempID: state.tempModule.tempID

@@ -15,10 +15,10 @@ Vue.use(Router);
 export default new Router({
   mode: 'hash',
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/Account/Login',
-    // },
+    {
+      path: '/',
+      redirect: '/Account/Login',
+    },
     {
       path: '/',
       redirect: '/Home',

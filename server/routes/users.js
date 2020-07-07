@@ -56,7 +56,7 @@ router.post("/login", (req, res) => {
     })
     .then((user) => {
       if (!user) {
-        return res.status(404).json("用户不存在！");
+        return res.status(203).json("用户不存在！");
       } else {
         //密码匹配
         bcrypt.compare(password, user.password)
@@ -80,7 +80,7 @@ router.post("/login", (req, res) => {
               });
               //   res.json({msg : "success"});
             } else {
-              return res.status(400).json("密码错误");
+              return res.status(203).json("密码错误");
             }
           });
       }
