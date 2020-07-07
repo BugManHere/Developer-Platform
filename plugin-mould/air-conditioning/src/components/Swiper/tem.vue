@@ -79,6 +79,9 @@ export default {
       if (result <= this.minTem) return this.minTem;
       return result;
     },
+    hideState() {
+      return this.g_hideStateArr.includes('Tem_default');
+    },
     // 显示文本，禁止滑动
     banSwiping() {
       if (this.StHt) {
@@ -86,13 +89,16 @@ export default {
           txt: this.TemUn ? 'StHt_F' : 'StHt_C',
           isNumber: true,
         }; 
-      } else if (!this.Mod || this.autoAbleSetTem) {
+      } else if ([0, 5].includes(this.Mod) || this.autoAbleSetTem) {
         return {
           txt: 'Auto',
           isNumber: false
         };
       } 
       return false;
+    },
+    ableControl() {
+      return !this.hideState;
     }
   },
   watch: {
@@ -111,6 +117,14 @@ export default {
     },
     TemUn() {
       this.initSwiper();
+    },
+    ableControl: {
+      handler(newVal) {
+        this.$nextTick(() => {
+          this.$refs[this.ref].banTouch(!newVal);
+        });
+      },
+      immediate: true,
     },
   },
   mounted() {

@@ -59,7 +59,7 @@
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow && !loading" key="temSwiper"/>
         <!-- 温度单位图标 -->
-        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && Mod">
+        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
         <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>

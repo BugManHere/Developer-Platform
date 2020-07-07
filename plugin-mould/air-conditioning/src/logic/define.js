@@ -23,6 +23,7 @@ const LogicDefine = {
     this.g_funcDefine = funcDefine;
     this.g_excludeMap = excludeMap;
     this.g_hideMap = hideMap;
+    console.log(hideMap);
     this.g_mid = productModel;
     this.setState(['devOptions', {
       pluginVer: moreOption.pluginVer,

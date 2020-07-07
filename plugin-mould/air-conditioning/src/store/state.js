@@ -20,8 +20,6 @@ const state = {
     functype: 0, // 0代表正常，1代表集中控制
     CO2: 401,
     SmartSlpModEx: 0,
-    ableTem: 1,
-    p: 1,
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
