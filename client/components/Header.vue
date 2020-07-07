@@ -49,7 +49,7 @@
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><a href="#Account/Login" @click="signOut">退出登录</a></li>
               </ul>
             </li>
           </ul>
@@ -86,7 +86,6 @@ export default {
       return '格力风驰平台';
     },
     userName() {
-      console.log(this.user);
       return this.user.email;
     }
   },
@@ -98,7 +97,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setPulicMoule: 'SET_PULIC_MODULE'
+      setPulicMoule: 'SET_PULIC_MODULE',
+      setAuthenticated: 'SET_AUTHENTICATED',
+      setUser: 'SET_USER',
     }),
     updataPage(routeName) {
       if (this.$route.name !== routeName && this.$route.name !== 'Account') {
@@ -109,6 +110,16 @@ export default {
     },
     setDevelopType(val) {
       this.setPulicMoule(['developType', val]);
+    },
+    signOut() {
+      // 清除token
+      localStorage.removeItem("eleToken");
+      // 清除vuex store
+      this.setAuthenticated(false);
+      this.setUser(null);
+      this.$toast.info('已退出登录');
+      // 跳转登陆界面
+      this.$router.push("/Account/Login");
     }
   },
 }

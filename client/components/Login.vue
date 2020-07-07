@@ -92,6 +92,7 @@ export default {
           // token储存在vuex中
           this.setAuthenticated(!this.isEmpty(decoded));
           this.setUser(decoded);
+          this.$toast.info('登录成功');
           this.$router.push("/Home");
         } else {
           this.$toast.error(data);
