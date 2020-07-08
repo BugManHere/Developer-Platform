@@ -1,5 +1,5 @@
 <template>
-  <div class="components-header header" style="z-index: 1;">
+  <div class="components-header header" style="z-index: 10;">
     <nav 
       class="navbar navbar-default" style="margin-bottom: 0">
       <div class="container-fluid">
@@ -10,17 +10,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#Home" @click="updataPage('Home')">Plugin自动化开发平台</a>
+          <!-- <a class="navbar-brand" href="#Home" @click="updataPage('Home')">Plugin自动化开发平台</a> -->
+          <a class="navbar-brand" @click="updataPage('Home')" v-text="webTitle"/>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" v-show="$route.name !== 'Account'">
             <li :class="{active: developType === 0}" @click="setDevelopType(0)">
               <a href="#Home" @click="updataPage('Home')">设备管理</a>
             </li>
             <li :class="{active: developType === 1}" @click="setDevelopType(1)">
               <a href="#Home" @click="updataPage('Home')">模板定义</a>
             </li>
-            <li class="dropdown">
+            <!-- <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">运营中心 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
@@ -31,24 +32,24 @@
                 <li role="separator" class="divider"></li>
                 <li><a href="#">One more separated link</a></li>
               </ul>
-            </li>
+            </li> -->
           </ul>
-          <form class="navbar-form navbar-left">
+          <!-- <form class="navbar-form navbar-left">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search">
             </div>
             <button type="submit" class="btn btn-default">查找</button>
-          </form>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">开发文档</a></li>
+          </form> -->
+          <ul class="nav navbar-nav navbar-right" v-show="$route.name !== 'Account'">
+            <!-- <li><a href="#">开发文档</a></li> -->
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的 <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{userName}} <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><a href="#Account/Login" @click="signOut">退出登录</a></li>
               </ul>
             </li>
           </ul>
@@ -79,7 +80,14 @@ export default {
     ...mapState({
       user: state => state.userModule.user,
       developType: state => state.pulicModule.developType,
-    })
+    }),
+    webTitle() {
+      if (this.$route.name === 'Account') return '格力风驰平台 | 登录'
+      return '格力风驰平台';
+    },
+    userName() {
+      return this.user.name;
+    }
   },
   watch: {
     '$route.name'(newVal, oldVal) {
@@ -89,10 +97,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setPulicMoule: 'SET_PULIC_MODULE'
+      setPulicMoule: 'SET_PULIC_MODULE',
+      setAuthenticated: 'SET_AUTHENTICATED',
+      setUser: 'SET_USER',
     }),
     updataPage(routeName) {
-      if (this.$route.name !== routeName) {
+      if (this.$route.name !== routeName && this.$route.name !== 'Account') {
         this.$router.push({name: routeName}).catch(err => {
           console.log(err);
         });
@@ -100,6 +110,15 @@ export default {
     },
     setDevelopType(val) {
       this.setPulicMoule(['developType', val]);
+    },
+    signOut() {
+      // 清除token
+      localStorage.removeItem("eleToken");
+      // 清除vuex store
+      this.setAuthenticated(false);
+      this.setUser(null);
+      // 跳转登陆界面
+      this.$router.go("/Account/Login");
     }
   },
 }

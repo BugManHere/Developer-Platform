@@ -13,6 +13,10 @@
       // border: 1px solid #ddd;
       padding-right: 5px;
       overflow-y: auto;
+      .list-group {
+        border: 1px #eee solid;
+        height: 70%;
+      }
       .order-input {
         width: 100%;
         display: flex;

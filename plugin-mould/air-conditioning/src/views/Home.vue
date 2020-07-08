@@ -48,9 +48,9 @@
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
-        <gree-notice-bar class="custom-notice-bar" v-if="Pow && PctCle">
+        <gree-notice-bar class="custom-notice-bar" v-if="Pow && warnningText">
           <gree-icon slot="left" name="bell"></gree-icon>
-          {{ $language('warn.dirty') }}
+          {{ warnningText }}
         </gree-notice-bar>
         <div 
           v-show="!Pow"
@@ -59,7 +59,7 @@
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow && !loading" key="temSwiper"/>
         <!-- 温度单位图标 -->
-        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && Mod">
+        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
         <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
@@ -103,7 +103,16 @@
 
 import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { closePage, editDevice, changeBarColor, getCCcmd, startVoiceMainActivity, showLoading, getCurrentMode } from '@PluginInterface';
+import { 
+  closePage, 
+  editDevice, 
+  changeBarColor, 
+  getCCcmd, 
+  startVoiceMainActivity, 
+  showLoading, 
+  getCurrentMode, 
+  // getMsg 
+} from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import Carousel from '@/components/Carousel';
 import PopupBottom from '@/components/PopupBottom';
@@ -138,6 +147,7 @@ export default {
       currentCO2: 0,
       currentCO2Level: 0,
       currentCO2Img: 0,
+      warnningText: false,
     };
   },
   computed: {
@@ -154,7 +164,6 @@ export default {
       TemUn: state => state.dataObject.TemUn,
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
-      PctCle: state => state.dataObject.PctCle,
       CO2: state => state.dataObject.CO2,
       CO2Level: state => state.dataObject.CO2Level,
     }),
@@ -168,7 +177,7 @@ export default {
       return {
         backgroundImage,
         'background-size': `${isB ? 1 : 5}00% 100%`,
-        'background-position': `${isB ? 0 : this.Mod * 25}% 0%`
+        'background-position': `${isB ? 0 : (this.Mod % 5) * 25}% 0%`
       };
     },
     showPowOff() {
@@ -312,6 +321,20 @@ export default {
     } else {
       window.storage.set('WdSpd', this.WdSpd);
     }
+    // getMsg().then(res => {
+    //   console.log('-------------------getMsg---------------------');
+    //   console.log(res);
+    //   const msgs = JSON.parse(res);
+    //   console.log('-----------------parse------------------------');
+    //   console.log(msgs);
+    //   console.log('-----------------------m-----------------------');
+    //   console.log(msgs.msgs);
+    //   if (msgs && msgs.msgs && msgs.msgs.length) {
+    //     const msg = msgs.msgs.find(item => { return item.data.notice.extras.ext.data.t === 'warn' && item.data.notice.extras.ext.mac === this.mac; });
+    //     this.warnningText = msg.data.notice.extras.msg;
+    //     // const title = msg.data.notice.extras.title;
+    //   }
+    // });
   },
   methods: {
     ...mapMutations({

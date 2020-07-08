@@ -1,5 +1,6 @@
 const userModule = {
-  admin: '陈文中',
+  admin: '',
+  isAuthenticated: false,
   user: {},
 };
 export default {state: userModule};

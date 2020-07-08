@@ -10,11 +10,41 @@
 
 <script>
 import Header from '@/components/Header';
+import jwt_decode from "jwt-decode";
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'app',
   components: {
     Header,
+  },
+  created() {
+    if (localStorage.eleToken) {
+      // 解析token
+      const decoded = jwt_decode(localStorage.eleToken);
+      // token储存在vuex中
+      this.setAuthenticated(!this.isEmpty(decoded));
+      this.setUser(decoded);
+      this.setUserModule({
+        key: 'admin',
+        value: decoded.email
+      });
+    }
+  },
+  methods: {
+    ...mapMutations({
+      setAuthenticated: 'SET_AUTHENTICATED',
+      setUser: 'SET_USER',
+      setUserModule: 'SET_USER_MODULE',
+    }),
+    isEmpty(value) {
+      return (
+        value === undefined ||
+        value === null ||
+        (typeof value === "object" && Object.keys(value).length === 0) ||
+        (typeof value === "string" && value.trim().length === 0)
+      );
+    }
   }
 }
 </script>

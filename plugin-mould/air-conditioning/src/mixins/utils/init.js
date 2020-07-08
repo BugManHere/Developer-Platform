@@ -59,7 +59,7 @@ const mixin = {
       key.forEach((item, index) => {
         DataObject[item] = Number(valArr[index]);
       });
-      DataObject.functype = functype;
+      (DataObject.functype = functype) && (DataObject.OutHome = 0);
       
       console.log(DataObject);
       valArr && this.setCheckObject(DataObject);

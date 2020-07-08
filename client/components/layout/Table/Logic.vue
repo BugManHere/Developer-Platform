@@ -194,7 +194,8 @@ export default {
         const id = func.identifier; // 获取id
         // 轮询功能里面的状态，提取互斥
         Object.keys(func.statusDefine).forEach(statusKey => {
-          if (statusKey === 'undefined' || !func.statusDefine[statusKey].isCheck) return; // 排除1.'其他'状态；2.不检查互斥的状态
+          // if (statusKey === 'undefined' || !func.statusDefine[statusKey].isCheck) return; // 排除1.'其他'状态；2.不检查互斥的状态
+          if (!func.statusDefine[statusKey].isCheck) return; // 排除不检查互斥的状态
           const stateKey = `${id}_${statusKey}`; // 获取状态的key值
           const arr = extractLogic(func.statusDefine[statusKey], 'excludeArr'); // 提取互斥
           if (!arr.length) return // 如果空，不操作
@@ -221,7 +222,8 @@ export default {
         const id = func.identifier; // 获取id
         // 轮询功能里面的状态，提取互斥
         Object.keys(func.statusDefine).forEach(statusKey => {
-          if (statusKey === 'undefined' || !func.statusDefine[statusKey].isCheck) return; // 排除1.'其他'状态；2.不检查互斥的状态
+          // if (statusKey === 'undefined' || !func.statusDefine[statusKey].isCheck) return; // 排除1.'其他'状态；2.不检查互斥的状态
+          if (!func.statusDefine[statusKey].isCheck) return; // 排除不检查互斥的状态
           const stateKey = `${id}_${statusKey}`; // 获取状态的key值
           const arr = extractLogic(func.statusDefine[statusKey], 'hideArr'); // 提取互斥
           if (!arr.length) return // 如果空，不操作

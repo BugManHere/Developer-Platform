@@ -135,9 +135,9 @@ export default {
         'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',
         'StSlp4C', 'StSlp4CInc', 'StSlp4CSp', 'StSlp4H', 'StSlp4HInc', 'StSlp4HSp'],
       slpModExVal: [
-        [1, 2, 4, 1, 1, 133, 1, 1, 133, 1, 300, 10, 6, 300, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 2, 1, 138, 1, 1, 138, 1, 300, 10, 6, 300, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 3, 1, 143, 1, 1, 143, 1, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 1, 1, 131, 1, 1, 131, 1, 120, 0, 6, 120, 0, 6, 300, 8, 6, 300, 8, 6, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 2, 1, 133, 1, 1, 133, 1, 120, 0, 6, 120, 0, 6, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 3, 1, 136, 1, 1, 136, 1, 120, 0, 6, 120, 0, 6, 300, 3, 6, 300, 3, 6, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 4, 1, 133, 1, 1, 133, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 5, 1, 138, 1, 1, 138, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
@@ -179,9 +179,9 @@ export default {
       return this.currentMod === 3;
     },
     currentAge() {
-      if (this.SlpMod === 1) return 4;
-      if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
+      if ([1, 4].includes(this.SlpMod)) return 4;
       if (this.SmartSlpModEx === 0) return 1; 
+      if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
       return Math.ceil(this.SmartSlpModEx / 3) - 1;
     },
     currentBody() {
@@ -448,6 +448,9 @@ export default {
       handler(newVal) {
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
+        if (newVal === 3) {
+          this.getSlpVal();
+        }
       },
       immediate: true
     },
@@ -497,15 +500,19 @@ export default {
     }),
     async changeDataObject(obj, hasToast = false) {
       const control = obj;
-      if (obj.SwhSlp && this.Mod === 1) {
-        control.AntiDirectBlow = 1;
-        control.Tur = 0;
-        control.Quiet = 2;
-        control.WdSpd = 1;
-      } else if (this.Mod === 4) {
-        control.Tur = 0;
-        control.Quiet = 2;
-        control.WdSpd = 1;
+      if (!this.SwhSlp) {
+        console.log('yeses');
+        if (obj.SwhSlp && this.Mod === 1) {
+          control.AntiDirectBlow = 1;
+          control.SwUpDn = 0;
+          control.Tur = 0;
+          control.Quiet = 2;
+          control.WdSpd = 1;
+        } else if (this.Mod === 4) {
+          control.Tur = 0;
+          control.Quiet = 2;
+          control.WdSpd = 1;
+        }
       }
       const opt = Object.keys(obj);
       const p = Object.values(obj);
@@ -523,10 +530,11 @@ export default {
       this.setState(['uilock', false]);
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
-        showToast(hasToast);
+        showToast(hasToast, 1);
       }
     },
     async getSlpVal() {
+      // data
       const cols = ['SwhSlp', 'SlpMod', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
       const statueJson = JSON.stringify({
         mac: this.mac,

@@ -199,6 +199,7 @@ export default {
   },
   watch: {
     productTypeList(newVal) {
+      console.log(newVal);
       // 获取到产品品类列表时赋予初值
       this.deviceInfo.productID = newVal[0]._id;
       this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;

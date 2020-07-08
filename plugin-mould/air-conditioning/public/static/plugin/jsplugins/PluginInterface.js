@@ -742,5 +742,9 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function (
         type
       ]);
     },
+    // 获取消息推送列表
+    getMsg: function (callback) {
+      exec(callback, null, 'PluginInterface', 'getMsg', []);
+    },
   };
 });

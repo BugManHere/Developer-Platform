@@ -269,7 +269,7 @@ export default {
         case 1:
           result = {
             show: this.currentFuncId !== false,
-            class:  'big',
+            // class:  'big',
             title: "状态定义",
             miniBtn: {
               close: {

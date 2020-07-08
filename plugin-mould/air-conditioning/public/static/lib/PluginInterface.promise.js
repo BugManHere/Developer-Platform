@@ -36,7 +36,7 @@ export const timerListDevice = mac => {
   try {
     return navigator.PluginInterface.timerListDevice(mac);
   } catch (e) {
-    console.error(e);
+    console.log('调用接口timerListDevice');
   }
 };
 
@@ -58,7 +58,8 @@ export const sendDataToDevice = (mac, json, isFollowSysVibration) => {
         }
       );
     } catch (err) {
-      reject(err);
+      // reject(err);
+      err;
     }
   });
 };
@@ -159,13 +160,14 @@ export const getInfo = mac => {
  * @param {string} color
  */
 export const changeBarColor = color => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     try {
       navigator.PluginInterface.changeBarColor(color, (...params) => {
         resolve(...params);
       });
     } catch (err) {
-      reject(err);
+      console.log(`%c调用changeBarColor改变颜色：${color}`, `color:${color}`);
+      // reject(err);
     }
   });
 };
@@ -806,7 +808,7 @@ export const showLoading = () => {
   try {
     return navigator.PluginInterface.showLoading();
   } catch (e) {
-    console.error(e);
+    e;
   }
 };
 
@@ -817,7 +819,7 @@ export const hideLoading = () => {
   try {
     return navigator.PluginInterface.hideLoading();
   } catch (e) {
-    console.error(e);
+    e;
   }
 };
 
@@ -1430,3 +1432,31 @@ export const getGridConList = (mac, range) => {
   });
 };
 
+// 故障查询
+export const getDevRealTimeFault = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getDevRealTimeFault(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+
+/**
+ * 获取消息提醒列表
+ */
+export const getMsg = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getMsg((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

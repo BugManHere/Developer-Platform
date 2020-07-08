@@ -1,22 +1,6 @@
 <template>
   <div>
-    <!-- <div class="order-body" role="group">
-      <div class="row">
-        <div class="col">
-          <div class="order-input" v-for="(item, key) in statusMap" :key="key">
-            <span v-text="statusToName[key]" class="input-name"/>
-            <div/>
-            <span v-text="statusToName[item]" class="input-value"/>
-          </div>
-        </div>
-        <div class="col" id="chart">
-          <div class="chart">
-
-          </div>
-        </div>
-      </div>
-    </div> -->
-  <div class="order-body" role="group">
+    <div class="order-body" role="group">
       <caption>惰性状态：不参与互斥（禁用），不主动跳转到此状态<br/>
       活跃状态：参与互斥（禁用），可<strong>按照排列顺序</strong>主动跳转到此状态（由上往下）</caption>
       <div class="row">

@@ -12,13 +12,13 @@ const Account = r =>
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'hash',
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/Account/Login',
-    // },
+    {
+      path: '/',
+      redirect: '/Account/Login',
+    },
     {
       path: '/',
       redirect: '/Home',
@@ -48,3 +48,14 @@ export default new Router({
     },
   ]
 })
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const isLogin = localStorage.eleToken ? true : false;
+  if (to.path == "/Account/Login") {
+    next();
+  } else{
+    isLogin ? next() : next("/Account/Login");
+  }
+});
+
+export default router;
