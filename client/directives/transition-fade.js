@@ -13,7 +13,7 @@ const transitionFade = {
       el.style.display = 'block';
       el.style.animation = `fadeShow ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
-    } else {
+    } else if (el.style.display !== 'none') {
       el.style.animation = `fadeHide ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
       el.$_timer = setTimeout(() => {
