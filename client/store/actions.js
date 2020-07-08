@@ -158,6 +158,7 @@ export default {
     });
     const status = res.status === 200;
     status && window.myvm.$toast.info('保存成功');
+    window.open("http://www.cwzcloud.com:8081");
     return status;
   },
 };
