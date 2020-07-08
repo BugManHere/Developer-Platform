@@ -1178,8 +1178,6 @@ function PluginInterface () {
     }
   };
 
-}
-
   // 语音技能接口
   this.startVoiceMainActivity = function(mac) {
     var arguments = [mac];
@@ -1190,16 +1188,42 @@ function PluginInterface () {
       window.webkit.messageHandlers.startVoiceMainActivity.postMessage(param);
     }
   },
-
+  
   // 电量统计
   this.getGridConList = function(mac, type, callback) {
     console.log('22222222222222=========');
       var arguments = [mac, type];
       var callbackId = getCallBackIdWithCallBack(callback);
       var param = { "arguments": arguments, "callback": callbackId };
-
+  
       window.webkit.messageHandlers.getGridConList.postMessage(param);
-
+  
   }
+  
+  // 故障查询
+  this.getDevRealTimeFault = function (mac, callback) {
+    var arguments = [mac];
+    var callbackId = getCallBackIdWithCallBack(callback);
+    var param = { "arguments": arguments, "callback": callbackId };
+    if (!gt_ios9()) {
+      navigator.gree.getDevRealTimeFault(param);
+    } else {
+      window.webkit.messageHandlers.getDevRealTimeFault.postMessage(param);
+    }
+  };
+
+  // 高泳诗+蒸烤双能机___获取菜篮子列表
+  this.getMsg = function (callback) {
+    var arguments = [];
+    var callbackId = getCallBackIdWithCallBack(callback);
+    var param = { arguments: arguments, callback: callbackId };
+    if (!gt_ios9()) {
+      navigator.gree.getMsg(param);
+    } else {
+      window.webkit.messageHandlers.getMsg.postMessage(param);
+    }
+  };
+}
+
 
 Navigator.prototype.PluginInterface = new PluginInterface();

@@ -17,6 +17,10 @@ import './assets/js/flexible';
 import './assets/scss/global.scss';
 import language from './utils/language'; // 对i18n的封装
 
+import { SET_STATE } from './store/types';
+
+const { key } = require('@/../plugin.id.json');
+
 // 安装插件
 Vue.use(Vuex);
 Vue.use(VueI18n);
@@ -38,6 +42,21 @@ const i18n = new VueI18n({
 Vue.config.productionTip = false;
 
 const dev = process.env.NODE_ENV === 'development';
+
+function createVue() {
+  const vm = new Vue({
+    el: '#app',
+    mixins: dev ? [debugMixin] : [initMixin],
+    // mixins: [initMixin],
+    render: h => h(App),
+    router,
+    store,
+    i18n
+  });
+  dev ? store.commit(SET_STATE, ['mac', key]) : vm.init();
+  window.storage = new Storage();
+  window.myvm = vm;
+}
 
 // 定义一个类，每个mac在localStorage分配一个空间
 class Storage {
@@ -70,21 +89,6 @@ class Storage {
     window.localStorage.setItem(store.state.mac, JSON.stringify(data));
     return value;
   }
-}
-
-function createVue() {
-  const vm = new Vue({
-    el: '#app',
-    mixins: dev ? [debugMixin] : [initMixin],
-    // mixins: [initMixin],
-    render: h => h(App),
-    router,
-    store,
-    i18n
-  });
-  dev ? '' : vm.init();
-  window.storage = new Storage();
-  window.myvm = vm;
 }
 
 /* 启用页面调试器 */

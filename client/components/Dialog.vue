@@ -199,7 +199,6 @@ export default {
   },
   watch: {
     productTypeList(newVal) {
-      console.log(newVal);
       // 获取到产品品类列表时赋予初值
       this.deviceInfo.productID = newVal[0]._id;
       this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;
@@ -241,7 +240,6 @@ export default {
         .then(data => {
           if (data.status === 201) {
             this.$toast.info("创建成功");
-            console.log(data.data);
             this.setTempModule(['templates', data.data]);
             this.$emit("hideDialog", false);
           } else if (data.status === 200) {
