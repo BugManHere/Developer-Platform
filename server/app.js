@@ -4,7 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport");
-const jwt = require('jsonwebtoken');
 
 // 引入json解析中间件
 const bodyParser = require('body-parser');
