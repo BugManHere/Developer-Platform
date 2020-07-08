@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 // 登录token
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
-const passport = require("passport");
+
 // 邮箱验证
 const mail = require('../api/mail');
 // 日期模块
@@ -16,7 +16,6 @@ const dayjs = require('dayjs');
 
 // post请求：注册接口 users/register
 router.post("/register", (req, res) => {
-  console.log('yes');
   //查询数据库是否有邮箱
   User.findOne({
       email: req.body.email
@@ -37,6 +36,7 @@ router.post("/register", (req, res) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
             newUser.password = hash;
+            console.log(newUser);
             newUser.save().then(user => res.json(user))
               .catch(err => console.log(err));
           });
@@ -121,6 +121,10 @@ router.post("/mail", (req, res) => {
           })
       }
     });
+});
+
+router.get('/test', (req, res) => {
+  res.json('test done!');
 });
 
 module.exports = router;

@@ -1,29 +1,29 @@
 <template>
   <div class="login">
     <section class="form_container">
-      <!-- <span class="title">格力风驰平台</span> -->
+      <span class="title">账号登录</span>
       <form class="form-horizontal">
         <div class="form-group">
-          <div class="col-sm-16">
-            <input
-              type="email"
-              class="form-control"
-              id="inputEmail3"
-              placeholder="请输入账号/邮箱号"
-              v-model="loginUser.email"
-            >
-          </div>
+          <div class="form-name">账号</div>
+          <input
+            type="email"
+            class="form-control"
+            id="inputEmail3"
+            placeholder="请输入账号/邮箱号"
+            v-model="loginUser.email"
+            autocomplete
+          >
         </div>
         <div class="form-group">
-          <div class="col-sm-14">
-            <input
-              type="password"
-              class="form-control"
-              id="inputPassword3"
-              placeholder="请输入密码"
-              v-model="loginUser.password"
-            >
-          </div>
+          <div class="form-name">密码</div>
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword3"
+            placeholder="请输入密码"
+            v-model="loginUser.password"
+            autocomplete
+          >
         </div>
         <div class="form-group">
           <button
@@ -74,6 +74,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      setUserModule: 'SET_USER_MODULE',
       setAuthenticated: 'SET_AUTHENTICATED',
       setUser: 'SET_USER',
     }),
@@ -81,7 +82,6 @@ export default {
     submitForm() {
       https.fetchPost("users/login", this.loginUser)
       .then(res => {
-        console.log(res);
         // 获取token
         const { status, data } = res;
         if (status === 200) {
@@ -92,6 +92,10 @@ export default {
           // token储存在vuex中
           this.setAuthenticated(!this.isEmpty(decoded));
           this.setUser(decoded);
+          this.setUserModule({
+            key: 'admin',
+            value: decoded.email
+          });
           this.$toast.info('登录成功');
           this.$router.push("/Home");
         } else {

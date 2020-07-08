@@ -7,10 +7,33 @@ const templateFuncModel = require("../models/template");
 const dayjs = require('dayjs');
 const fs = require('fs');
 const path = require('path');
+// 登录token
+const jwt = require('jsonwebtoken');
+const keys = require('../config/keys');
 
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
+
+router.use(function(req, res, next) {
+  // 拿取token 数据 按照自己传递方式写
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (token) {      
+      // 解码 token (验证 secret 和检查有效期（exp）)
+      jwt.verify(token, keys.secretOrKey, function(err, decoded) {      
+            if (err) {
+              return res.status(403).send('用户信息过期');
+            } else {
+              // 如果验证通过，在req中写入解密结果
+              req.decoded = decoded;  
+              next(); //继续下一步路由
+        }
+      });
+  } else {
+    // 没有拿到token 返回错误 
+    return res.status(403).send('用户信息过期');
+  }
+});
 
 router.get('/', async function(req, res, next) {
   const admin = req.body.admin;
@@ -165,10 +188,12 @@ router.post('/done', async function(req, res, next) {
 });
 
 async function getAdminDevice(admin) {
-  let Signture = crypto.createHmac('sha1', global.key);
+  let Signture = crypto.createHmac('sha1', keys.secretOrKey);
   Signture.update(admin);
   const Ciphertext = Signture.digest().toString('base64');
-  return await userDeviceModel.findOne({ admin: Ciphertext });
+  const res = await userDeviceModel.findOne({ admin: Ciphertext });
+  console.log(Ciphertext);
+  return res || {userDeviceList: []};
 }
 
 module.exports = router;

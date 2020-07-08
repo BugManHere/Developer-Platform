@@ -86,7 +86,7 @@ export default {
       return '格力风驰平台';
     },
     userName() {
-      return this.user.email;
+      return this.user.name;
     }
   },
   watch: {
@@ -117,9 +117,8 @@ export default {
       // 清除vuex store
       this.setAuthenticated(false);
       this.setUser(null);
-      this.$toast.info('已退出登录');
       // 跳转登陆界面
-      this.$router.push("/Account/Login");
+      this.$router.go("/Account/Login");
     }
   },
 }

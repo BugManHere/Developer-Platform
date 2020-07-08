@@ -1,6 +1,9 @@
 .login {
   position: relative;
   top: 100px;
+  .title {
+    color: #888
+  }
   .form_container {
     width: 400px;
     height: 600px;
@@ -18,8 +21,21 @@
       justify-content: center;
       align-items: center;
       > div {
-        width: 80%;
+        width: 100%;
         margin: 10px;
+        &.form-group {
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: center;
+          .form-name {
+            text-align: left;
+            width: 15%;
+          }
+          .form-control {
+            width: 85%;
+          }
+        }
         button {
           width: 100px;
         }

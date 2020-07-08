@@ -25,12 +25,17 @@ export default {
       // token储存在vuex中
       this.setAuthenticated(!this.isEmpty(decoded));
       this.setUser(decoded);
+      this.setUserModule({
+        key: 'admin',
+        value: decoded.email
+      });
     }
   },
   methods: {
     ...mapMutations({
       setAuthenticated: 'SET_AUTHENTICATED',
       setUser: 'SET_USER',
+      setUserModule: 'SET_USER_MODULE',
     }),
     isEmpty(value) {
       return (

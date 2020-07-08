@@ -10,6 +10,9 @@ export default {
   [type.SET_PULIC_MODULE](state, [key, val]) {
     state.pulicModule[key] = val;
   },
+  [type.SET_USER_MODULE](state, map) {
+    state.userModule[map.key] = map.value;
+  },
   [type.CHANGE_TEMPLATE](state, val) {
     const productID = state.tempModule.tempID.split('&')[0];
     const seriesID = state.tempModule.tempID.split('&')[1];

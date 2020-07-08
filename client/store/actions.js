@@ -42,12 +42,17 @@ export default {
   },
   // 获取用户设备列表
   async [GET_USERDEVICE_LIST]({ state, commit }) {
-    const res = await https.fetchPost("/userDevice", {
+    await https.fetchPost("/userDevice", {
       admin: state.userModule.admin, 
+    }).then(res => {
+      const status = res.status === 200;
+      status && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
+      return status;
+    }).catch(e => {
+      if (e.response.status === 403) {
+        window.myvm.$router.push('/Account/Login');
+      }
     });
-    const status = res.status === 200;
-    status && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
-    return status;
   },
    // 获取模板信息
   async [GET_TEMPLATES]({ state, commit }) {
@@ -112,7 +117,6 @@ export default {
   },
   // 模板配置完毕
   async [SET_TEMP_DONE]({ state, getters, commit }) {
-    console.log(getters.funcDefine);
     const res = await https.fetchPost("/template/done", {
       funcDefine: JSON.stringify(getters.funcDefine),
       tempID: state.tempModule.tempID
@@ -146,7 +150,6 @@ export default {
   },
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
-    console.log(state.devModule.moreOption);
     const res = await https.fetchPost("/userDevice/done", {
       admin: state.userModule.admin, 
       id: state.devModule.deviceKey,
