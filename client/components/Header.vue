@@ -46,9 +46,8 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{userName}} <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                <li><a href="#">基本信息</a></li>
+                <li><a href="#">账号设置</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="#Account/Login" @click="signOut">退出登录</a></li>
               </ul>
