@@ -10,6 +10,8 @@ const path = require('path');
 // 登录token
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
+// 权限判断
+const permit = require("../api/permit");
 
 const resolve = dir => {
   return path.join(__dirname, dir);
@@ -48,6 +50,8 @@ router.post('/', async function(req, res, next) {
 });
 
 router.post('/create', async function(req, res, next) {
+  const hasPermit = await permit(res, req.body.admin, 2);
+  if (!hasPermit) return;
   const admin = req.body.admin;
   const userDevice = await getAdminDevice(admin);
   const userDeviceList = userDevice.userDeviceList;
@@ -89,6 +93,8 @@ router.post('/create', async function(req, res, next) {
 });
 
 router.post('/delDevice', async function(req, res, next) {
+  const hasPermit = await permit(res, req.body.admin, 2);
+  if (!hasPermit) return;
   const admin = req.body.admin;
   const id = req.body.id;
   const userDevice = await getAdminDevice(admin);
@@ -99,6 +105,8 @@ router.post('/delDevice', async function(req, res, next) {
 });
 
 router.post('/save', async function(req, res, next) {
+  const hasPermit = await permit(res, req.body.admin, 2);
+  if (!hasPermit) return;
   const admin = req.body.admin;
   const id = req.body.id;
   const idList = JSON.parse(req.body.idList);
@@ -110,9 +118,9 @@ router.post('/save', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/addFunc', function(req, res, next) {});
-
 router.post('/delFunc', async function(req, res, next) {
+  const hasPermit = await permit(res, req.body.admin, 2);
+  if (!hasPermit) return;
   const admin = req.body.admin;
   const id = req.body.id;
   const funcId = req.body.funcId;
@@ -126,6 +134,8 @@ router.post('/delFunc', async function(req, res, next) {
 });
 
 router.post('/done', async function(req, res, next) {
+  const hasPermit = await permit(res, req.body.admin, 2);
+  if (!hasPermit) return;
   const admin = req.body.admin;
   const id = req.body.id;
   const moreOption = JSON.parse(req.body.moreOption);
@@ -192,7 +202,6 @@ async function getAdminDevice(admin) {
   Signture.update(admin);
   const Ciphertext = Signture.digest().toString('base64');
   const res = await userDeviceModel.findOne({ admin: Ciphertext });
-  console.log(Ciphertext);
   return res || {userDeviceList: []};
 }
 

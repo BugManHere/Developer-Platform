@@ -6,6 +6,8 @@ const templateFuncModel = require('../models/template');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 require('../mongoose.js');
+// 权限判断
+const permit = require("../api/permit");
 
 router.use(function(req, res, next) {
   // 拿取token 数据 按照自己传递方式写
@@ -35,6 +37,8 @@ router.get('/', function(req, res) {
 
 // 创建模板
 router.post('/create', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const params = await templateFuncModel.findOne({
     seriesID: req.body.seriesID,
     productID: req.body.productID
@@ -57,6 +61,8 @@ router.post('/create', async function(req, res) {
 
 // 模板保存功能
 router.post('/save', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
   productInfo.funcDefine = funcDefine;
@@ -66,6 +72,8 @@ router.post('/save', async function(req, res) {
 
 // 模板编辑功能
 router.post('/editFunc', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const productInfo = await getProductInfo(req.body.tempID);
   const subFuncDefine = JSON.parse(req.body.subFuncDefine);
   const subFuncDefineCopy = productInfo.funcDefine.id(subFuncDefine._id);
@@ -83,6 +91,8 @@ router.post('/editFunc', async function(req, res) {
 
 // 模板添加新功能
 router.post('/addFunc', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const productInfo = await getProductInfo(req.body.tempID);
   const insetMap = JSON.parse(req.body.insertMap);
   productInfo.funcDefine.push(insetMap); // 插入新功能
@@ -92,6 +102,8 @@ router.post('/addFunc', async function(req, res) {
 
 // 模板删除功能
 router.post('/delFunc', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const productInfo = await getProductInfo(req.body.tempID);
   const suvbFuncDefine = productInfo.funcDefine[req.body.index];
   suvbFuncDefine.remove();
@@ -101,6 +113,8 @@ router.post('/delFunc', async function(req, res) {
 
 // 模板配置完毕
 router.post('/done', async function(req, res) {
+  const hasPermit = await permit(res, req.body.admin, 1);
+  if (!hasPermit) return;
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
   productInfo.funcDefine = funcDefine;
@@ -113,4 +127,5 @@ async function getProductInfo(tempID) {
   const seriesID = tempID.split('&')[1];
   return await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
 }
+
 module.exports = router;

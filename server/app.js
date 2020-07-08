@@ -11,17 +11,12 @@ const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
 const productTypeRouter = require('./routes/productType');
-const productFuncRouter = require('./routes/productFunc');
 const userDeviceRouter = require('./routes/userDevice');
 const templateRouter = require('./routes/template');
-// var httpsRouter = require('./routes/https');
+
 const usersRouter = require('./routes/users');
-const keys = require("./config/keys");
 
 const app = express();
-const apiRoutes = express.Router();
-
-global.key = 'greekey';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,9 +25,6 @@ app.set('view engine', 'hbs');
 // 初始化passport
 app.use(passport.initialize());
 require('./config/passport')(passport);
-
-// 设置superSecret 全局参数
-app.set('superSecret', keys.secretOrKey);
 
 // 自定义跨域中间件
 var allowCors = function(req, res, next) {
@@ -59,7 +51,6 @@ app.use(bodyParser.urlencoded({
 
 app.use('/', indexRouter);
 app.use('/productType', productTypeRouter);
-app.use('/productFunc', productFuncRouter);
 app.use('/userDevice', userDeviceRouter);
 app.use('/template', templateRouter);
 // app.use('/https', httpsRouter);

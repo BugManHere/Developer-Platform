@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const dayjs = require('dayjs');
 const productTypeModel = require("../models/productType");
 // 登录token
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
-require('../mongoose.js');
 
 let data;
 
@@ -41,24 +39,6 @@ router.get('/', function(req, res, next) {
     // console.log(seriesList);
     // data[0].save();
   })
-});
-
-router.post('/', function(req, res, next) {
-  const map = req.body;
-  map.logicMap = {json: "{}"};
-  map.disableMap = {json: "{}"};
-  map.createTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
-  const userDeviceList = global.adminInfo.userDeviceList;
-  userDeviceList.push(map);
-
-  global.adminInfo.set({userDeviceList: userDeviceList});
-  global.adminInfo.save()
-    .then((v) => {
-      res.json(v);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
 });
 
 module.exports = router;
