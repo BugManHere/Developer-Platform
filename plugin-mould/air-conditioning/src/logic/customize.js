@@ -122,6 +122,9 @@ const Customize = {
             default:
               break;
           }
+        },        
+        Status: (currentStatus, afterStatus) => {
+          this.$router.push({name: 'Status'}).catch(e => { console.log(e); });
         },
         RFan: () => {
           this.changeData({UDFanPort: 3});

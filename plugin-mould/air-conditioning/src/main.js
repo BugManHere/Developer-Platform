@@ -88,11 +88,14 @@ function createVue() {
 }
 
 /* 启用页面调试器 */
-if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
-  const VConsole = require('vconsole/dist/vconsole.min.js');
-  // eslint-disable-next-line no-new
-  new VConsole();
-}
+// if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+const VConsole = require('vconsole/dist/vconsole.min.js');
+// eslint-disable-next-line no-new
+new VConsole();
+// }
+
+console.log('---------V1.0.1---------------');
+
 
 dev ? createVue() : '';
 
@@ -105,7 +108,7 @@ window.backButton = function backButton() {
   const { name } = router.currentRoute;
   if (name === 'Error' || name === 'Home' || name === 'Offline') {
     closePage();
-  } else if (name === 'Voice' || name === 'Sweep' || name === 'Air') {
+  } else if (name === 'Loop' || name === 'Humi') {
     router.push({ name: 'Home' }).catch(err => { err; });
   } else {
     router.back(-1);

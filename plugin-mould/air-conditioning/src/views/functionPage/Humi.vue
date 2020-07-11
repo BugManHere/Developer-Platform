@@ -73,7 +73,8 @@ export default {
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      Humi: state => state.dataObject.Humi
+      Humi: state => state.dataObject.Humi,
+      OutHome: state => state.dataObject.OutHome,
     }),
     humi_bg() {
       console.log('this.Humi', this.Humi);
@@ -95,12 +96,34 @@ export default {
           err;
         });
       }
+    },
+
+    OutHome(newVal) {
+      if (newVal) {
+        try {
+          showToast('外出模式开启,不可设置。', 1);
+        } catch (e) {
+          Toast({
+            content: '外出模式开启,不可设置。',
+            position: 'bottom'
+          });
+        }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
+      }
     }
   },
+
   mounted() {
     hideLoading();
     this.isActive = Boolean(this.Dazzling);
   },
+
+  beforeDestroy() {
+    console.log('--------------');
+    this.isActive = false;
+    Dialog.closeAll();
+  },
+
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',

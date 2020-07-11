@@ -19,8 +19,7 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item, Button, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast,
-  hideLoading
+  showToast
 } from '@PluginInterface';
 
 export default {
@@ -39,7 +38,7 @@ export default {
   },
   data() {
     return {
-      LoopModList: ['全新风', '混合风', '循环风'],
+      LoopModList: ['全新风', '混合风'],
     };
   },
   computed: {
@@ -48,6 +47,7 @@ export default {
       Mod: state => state.dataObject.Mod,
       LoopMod: state => state.dataObject.LoopMod,
       Dazzling: state => state.dataObject.Dazzling,
+      OutHome: state => state.dataObject.OutHome,
     }),
   },
   watch: {
@@ -77,10 +77,23 @@ export default {
         }
         this.$router.push({name: 'Home'}).catch(err => { err; });
       }
+    },
+
+    OutHome(newVal) {
+      if (newVal) {
+        try {
+          showToast('外出模式开启,不可设置。', 1);
+        } catch (e) {
+          Toast({
+            content: '外出模式开启,不可设置。',
+            position: 'bottom'
+          });
+        }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
+      }
     }
   },
   mounted() {
-    hideLoading();
   },
   methods: {
     ...mapMutations({
@@ -90,6 +103,7 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
+    
     changeLoopMod(index) {
       const obj = {LoopMod: index + 1};
       this.setState(['ableSend', true]);
@@ -119,6 +133,10 @@ export default {
     }
     .gree-button:nth-of-type(1){
         margin-top: 110px;
+    }
+    .gree-button__text{
+      font-size: 40px !important;
+      color: #000 !important;
     }
   }
 }

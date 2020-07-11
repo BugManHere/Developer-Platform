@@ -12,7 +12,10 @@ const Offline = r =>
 
 const ErrorPage = r =>
   require.ensure([], () => r(require('./views/Error')), 'error');
-  
+
+const Status = r =>
+  require.ensure([], () => r(require('./views/functionPage/Status')), 'status');  
+
 // 高级功能倒三角进入
 const Test = r =>
   require.ensure([], () => r(require('./views/functionPage/Test')));
@@ -63,6 +66,11 @@ export default new Router({
       path: '/Offline',
       name: 'Offline',
       component: Offline
+    },
+    {
+      path: '/Status',
+      name: 'Status',
+      component: Status
     },
     {
       path: '/Error',

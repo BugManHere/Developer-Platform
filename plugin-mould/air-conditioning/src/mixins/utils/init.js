@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 1.1
+ * @Author: ZM_lee└(^o^)┘
+ * @Date: 2020-07-08 09:14:43
+ * @LastEditors: ZM_lee└(^o^)┘
+ * @LastEditTime: 2020-07-08 19:13:10
+ */ 
 // 根据实际业务修改
 import { mapState, mapMutations, mapActions } from 'vuex';
 import updateStatus from './updateStatus';
@@ -38,6 +46,15 @@ const mixin = {
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
+      console.log('-----aaa---');
+      console.log('location.href', location.href);
+      let FreshAirConditionState = 0;
+      try {
+        FreshAirConditionState = getQueryStringByName('FreshAirConditionState');
+        console.log('FreshAirConditionState', FreshAirConditionState);
+      } catch (error) {
+        console.log('-------------', error);
+      }
 
       const valArr = JSON.parse(dataArr);
       console.log(dataArr);
@@ -60,7 +77,7 @@ const mixin = {
         DataObject[item] = Number(valArr[index]);
       });
       (DataObject.functype = functype) && (DataObject.OutHome = 0);
-      
+      FreshAirConditionState && Object.assign(DataObject, {FreshAirConditionState});
       console.log(DataObject);
       valArr && this.setCheckObject(DataObject);
       valArr && this.setDataObject(DataObject);

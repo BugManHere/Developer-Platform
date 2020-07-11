@@ -6,3 +6,4 @@ yarn-debug.log*
 yarn-error.log*
 /babel.config.js
 /plugin-mould/vue-cli3-model/node_modules
+gree-ui/

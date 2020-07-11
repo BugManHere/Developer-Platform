@@ -12,7 +12,7 @@
   "dependencies": {
     "dayjs": "^1.8.15",
     "echarts": "4.0.4",
-    "gree-ui": "F:\\WebCode\\commit\\gree-ui",
+    "gree-ui": "F:\\plugin-open-platform\\iotfe-gdp\\gree-ui\\gree-ui-20200706-3439b60d1f6ca9c3f80595fda0356d6c4d22188a",
     "vconsole": "^3.3.0",
     "vue": "^2.5.17",
     "vue-awesome-swiper": "^3.1.3",
