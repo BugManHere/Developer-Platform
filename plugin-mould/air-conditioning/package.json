@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service serve --mode test",
+    "local": "vue-cli-service serve --mode local",
     "debug": "vue-cli-service build --mode debug",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"

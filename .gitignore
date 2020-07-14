@@ -5,4 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /babel.config.js
-/plugin-mould/vue-cli3-model/node_modules
+
+.yarnrc
+
+# lock
+package-lock.json
+yarn.lock

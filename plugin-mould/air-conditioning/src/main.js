@@ -20,8 +20,8 @@ import language from './utils/language'; // 对i18n的封装
 
 import { SET_STATE } from './store/types';
 
-axios.defaults.baseURL = 'http://8.210.116.167:3000'; // 配置接口地址
-// axios.defaults.baseURL = 'http://localhost:3000'; // 配置接口地址
+axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
+
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
 
@@ -59,6 +59,8 @@ async function createVue() {
   });
   window.myvm = vm;
   window.storage = new Storage();
+
+  console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
 
   // 如果是开发模式，加载服务器/缓存配置
   if (dev) {
