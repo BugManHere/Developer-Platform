@@ -83,6 +83,7 @@ import { Header, Toast, Switch, List, Item, RadioList } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import {
   showToast,
+  showLoading,
   hideLoading,
   sendDataToDevice,
 } from '@PluginInterface';
@@ -140,7 +141,7 @@ export default {
         [1, 2, 4, 3, 1, 136, 1, 1, 136, 1, 120, 0, 6, 120, 0, 6, 300, 3, 6, 300, 3, 6, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 4, 1, 133, 1, 1, 133, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 5, 1, 138, 1, 1, 138, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 7, 60, 130, 1, 60, 130, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
         [1, 2, 4, 8, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
         [1, 2, 4, 9, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1]
@@ -449,7 +450,7 @@ export default {
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
         if (newVal === 3) {
-          this.getSlpVal();
+          // this.getSlpVal();
         }
       },
       immediate: true
@@ -499,9 +500,9 @@ export default {
       updateDataObject: 'UPDATE_DATAOBJECT',
     }),
     async changeDataObject(obj, hasToast = false) {
+      this.setState(['uilock', true]);
       const control = obj;
       if (!this.SwhSlp) {
-        console.log('yeses');
         if (obj.SwhSlp && this.Mod === 1) {
           control.AntiDirectBlow = 1;
           control.SwUpDn = 0;
@@ -524,34 +525,40 @@ export default {
       });
       console.table([opt, p]);
       this.updateDataObject(obj);
-      if (this.functype) return;
-      this.setState(['uilock', true]);
+      if (this.functype) {
+        hasToast && showToast(hasToast, 1);
+        return;
+      }
       const res = await sendDataToDevice(this.mac, json, false);
-      this.setState(['uilock', false]);
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
       }
+      this.setState(['uilock', false]);
     },
     async getSlpVal() {
+      if ((this.functype && this.dataObject.Slp1L1) || this.$store.state.uilock) return; // 场景模式下不重复查询
+
       // data
-      const cols = ['SwhSlp', 'SlpMod', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
+      const cols = ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
       const statueJson = JSON.stringify({
         mac: this.mac,
         t: 'status',
         cols
       });
-      this.setState(['uilock', true]);
+      showLoading();
       const res = await sendDataToDevice(this.mac, statueJson, false);
-      this.setState(['uilock', false]);
       const _res = JSON.parse(res);
       const dataObject = {};
       _res.forEach((item, index) => {
         dataObject[cols[index]] = item;
       });
 
-      this.updateLocal(dataObject);
+      hideLoading();
 
+      if (this.$store.state.uilock) return;
+
+      this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
     },
     updateLocal(dataObject) {

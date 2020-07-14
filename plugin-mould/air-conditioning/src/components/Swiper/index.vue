@@ -4,10 +4,10 @@
       :ref="slidesData.key"
       class="gr-swiper"
       :options="swiperOption"
+      @touchcancel.native="clearSwiperHold(slidesData.key)"
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
-      @touch-cancel="clearSwiperHold(slidesData.key)"
       :class="{'swiper-no-swiping': noSwiping}"
       v-show="!isShowText"
     >
@@ -105,8 +105,12 @@ export default {
       }, 20);
     },
     swiperHold(newVal) {
-      if (newVal) return;
       const key = this.slidesData.key;
+      if (newVal) {
+        newVal === key || this.banTouch(true);
+        return;
+      }
+      this.banTouch(false);
       if (this.swiperPerView[key] && this.swiperPerView[key].length) {
         while (this.swiperPerView[key].length) {
           const swiper = this.swiperPerView[key].pop();
@@ -153,7 +157,7 @@ export default {
     }),
     setSwiperHold(key) {
       this.$nextTick(() => {
-        !this.swiperHold && this.setState(['swiperHold', true]);
+        this.setState(['swiperHold', key]);
         const ref = this.$refs[key];
         this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
         const realIndex = ref.swiper.realIndex;

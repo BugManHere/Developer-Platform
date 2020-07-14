@@ -9,7 +9,7 @@ const state = {
   isStHt: false,
   dataObject: {
     Pow: 1,
-    Mod: 1,
+    Mod: 3,
     SetTem: 18,
     WdSpd: 1,
     'Add0.5': 0,
