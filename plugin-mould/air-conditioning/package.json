@@ -10,6 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "dayjs": "^1.8.15",
     "echarts": "4.0.4",
     "gree-ui": "F:\\WebCode\\commit\\gree-ui",

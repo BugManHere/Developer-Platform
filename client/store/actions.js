@@ -18,6 +18,7 @@ import {
   SET_DEV_DONE,
 } from './types';
 import https from '@/https';
+import axios from 'axios'
 // import { deepCopy } from "@/utils";
 
 export default {
@@ -48,10 +49,6 @@ export default {
       const status = res.status === 200;
       status && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
       return status;
-    }).catch(e => {
-      if (e.response.status === 403) {
-        window.myvm.$router.push('/Account/Login');
-      }
     });
   },
    // 获取模板信息
@@ -77,6 +74,7 @@ export default {
     }
     // 请求接口，返回：template
     const res = await https.fetchPost("/template/save", {
+      admin: state.userModule.admin, 
       funcDefine: JSON.stringify(funcDefine), 
       tempID: state.tempModule.tempID,
     });
@@ -88,6 +86,7 @@ export default {
   // 模板编辑功能（更新某一功能），传入funcDefine
   async [EDIT_TEMP_FUNC]({ state, commit }, subFuncDefine) {
     const  res = await https.fetchPost("/template/editFunc", {
+      admin: state.userModule.admin, 
       subFuncDefine: JSON.stringify(subFuncDefine),
       tempID: state.tempModule.tempID,
     });
@@ -98,6 +97,7 @@ export default {
   // 模板增加功能
   async [ADD_TEMP_FUNC]({ state, commit }, insertMap) {
     const res = await https.fetchPost("/template/addFunc", {
+      admin: state.userModule.admin, 
       insertMap: JSON.stringify(insertMap),
       tempID: state.tempModule.tempID,
     })
@@ -108,6 +108,7 @@ export default {
   // 模板删除功能
   async [DEL_TEMP_FUNC]({ state, commit }, index) {
     const res = await https.fetchPost("/template/delFunc", {
+      admin: state.userModule.admin, 
       index,
       tempID: state.tempModule.tempID,
     });
@@ -118,8 +119,9 @@ export default {
   // 模板配置完毕
   async [SET_TEMP_DONE]({ state, getters, commit }) {
     const res = await https.fetchPost("/template/done", {
+      admin: state.userModule.admin, 
       funcDefine: JSON.stringify(getters.funcDefine),
-      tempID: state.tempModule.tempID
+      tempID: state.tempModule.tempID,
     });
     commit(CHANGE_TEMPLATE, res.data);
     const status = res.status === 200;
@@ -129,8 +131,8 @@ export default {
   // 删除设备
   async [DEL_DEV]({ state, commit }, id) {
     const res = await https.fetchPost('/userDevice/delDevice', { 
-      id,
       admin: state.userModule.admin, 
+      id,
     });
     const status = res.status === 200;
     status && window.myvm.$toast.info('删除设备成功') && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
@@ -158,7 +160,10 @@ export default {
     });
     const status = res.status === 200;
     status && window.myvm.$toast.info('保存成功');
-    window.open("http://www.cwzcloud.com:8081");
+    // const targetUrl = `http://www.cwzcloud.com:8081/#/Home?key=${state.devModule.deviceKey}`;
+    const targetUrl = `http://localhost:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
+    const newWin = window.open(targetUrl, 'pluginPage', '', true);
+    newWin.location.href = targetUrl;
     return status;
   },
 };

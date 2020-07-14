@@ -1,4 +1,4 @@
-import { timerListDevice, showLoading } from '@PluginInterface';
+import { timerListDevice, showLoading, sendDataToDevice } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
@@ -139,10 +139,6 @@ const Customize = {
      */
     initFunc() {
       return {
-        SmartSleep: () => {
-          console.log(
-          );
-        }
       };
     },
   },
@@ -152,6 +148,7 @@ const Customize = {
       setState: 'SET_STATE',
     }),
     ...mapActions({
+      updateDataObject: 'UPDATE_DATAOBJECT',
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(map) {

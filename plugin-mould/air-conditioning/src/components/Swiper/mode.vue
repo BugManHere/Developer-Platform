@@ -152,20 +152,20 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
+      // const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
 
       // 缓存温度
-      // const temSetting = window.storage.get('temSetting') || {};
-      // let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
-      // temSetting[this.dataObject.Mod] = {
-      //   SetTem: this.dataObject.SetTem,
-      //   'Add0.5': this.dataObject['Add0.5'],
-      //   'Add0.1': this.dataObject['Add0.1'],
-      // };
-      // window.storage.set('temSetting', temSetting);
+      const temSetting = window.storage.get('temSetting') || {};
+      let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
+      temSetting[this.dataObject.Mod] = {
+        SetTem: this.dataObject.SetTem,
+        'Add0.5': this.dataObject['Add0.5'],
+        'Add0.1': this.dataObject['Add0.1'],
+      };
+      window.storage.set('temSetting', temSetting);
 
       // 自动模式需要发送温度
-      // toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
+      toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
 
       // M3在WiFi处作了特殊处理，app要兼容
       if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {

@@ -366,15 +366,10 @@ export default {
     // 场景模式保存按钮
     sceneSave() {
       const remarks = '...';
-      const opt = JSON.parse(
-        this.devOptions.statueJson2
-      );
+      const opt = this.devOptions.statueJson2;
+      console.log(opt);
       const p = opt.map(item => {
-        // 兼容炫光
-        if (item === 'Dazzling') {
-          return this.Pow;
-        }
-        return this.dataObject[item];
+        return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
       });
 
       const json = JSON.stringify({ opt, p, t: 'cmd' });

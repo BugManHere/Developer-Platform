@@ -12,6 +12,7 @@ const indexRouter = require('./routes/index');
 const productTypeRouter = require('./routes/productType');
 const userDeviceRouter = require('./routes/userDevice');
 const templateRouter = require('./routes/template');
+const pluginRouter = require('./routes/plugin');
 
 const usersRouter = require('./routes/users');
 
@@ -52,7 +53,7 @@ app.use('/', indexRouter);
 app.use('/productType', productTypeRouter);
 app.use('/userDevice', userDeviceRouter);
 app.use('/template', templateRouter);
-// app.use('/https', httpsRouter);
+app.use('/plugin', pluginRouter);
 app.use('/users', usersRouter);
 
 // error handler
