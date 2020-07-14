@@ -236,8 +236,11 @@ export default {
     createTemplate() {
       const productID = this.deviceInfo.productID;
       const seriesID = this.deviceInfo.seriesID;
-      https.fetchPost('/template/create', {productID, seriesID})
-        .then(data => {
+      https.fetchPost('/template/create', {
+        productID, 
+        seriesID,
+        admin: this.admin, 
+      }).then(data => {
           if (data.status === 201) {
             this.$toast.info("创建成功");
             this.setTempModule(['templates', data.data]);
