@@ -38,8 +38,8 @@ axios.interceptors.response.use((res) =>{
         const vm = window.myvm;
         vm.$loading.hide();
         if (error.response && error.response.data) {
-            vm.$router.push('/Account/Login');
             vm.$toast.error(error.response.data);
+            error.response.status === 403 && vm.$router.push('/Account/Login');
         } else {
             vm.$toast.error('网络异常');
         }
