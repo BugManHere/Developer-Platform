@@ -10,11 +10,6 @@ yarn install
 yarn serve
 ```
 
-### 启动客户端（本地模式，需要本地有数据库文件）
-```
-yarn local
-```
-
 ### 启动服务器
 ```
 yarn start
@@ -23,6 +18,11 @@ yarn start
 ### 启动服务器与客户端
 ```
 yarn dev
+```
+
+### 启动服务器与客户端（本地模式，需要本地有数据库文件）
+```
+yarn local
 ```
 
 ### Compiles and minifies for production
