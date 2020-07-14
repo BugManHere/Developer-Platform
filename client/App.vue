@@ -19,6 +19,8 @@ export default {
     Header,
   },
   created() {
+    console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
+    
     if (localStorage.eleToken) {
       // 解析token
       const decoded = jwt_decode(localStorage.eleToken);

@@ -152,6 +152,7 @@ export default {
   },
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
+    const newWin = window.open('', 'pluginPage');
     const res = await https.fetchPost("/userDevice/done", {
       admin: state.userModule.admin, 
       id: state.devModule.deviceKey,
@@ -160,9 +161,8 @@ export default {
     });
     const status = res.status === 200;
     status && window.myvm.$toast.info('保存成功');
-    // const targetUrl = `http://www.cwzcloud.com:8081/#/Home?key=${state.devModule.deviceKey}`;
-    const targetUrl = `http://localhost:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
-    const newWin = window.open(targetUrl, 'pluginPage', '', true);
+    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
+    // window.open(targetUrl, 'pluginPage', '', true);
     newWin.location.href = targetUrl;
     return status;
   },

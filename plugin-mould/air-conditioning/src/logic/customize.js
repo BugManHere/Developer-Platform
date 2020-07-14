@@ -1,4 +1,4 @@
-import { timerListDevice, showLoading, sendDataToDevice } from '@PluginInterface';
+import { timerListDevice, showLoading } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
