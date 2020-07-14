@@ -16,15 +16,19 @@ const LogicDefine = {
     };
   },
   mounted() {
+    // console.log(window.storage.get('config'));
     const { key } = require('@/../plugin.id.json');
-    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = require(`@/../../../output/${key}.json`);
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = process.env.NODE_ENV === 'development' ? 
+      window.storage.get('config') :
+      require(`@/../../../output/${key}.json`);
     this.g_deviceName = deviceName;
     this.g_moreOption = moreOption;
     this.g_funcDefine = funcDefine;
     this.g_excludeMap = excludeMap;
     this.g_hideMap = hideMap;
     this.g_mid = productModel;
-    this.setState(['devOptions', {
+    
+    this.$store.state.devOptions.statueJson2 === '[]' && this.setState(['devOptions', {
       pluginVer: moreOption.pluginVer,
       mid: productModel,
       statueJson: JSON.stringify(moreOption.statueJson),

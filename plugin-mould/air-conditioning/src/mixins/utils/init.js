@@ -35,6 +35,11 @@ const mixin = {
      * @description 初始化，并将小卡片传进来的值赋予state
      */
     init() {
+      const { key } = require('@/../plugin.id.json');
+      const { moreOption } = process.env.NODE_ENV === 'development' ? 
+        window.storage.get('config') :
+        require(`@/../../../output/${key}.json`);
+
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
@@ -53,10 +58,11 @@ const mixin = {
       this.setMac(mac);
       this.getDeviceInfo(mac);
 
-      const key = JSON.parse(this.devOptions.statueJson2);
+      const jsonKey = moreOption.statueJson2;
       const DataObject = {};
 
-      key.forEach((item, index) => {
+      jsonKey.forEach((item, index) => {
+        console.log(item);
         DataObject[item] = Number(valArr[index]);
       });
       (DataObject.functype = functype) && (DataObject.OutHome = 0);

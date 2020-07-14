@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
 const Home = r =>
   require.ensure(
@@ -43,7 +44,7 @@ const Sleep = r =>
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
@@ -136,3 +137,21 @@ export default new Router({
     },
   ]
 });
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  // 如果点击了“预览效果”，就刷新页面
+  if (from.name && to.path === '/Loading') {
+    router.go(0);
+  }
+  // 顶栏颜色操作
+  let color = '#404040';
+  if (to.name === 'Error') {
+    color = '#ddd5a3';
+  } else if (to.name === 'Offline') {
+    color = window.myvm.$store.state.dataObject.Mod === window.myvm.$store.state.ModHeat ? '#f78d00' : '#6ba0e2';
+  }
+  changeBarColor(color);
+  next();
+});
+
+export default router;
