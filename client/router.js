@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
   const isLogin = localStorage.eleToken ? true : false;
   if (to.path == "/Account/Login") {
     next();
-  } else {
+  } else{
     isLogin ? next() : next("/Account/Login");
   }
 });
