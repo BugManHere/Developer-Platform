@@ -152,7 +152,7 @@ export default {
   async [SET_DEV_DONE]({ state, getters }) {
     const newWin = window.open('', 'pluginPage');
     // 前端先检验：如果权限不足，则不请求接口
-    if (state.userModule.user <= 2) {
+    if (state.userModule.user.identity <= 2) {
       await https.fetchPost("/userDevice/done", {
         admin: state.userModule.admin, 
         id: state.devModule.deviceKey,
