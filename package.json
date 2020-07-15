@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "serve": "node-dev server/app.js",
-    "local": "concurrently \"yarn start --mode local\" \"yarn serve\"",
+    "local": "concurrently \"yarn start --mode localserve\" \"yarn serve\"",
     "go": "concurrently \"yarn start\" \"yarn serve\""
   },
   "dependencies": {
