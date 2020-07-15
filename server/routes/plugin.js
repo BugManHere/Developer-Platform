@@ -18,7 +18,7 @@ router.get('/config', async function(req, res, next) {
   
   const funcDefine = device.funcImport.map(key => {
     return template.funcDefine.id(key);
-  })
+  }).filter(v => v);
 
   const output = {
     excludeMap: {},
