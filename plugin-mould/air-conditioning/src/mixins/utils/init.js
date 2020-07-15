@@ -45,10 +45,11 @@ const mixin = {
       console.log(`mac: ${mac}`);
 
       const valArr = JSON.parse(dataArr);
+      console.log('----------url传值-----------');
       console.log(dataArr);
 
       const functype = JSON.parse(getQueryStringByName('functype'));
-      console.log(`functype: ${functype}`);
+      console.log(`是否场景模式: ${Boolean(functype)}`);
 
       const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
       hasReportedForRepair === 'true'
@@ -62,15 +63,13 @@ const mixin = {
       const DataObject = {};
 
       jsonKey.forEach((item, index) => {
-        console.log(item);
         DataObject[item] = Number(valArr[index]);
       });
       (DataObject.functype = functype) && (DataObject.OutHome = 0);
       
-      console.log(DataObject);
       valArr && this.setCheckObject(DataObject);
       valArr && this.setDataObject(DataObject);
-      console.log('finish');
+      console.log('-------------init finish--------------');
     }
   }
 };
