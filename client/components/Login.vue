@@ -30,6 +30,7 @@
             type="submit"
             class="btn btn-primary"
             @click="submitForm('loginForm')"
+            @click.prevent
           >登录</button>
         </div>
       </form>
