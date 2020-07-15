@@ -97,7 +97,9 @@ export default {
             value: decoded.email
           });
           this.$toast.info('登录成功');
-          this.$router.push("/Home");
+          this.$nextTick(() => {
+            this.$router.push("/Home");
+          });
         } else {
           this.$toast.error(data);
         }
