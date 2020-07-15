@@ -58,12 +58,12 @@ async function createVue() {
     i18n
   });
   window.myvm = vm;
-  window.storage = new Storage();
-
+  
   console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
-
+  
   // 如果是开发模式，加载服务器/缓存配置
   if (dev) {
+    window.storage = new Storage();
     // 解析传入参数, id: 设备key, admin: 用户名
     let { id, admin } = router.currentRoute.query;
     const storage = window.storage;
@@ -88,10 +88,11 @@ async function createVue() {
       // 更新mac
       vm.$store.commit(SET_STATE, ['mac', oldId]);
     }
-
+    
     vm.$router.push('/Home');
   } else {
     vm.init();
+    window.storage = new Storage();
   }
 
   // 挂载到#app上
