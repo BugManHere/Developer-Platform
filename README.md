@@ -7,17 +7,17 @@ yarn install
 
 ### 启动客户端
 ```
-yarn serve
+yarn start
 ```
 
 ### 启动服务器
 ```
-yarn start
+yarn serve
 ```
 
 ### 启动服务器与客户端
 ```
-yarn dev
+yarn run
 ```
 
 ### 启动服务器与客户端（本地模式，需要本地有数据库文件，需要拷贝数据库的可以找我）
@@ -29,11 +29,3 @@ yarn local
 ```
 yarn build
 ```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
