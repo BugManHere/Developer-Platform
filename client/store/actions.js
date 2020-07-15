@@ -151,14 +151,16 @@ export default {
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
     const newWin = window.open('', 'pluginPage');
-    const res = await https.fetchPost("/userDevice/done", {
-      admin: state.userModule.admin, 
-      id: state.devModule.deviceKey,
-      funcImport: getters.funcImport,
-      moreOption: JSON.stringify(state.devModule.moreOption)
-    });
-    const status = res.status === 200;
-    status && window.myvm.$toast.info('保存成功');
+    // 前端先检验：如果权限不足，则不请求接口
+    if (state.userModule.user <= 2) {
+      await https.fetchPost("/userDevice/done", {
+        admin: state.userModule.admin, 
+        id: state.devModule.deviceKey,
+        funcImport: getters.funcImport,
+        moreOption: JSON.stringify(state.devModule.moreOption)
+      });
+    }
+    window.myvm.$toast.info('请在新窗口预览效果');
     const targetUrl = `${process.env.VUE_APP_SERVE_URL}:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
     // window.open(targetUrl, 'pluginPage', '', true);
     newWin.location.href = targetUrl;

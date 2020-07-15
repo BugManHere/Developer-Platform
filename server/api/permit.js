@@ -7,7 +7,6 @@ module.exports = (res, admin, root) => {
     if (user && user.identity <= root) {
       resolve(true);
     } else {
-      res.status(401).send('没有此权限');
       resolve(false);
     }
   })
