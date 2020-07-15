@@ -147,6 +147,8 @@ function getStatusOfDev({ state, commit }) {
         commit(SET_DATA_OBJECT, DataObject);
         lastObject = state.checkObject;
       }
+      console.log('--------------DataObject-------------');
+      console.log(DataObject);
       return DataObject;
     })
     .catch(err => {

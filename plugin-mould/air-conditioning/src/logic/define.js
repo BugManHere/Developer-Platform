@@ -16,7 +16,6 @@ const LogicDefine = {
     };
   },
   mounted() {
-    // console.log(window.storage.get('config'));
     const { key } = require('@/../plugin.id.json');
     const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = process.env.NODE_ENV === 'development' ? 
       window.storage.get('config') :
