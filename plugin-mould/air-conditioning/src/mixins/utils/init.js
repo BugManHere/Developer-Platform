@@ -36,9 +36,7 @@ const mixin = {
      */
     init() {
       const { key } = require('@/../plugin.id.json');
-      const { moreOption } = process.env.NODE_ENV === 'development' ? 
-        window.storage.get('config') :
-        require(`@/../../../output/${key}.json`);
+      const { moreOption } = require(`@/../../../output/${key}.json`);
 
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
