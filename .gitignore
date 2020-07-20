@@ -7,7 +7,7 @@ yarn-error.log*
 /babel.config.js
 
 .yarnrc
-plugin-mould/air-conditioning-new
+# plugin-mould/air-conditioning-b
 
 # lock
 package-lock.json

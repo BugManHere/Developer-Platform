@@ -1,0 +1,117 @@
+.page-electric {
+  .left-arrow .gree-icon.icon-font {
+    font-weight: 800;
+  }
+  .page {
+    .page-content {
+      .total-clean {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 20px 15px 20px;
+        span:last-child {
+          color: #00aeff;
+          text-decoration: underline;
+        }
+      }
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      background-color: white;
+      margin: 0;
+      padding: 30px 0px 30px 0px;
+      .btn {
+        width: 22%;
+        height: 0.72rem;
+        line-height: 0.72rem;
+        text-align: center;
+        color: #00aeff;
+        border: {
+          top: 2px solid #00aeff;
+          left: 0px;
+          bottom: 2px solid #00aeff;
+          right: 0px;
+        }
+      }
+      div:first-child {
+        border-left: 2px solid #00aeff;
+        border-right: 1px solid #00aeff;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+      div:last-child {
+        border-right: 2px solid #00aeff;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+      div:nth-child(2),
+      :nth-child(3) {
+        border-right: 1px solid #00aeff;
+      }
+    }
+    .chart-bg {
+      background-color: white;
+      .chart-block {
+        background-color: #6ac8f4;
+        height: 64vw;
+        margin: 0 6% 20px 6%;
+        border-radius: 20px;
+        .unit-txt {
+          z-index: 10;
+          position: absolute;
+          right: 1%;
+          bottom: 9px;
+          color: white;
+          font-size: 30px;
+        }
+        .chart-canves {
+          z-index: 10;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 64vw;
+        }
+        .total-day {
+          position: absolute;
+          display: flex;
+          justify-content: space-between;
+          width: 94%;
+          height: 50px;
+          top: 5%;
+          color: white;
+          font-size: 36px;
+          span:first-child,
+          :last-child {
+            margin: 0 5% 0 5%;
+          }
+        }
+        .gree-divider {
+          z-index: 200;
+          position: absolute;
+          top: 10%;
+          width: 88%;
+          margin: 4%;
+          background-color: white;
+        }
+        .isNoData {
+          z-index: 7;
+          position: absolute;
+          top: 50%;
+          width: 94%;
+          color: #f4f4f4;
+          text-align: center;
+          font-size: 0.5rem;
+        }
+      }
+      .tip {
+        height: 80px;
+        background-color: white;
+        justify-content: center;
+        align-items: center;
+        color: #a3a5ac;
+        font-size: 36px;
+      }
+    }
+  }
+}

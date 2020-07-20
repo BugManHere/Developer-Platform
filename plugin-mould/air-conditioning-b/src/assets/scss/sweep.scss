@@ -1,0 +1,28 @@
+.page-sweep {
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  background-color: #fff;
+  .page-content {
+    overflow: hidden;
+  }
+  .gree-sweep-select {
+    position: absolute;
+    left: 0;
+  }
+  .point-text {
+    pointer-events: none;
+    position: absolute;
+    bottom: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    p {
+      color: #8c8c8c;
+      font-size: 40px;
+    }
+  }
+}
