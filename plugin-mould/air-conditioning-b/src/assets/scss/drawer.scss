@@ -1,0 +1,40 @@
+.drawer-wrapper {
+    .pull-down {
+      padding-top: 8px;
+      width: 100%;
+      text-align: center;
+      .img {
+        width: 0.5rem;
+      }
+    }
+    .btn-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+      .foot-list,
+      .advanced-funtion {
+        padding: 0.2rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 25%;
+        .function-img,
+        .advanced-img {
+          width: 1.61rem;
+          height: 1.61rem;
+        }
+        .moreContent {
+          width: 0.2rem;
+        }
+        .function-name,
+        .advanced-name {
+          padding-bottom: 0.01rem;
+          font-size: 0.42rem;
+        }
+        .advanced-more {
+          padding-left: 0.3rem;
+        }
+      }
+    }
+  }
