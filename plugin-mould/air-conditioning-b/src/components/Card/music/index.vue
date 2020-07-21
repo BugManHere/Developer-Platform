@@ -1,7 +1,14 @@
 <template>
-  <div class="card-music">
+  <div
+    class="card-music"
+    :style="{height: `${cradHeight}px`}"
+  >
     <!-- 标题 -->
-    <div class="music-header">
+    <div 
+      class="music-header"
+      @touchstart="startDrag"
+      @touchmove="dragCard"
+    >
       <!-- 左边文字 -->
       <div class="left">
         <div v-text="'点播'" @click="imshowType = 0" :class="{select: imshowType === 0}"/>
@@ -15,33 +22,60 @@
     </div>
     <!-- 内容 -->
     <div class="music-main">
-      <songList />
+      <div :is="['songList', 'voiceSkill'][imshowType]"/>
     </div>
   </div>
 </template>
 
 <script>
-import songList from './songList'
+import songList from './songList';
+import voiceSkill from './voiceSkill';
 
 export default {
   components: {
-    songList
+    songList,
+    voiceSkill,
   },
   data() {
     return {
       imshowType: 0, // 0：点播, 1：技能
+      headerPos: 0,
+      headerMove: 0,
+      baseHeight: 0
+    };
+  },
+  computed: {
+    // 卡片高度
+    cradHeight() {
+      if (this.headerMove < 0) return this.baseHeight;
+      const result = this.baseHeight + this.headerMove;
+      if (result / document.documentElement.clientHeight * 1920 >= 1800) return 1800 * document.documentElement.clientHeight / 1920;
+      return result;
     }
+  },
+  mounted() {
+    this.baseHeight = document.documentElement.clientHeight / 1920 * 1251;
+  },
+  methods: {
+    startDrag(e) {
+      if (this.headerPos) return;
+      this.headerPos = e.changedTouches[0].pageY;
+    },
+    dragCard(e) {
+      const moveY = this.headerPos - e.changedTouches[0].pageY;
+      this.headerMove = moveY;
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .card-music {
-  $height: calc(100vh - 669px);
+  position: absolute;
+  bottom: 0;
   $headerHeight: 142px; 
   $mainHeight: calc(100vh - 669px - 142px - 190px);
   $fontSize: 44px;
-  height: $height;
   width: 100%;
   background: #fff;
   border-radius: 100px;

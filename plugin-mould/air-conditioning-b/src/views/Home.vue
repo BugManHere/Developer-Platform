@@ -4,8 +4,7 @@
       no-navbar 
       class="page-home">
       <!-- 头部 -->
-      <div 
-        class="page-header">
+      <div class="page-header">
         <gree-header 
           theme="transparent"
           :left-options="{ preventGoBack: true }" 
@@ -60,15 +59,13 @@ import {
   editDevice, 
   changeBarColor, 
   getCCcmd, 
-  startVoiceMainActivity, 
-  showLoading, 
   getCurrentMode, 
   // getMsg 
 } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import homeConfig from '@/mixins/config/home.js';
 import LogicDefine from '@/logic/define';
-import musicCard from '@components/Card/music/index';
+import musicCard from '@/components/Card/music/index';
 
 export default {
   components: {

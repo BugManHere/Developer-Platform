@@ -1,0 +1,95 @@
+{
+  "header":{
+      "sessionId":"1595292742185752_iyRZJP5vmeAJC",
+      "code":200,
+      "message":"业务服务返回消息:OK"
+  },
+  "payload":{
+      "errorCode":0,
+      "errorMsg":"",
+      "data":{
+          "playlists":[
+              {
+                  "playlistId":"collection_3_1161594453_329_0",
+                  "playlistName":"【甜美旋律】激发宝宝想象力",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200720/20200720141122225461.jpg",
+                  "updateTime":"2020-07-20 00:00:00",
+                  "createTime":"2020-07-20 00:00:00",
+                  "intro":"研究表明,宝宝越早接触音乐,对宝宝智力的开放越有好处。音乐启蒙教育不仅能让 宝宝的听觉变得敏锐,还可以激发宝宝的想象力,提升宝宝智力!"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_331_0",
+                  "playlistName":"【音乐感知唤醒课】丰富宝宝的听觉神经",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200720/20200720142857753276.jpg",
+                  "updateTime":"2020-07-20 00:00:00",
+                  "createTime":"2020-07-20 00:00:00",
+                  "intro":"音乐可以通过听觉进入孩子的潜意识，进而对孩子的性格、审美产生良性影响，能给孩子带来温暖和快乐，帮助孩子更好的认识世界。以下这份歌单作品中涵盖了爵士、Blues、Funknown、Flamenco、爱尔兰民谣等20多种音乐风格，充分丰富宝宝的听觉神经，为孩子打开炫丽听觉世界的大门。"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_330_0",
+                  "playlistName":"双语幼教：80首英语游戏儿歌",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200720/20200720151922932320.jpg",
+                  "updateTime":"2020-07-20 00:00:00",
+                  "createTime":"2020-07-20 00:00:00",
+                  "intro":"80首英语游戏儿 歌，让孩子在游戏玩耍中快乐的学习英语知识！"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_326_0",
+                  "playlistName":"【Y星人】培养生活好习惯NO.2",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200717/20200717133126846761.jpg",
+                  "updateTime":"2020-07-17 00:00:00",
+                  "createTime":"2020-07-17 00:00:00",
+                  "intro":"《生活好习惯》是一张健康百科类儿童亲子音乐专辑，歌曲欢快的节奏感中，旋律俏皮动听，歌词内容将健康小常识、生活好习惯融入其中，让孩子被音乐吸引的同时还能培养他们关注健康的意识。"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_327_0",
+                  "playlistName":"白雪公主的故事",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200717/20200717160331674393.jpg",
+                  "updateTime":"2020-07-17 00:00:00",
+                  "createTime":"2020-07-17 00:00:00",
+                  "intro":"白雪公主是欧洲的一个童话，讲述了白雪公主受到继母的虐待，逃到森林里与七个小矮人生活，后被王后设计吃下毒苹果陷入永久的昏厥，直到一位白马王子经过这里，真爱的力量唤醒了白雪公主，从此王子和公主幸福的生活在一起！"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_328_0",
+                  "playlistName":"科普认知",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200717/20200717161340738295.jpg",
+                  "updateTime":"2020-07-17 00:00:00",
+                  "createTime":"2020-07-17 00:00:00",
+                  "intro":"本专辑详细讲解了日常生活中的各种疑问！"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_323_0",
+                  "playlistName":"【胎教轻音】提高宝宝感知能力",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200716/20200716150950674040.jpg",
+                  "updateTime":"2020-07-16 00:00:00",
+                  "createTime":"2020-07-16 00:00:00",
+                  "intro":"轻音乐最能调节情绪，陶冶情操，以下是小编为大家推荐的适合孕妇的轻音乐，希望孕妈妈们能够喜欢！"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_324_0",
+                  "playlistName":"家传户晓的经典粤语儿歌",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200716/20200716152935414115.jpg",
+                  "updateTime":"2020-07-16 00:00:00",
+                  "createTime":"2020-07-16 00:00:00",
+                  "intro":"家传户晓的经典粤语儿歌，让孩子边听儿歌边学粤语！"
+              },
+              {
+                  "playlistId":"collection_3_803133159_199_0",
+                  "playlistName":"假期亲子游 | 听着小曲赏美景",
+                  "pic":"http://c1.kgimg.com/custom/480/20200716/20200716111656517130.jpg",
+                  "updateTime":"2020-07-16 00:00:00",
+                  "createTime":"2020-07-16 00:00:00",
+                  "intro":"假期亲情一家游，开着车听着歌，带着自己的宝宝。一路欣赏周边的风景，相信这种幸福的画面很多人都羡慕吧。"
+              },
+              {
+                  "playlistId":"collection_3_1161594453_318_0",
+                  "playlistName":"【美国亲子杂志力荐】幼教英语儿歌",
+                  "pic":"http://imge.kugou.com/soft/collection/480/20200714/20200714111041811558.jpg",
+                  "updateTime":"2020-07-14 00:00:00",
+                  "createTime":"2020-07-14 00:00:00",
+                  "intro":"现在孩子学英语的年龄是越来越早了，但学校里要等小学一年级、三年级才开始教，所以，今天为大家推荐这张美国亲子杂志推荐的幼儿英语儿歌，让宝宝更早的接触英语，为将来打好基础！"
+              }
+          ]
+      }
+  }
+}
