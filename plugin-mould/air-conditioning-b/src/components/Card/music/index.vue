@@ -7,7 +7,7 @@
     <div 
       class="music-header"
       @touchstart="startDrag"
-      @touchmove="dragCard"
+      @touchmove.prevent="dragCard"
     >
       <!-- 左边文字 -->
       <div class="left">
@@ -21,8 +21,8 @@
       </div>
     </div>
     <!-- 内容 -->
-    <div class="music-main">
-      <div :is="['songList', 'voiceSkill'][imshowType]"/>
+    <div class="music-main" :style="{height: `${cradMainHeight}px`}">
+      <div :is="['songList', 'voiceSkill'][imshowType]" :card-height="cradHeight"/>
     </div>
   </div>
 </template>
@@ -50,6 +50,11 @@ export default {
       if (this.headerMove < 0) return this.baseHeight;
       const result = this.baseHeight + this.headerMove;
       if (result / document.documentElement.clientHeight * 1920 >= 1800) return 1800 * document.documentElement.clientHeight / 1920;
+      return result;
+    },
+    // 卡片高度
+    cradMainHeight() {
+      const result = this.cradHeight - 117;
       return result;
     }
   },
@@ -118,6 +123,9 @@ export default {
   .music-main {
     position: relative;
     height: $mainHeight;
+  }
+  ::-webkit-scrollbar {
+    display: none;
   }
 }
 

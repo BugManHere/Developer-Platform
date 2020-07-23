@@ -22,10 +22,13 @@
         @focus="searchBarOnFocus = true"
         @blur="searchBarOnFocus = false"/>
       <div class="content" v-for="(list, key) in playMap" :key="key">
-        <div class="content-header" v-text="'儿童'"/>
+        <div class="content-header" v-text="'儿童'" @click="checkCollect"/>
         <div class="content-body">
-          <div class="content-card" v-for="index in 3" :key="index">
-            <img src="@assets/img/music/test1.jpg">
+          <div class="content-card" v-for="index in 10" :key="index" @click="checkDetail(key, index - 1)">
+            <img :src="list[index - 1].pic">
+            <span v-text="list[index - 1].playlistName.substr(0, 8)"/>
+            <span v-text="list[index - 1].playlistName.substr(8, 8).length > 6 ? `${list[index - 1].playlistName.substr(8, 7)}...` : list[index - 1].playlistName.substr(8, 8)"/>
+            <!-- <span v-text="list[index - 1].intro.length > 8 ? `${list[index - 1].intro.slice(0, 7)}...` : list[index - 1].intro"/> -->
           </div>
         </div>
       </div>
@@ -35,7 +38,7 @@
 
 <script>
 import { Button, SearchBar, Icon } from 'gree-ui';
-import { mapActions } from 'vuex';
+import { mapState ,mapActions, mapMutations } from 'vuex';
 
 export default {
   components: {
@@ -43,14 +46,24 @@ export default {
     [SearchBar.name]: SearchBar,
     [Icon.name]: Icon,
   },
+  props: {
+    cardHeight: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
       isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
       categoryList: [],
-      playMap: {}
     };
+  },
+  computed: {
+    ...mapState({
+      playMap: state => state.musicData.playMap,
+    }),
   },
   watch: {
     isLogin: {
@@ -59,25 +72,42 @@ export default {
           const category = await this.getCategory();
           this.categoryList = category.data.groups;
           const awesome = await this.getAwesome();
-          this.$set(this.playMap, 1110, awesome.data.playlists)
-          console.log(this.categoryList);
-          console.log(this.playMap);
+          const playMap = {
+            1110: awesome.data.playlists
+          }
+          this.setMusicData({playMap});
         }
       },
       immediate: true
     }
   },
   methods: {
+    ...mapMutations({
+      setMusicData: 'SET_MUSIC_DATA',
+    }),
     ...mapActions({
       getCategory: 'GET_CATEGORY',
       getAwesome: 'GET_AWESOME',
     }),
+    checkCollect() {
+      this.$router.push('MusicCollect');
+    },
+    checkDetail(key, index) {
+      this.$router.push({
+        name: 'MusicDetail',
+        params: {
+          key,
+          index
+        }
+      });
+    }
   },
 };
 </script>
 
 <style lang="scss">
 .song-list {
+  overflow: scroll;
   $fontSize: 44px;
   width: 100%;
   height: 100%;
@@ -118,9 +148,12 @@ export default {
     }
   }
   .list-main {
+    height: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    overflow-y: scroll;
+    overflow-x: hidden;
     .gree-search-bar {
       width: 90%;
       .gree-search-bar__content {
@@ -133,22 +166,23 @@ export default {
       }
     }
     .content {
-      $contentHeight: 500px;
+      $contentHeight: 520px;
       $contentHeaderHeight: 60px;
       $contentHeaderPadding: 20px;
       height: $contentHeight;
       width: 100%;
       border-bottom: 1px solid #f0f0f0;
       .content-header {
-        padding: $contentHeaderPadding;
+        padding: $contentHeaderPadding 35px;
         padding-bottom: 0;
         height: $contentHeaderHeight;
-        font-size: 20px;
+        font-size: $fontSize;
         display: flex;
         justify-content: space-between;
+        font-weight: 700;
         &::after {
           content: '更多';
-          padding-right: 30px;
+          padding-right: 40px;
         }
         &::before  {
           font-family: Gree-UI-Icon!important;
@@ -159,18 +193,38 @@ export default {
         }
       }
       .content-body {
+        $contentPaddingTop: 20px;
+        padding-top: $contentPaddingTop;
+        padding-left: $contentPaddingTop;
         width: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         flex-wrap: nowrap;
-        height: $contentHeight - $contentHeaderHeight - $contentHeaderPadding;
+        height: $contentHeight - $contentHeaderHeight - $contentHeaderPadding - $contentPaddingTop;
+        overflow-x: auto;
+        overflow-y: hidden;
         .content-card {
           display: flex;
-          justify-content: center;
-          width: 33%;
+          flex-direction: column;
+          align-items: center;
+          width: 30%;
+          padding-right: 45px;
           img {
             width: 300px;
             height: 300px;
+            border-radius: 20px;
+          }
+          span {
+            font-size: 36px;
+            width: 100%;
+
+            text-overflow: -o-ellipsis-lastline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
         }
       }

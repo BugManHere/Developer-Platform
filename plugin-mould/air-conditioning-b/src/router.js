@@ -41,6 +41,10 @@ const Loop = r =>
   require.ensure([], () => r(require('./views/functionPage/Loop')));
 const Sleep = r =>
   require.ensure([], () => r(require('./views/functionPage/Sleep')));
+const MusicCollect = r =>
+  require.ensure([], () => r(require('./../src/components/Card/music/page/collect.vue')));
+const MusicDetail = r =>
+  require.ensure([], () => r(require('./../src/components/Card/music/page/detail.vue')));
 
 Vue.use(Router);
 
@@ -50,7 +54,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Home'
+      redirect: '/MusicCollect'
     },
     {
       path: '/Home',
@@ -134,6 +138,16 @@ const router = new Router({
       path: '/Sleep',
       name: 'Sleep',
       component: Sleep
+    },
+    {
+      path: '/MusicCollect',
+      name: 'MusicCollect',
+      component: MusicCollect
+    },
+    {
+      path: '/MusicDetail',
+      name: 'MusicDetail',
+      component: MusicDetail
     },
   ]
 });

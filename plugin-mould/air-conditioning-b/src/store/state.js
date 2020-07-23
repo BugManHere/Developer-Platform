@@ -43,6 +43,9 @@ const state = {
     weekChart: null, // 每天
     monthChart: null, // 每月
     yearChart: null // 每年
+  },
+  musicData: {
+    playMap: {}
   }
 };
 export default state;

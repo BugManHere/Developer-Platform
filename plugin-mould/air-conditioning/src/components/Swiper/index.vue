@@ -8,7 +8,7 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
-      :class="{'swiper-no-swiping': noSwiping}"
+      :class="{'swiper-no-swiping': noSwiping || (swiperHold && swiperHold !== slidesData.key)}"
       v-show="!isShowText"
     >
       <swiper-slide 
@@ -105,12 +105,10 @@ export default {
       }, 20);
     },
     swiperHold(newVal) {
+      console.log('-----swiperHold------');
+      console.log(newVal);
       const key = this.slidesData.key;
-      if (newVal) {
-        newVal === key || this.banTouch(true);
-        return;
-      }
-      this.banTouch(false);
+      if (newVal) return;
       if (this.swiperPerView[key] && this.swiperPerView[key].length) {
         while (this.swiperPerView[key].length) {
           const swiper = this.swiperPerView[key].pop();

@@ -22,7 +22,15 @@ export default {
     return true;
   },
   [type.SET_CHECK_OBJECT](state, obj) {
-    state.checkObject = { ...state.checkObject, ...obj };
+    const map = {};
+    Object.keys(obj).forEach(key => {
+      map[key] = Number(obj[key]);
+    });
+    state.checkObject = { ...state.checkObject, ...map };
+    return true;
+  },
+  [type.SET_MUSIC_DATA](state, obj) {
+    state.musicData = { ...state.musicData, ...obj };
     return true;
   },
   [type.SET_STATE](state, [key, value]) {
