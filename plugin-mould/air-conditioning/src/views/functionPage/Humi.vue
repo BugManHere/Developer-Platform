@@ -29,6 +29,7 @@
           <gree-button round type="default" style="width: 50%" :disabled="Humi===70" @click="changeHumiValue('add')">+</gree-button>
         </gree-col>
       </gree-row>
+      <div style="display:none">{{errStatus}}</div>
     </gree-page>
   </gree-view>
 </template>
@@ -49,6 +50,7 @@ import {
 } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
+import errorConfig from '@/mixins/utils/error'
 
 export default {
   name: 'Dazzling',
@@ -65,6 +67,7 @@ export default {
     [Col.name]: Col,
     [Button.name]: Button,
   },
+  mixins: [errorConfig],
   data() {
     return {
       isActive: true

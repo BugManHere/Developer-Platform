@@ -45,6 +45,7 @@ function sendControl({ state, commit }, dataMap) {
       }
     });
     setData = {};
+    
     if (!setOpt.length) return;
     const mac = state.mac;
     const t = 'cmd';
@@ -54,16 +55,17 @@ function sendControl({ state, commit }, dataMap) {
     console.table([opt, p]);
     
     // 8度制热相关操作
-    state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
-    if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
-      setOpt.push('AssHt');
-      setP.push(1);
-    } else if (!setOpt.includes('StHt')) {
-      setOpt.push('StHt');
-      setP.push(0);
-    }
+    // state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
+    // if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
+    //   setOpt.push('AssHt');
+    //   setP.push(1);
+    // } else if (!setOpt.includes('StHt')) {
+    //   setOpt.push('StHt');
+    //   setP.push(0);
+    // }
     
     const json = JSON.stringify({ mac, t, opt, p });
+    console.log('json', json);
     
     if (state.dataObject.functype || !state.ableSend) {
       commit(SET_STATE, ['uilock', false]); // ui锁
@@ -71,7 +73,7 @@ function sendControl({ state, commit }, dataMap) {
     }
     commit(SET_STATE, ['watchLock', true]);
     commit(SET_STATE, ['ableSend', false]);
-
+    
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
         // 发送指令后暂停接收，过8秒后重启轮询

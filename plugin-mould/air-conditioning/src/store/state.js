@@ -21,7 +21,11 @@ const state = {
     CO2: 401,
     SmartSlpModEx: 0,
     FreshAirConditionState: 0,
-    Humi: 0
+    Humi: 0,
+    ErrCode1: 0,
+    ErrCode2: 0,
+    JFerr: 0,
+    ErrCodeType: 0
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

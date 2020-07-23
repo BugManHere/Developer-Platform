@@ -1,58 +1,118 @@
 /**
  * @description 故障配置
  */
+import { mapState, mapMutations } from 'vuex';
+import errorList from '@/utils/error';
+
 const errorConfig = {
   data() {
     return {
-      errorList: {
-        E1: this.$language('error.notify_fault_name_E1'),
-        E2: this.$language('error.notify_fault_name_E2'),
-        E3: this.$language('error.notify_fault_name_E3'),
-        E4: this.$language('error.notify_fault_name_E4'),
-        E5: this.$language('error.notify_fault_name_E5'),
-        E6: this.$language('error.notify_fault_name_E6'),
-        E7: this.$language('error.notify_fault_name_E7'),
-        E8: this.$language('error.notify_fault_name_E8'),
-        F1: this.$language('error.notify_fault_name_F1'),
-        F2: this.$language('error.notify_fault_name_F2'),
-        F3: this.$language('error.notify_fault_name_F3'),
-        F4: this.$language('error.notify_fault_name_F4'),
-        F5: this.$language('error.notify_fault_name_F5'),
-        F6: this.$language('error.notify_fault_name_F6'),
-        F8: this.$language('error.notify_fault_name_F8'),
-        F9: this.$language('error.notify_fault_name_F9'),
-        PH: this.$language('error.notify_fault_name_PH'),
-        U5: this.$language('error.notify_fault_name_U5'),
-        P5: this.$language('error.notify_fault_name_P5'),
-        L3: this.$language('error.notify_fault_name_L3'),
-        Fo: this.$language('error.notify_fault_name_Fo'),
-        H3: this.$language('error.notify_fault_name_H3'),
-        H4: this.$language('error.notify_fault_name_H4'),
-        H5: this.$language('error.notify_fault_name_H5'),
-        HC: this.$language('error.notify_fault_name_HC'),
-        H7: this.$language('error.notify_fault_name_H7'),
-        H0: this.$language('error.notify_fault_name_H0'),
-        Lc: this.$language('error.notify_fault_name_Lc'),
-        U1: this.$language('error.notify_fault_name_U1'),
-        EE: this.$language('error.notify_fault_name_EE'),
-        PU: this.$language('error.notify_fault_name_PU'),
-        P7: this.$language('error.notify_fault_name_P7'),
-        P8: this.$language('error.notify_fault_name_P8'),
-        U3: this.$language('error.notify_fault_name_U3'),
-        PL: this.$language('error.notify_fault_name_PL'),
-        LE: this.$language('error.notify_fault_name_LE'),
-        EU: this.$language('error.notify_fault_name_EU'),
-        U7: this.$language('error.notify_fault_name_U7'),
-        En: this.$language('error.notify_fault_name_En'),
-        FH: this.$language('error.notify_fault_name_FH'),
-        FC: this.$language('error.notify_fault_name_FC'),
-        F0: this.$language('error.notify_fault_name_F0'),
-        oE: this.$language('error.notify_fault_name_oE'),
-        e6: this.$language('error.notify_fault_name_e6'),
-        H6: this.$language('error.notify_fault_name_H6'),
-        Uo: this.$language('error.notify_fault_name_Uo')
-      }
+      errorList,
+      errMsg: '', // 故障文字
+      warnMsg: '', // 提醒文字
     };
+  },
+
+  computed: {
+    ...mapState({
+      ErrCode1: state => state.dataObject.ErrCode1,
+      ErrCode2: state => state.dataObject.ErrCode2,
+      JFerr: state => state.dataObject.JFerr,
+      ErrCodeType: state => state.dataObject.ErrCodeType,
+    }),
+
+    /**
+     * @description 检测是否有故障
+     */
+    errStatus() {
+      let errState;
+      const isError = this.ErrCode1 || this.ErrCode2 || this.JFerr ;
+      if (isError) {
+        errState = true;
+        if(this.$route.name === 'Error') {
+          this.updateError(); // 如果当前页是故障页，则显示长List 方法去故障页看
+          return errState;
+        } else {
+          this.updataErrMsg()
+        }
+      } else {
+        errState = false;
+      }
+      this.changeRoute(errState)
+      return errState;
+    }
+  },
+  watch: {
+
+  },
+  methods:{
+    ...mapMutations({
+      setDataObject: 'SET_DATA_OBJECT',
+    }),
+    changeRoute(value){
+      if (!value && this.$route.name === 'Error') {
+        this.$router.push({ name: 'Home' });
+        return;
+      } 
+      // 非故障页 需要跳故障页
+      const err2ToErr = this.getErr2toErrorStatus()
+      
+      const toErrorPage = (this.ErrCode1 || this.JFerr || err2ToErr) && this.$route.name !== 'Error'
+      
+      if(toErrorPage){
+        this.$router.push({ name: 'Error' });
+      }
+    },
+
+
+    /**
+     * @description 判断err2 是否需要跳故障页
+     */
+    getErr2toErrorStatus() {
+      if (this.ErrCode2) {
+        let toError = false
+        const err2IndexList = this.HandleErrorCode(this.ErrCode2)
+        // 如果是第0位或第四位需要跳故障页
+        toError = Boolean(err2IndexList.includes(0) || err2IndexList.includes(4))
+        this.setDataObject({ErrCodeType: !toError >> 0});
+        return toError
+      } else {
+        return false
+      }
+    },
+
+    /**
+     * @description 获取需要显示的errMsg
+     */
+    updataErrMsg() {
+      if(this.ErrCode1 || this.JFerr) return
+      let msg = [];
+      msg = this.HandleErrorCode(this.ErrCode2);
+      if( msg.length > 0){
+        this.errMsg = `故障:  ${this.errorList.ErrCode2[msg[0]].code}, ${
+          this.$language(`error.${this.errorList.ErrCode2[msg[0]].title}`)
+        }。 `;
+      }
+    },
+
+    /**
+     * @description 十进制转2进制下标
+     * @function HandleErrorCode
+     * @param { number} value 传入的十进制数 
+     * @return eg 13 => [0, 1, 3]
+     */
+    HandleErrorCode(value){
+      let errorCode = value;
+      errorCode = String(errorCode.toString(2));
+      const errorCodeList = errorCode.split('').reverse();
+      const indexList = [];
+      for (let index = 0; index < errorCodeList.length; index++) {
+        if (errorCodeList[index] === '1') {
+          indexList.push(index);
+        }
+      }
+      return indexList;
+    },
   }
 };
 

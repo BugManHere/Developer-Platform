@@ -726,7 +726,7 @@
       "_id": "5f0415c940734e4054874b9b",
       "name": "故障",
       "identifier": "ErrCode2",
-      "json": "ErrCode2",
+      "json": "ErrCodeType",
       "type": "inertia",
       "statusDefine": {
         "default": {

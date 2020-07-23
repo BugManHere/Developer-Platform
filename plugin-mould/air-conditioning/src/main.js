@@ -94,7 +94,7 @@ const VConsole = require('vconsole/dist/vconsole.min.js');
 new VConsole();
 // }
 
-console.log('---------V1.0.1---------------');
+console.log('---------V1.0.2---------------');
 
 
 dev ? createVue() : '';

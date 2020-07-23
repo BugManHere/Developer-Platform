@@ -46,14 +46,13 @@ const mixin = {
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
-      console.log('-----aaa---');
-      console.log('location.href', location.href);
+      console.log('location.href:', location.href);
       let FreshAirConditionState = 0;
       try {
         FreshAirConditionState = getQueryStringByName('FreshAirConditionState');
-        console.log('FreshAirConditionState', FreshAirConditionState);
+        console.log('是否跳设备状态页', FreshAirConditionState);
       } catch (error) {
-        console.log('-------------', error);
+        console.log('---拿不到跳设备状态的值----', error);
       }
 
       const valArr = JSON.parse(dataArr);

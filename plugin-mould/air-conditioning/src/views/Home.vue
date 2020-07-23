@@ -45,6 +45,20 @@
         </div>
         <!-- 模式滑轮 -->
         <modeSwiper v-if="Pow && !loading" key="modeSwiper"/>
+
+        <!-- 故障提示 -->
+        <gree-notice-bar
+          scrollable
+          v-show="errStatus"
+          class="notice-bar"
+          icon="warning"
+        >{{ errMsg }}
+          <router-link to="/Error">
+            <span class="err-detail">
+              查看详情
+            </span>
+          </router-link>
+        </gree-notice-bar>
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
@@ -122,6 +136,7 @@ import modeSwiper from '@/components/Swiper/mode';
 import temSwiper from '@/components/Swiper/tem';
 import fanSwiper from '@/components/Swiper/fan';
 import airFanSwiper from '@/components/Swiper/airFan';
+import errorConfig from '@/mixins/utils/error'
 
 export default {
   components: {
@@ -139,7 +154,7 @@ export default {
     fanSwiper,
     airFanSwiper,
   },
-  mixins: [homeConfig, LogicDefine],
+  mixins: [homeConfig, LogicDefine, errorConfig],
   data() {
     return {
       onTestFlag: 0,

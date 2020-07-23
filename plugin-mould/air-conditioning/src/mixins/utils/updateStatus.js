@@ -23,10 +23,10 @@ const updateStatus = {
   },
   watch: {
     /**
-     * @description 设备离线时跳转离线页面
+     * @description 设备离线时跳转离线页面 特殊的 状态查询页 不跳Status
      */
     isOffline(newV) {
-      if (newV === -1) {
+      if (newV === -1 && this.$route.name !== 'Status') {
         this.$router.push({ name: 'Offline' }).catch(err => { err; });
       }
     },
@@ -35,7 +35,6 @@ const updateStatus = {
      */
     FreshAirConditionState(newV) {
       if (newV) {
-        console.log('-------watch--------');
         this.$router.push({ name: 'Status' }).catch(err => { err; });
       }
     },

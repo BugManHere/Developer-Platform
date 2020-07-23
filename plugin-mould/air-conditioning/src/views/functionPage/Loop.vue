@@ -10,7 +10,7 @@
           </gree-col>
         </gree-row>
       </div>
-
+      <div style="display:none">{{errStatus}}</div>
     </gree-page>
   </gree-view>
 </template>
@@ -21,6 +21,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import {
   showToast
 } from '@PluginInterface';
+import errorConfig from '@/mixins/utils/error'
 
 export default {
   name: 'Dazzling',
@@ -36,6 +37,7 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
   },
+  mixins: [errorConfig],
   data() {
     return {
       LoopModList: ['全新风', '混合风'],

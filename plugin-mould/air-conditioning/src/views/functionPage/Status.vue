@@ -1,37 +1,41 @@
 <template>
   <gree-view bg-color="#404040">
+    <gree-header @on-click-back="clickBack" :left-options="{ preventGoBack: true }" >{{ $language('btn.LoopMod') }}</gree-header>
     <gree-page class="page-status">
-      <gree-header>{{ $language('btn.LoopMod') }}</gree-header>
-      <h3 class="headline" style="border-top: 1px solid #D6D6D6">机组运行状态</h3>
-      <gree-list>
-        <gree-list-item title="运行模式" :text="ModStatus" media-item />
-        <gree-list-item title="风挡状态" :text="WdSpdStatus" media-item />
-        <gree-list-item title="循环模式" :text="LoopModStatus" media-item />
-        <gree-list-item title="室外环境温度" :text="OutEnvTemStatus" media-item />
-        <gree-list-item title="室内回风温度" :text="InAirTemStatus" media-item />
-        <gree-list-item title="室内回风湿度" :text="InAirHumiStatus" media-item />
-        <gree-list-item title="送风温度" :text="WdSupTemStatus" media-item />
+      <div class="status">
+        <h3 class="headline" style="border-top: 1px solid #D6D6D6">机组运行状态</h3>
+        <gree-list>
+          <gree-list-item title="运行模式" :text="ModStatus" media-item />
+          <gree-list-item title="风挡状态" :text="WdSpdStatus" media-item />
+          <gree-list-item title="循环模式" :text="LoopModStatus" media-item />
+          <gree-list-item title="室外环境温度" :text="OutEnvTemStatus" media-item />
+          <gree-list-item title="室内回风温度" :text="InAirTemStatus" media-item />
+          <gree-list-item title="室内回风湿度" :text="InAirHumiStatus" media-item />
+          <gree-list-item title="送风温度" :text="WdSupTemStatus" media-item />
         <!-- <gree-list-item
           title="实时耗电量"
           :text="ActualElecStatus"
           footer="实时耗电量数据仅供查考"
           media-item 
         /> -->
-      </gree-list>
+        </gree-list>
 
-      <h3 class="headline">空气品质状态</h3>
-      <gree-list>
-        <gree-list-item title="送风PM2.5浓度" :text="WdSupPMStatus" media-item />
-        <gree-list-item title="回风CO2浓度" :text="AirCO2Status" media-item />
-      </gree-list>
+        <h3 class="headline">空气品质状态</h3>
+        <gree-list>
+          <gree-list-item title="送风PM2.5浓度" :text="WdSupPMStatus" media-item />
+          <gree-list-item title="回风CO2浓度" :text="AirCO2Status" media-item />
+        </gree-list>
 
-      <h3 class="headline">滤网状态</h3>
-      <gree-list>
-        <gree-list-item title="新风粗效滤网" :text="SieveStateBit3" media-item />
-        <gree-list-item title="回风粗效滤网" :text="SieveStateBit2" media-item />
-        <gree-list-item title="高效滤网" :text="SieveStateBit1" media-item />
-        <gree-list-item title="换热芯体" :text="SieveStateBit0" media-item />
-      </gree-list>
+        <h3 class="headline">滤网状态</h3>
+        <gree-list>
+          <gree-list-item title="新风粗效滤网" :text="SieveStateBit3" media-item />
+          <gree-list-item title="回风粗效滤网" :text="SieveStateBit2" media-item />
+          <gree-list-item title="高效滤网" :text="SieveStateBit1" media-item />
+          <gree-list-item title="换热芯体" :text="SieveStateBit0" media-item />
+        </gree-list>
+
+        <h3 class="status-bottom">到底啦~</h3>
+      </div>
     </gree-page>
   </gree-view>
 </template>
@@ -69,6 +73,10 @@ export default {
       WdSupPM: state => state.dataObject.WdSupPM,
       AirCO2: state => state.dataObject.AirCO2,
       SieveState: state => state.dataObject.SieveState,
+      ErrCode1: state => state.dataObject.ErrCode1,
+      ErrCode2: state => state.dataObject.ErrCode2,
+      JFerr: state => state.dataObject.JFerr,
+      isOffline: state => state.deviceInfo.deviceState,
     }),
 
     ModStatus() {
@@ -113,36 +121,42 @@ export default {
     },
     // 滤网状态  换热芯体
     SieveStateBit0() {
-      return this.getSieveStateStatus(1);
+      return this.getSieveStateStatus(0);
     },
     // 滤网状态 高效滤网  
     SieveStateBit1() {
-      return this.getSieveStateStatus(2);
+      return this.getSieveStateStatus(1);
     },
     // 滤网状态 回风粗效滤网  
     SieveStateBit2() {
-      return this.getSieveStateStatus(3);
+      return this.getSieveStateStatus(2);
     },
     // 滤网状态 新风粗效滤网  
     SieveStateBit3() {
-      return this.getSieveStateStatus(4);
+      return this.getSieveStateStatus(3);
     },
   },
 
   watch: {
     Pow(newVal) {
-      if (!newVal) {
-        try {
-          showToast('设备已被关闭，自动退出状态查询。', 1);
-        } catch (e) {
-          Toast({
-            content: '设备已被关闭，自动退出状态查询。',
-            position: 'bottom'
-          });
-        }
-        closePage();
-      }
+      if (!newVal) this.colse('设备已被关闭');
     },
+
+    ErrCode1(newVal) {
+      if (newVal) this.colse('设备出现故障');
+    },
+
+    ErrCode2(newVal) {
+       if (newVal) this.colse('设备出现故障');
+    },
+
+    JFerr(newVal) {
+       if (newVal) this.colse('设备出现故障');
+    },
+
+    isOffline(newVal) {
+      if (newVal === -1) this.colse('设备离线');
+    }
   },
 
   mounted() {},
@@ -155,20 +169,51 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
-    
+
+    /**
+     * @description 返回键
+     */
+    clickBack(){
+      closePage();
+    }, 
+
+    /**
+     * @description 设置正常状态判断
+     */    
     getSieveStateStatus(index) {
       const value = this.SieveState >> index;
       if (value % 2 === 1) {
         return '更换';
       }
       return '正常';
-    } 
+    },
+    
+    /**
+     * @description 退出当前页面
+     */    
+    colse(type) {
+      try {
+        showToast(`${type}，自动退出状态查询。`, 1);
+      } catch (e) {
+        Toast({
+          content: `${type}，自动退出状态查询。`,
+          position: 'bottom'
+        });
+      }
+      closePage();
+    }
   }
 };
 </script>
 
 <style lang="scss">
 .page-status {
+  .page-content{
+    padding-bottom: 50px;
+  }
+  .status{
+    overflow: auto;
+  }
   .list {
     margin-top: 0;
     margin-bottom: 0.1rem;
@@ -178,6 +223,11 @@ export default {
       color: #404657;
     }
     }
+  }
+  .status-bottom{
+    text-align: center;
+    margin-top: 50px;
+    color: #989898;
   }
   .headline {
     padding-left: 70px;
