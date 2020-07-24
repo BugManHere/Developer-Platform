@@ -4,7 +4,7 @@
   <version>1.0</version>
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
-  <statueJson>["Pow","Mod","SetTem","TemUn","OutHome","JFerr", "ErrCode1", "ErrCode2"]</statueJson>
-  <statueJson2>["Pow","Mod","SetTem","TemUn","OutHome","JFerr", "ErrCode1", "ErrCode2", "WdSpd","Blo","SvSt","Humi","LoopMod","OutEnvTem","InAirTem","InAirHumi","WdSupTem","ActualElec","WdSupPM","AirCO2","SieveState"]</statueJson2>
+  <statueJson>["Pow","Mod","SetTem","OutHome","JFerr", "ErrCode1", "ErrCode2"]</statueJson>
+  <statueJson2>["Pow","Mod","SetTem",OutHome","JFerr", "ErrCode1", "ErrCode2", "WdSpd","Blo","SvSt","Humi","LoopMod","OutEnvTem","InAirTem","InAirHumi","WdSupTem","WdSupPM","AirCO2","SieveState", "AppTimer"]</statueJson2>
   <moduleVer>1</moduleVer>
 </device>

@@ -118,7 +118,10 @@ export default {
 
   mounted() {
     hideLoading();
-    this.isActive = Boolean(this.Dazzling);
+    this.isActive = Boolean(this.Humi);
+    if(this.isActive){
+      window.storage.set('ishiddenTip', true)
+    }
   },
 
   beforeDestroy() {
@@ -138,16 +141,23 @@ export default {
 
     switchDazzling(active) {
       if (active) {
-        Dialog.confirm({
-          title: '提示',
-          content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
-          confirmText: '确定',
-          onConfirm: () => this.setHumi(50),
-          cancelText: '取消',
-          onCancel: () => {
-            this.isActive = false;
-          }
-        });
+        const ishiddenTip = window.storage.get('ishiddenTip')
+        console.log('--ishiddenTip--', ishiddenTip);
+        if(!ishiddenTip){
+          Dialog.confirm({
+            title: '提示',
+            content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
+            confirmText: '确定',
+            onConfirm: () => this.setHumi(50),
+            cancelText: '取消',
+            onCancel: () => {
+              window.storage.set('ishiddenTip', true)
+              this.isActive = false;
+            }
+          });
+        } else {
+           this.isActive = false;
+        }
       } else {
         this.setHumi(0);
       }
@@ -199,11 +209,12 @@ export default {
     .humi-value {
       font-size: 295px;
       color: #404657;
+      font-family: appleLight;
     }
     .humi-unit {
       position: absolute;
       bottom: 70px;
-      left: 70%;
+      left: 75%;
       font-size: 100px;
       color: #404657;
       }
@@ -212,6 +223,9 @@ export default {
     margin-top: 90px;
     .humi-col{
       text-align: center;
+      .gree-button--normal{
+        font-size: 100px;
+      }
     }
   }
 }

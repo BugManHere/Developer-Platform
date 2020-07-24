@@ -127,7 +127,7 @@ export default {
      * @description 单故障处理
      */
     handleSingleErrObj(item){
-      let element = item
+      const element = JSON.parse(JSON.stringify(item))
       element.title = this.$language(`error.${item.title}`)
       element.text = this.$language(`error.${item.text}`)
       element.headtitle = this.$language('error.headtitle')

@@ -1,12 +1,12 @@
 <template>
   <gree-view bg-color="#404040">
     <gree-page class="page-nobodysave">
-      <gree-header>{{ $language('btn.LoopMod') }}</gree-header>
+      <gree-header>{{ $language('btn.circulationPatterns') }}</gree-header>
 
       <div class="Loop-btn-block"> 
         <gree-row v-for="(item, index) in LoopModList" :key="index">
           <gree-col>
-            <gree-button round :type="LoopMod === index + 1 ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
+            <gree-button round :type="LoopMod === index ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
           </gree-col>
         </gree-row>
       </div>
@@ -19,12 +19,13 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item, Button, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
-  showToast
+  showToast,
+  hideLoading
 } from '@PluginInterface';
 import errorConfig from '@/mixins/utils/error'
 
 export default {
-  name: 'Dazzling',
+  name: 'Loop',
   components: {
     [Header.name]: Header,
     [Radio.name]: Radio,
@@ -96,6 +97,7 @@ export default {
     }
   },
   mounted() {
+    hideLoading()
   },
   methods: {
     ...mapMutations({
@@ -107,7 +109,7 @@ export default {
     }),
     
     changeLoopMod(index) {
-      const obj = {LoopMod: index + 1};
+      const obj = {LoopMod: index};
       this.setState(['ableSend', true]);
       this.setDataObject(obj);
       this.sendCtrl(obj);
