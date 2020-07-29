@@ -12,7 +12,13 @@
       />
     </div>
     <!-- 已登录显示 -->
-    <div v-else class="list-main" :style="{'overflow-y': isTop ? 'scroll' : 'hidden'}" @touchmove="getScrollTop">
+    <div 
+      v-else
+      class="list-main" 
+      :style="{'overflow-y': isTop ? 'scroll' : 'hidden'}" 
+      @touchmove="getScrollTop"
+      @touchend="setScrollTop"
+      >
       <gree-search-bar 
         :placeholder="reWord" 
         shape="round" 
@@ -41,7 +47,7 @@
 </template>
 
 <script>
-import { Button, SearchBar, Icon } from 'gree-ui';
+import { Button, SearchBar, Icon, Lazyload } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
@@ -62,7 +68,10 @@ export default {
       isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
-      isScrollTop: true
+      isScrollTop: true,
+      scrollTopNum: 0,
+      scrollPercen: 10,
+      hasRequestNum: 0,
     };
   },
   computed: {
@@ -70,6 +79,13 @@ export default {
       playMap: state => state.musicData.playMap,
       imshowTypeList: state => state.musicData.imshowTypeList,
     }),
+    scrollRank() {
+      if (document.getElementsByClassName('list-main')[0]) {
+        const height = document.getElementsByClassName('list-main')[0].scrollHeight;
+        return this.scrollTopNum/height;
+      }
+      return this.scrollTopNum * 0;
+    }
   },
   watch: {
     isLogin: {
@@ -85,19 +101,74 @@ export default {
       handler() {
         // 请求歌单
         this.imshowTypeList.forEach(category => {
-          const data = {
-            header: {},
-            payload: {
-              clientIp: '116.6.120.23',
-              page: 1,
-              size: 10,
-              categoryId: category.categoryId
-            }
-          };
-          const sendData = JSON.stringify({data, url: '/tme/playlist/awesome'});
-          this.postRequest(sendData);
+
         });
       }
+    },
+    scrollRank: {
+      handler(newVal) {
+        console.log(newVal);
+        if (newVal && newVal + 10 > this.scrollPercen) {
+          const length = this.imshowTypeList.length;
+          let nextRequestNum = Math.floor(length * (newVal * 100 + 10) / 100);
+          if (nextRequestNum > this.hasRequestNum && this.hasRequestNum !== length) {
+            if (nextRequestNum >= length) {
+              for (let i = this.hasRequestNum; i < length; i += 1) {
+                const category = this.imshowTypeList[i];
+                const data = {
+                  header: {},
+                  payload: {
+                    clientIp: '116.6.120.23',
+                    page: 1,
+                    size: 10,
+                    categoryId: category.categoryId
+                  }
+                };
+                const sendData = JSON.stringify({data, url: '/tme/playlist/awesome'});
+                this.postRequest(sendData);
+              }
+            } else {
+              for (let i = this.hasRequestNum; i < nextRequestNum; i += 1) {
+                const category = this.imshowTypeList[i];
+                const data = {
+                  header: {},
+                  payload: {
+                    clientIp: '116.6.120.23',
+                    page: 1,
+                    size: 10,
+                    categoryId: category.categoryId
+                  }
+                };
+                const sendData = JSON.stringify({data, url: '/tme/playlist/awesome'});
+                this.postRequest(sendData);
+              }
+            }
+            this.hasRequestNum = nextRequestNum;
+          }
+        } else if (newVal === 0) {
+          const timer = setInterval(() => {
+            if (this.imshowTypeList.length) {
+              for (let i = 0; i < 10; i += 1) {
+                const category = this.imshowTypeList[i];
+                const data = {
+                  header: {},
+                  payload: {
+                    clientIp: '116.6.120.23',
+                    page: 1,
+                    size: 10,
+                    categoryId: category.categoryId
+                  }
+                };
+                const sendData = JSON.stringify({data, url: '/tme/playlist/awesome'});
+                this.postRequest(sendData);
+              }
+              this.hasRequestNum = 10;
+              clearInterval(timer);
+            }
+          }, 300);
+        }
+      },
+      immediate: true
     }
   },
   mounted() {
@@ -140,6 +211,7 @@ export default {
     },
     getScrollTop() {
       const dom = document.getElementsByClassName('list-main')[0];
+      this.scrollTopNum = dom.scrollTop;
       if (dom && dom.scrollTop <= 0) {
         this.isScrollTop || this.$emit('isScrollTop', true);
         this.isScrollTop = true;
@@ -147,6 +219,12 @@ export default {
         this.isScrollTop && this.$emit('isScrollTop', false);
         this.isScrollTop = false;
       }
+    },
+    setScrollTop() {
+      setTimeout(() => {
+        const dom = document.getElementsByClassName('list-main')[0];
+        this.scrollTopNum = dom.scrollTop;
+      }, 1000);
     }
   },
 };
