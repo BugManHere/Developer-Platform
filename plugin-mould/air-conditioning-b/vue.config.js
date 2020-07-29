@@ -59,6 +59,7 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src'),
+        '@api': resolve('api'),
         '@assets': resolve('src/assets'),
         '@components': resolve('src/components'),
         '@PluginInterface': resolve('../static/lib/PluginInterface.promise')

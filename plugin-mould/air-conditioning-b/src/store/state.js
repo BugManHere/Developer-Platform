@@ -43,6 +43,12 @@ const state = {
     weekChart: null, // 每天
     monthChart: null, // 每月
     yearChart: null // 每年
+  },
+  musicData: {
+    playMap: {},
+    songsMap: [],
+    imshowTypeList: [],
+    // imshowTypeList: ['1110', '583']
   }
 };
 export default state;

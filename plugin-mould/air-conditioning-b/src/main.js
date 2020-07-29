@@ -33,6 +33,10 @@ Vue.use(VueClipboard);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
+const VConsole = require('vconsole/dist/vconsole.min.js');
+// eslint-disable-next-line no-new
+new VConsole();
+
 // 使用语言包
 const i18n = new VueI18n({
   locale: 'zh_CN',
@@ -138,11 +142,11 @@ class Storage {
 }
 
 /* 启用页面调试器 */
-if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
-  const VConsole = require('vconsole/dist/vconsole.min.js');
-  // eslint-disable-next-line no-new
-  new VConsole();
-}
+// if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+//   const VConsole = require('vconsole/dist/vconsole.min.js');
+//   // eslint-disable-next-line no-new
+//   new VConsole();
+// }
 
 dev ? createVue() : '';
 

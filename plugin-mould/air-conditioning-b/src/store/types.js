@@ -9,6 +9,10 @@ export const IS_SCENE = 'IS_SCENE'; // 是否场景模式
 export const SET_REPAIR = 'SET_REPAIR'; // 是否报修
 export const SET_STATE = 'SET_STATE'; // 
 export const SET_CHART_DATA = 'SET_CHART_DATA'; // 
+export const SET_MUSIC_DATA = 'SET_MUSIC_DATA'; // 
+
+export const GET_CATEGORY = 'GET_CATEGORY'; // 酷狗音乐获取歌单分类
+export const GET_AWESOME = 'GET_AWESOME'; // 酷狗音乐获取分类下的推荐歌单
 
 // 根据业务逻辑修改
 

@@ -1,7 +1,15 @@
 <template>
-  <div class="card-music">
+  <div
+    class="card-music"
+    :style="{transform: `translate(0, ${headerHeight - headerMoveCurrent - headerMoveLast}px)`}"
+    @touchstart="startDrag"
+    @touchmove="dragCard"
+    @touchend="endDrag"
+  >
     <!-- 标题 -->
-    <div class="music-header">
+    <div 
+      class="music-header"
+    >
       <!-- 左边文字 -->
       <div class="left">
         <div v-text="'点播'" @click="imshowType = 0" :class="{select: imshowType === 0}"/>
@@ -14,22 +22,167 @@
       </div>
     </div>
     <!-- 内容 -->
-    <div class="music-main">
-      <songList />
+    <div class="music-main" style="{height: `100%`}">
+      <keep-alive>
+        <component :is="['songList', 'voiceSkill'][imshowType]" :is-top="isTop" @isScrollTop="getSrollType"/>
+      </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
-import songList from './songList'
+import { mapState, mapMutations } from 'vuex';
+import songList from './songList';
+import voiceSkill from './voiceSkill';
 
 export default {
   components: {
-    songList
+    songList,
+    voiceSkill,
   },
   data() {
     return {
       imshowType: 0, // 0：点播, 1：技能
+      headerPos: 0,
+      headerMoveLast: 0,
+      headerMoveCurrent: 0,
+      baseHeight: 0,
+      isTop: false,
+      isScrollTop: true,
+    };
+  },
+  computed: {
+    ...mapState({
+      playMap: state => state.musicData.playMap,
+    }),
+    // 可拉伸高度
+    headerHeight() {
+      return (1800 - 1251) / 1920 * document.documentElement.clientHeight;
+    },
+  },
+  created() {
+  },
+  destroyed() {
+    // 离开路由之后断开websocket连接
+    this.websock.close();
+  },
+  mounted() {
+    this.initWebSocket();
+
+    this.baseHeight = document.documentElement.clientHeight / 1920 * 1251;
+
+    document.getElementsByClassName('list-main')[0].addEventListener('touchmove', e => {
+        if (this.isScrollTop && !this.isTop) {
+          this.$nextTick(() => {
+            e.preventDefault();
+          });
+        }
+    }, {passive: false});
+  },
+  methods: {
+    ...mapMutations({
+      setMusicData: 'SET_MUSIC_DATA',
+    }),
+    // 记录开始点击的位置
+    startDrag(e) {
+      if (!this.isScrollTop) return;
+      this.headerPos = e.changedTouches[0].pageY;
+    },
+    // 拖动结束时记录拖动长度
+    endDrag() {
+      this.headerMoveLast += this.headerMoveCurrent;
+      this.headerMoveCurrent = 0;
+      this.headerPos = 0;
+    },
+    // 拖动函数
+    dragCard(e) {
+      if (!this.isScrollTop) return;
+      this.headerPos || (this.headerPos = e.changedTouches[0].pageY);
+      let moveY = this.headerPos - e.changedTouches[0].pageY; // 计算Y轴拖动距离
+      // 拖动计算
+      if (this.headerHeight - moveY - this.headerMoveLast <= 0) { // 到顶部
+        this.headerMoveCurrent = this.headerHeight - this.headerMoveLast;
+        this.isTop = true;
+      } else if (moveY + this.headerMoveLast <= 0) { // 到底部
+        this.headerMoveCurrent = -this.headerMoveLast;
+        this.isTop = false;
+      } else {
+        this.headerMoveCurrent = moveY;
+        this.isTop = false;
+      }
+    },
+    // 初始化weosocket
+    initWebSocket() {
+      const wsuri = 'ws://192.168.31.94:9999';
+      this.websock = new WebSocket(wsuri);
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onclose = this.websocketclose;
+      this.websock.onsend = this.websocketsend;
+      window.websock = this.websock;
+    },
+    // 连接建立之后执行send方法发送数据
+    websocketonopen() { 
+    },
+    // 连接建立失败重连
+    websocketonerror() {
+      console.log('------------websocket重连中---------------');
+      this.initWebSocket();
+    },
+    // 数据接收
+    websocketonmessage(e) {
+      const res = JSON.parse(e.data);
+      const data = JSON.parse(res.data);
+      const params = res.params;
+      const postUrl = res.postUrl;
+      const { playlistId, categoryId } = params.data.payload;
+
+      switch (postUrl) {
+        // 请求类别
+        case '/tme/playlist/category':
+          const imshowTypeList = [];
+          data.payload.data.groups.forEach(group => {
+            imshowTypeList.push(...group.categories);
+          });
+          this.setMusicData({ imshowTypeList });
+          break;
+        // 请求类别下的歌单
+        case '/tme/playlist/awesome':
+          this.setMusicData({
+            playMap: {
+              [categoryId]: data.payload.data.playlists,
+              ...this.playMap
+            }
+          });
+          break;
+        // 请求歌单下的歌曲
+        case '/tme/playlist/song':
+          this.setMusicData({
+            songsMap: {
+              [playlistId]: data.payload.data.songs
+            }
+          });
+          break;
+        default:
+          console.log('---------url错误--------');
+          console.log(res.postUrl);
+          break;
+      }
+    },
+    // 发送数据
+    websocketsend(data) {
+      // 发送数据格式： @$_${len}{data}#$_$
+      let sendData = `${data}#$_$`;
+      sendData = `@$_$${(sendData.length).toString().padStart(8, 0)}${sendData}`;
+      this.websock.send(sendData);
+    },
+    // 断开连接
+    websocketclose(e) {
+      console.log('断开连接', e);
+    },
+    getSrollType(type) {
+      this.isScrollTop = type;
     }
   },
 };
@@ -37,11 +190,11 @@ export default {
 
 <style lang="scss">
 .card-music {
-  $height: calc(100vh - 669px);
+  position: absolute;
+  bottom: 0;
   $headerHeight: 142px; 
-  $mainHeight: calc(100vh - 669px - 142px - 190px);
+  $mainHeight: calc(100vh - 142px - 120px);
   $fontSize: 44px;
-  height: $height;
   width: 100%;
   background: #fff;
   border-radius: 100px;
@@ -85,6 +238,9 @@ export default {
     position: relative;
     height: $mainHeight;
   }
+  // ::-webkit-scrollbar {
+  //   display: none;
+  // }
 }
 
 </style>

@@ -1,0 +1,255 @@
+{
+    "header": {
+        "sessionId": "1595292742185752_iyRZJP5vmeAJC",
+        "code": 200,
+        "message": "业务服务返回消息:OK"
+    },
+    "payload": {
+        "errorCode": 0,
+        "errorMsg": "",
+        "data": {
+            "playlists": [
+                {
+                    "playlistId": "collection_3_1161594453_329_0",
+                    "playlistName": "【甜美旋律】激发宝宝想象力",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200720/20200720141122225461.jpg",
+                    "updateTime": "2020-07-20 00:00:00",
+                    "createTime": "2020-07-20 00:00:00",
+                    "intro": "研究表明,宝宝越早接触音乐,对宝宝智力的开放越有好处。音乐启蒙教育不仅能让 宝宝的听觉变得敏锐,还可以激发宝宝的想象力,提升宝宝智力!"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_331_0",
+                    "playlistName": "【音乐感知唤醒课】丰富宝宝的听觉神经",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200720/20200720142857753276.jpg",
+                    "updateTime": "2020-07-20 00:00:00",
+                    "createTime": "2020-07-20 00:00:00",
+                    "intro": "音乐可以通过听觉进入孩子的潜意识，进而对孩子的性格、审美产生良性影响，能给孩子带来温暖和快乐，帮助孩子更好的认识世界。以下这份歌单作品中涵盖了爵士、Blues、Funknown、Flamenco、爱尔兰民谣等20多种音乐风格，充分丰富宝宝的听觉神经，为孩子打开炫丽听觉世界的大门。"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_330_0",
+                    "playlistName": "双语幼教：80首英语游戏儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200720/20200720151922932320.jpg",
+                    "updateTime": "2020-07-20 00:00:00",
+                    "createTime": "2020-07-20 00:00:00",
+                    "intro": "80首英语游戏儿 歌，让孩子在游戏玩耍中快乐的学习英语知识！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_326_0",
+                    "playlistName": "【Y星人】培养生活好习惯NO.2",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200717/20200717133126846761.jpg",
+                    "updateTime": "2020-07-17 00:00:00",
+                    "createTime": "2020-07-17 00:00:00",
+                    "intro": "《生活好习惯》是一张健康百科类儿童亲子音乐专辑，歌曲欢快的节奏感中，旋律俏皮动听，歌词内容将健康小常识、生活好习惯融入其中，让孩子被音乐吸引的同时还能培养他们关注健康的意识。"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_327_0",
+                    "playlistName": "白雪公主的故事",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200717/20200717160331674393.jpg",
+                    "updateTime": "2020-07-17 00:00:00",
+                    "createTime": "2020-07-17 00:00:00",
+                    "intro": "白雪公主是欧洲的一个童话，讲述了白雪公主受到继母的虐待，逃到森林里与七个小矮人生活，后被王后设计吃下毒苹果陷入永久的昏厥，直到一位白马王子经过这里，真爱的力量唤醒了白雪公主，从此王子和公主幸福的生活在一起！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_328_0",
+                    "playlistName": "科普认知",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200717/20200717161340738295.jpg",
+                    "updateTime": "2020-07-17 00:00:00",
+                    "createTime": "2020-07-17 00:00:00",
+                    "intro": "本专辑详细讲解了日常生活中的各种疑问！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_323_0",
+                    "playlistName": "【胎教轻音】提高宝宝感知能力",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200716/20200716150950674040.jpg",
+                    "updateTime": "2020-07-16 00:00:00",
+                    "createTime": "2020-07-16 00:00:00",
+                    "intro": "轻音乐最能调节情绪，陶冶情操，以下是小编为大家推荐的适合孕妇的轻音乐，希望孕妈妈们能够喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_324_0",
+                    "playlistName": "家传户晓的经典粤语儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200716/20200716152935414115.jpg",
+                    "updateTime": "2020-07-16 00:00:00",
+                    "createTime": "2020-07-16 00:00:00",
+                    "intro": "家传户晓的经典粤语儿歌，让孩子边听儿歌边学粤语！"
+                },
+                {
+                    "playlistId": "collection_3_803133159_199_0",
+                    "playlistName": "假期亲子游 | 听着小曲赏美景",
+                    "pic": "http://c1.kgimg.com/custom/480/20200716/20200716111656517130.jpg",
+                    "updateTime": "2020-07-16 00:00:00",
+                    "createTime": "2020-07-16 00:00:00",
+                    "intro": "假期亲情一家游，开着车听着歌，带着自己的宝宝。一路欣赏周边的风景，相信这种幸福的画面很多人都羡慕吧。"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_318_0",
+                    "playlistName": "【美国亲子杂志力荐】幼教英语儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200714/20200714111041811558.jpg",
+                    "updateTime": "2020-07-14 00:00:00",
+                    "createTime": "2020-07-14 00:00:00",
+                    "intro": "现在孩子学英语的年龄是越来越早了，但学校里要等小学一年级、三年级才开始教，所以，今天为大家推荐这张美国亲子杂志推荐的幼儿英语儿歌，让宝宝更早的接触英语，为将来打好基础！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_318_0",
+                    "playlistName": "【美国亲子杂志力荐】幼教英语儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200714/20200714111041811558.jpg",
+                    "updateTime": "2020-07-14 00:00:00",
+                    "createTime": "2020-07-14 00:00:00",
+                    "intro": "现在孩子学英语的年龄是越来越早了，但学校里要等小学一年级、三年级才开始教，所以，今天为大家推荐这张美国亲子杂志推荐的幼儿英语儿歌，让宝宝更早的接触英语，为将来打好基础！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_321_0",
+                    "playlistName": "碰碰狐！英语自然拼读儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200714/20200714123353981595.jpg",
+                    "updateTime": "2020-07-14 00:00:00",
+                    "createTime": "2020-07-14 00:00:00",
+                    "intro": "全球知名幼儿卡通品牌-碰碰狐 来啦！本张歌单内容是由幼儿教育专家们制作并值得信赖的儿歌，立于提高孩子们英语发音能力的字母儿歌！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_322_0",
+                    "playlistName": "尼尔斯骑鹅旅行记",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200714/20200714155415396488.jpg",
+                    "updateTime": "2020-07-14 00:00:00",
+                    "createTime": "2020-07-14 00:00:00",
+                    "intro": "《尼尔斯骑鹅旅行记》讲述一位不爱学习、喜欢调皮捣蛋的男孩尼尔斯，因一次意外，变成了一个小人儿，并和自家的公鹅跟随一群大雁进次了一次沿着瑞典全国的长途旅行，在这次冒险的旅行中，尼尔斯历尽艰辛，经受种种考验，精神意志和品质得到了锤炼，并且增长了见识，结识了许多朋友，特别是动物朋友，吸发起了强烈的爱国心。最后尼尔斯回到了家中，恢复原形，变成了好孩子。这本荣获诺贝尔文学奖的小说将将动物与人、想象与现实交融于一体，情节曲折丰富，语言清新，富于诗意，深受世界各国青少年读者的喜爱，并被改编为电影、戏剧等其他多种艺术形式。"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_325_0",
+                    "playlistName": "【宝宝爱洗澡】我是小乖乖，洗澡不哭闹",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200717/20200717093724900596.jpg",
+                    "updateTime": "2020-07-12 00:00:00",
+                    "createTime": "2020-07-12 00:00:00",
+                    "intro": "听着儿歌洗澡，我是小乖乖，洗澡不哭闹！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_320_0",
+                    "playlistName": "【宝宝爱自然】神奇的大自然儿歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200714/20200714103939331004.jpg",
+                    "updateTime": "2020-07-11 00:00:00",
+                    "createTime": "2020-07-11 00:00:00",
+                    "intro": "儿歌里面添加了宝宝最爱的大自然的实物元素，将自然融入宝宝的视野！"
+                },
+                {
+                    "playlistId": "collection_3_1599084607_67_0",
+                    "playlistName": "经典儿歌:朗朗上口，宝贝学得快",
+                    "pic": "http://c1.kgimg.com/custom/480/20200711/20200711105956119807.jpg",
+                    "updateTime": "2020-07-11 00:00:00",
+                    "createTime": "2020-07-11 00:00:00",
+                    "intro": "每首儿歌一个小故事，通过亲子游戏，伴随丰富想象力，让儿歌更有趣。高品质、独特的原创新儿歌，充满想象力和创造力的故事内容。"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_312_0",
+                    "playlistName": "【Y星人】宝宝听儿歌认昆虫",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710123629145554.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "观察昆虫可以锻炼孩子的观察能力，从而提高孩子观察其他事物的能力，以下是Y星人带给大家的昆虫儿歌，希望宝贝们听儿歌的同时，学会认识昆虫！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_314_0",
+                    "playlistName": "【趣味英语】自然拼读初级班",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710165920575013.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "根据字母学习单词，让孩子哼唱的同时忘记学习的压力，可以更快掌握学习英语的秘籍！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_315_0",
+                    "playlistName": "【儿童音乐盒】自然的赠礼·安睡",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710171337274517.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "清晰的旋律，舒缓的节奏，让宝宝在夜晚的各种细语中悄然入睡！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_313_0",
+                    "playlistName": "菲梦少女动画原声精选",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710174533974773.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "以下是小编为大家整理的菲梦少女的动画原声，希望大家能够喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_316_0",
+                    "playlistName": "爸爸，带我去看世界建筑吧",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710202830109998.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "没时间陪宝宝看遍世界的每个角落怎么办？就由“樊爸爸”带领我们前往世界每个著名的地方吧~"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_317_0",
+                    "playlistName": "百变布鲁可",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200710/20200710203939612897.jpg",
+                    "updateTime": "2020-07-10 00:00:00",
+                    "createTime": "2020-07-10 00:00:00",
+                    "intro": "准备！布鲁可小队！我们要出发啦~“三个百变积木机器人”带你一起解决生活中的各种难题！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_319_0",
+                    "playlistName": "【国学熏陶】宝宝的睡前古琴乐",
+                    "pic": "http: //imge.kugou.com/soft/collection/480/20200714/20200714094316483082.jpg",
+                    "updateTime": "2020-07-09 00:00:00",
+                    "createTime": "2020-07-09 00:00:00",
+                    "intro": "宝宝睡前听古琴乐，让宝宝在优美的琴声中慢慢入睡！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_306_0",
+                    "playlistName": "【国学启蒙】玩转百科的古诗词（更新至冬篇）",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200718/20200718142031149508.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "玩转百科的古诗词，是在大语文环境下为儿童量身打造的古诗词启蒙读物！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_307_0",
+                    "playlistName": "巧虎儿歌大全",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200708/20200708143551778769.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "以下是小编为大家整理的巧虎儿歌大全，希望小宝贝们能够喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_308_0",
+                    "playlistName": "《萌鸡小队》动画原声带",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200708/20200708151208207416.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "《萌鸡小队》动画原声带收录了15首好听又好玩的原创歌曲，节奏欢乐，郎朗上口。希望小宝贝们能够喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_309_0",
+                    "playlistName": "《小黄人大眼萌》电影原声带",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200708/20200708153420240251.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "以下是小编为大家整理的全球大热动画片《小黄人大眼萌》电影原声带，希望宝贝们能够喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_310_0",
+                    "playlistName": "《米奇妙妙屋》动画原声带",
+                    "pic": "http: //imge.kugou.com/soft/collection/480/20200708/20200708155812644161.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "以下是小编为大家整理的《米奇妙妙屋》动画原声带，希望小宝贝们喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_311_0",
+                    "playlistName": "《海绵宝宝》动画原声带",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200708/20200708161131161600.jpg",
+                    "updateTime": "2020-07-08 00:00:00",
+                    "createTime": "2020-07-08 00:00:00",
+                    "intro": "以下是小编为大家整理的《海绵宝宝》动画原声带，希望宝贝们喜欢！"
+                },
+                {
+                    "playlistId": "collection_3_1161594453_305_0",
+                    "playlistName": "【课外必听】童话故事主题歌",
+                    "pic": "http://imge.kugou.com/soft/collection/480/20200716/20200716155323396529.jpg",
+                    "updateTime": "2020-07-07 00:00:00",
+                    "createTime": "2020-07-07 00:00:00",
+                    "intro": "童话寓言儿歌，保证你没有听过！"
+                }
+            ]
+        }
+    }
+}

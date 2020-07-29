@@ -4,13 +4,12 @@
       :ref="slidesData.key"
       class="gr-swiper"
       :options="swiperOption"
-      @touchcancel.native="clearSwiperHold(slidesData.key)"
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
-      :class="{'swiper-no-swiping': noSwiping}"
       v-show="!isShowText"
     >
+      <!-- :class="{'swiper-no-swiping': noSwiping}" -->
       <swiper-slide 
         v-for="(item, index) in slidesData.list" 
         :key="index">
@@ -97,6 +96,9 @@ export default {
       swiperHold: state => state.swiperHold,
       Pow: state => state.dataObject.Pow,
     }),
+    addDisableClass() {
+      return this.noSwiping || (this.swiperHold && this.swiperHold !== this.slidesData.key);
+    }
   },
   watch: {
     Pow() {
@@ -106,16 +108,23 @@ export default {
     },
     swiperHold(newVal) {
       const key = this.slidesData.key;
-      if (newVal) {
-        newVal === key || this.banTouch(true);
-        return;
-      }
-      this.banTouch(false);
+      if (newVal) return;
       if (this.swiperPerView[key] && this.swiperPerView[key].length) {
         while (this.swiperPerView[key].length) {
           const swiper = this.swiperPerView[key].pop();
           swiper && (swiper.style.visibility = 'hidden');
         }
+      }
+    },
+    // 兼容格力2代
+    addDisableClass(newVal) {
+      const key = this.slidesData.key;
+      const ref = this.$refs[key];
+      if (newVal) {
+        ref.$el.className += ' swiper-no-swiping';
+      } else {
+        const classVal = ref.$el.className.replace(' swiper-no-swiping', '');
+        ref.$el.className = classVal;
       }
     }
   },

@@ -214,13 +214,26 @@ export default {
     },
     // 根据情况填充slide 
     insertAllSlide() {
-      const swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
-      if (swiperNum >= this.leftLen + this.leftLen + 1) return;
-      for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
-        const funcName = 'appendSlide';
+      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
+      if (swiperNum >= this.leftLen + this.rightLen + 1) return;
+      for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {
+        const funcName = 'prependSlide';
         const moveLen = i;
         const toIndex = this.countIndex(this.swiperIndex, moveLen);
         this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
+      }
+
+      // 如果slide数量大于限定数量，则删掉
+      swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
+      let maxLen = this.leftLen + this.rightLen + 1;
+      if (swiperNum >= maxLen) {
+        const removeList = [];
+        for (let index = maxLen; index < swiperNum; index += 1) {
+          removeList.push(index);
+        }
+        setTimeout(() => {
+          this.$refs[this.ref].removeSlide(removeList);
+        }, 0);
       }
     },
     // 滑动事件
