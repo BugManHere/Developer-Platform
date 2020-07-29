@@ -60,9 +60,9 @@ const router = new Router({
       path: '/Home',
       name: 'Home',
       component: Home,
-      // meta: {
-      //   keepAlive: true
-      // },
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path: '/Offline',

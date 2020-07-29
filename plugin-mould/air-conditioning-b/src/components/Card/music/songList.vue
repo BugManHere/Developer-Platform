@@ -12,7 +12,7 @@
       />
     </div>
     <!-- 已登录显示 -->
-    <div v-else class="list-main">
+    <div v-else class="list-main" :style="{'overflow-y': isTop ? 'scroll' : 'hidden'}" @touchmove="getScrollTop">
       <gree-search-bar 
         :placeholder="reWord" 
         shape="round" 
@@ -21,14 +21,18 @@
         :class="{focus: searchBarOnFocus}"
         @focus="searchBarOnFocus = true"
         @blur="searchBarOnFocus = false"/>
-      <div class="content" v-for="(list, key) in playMap" :key="key">
-        <div class="content-header" v-text="'儿童'" @click="checkCollect"/>
+      <div class="content" v-for="(category, typeIndex) in imshowTypeList" :key="typeIndex">
+        <div class="content-header" @click="checkCollect">
+          <span v-text="category.categoryName" />
+          <span v-text="'更多'" />
+        </div>
         <div class="content-body">
-          <div class="content-card" v-for="index in 10" :key="index" @click="checkDetail(key, index - 1)">
-            <img :src="list[index - 1].pic">
-            <span v-text="list[index - 1].playlistName.substr(0, 8)"/>
-            <span v-text="list[index - 1].playlistName.substr(8, 8).length > 6 ? `${list[index - 1].playlistName.substr(8, 7)}...` : list[index - 1].playlistName.substr(8, 8)"/>
-            <!-- <span v-text="list[index - 1].intro.length > 8 ? `${list[index - 1].intro.slice(0, 7)}...` : list[index - 1].intro"/> -->
+          <div class="content-card" v-for="index in 10" :key="index" @click="checkDetail(category.categoryId, index - 1)">
+            <div v-if="playMap[category.categoryId]">
+              <img :src="playMap[category.categoryId][index - 1].pic">
+              <span v-text="playMap[category.categoryId][index - 1].playlistName.substr(0, 8)"/>
+              <span v-text="playMap[category.categoryId][index - 1].playlistName.substr(8, 8).length > 6 ? `${playMap[category.categoryId][index - 1].playlistName.substr(8, 7)}...` : playMap[category.categoryId][index - 1].playlistName.substr(8, 8)"/>
+            </div>
           </div>
         </div>
       </div>
@@ -38,18 +42,19 @@
 
 <script>
 import { Button, SearchBar, Icon } from 'gree-ui';
-import { mapState ,mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
+  name: 'song-list',
   components: {
     [Button.name]: Button,
     [SearchBar.name]: SearchBar,
     [Icon.name]: Icon,
   },
   props: {
-    cardHeight: {
-      type: Number,
-      default: 0,
+    isTop: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -57,29 +62,50 @@ export default {
       isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
-      categoryList: [],
+      isScrollTop: true
     };
   },
   computed: {
     ...mapState({
       playMap: state => state.musicData.playMap,
+      imshowTypeList: state => state.musicData.imshowTypeList,
     }),
   },
   watch: {
     isLogin: {
-      async handler(newVal) {
+      handler(newVal) {
         if (newVal) {
-          const category = await this.getCategory();
-          this.categoryList = category.data.groups;
-          const awesome = await this.getAwesome();
-          const playMap = {
-            1110: awesome.data.playlists
-          }
-          this.setMusicData({playMap});
+          // 请求歌单分类
+          this.postRequest('{"data":{"header":{},"payload":{"clientIp":"116.6.120.23"}},"url":"/tme/playlist/category"}');
         }
       },
       immediate: true
+    },
+    'imshowTypeList.length': {
+      handler() {
+        // 请求歌单
+        this.imshowTypeList.forEach(category => {
+          const data = {
+            header: {},
+            payload: {
+              clientIp: '116.6.120.23',
+              page: 1,
+              size: 10,
+              categoryId: category.categoryId
+            }
+          };
+          const sendData = JSON.stringify({data, url: '/tme/playlist/awesome'});
+          this.postRequest(sendData);
+        });
+      }
     }
+  },
+  mounted() {
+    // document.getElementsByClassName('list-main')[0].addEventListener('touchmove', e => {
+    //     if (this.isScrollTop && !this.isTop) {
+    //       e.preventDefault();
+    //     }
+    // }, {passive: false});
   },
   methods: {
     ...mapMutations({
@@ -100,6 +126,27 @@ export default {
           index
         }
       });
+    },
+    postRequest(data) {
+      const timer = setInterval(() => {
+        try {
+          window.websock.onsend(data);
+          clearInterval(timer);
+        } catch (e) {
+          console.log('连接中');
+          e;
+        }
+      }, 100);
+    },
+    getScrollTop() {
+      const dom = document.getElementsByClassName('list-main')[0];
+      if (dom && dom.scrollTop <= 0) {
+        this.isScrollTop || this.$emit('isScrollTop', true);
+        this.isScrollTop = true;
+      } else {
+        this.isScrollTop && this.$emit('isScrollTop', false);
+        this.isScrollTop = false;
+      }
     }
   },
 };
@@ -181,15 +228,15 @@ export default {
         justify-content: space-between;
         font-weight: 700;
         &::after {
-          content: '更多';
-          padding-right: 40px;
+          // content: '更多';
+          // padding-right: 40px;
         }
         &::before  {
-          font-family: Gree-UI-Icon!important;
-          content: '\E658';
-          position: absolute;
-          right: 40px;
-          transform: rotate(90deg);
+          // font-family: Gree-UI-Icon!important;
+          // content: '\E658';
+          // position: absolute;
+          // right: 40px;
+          // transform: rotate(90deg);
         }
       }
       .content-body {

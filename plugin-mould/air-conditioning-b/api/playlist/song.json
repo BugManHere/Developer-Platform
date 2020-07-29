@@ -1,6 +1,6 @@
 {
   "header": {
-    "sessionId": "1595475056271280_ZywkxJO00yryt",
+    "sessionId": "1595673454776451_QmZxGK0jfGbhF",
     "code": 200,
     "message": "业务服务返回消息:OK"
   },
@@ -8,86 +8,507 @@
     "errorCode": 0,
     "errorMsg": "",
     "data": {
-      "playlists": [
+      "total": 80,
+      "songs": [
         {
-          "playlistId": "collection_3_98350951_586_0",
-          "playlistName": "网络热歌：蝉鸣了整个仲夏",
-          "pic": "http://c1.kgimg.com/custom/480/20200722/20200722080511110182.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "夏日热浪袭来，易燃易爆的氛围笼罩着整片大地。春听雨声，夏听蝉声，秋听叶声，冬听雪声，白昼听棋声，月下听箫声，不负此生耳。\n\n夏天的风吹皱了城市的喧嚣，\n不知名的果子啪嗒一声落入车窗，\n一面是日光，一面是果香。\n夏天的知了叫嚣着整个仲夏，\n树叶蹦跶着落入泥土，\n一面是欢乐，一面是活力。\n\n今天，我将冰块与旋律打包带给你，为你抵挡热辣的阳光，赶走夏季的燥热！愿听歌的你，此刻是安逸的，更是幸福的。\n\n封面来自网络\n侵删！！！\n "
+          "playableCode": 0,
+          "songId": "35063533",
+          "songName": "The Wheels On the Bus",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_363361931_24_0",
-          "playlistName": "我有忘忧电子：烦恼乌云快走开",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722000931410132.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "不知道为了什么，忧愁它围绕着我。\n\n每天烦心事接二连三，像是头顶一片乌云，心情也多云转阴。可能唯有令人快乐的电子音乐，才能驱跑这些乌云君了。"
+          "playableCode": 0,
+          "songId": "35063534",
+          "songName": "Build It Up",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_1513280521_35_0",
-          "playlistName": "如果有人陪，谁愿意与孤独作伴",
-          "pic": "http://c1.kgimg.com/custom/480/20200722/20200722085459145809.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "一个人生活久了，渐渐变得排斥那种热闹的环境，一直想过着无人打扰的宁静生活。毕业以后的日子里，和好多朋友失去了联系，甚至是玩的特别好的，转瞬间形同陌路。\n \n在学校的我很少和女同学说话，我也不愿意和她们聊天，直到高三生活中的某一天里，我突然变得好想找你唠唠磕，可是对于我来说面对一个女生我不知道如何开口，同伴都说我太腼腆了，说“你啊，喜欢一个女孩子就要大胆去追求，你如果不说出来她怎么会知道你喜欢她呢？”我也经常计划着怎么面对你，站在你面前的那一刻我能够从容的和你说上几句。可是当我站在你面前的那一刻我的脑袋变得一片空白，不知从何说起。我渐渐放弃，打算把这份爱留在我心底最深处……\n\n过了好久，我无法忘记你，每次的发呆，眼前浮现出的是你的身影和那甜甜的笑容，我向同伴求助，在朋友的建议下，我下定决心我准备高考完后向你表达我的心意。为了给你一个惊喜，我准备了好久，每个周末回到家的第一件事就是看看我买的礼物到了没有，还经常向同伴征求意见，害怕我选了一款你不喜欢的样式，为了准备这次礼物我全心全意的投入……\n\n终于等到了我期待已久的一天，怀揣这激动的心情，我带上了准备已久的书信来到你的面前，将信递到你的手里，你惊讶的看着我，然后笑着说一句“晚上回家一起打游戏。”\n\n回到家后我紧张又期待着等待你的消息，过了好久好久，等到的却是\n“对不起，我对你没有感觉……”\n此后的我只能和孤独有个缘分，逐渐明白只有孤独才能够陪伴我。\n朋友问到“为什么你突然变得那么孤僻”\n“如果有人陪,谁有愿意和孤独做朋友呢”\n\n\n封面来自：pinterest"
+          "playableCode": 0,
+          "songId": "35063535",
+          "songName": "Wind the Bobbin Up",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_856750456_2425_0",
-          "playlistName": "爵士女伶｜清吧的小憩时光",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722094002822469.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "清吧是一个可以慢下来的地方\n喜欢爵士的你一定别错过\n这些曼妙的声音\n\n夏日炎炎\n酒吧清凉\n音乐暖心\n让我们泡在爵士乐里\n浪漫地消磨这炎炎夏日时光\n\n《小众挖宝计划》"
+          "playableCode": 0,
+          "songId": "35063536",
+          "songName": "I M a Little Teapot",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_697756715_19_0",
-          "playlistName": "插画封面丨国产独立音乐视听大赏",
-          "pic": "http://c1.kgimg.com/custom/480/20200722/20200722014506409233.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "#小众挖宝计划#\n\n\n被公认为现代抽象画创始人的俄罗斯画家瓦西里·康定斯基（Wassily Kandinsky）认为：“颜色是琴键，眼睛是和弦，灵魂是琴弦交错的钢琴。画家是奏响音乐的双手，越过一个又个琴键，拨动灵魂的共振。”\n\n歌单收集：国内独立音乐好看的插画类专辑封面\n\n歌单封面来自桃子假象的专辑《百分百》"
+          "playableCode": 0,
+          "songId": "35063537",
+          "songName": "Head, Shoulders, Knees \u0026 Toes",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_697756715_20_0",
-          "playlistName": "制造梦境丨国产盯鞋梦泡浪漫机器",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722014801129876.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "#小众挖宝计划#\n\n近几年的“盯鞋复兴”风潮在国内的年轻人中迅速生根发芽，许多城市也涌现出了优秀的自赏乐队。歌单收录风格偏向shoegaze、dream pop和noise pop类的国产乐队，在层层音墙中创造梦境~"
+          "playableCode": 0,
+          "songId": "35063538",
+          "songName": "Ten Fat Sausages",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_697756715_18_0",
-          "playlistName": "chill丨台团新浪漫风潮",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722013945850958.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "#小众挖宝计划#\n随着落日飞车等一批被乐迷评价“浪漫”的台团得到越来越多的关注，angel baby、everfor、south bad boy、the fur. 、海豚刑警、椅子……这些同样很chill的台团中，也会有你喜欢的吗？"
+          "playableCode": 0,
+          "songId": "35063539",
+          "songName": "Row Row Row Your Boat",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_697756715_17_0",
-          "playlistName": "indie丨夏日特饮o°˚ 便利店",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722013647637474.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "#小众挖宝计划#\n【夏日特饮·便利店】\n公告：总是在每个寒冷的冬日，期待着夏日流汗的冰镇汽水，耳机里的夏日旋律一直在酝酿；在这个夏日来临之前，便利店正式开业，供应国内独立乐团的夏日听觉特饮~\n\n原料：shoegaze、dream pop、postpunk、funk、indie…\n产地：中国\n保存方式：收藏+播放歌单，使用耳机更畅爽怡神\n保质期：forever summer"
+          "playableCode": 0,
+          "songId": "35063540",
+          "songName": "Jelly On a Plate",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_363361931_29_0",
-          "playlistName": "欧美R\u0026B：耳畔划过爱情的轻语",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722002912576141.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "爱情，一直是R\u0026B里不灭的主题。无论哪一张R\u0026B专辑，似乎离开了爱情，总觉得少了一点什么。R\u0026B歌手们往往会采用哀而不伤的口吻将最私密的虐恋向我们娓娓道来。"
+          "playableCode": 0,
+          "songId": "35063541",
+          "songName": "The Music Man",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         },
         {
-          "playlistId": "collection_3_363361931_27_0",
-          "playlistName": "华语Urban · 城市律动浪潮",
-          "pic": "http: //c1.kgimg.com/custom/480/20200722/20200722002321598084.jpg",
-          "updateTime": "2020-07-22 00:00:00",
-          "createTime": "2020-07-22 00:00:00",
-          "intro": "当节奏蓝调的旋律与唱腔撞上行云流水的嘻哈Flow，便擦出了当今最潮流的音乐，令人不禁在这律动的音乐中沉沦。"
+          "playableCode": 0,
+          "songId": "35063542",
+          "songName": "Knees Up Mother Brown",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063543",
+          "songName": "The Hokey Cokey",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063544",
+          "songName": "If You Re Happy and You Know It",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063545",
+          "songName": "Ring a Ring of Roses",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063546",
+          "songName": "Ride a Cock Horse",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063547",
+          "songName": "London Bridge Is Falling Down",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063548",
+          "songName": "The Grand Old Duke of York",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063549",
+          "songName": "Here We Go Round the Mulberry Bush",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063550",
+          "songName": "One, Two, Three, Four, Five",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063551",
+          "songName": "This Is the Way the Ladies Ride",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063552",
+          "songName": "See Saw Margery Daw",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063553",
+          "songName": "Jack in the Box",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063554",
+          "songName": "Round and Round the Garden",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063555",
+          "songName": "Pat-a-Cake Bakers Man (Rap)",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063556",
+          "songName": "Gee Up Neddy",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063557",
+          "songName": "Looby Loo",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063558",
+          "songName": "Dance Little Baby",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063559",
+          "songName": "To Market, To Market",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063560",
+          "songName": "One Finger, One Thumb",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063561",
+          "songName": "Two Little Dickie Birds",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063562",
+          "songName": "Incy Wincy Spider",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063563",
+          "songName": "Hot Cross Buns",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063564",
+          "songName": "Frere Jacques",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063565",
+          "songName": "Sing a Song of Sixpence",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063566",
+          "songName": "A Farmyard Song",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063567",
+          "songName": "Hey Diddle Diddle",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063568",
+          "songName": "Simple Simon",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063569",
+          "songName": "This Old Man (Nick Nack Paddiwack)",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063570",
+          "songName": "One, Two Buckle My Shoe",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063571",
+          "songName": "Michael Finnigan",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063572",
+          "songName": "Old Mother Goose",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063573",
+          "songName": "It's Raining It's Pouring",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063574",
+          "songName": "There Was an Old Woman Who Lived in a Shoe",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063575",
+          "songName": "Hickory Dickory Dock",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063576",
+          "songName": "The Muffin Man",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063577",
+          "songName": "The House That Jack Built",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063578",
+          "songName": "Five Little Ducks",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063579",
+          "songName": "Polly Wolly Doodle",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063580",
+          "songName": "The Crooked Man",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063581",
+          "songName": "One for Sorrow Two for Joy",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
+        },
+        {
+          "playableCode": 0,
+          "songId": "35063582",
+          "songName": "Baa Baa Black Sheep",
+          "singerId": "298511",
+          "singerName": "The Jamborees",
+          "albumId": "1228051",
+          "albumName": "The Wheels On the Bus",
+          "isVipSong": 0
         }
       ]
     }

@@ -10,5 +10,12 @@
 <script>
 export default {
   name: 'App',
+  mounted() {
+    // setTimeout(() => {
+    //   document.body.addEventListener('touchmove', function(e) {
+    //       e.preventDefault();
+    //   }, {passive: false});
+    // }, 1000);
+  },
 };
 </script>

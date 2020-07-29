@@ -45,7 +45,10 @@ const state = {
     yearChart: null // 每年
   },
   musicData: {
-    playMap: {}
+    playMap: {},
+    songsMap: [],
+    imshowTypeList: [],
+    // imshowTypeList: ['1110', '583']
   }
 };
 export default state;
