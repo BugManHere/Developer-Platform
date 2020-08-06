@@ -56,22 +56,6 @@ export default {
       onTestFlag: 0
     };
   },
-  watch: {
-    // 虚拟体验用
-    'dataObject.Pow': {
-      handler(newVal) {
-        sessionStorage.setItem(`isRun_${process.env.VUE_APP_MID}`, newVal);
-      },
-      immediate: true
-    },
-    // 虚拟体验用
-    'dataObject.Mod': {
-      handler(newVal) {
-        sessionStorage.setItem(`mode_${process.env.VUE_APP_MID}`, newVal);
-      },
-      immediate: true
-    }
-  },
   computed: {
     ...mapState('control', {
       dataObject: state => state.dataObject,
