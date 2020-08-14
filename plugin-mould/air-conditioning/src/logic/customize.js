@@ -102,6 +102,22 @@ const Customize = {
               break;
           }
         },
+        'UDFanPort(Cabinet)': (currentStatus, afterStatus) => {
+          switch (afterStatus) {
+            case 'status_1':
+              this.changeData({ UDFanPort: 2 });
+              break;
+            case 'status_2':
+              this.changeData({ UDFanPort: 1 });
+              break;
+            case 'default':
+              this.changeData({ UDFanPort: 2 });
+              break;
+            default:
+              this.changeData({ UDFanPort: 0 });
+              break;
+          }
+        },
         FanLR: (currentStatus, afterStatus) => {
           switch (afterStatus) {
             case 'status_1':

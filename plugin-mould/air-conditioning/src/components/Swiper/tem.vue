@@ -107,7 +107,6 @@ export default {
   },
   watch: {
     currentVal() {
-      // if (newVal === this.swiperVal) return;
       this.initSwiper();
     },
     temStep() {
@@ -256,6 +255,10 @@ export default {
     insertAllSlide() {
       if (this.$refs[this.ref].$el.getElementsByClassName('swiper-slide').length) {
         this.removeAllSlide();
+        setTimeout(() => {
+          this.insertAllSlide();
+        }, 10);
+        return;
       }
       const value = this.currentVal;
       const valueInteger = Math.floor(value);
@@ -303,6 +306,7 @@ export default {
           decimal
         });
       }
+      this.updateSwiper();
     },
     // 滑动事件
     swiperChange(index) {
