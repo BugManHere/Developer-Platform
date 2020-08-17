@@ -1,59 +1,65 @@
 <template>
-  <gree-view :bg-color="colorChange">
+  <gree-view :bg-color="colorChange" class="home-view">
+    <!-- 头部 -->
+    <div class="page-header">
+      <gree-header 
+        theme="transparent"
+        :left-options="{ preventGoBack: true }" 
+        :right-options="{ showMore: false }" 
+        @on-click-back="goBack">
+        <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="moreInfo"/>
+        <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo"/>
+        <span
+          v-text="devname" 
+          @click="onTest"/>
+        <a 
+          class="save"
+          slot="right" 
+          v-if="functype"
+          @click="sceneSave">
+          保存
+        </a>
+      </gree-header>
+    </div>
+    <!-- 卡片标题 -->
+    <cardHeader v-show="cardHeaderShow"/>
+
     <gree-page 
       no-navbar 
       class="page-home">
-      <!-- 头部 -->
-      <div class="page-header">
-        <gree-header 
-          theme="transparent"
-          :left-options="{ preventGoBack: true }" 
-          :right-options="{ showMore: false }" 
-          @on-click-back="goBack">
-          <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="moreInfo"/>
-          <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo"/>
-          <span
-            v-text="devname" 
-            @click="onTest"/>
-          <a 
-            class="save"
-            slot="right" 
-            v-if="functype"
-            @click="sceneSave">
-            保存
-          </a>
-        </gree-header>
+      <!-- 主要内容 -->
+      <div class="page-main">
         <!-- 模式滑轮 -->
         <div class="tem-edit">
           <gree-icon name="move" size="lg"/>
           <div v-text="SetTem" class="tem-value"/>
           <gree-icon name="add" size="lg"/>
         </div>
-      </div>
-      <!-- 主要内容 -->
-      <div class="page-main">
+
+        <cardHeader :style="cardHeaderShow ? {height: 0} : {}"/>
+
         <musicCard />
       </div>
-      <!-- 尾部 -->
-      <div class="page-footer">
-        <div 
-          class="item"
-          v-for="(item, index) in functionList" 
-          :key="index">
-          <img
-            :src="item.url"
-            @click="footerFunction(item.key)" />
-          <span>{{ item.name }}</span>
-        </div>
-      </div>
     </gree-page>
+    <!-- 尾部 -->
+    <div class="page-footer">
+      <div 
+        class="item"
+        v-for="(item, index) in functionList" 
+        :key="index">
+        <img
+          :src="item.url"
+          @click="footerFunction(item.key)" />
+        <span>{{ item.name }}</span>
+      </div>
+    </div>
   </gree-view>
 </template>
 
 <script>
-
 import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
+import cardHeader from '@/components/Card/music/cardHeader';
 import { 
   closePage, 
   editDevice, 
@@ -76,7 +82,8 @@ export default {
     [NoticeBar.name]: NoticeBar,
     [Dialog.name]: Dialog,
     [Icon.name]: Icon,
-    musicCard
+    musicCard,
+    cardHeader
   },
   mixins: [homeConfig, LogicDefine],
   data() {
@@ -87,6 +94,10 @@ export default {
       currentCO2Level: 0,
       currentCO2Img: 0,
       warnningText: false,
+      cardHeaderShow: false,
+      scrollPos: 0,
+      scrollTimer: null,
+      scrollTimer2: null
     };
   },
   computed: {
@@ -109,16 +120,6 @@ export default {
     isB() {
       return ['10f04'].includes(this.devOptions.mid); // B分体特殊ui
     },
-    // headerBg() {
-    //   if (!this.Pow) return {};
-    //   const isB = this.isB;
-    //   const backgroundImage = `url(${require(`@/assets/img/mode/${isB ? 'bg_b' : 'mode_bg'}.png`)})`;
-    //   return {
-    //     backgroundImage,
-    //     'background-size': `${isB ? 1 : 5}00% 100%`,
-    //     'background-position': `${isB ? 0 : (this.Mod % 5) * 25}% 0%`
-    //   };
-    // },
     /**
      * @description 主页面下更新状态栏颜色
      */
@@ -184,6 +185,35 @@ export default {
     this.$nextTick(() => {
       this.setCheckObject(this.dataObject);
     });
+    const dom = document.getElementsByClassName('page-content')[0];
+    dom.addEventListener('scroll', this.getScroll);
+    dom.addEventListener('touchmove', () => {
+      clearTimeout(this.scrollTimer2);
+      this.scrollTimer2 = setTimeout(() => {
+        clearInterval(this.scrollTimer);
+        this.scrollTimer = null;
+      }, 1500);
+      if (this.scrollTimer) return;
+      this.scrollTimer = setInterval(() => {
+        this.getScroll();
+      }, 20);
+    });
+  },
+  // 跳转回来时恢复滚动条
+  activated() {
+    if (this.scrollPos) {
+      this.$nextTick(() => {
+        const dom = document.getElementsByClassName('page-content')[0];
+        dom.scrollTo(0, this.scrollPos);
+      });
+    }
+  },
+  // 离开路由时清除定时器
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.scrollTimer);
+    clearTimeout(this.scrollTimer2);
+    this.scrollTimer = null;
+    next();
   },
   methods: {
     ...mapMutations({
@@ -242,6 +272,18 @@ export default {
         }
       });
     },
+    getScroll() {
+      const dom = document.getElementsByClassName('page-content')[0];
+      const currentScrollTop = dom.scrollTop;
+      currentScrollTop && (this.scrollPos = currentScrollTop);
+      const imshowTop = document.getElementsByClassName('tem-edit')[0].offsetHeight;
+      if (currentScrollTop >= imshowTop + 2) {
+        this.cardHeaderShow = true;
+      } else {
+        this.cardHeaderShow = false;
+      }
+      this.$forceUpdate();
+    }
   }
 };
 </script>

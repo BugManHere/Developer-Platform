@@ -172,7 +172,7 @@ export default {
         {
           value: 0,
           text: '睡眠模块',
-          json: ['AntiDirectBlow', 'CoolFeel', 'SmartSlpMod', 'SmartSlpModEx',
+          json: ['AntiDirectBlow', 'SmartSlpMod', 'SmartSlpModEx',
             'StSlp1C', 'StSlp1CInc', 'StSlp1CSp', 'StSlp1H', 'StSlp1HInc', 'StSlp1HSp',
             'StSlp2C', 'StSlp2CInc', 'StSlp2CSp', 'StSlp2H', 'StSlp2HInc', 'StSlp2HSp',
             'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',

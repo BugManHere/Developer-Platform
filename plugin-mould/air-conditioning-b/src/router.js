@@ -45,6 +45,8 @@ const MusicCollect = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/collect.vue')));
 const MusicDetail = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/detail.vue')));
+const MusicPlay = r =>
+  require.ensure([], () => r(require('./../src/components/Card/music/page/play.vue')));
 
 Vue.use(Router);
 
@@ -54,7 +56,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/MusicCollect'
+      redirect: '/Home'
     },
     {
       path: '/Home',
@@ -148,6 +150,14 @@ const router = new Router({
       path: '/MusicDetail',
       name: 'MusicDetail',
       component: MusicDetail
+    },
+    {
+      path: '/MusicPlay',
+      name: 'MusicPlay',
+      component: MusicPlay,
+      meta: {
+        keepAlive: true
+      },
     },
   ]
 });

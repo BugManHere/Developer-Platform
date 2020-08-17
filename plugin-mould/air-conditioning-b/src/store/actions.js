@@ -14,8 +14,7 @@ import {
   SEND_CTRL,
   UPDATE_DATAOBJECT,
   
-  GET_CATEGORY, // 酷狗音乐获取歌单分类
-  GET_AWESOME, // 酷狗音乐获取分类下的推荐歌单
+  MUSIC_CONTROL, // 音乐控制
 } from './types';
 
 
@@ -240,27 +239,12 @@ export default {
   },
 
   /**
-   * @description 请求歌单分类
-   */
-  [GET_CATEGORY]() {
-    const res = require('@api/playlist/category.json');
-    return res.payload;
-  },
-
-  /**
-   * @description 获取分类下的推荐歌单
-   */
-  [GET_AWESOME]({}, categoryId) {
-    const res = require('@api/playlist/awesome.json');
-    return res.payload;
-  },
-
-  /**
    * @description 更新本地数据
    */
   [UPDATE_DATAOBJECT]({ state, commit }, DataObject) {
     commit(SET_DATA_OBJECT, DataObject);
     commit(SET_CHECK_OBJECT, DataObject);
     lastObject = state.checkObject;
-  }
+  },
+
 };

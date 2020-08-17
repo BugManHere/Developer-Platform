@@ -1,5 +1,7 @@
 # Gree Developer Platform
 
+### 测试账号uitest.gree.com.cn 密码qwe!23
+
 ## Project setup
 ```
 yarn install

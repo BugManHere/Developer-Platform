@@ -45,10 +45,26 @@ const state = {
     yearChart: null // 每年
   },
   musicData: {
-    playMap: {},
-    songsMap: [],
-    imshowTypeList: [],
-    // imshowTypeList: ['1110', '583']
+    // 分组、分类
+    groups: [], // 分组
+    groupsUnfold: [], // 分组的展开
+    groupId: '', // 分组id
+    categoryId: '', // 分类id
+    // 歌单
+    playlistId: '', // 歌单ID
+    playMap: {}, // 根据playlistId对playlist进行分类 {playlistId: playlists}
+    // 歌曲
+    listSongsMap: {}, // 根据playlistId对playlist进行分类 {playlistId: playlists}
+    songInfosMap: {}, // 歌曲信息
+    songId: '', // 播放中的歌曲id
+    songUrl: {}, // 歌曲资源
+    // 歌词
+    lyric: '', // 歌词
+    lyricMap: {}, // 歌词
+    // 其他
+    albumImg: '', // 专辑封面
+    showBall: false, // 是否显示悬浮框
+    musicPlaying: false, // 歌曲播放中
   }
 };
 export default state;
