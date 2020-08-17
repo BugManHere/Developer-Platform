@@ -243,7 +243,7 @@ export default {
     }
   },
   created() {
-    document.onkeyup = e => {
+    document.onkeydown = e => {
       e.keyCode === 27  && (this.currentFuncId !== false || (this.insertPageShow = false)) && this.editStatus();
     };
   },

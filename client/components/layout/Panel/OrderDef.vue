@@ -1,10 +1,16 @@
 <template>
   <div class="status-page" role="group">
     <div class="status-input">
-      <caption>状态详情</caption>
+      <caption>
+        <span v-text="'状态详情'"/>
+        <span>
+          标识：
+          <span v-text="keyNote(currentStatusKey)" class="text-label"/>
+        </span>
+      </caption>
       <div class="status-info">
         <div class="info-name">
-          <span v-text="'名称'"/>
+          <span v-text="'名称'" class="text-label"/>
           <input
             type="text"
             class="form-control"
@@ -13,7 +19,7 @@
           />
         </div>
         <div class="info-direction">
-          <span v-text="'指向'"/>
+          <span v-text="'指向'" class="text-label"/>
           <select class="select-medium form-control" v-model="currentDrection" @change="setDirection">
             <option 
               v-for="(status, key) in statusList.filter((item, index) => ![currentStatusIndex, 1].includes(index))" 
@@ -23,7 +29,7 @@
           </select>
         </div>
         <div class="info-value">
-          <span v-text="'状态值'"/>
+          <span v-text="'状态值'" class="text-label"/>
           <input
             type="text"
             class="form-control"
@@ -31,14 +37,14 @@
           />
         </div>
         <div class="info-check">
-          <span v-text="'是否检查互斥'"/>
+          <span v-text="'是否检查互斥'" class="text-label"/>
           <select class="form-control" v-model="currentStatus.isCheck">
             <option :value="true">是</option>
             <option :value="false">否</option>
           </select>
         </div>
         <div class="info-customize">
-          <span v-text="'自定义函数'"/>
+          <span v-text="'自定义函数'" class="text-label"/>
           <select class="select-medium form-control" v-model="currentStatus.customize">
             <option :value="false">不使用</option>
             <option value="replace">替代</option>
@@ -46,14 +52,59 @@
             <option value="after">执行后</option>
           </select>
         </div>
+        <!-- 新增额外命令 -->
         <div class="info-cmd">
-          <span v-text="'额外命令'"/>
-          <span v-text="currentStatus.moreCommand"/>
+          <span v-text="'额外命令'" class="text-label"/>
+          <!-- <button type="button" class="btn btn-default">
+            <div class="close" aria-label="Close">
+              <span aria-hidden="true">+</span>
+            </div>
+            添加
+          </button> -->
+          <div class="cmd-table" v-if="cmdMap.keys.length">
+            <!-- 表格主体 -->
+            <table class="table table-bordered" id="main">
+              <thead>
+                <tr class="active">
+                  <th>字段</th>
+                  <th>值</th>
+                </tr>
+              </thead>
+              <!-- 显示已有命令 -->
+              <!-- <tbody v-if="moreCommand">
+                <tr class="active">
+                  <td v-text="key"/>
+                  <td v-text="val"/>
+                </tr>
+              </tbody> -->
+              <tbody>
+                <tr class="active" v-for="(key, index) in cmdMap.keys" :key="index">
+                  <td>
+                    <input type="text" class="form-control" v-model="cmdMap.keys[index]" @change="setCmd('key', index)"/>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" v-model="cmdMap.vals[index]" @change="setCmd('val', index)"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
+      </div>
+      <!-- 删除按钮 -->
+      <div class="del-btn">
+        <button type="button" class="btn btn-danger" v-text="'删除状态'" v-show="!['default', 'undefined'].includes(currentStatusKey)"/>
       </div>
     </div>
     <div class="status-order">
-      <caption>状态指向</caption>
+      <caption>
+        <span v-text="'状态指向'"/>
+        <span>
+          当前状态名称：
+          <span v-text="currentStatus.name && currentStatus.name.length >= 10 ? `${currentStatus.name.slice(0, 10)}...` : currentStatus.name" class="text-label"/>
+        </span>
+      </caption>
       <!-- 图表 -->
       <div class="order-chart" ref="mychart"/>
     </div>
@@ -71,7 +122,12 @@ export default {
       funcCopy: [], // 功能副本
       statusList: [], 
       currentStatusIndex: 0, // 当前选中状态的下标
-      currentDrection: 'default'
+      currentDrection: 'default',
+      cmdMap: {
+        keys: [''],
+        vals: [''],
+        oldKeys: [''],
+      }
     }
   },
   computed: {
@@ -101,7 +157,7 @@ export default {
             category: 1,
             x: null,
             y: null,
-            // draggable: true,
+            draggable: true,
             name: item.name.length > 3 ? `${item.name.slice(0, 3)}...` : item.name,
             cursor: 'pointer',
             id: item.key,
@@ -127,7 +183,6 @@ export default {
             }
           }
         );
-        console.log(links);
         categories.push({
           name: item.name
         })
@@ -147,7 +202,7 @@ export default {
                 data: nodes,
                 links,
                 categories,
-                draggable: true,
+                // draggable: true,
                 focusNodeAdjacency: false,
                 legendHoverLink: false,
                 zoom: 2.5,
@@ -240,6 +295,8 @@ export default {
       this.highlightStatus(newVal);
       // 获取状态指向
       this.currentDrection = this.funcCopy.map[this.currentStatusKey];
+      // 获取额外命令
+      this.updateCmd();
     }
   },
   mounted() {
@@ -340,6 +397,46 @@ export default {
       this.$set(this.funcCopy.map, fromKey, toKey);
 
       this.updateEchart();
+    },
+    keyNote(key) {
+      let result = '默认';
+      switch (key) {
+        case 'default':
+          break;
+        case 'undefined':
+          result = '其他';
+          break;
+        default:
+          result = `状态${key.split('_')[1]}`;
+          break;
+      }
+      return result;
+    },
+    updateCmd() {
+      this.cmdMap = {
+        keys: [''],
+        vals: [''],
+        oldKeys: [''],
+      };
+      const moreCommand = this.funcCopy.statusDefine[this.currentStatusKey].moreCommand;
+      if (moreCommand) {
+        Object.keys(moreCommand).forEach(key => {
+          this.cmdMap.keys.unshift(key);
+          this.cmdMap.oldKeys.unshift(key);
+          this.cmdMap.vals.unshift(moreCommand[key]);
+        })
+      }
+    },
+    setCmd() {
+      const cmd = {};
+      this.cmdMap.keys.forEach((key, index) => {
+        const val = this.cmdMap.vals[index];
+        if (key === '' || val === '') return;
+        cmd[key] = val;
+      });
+      this.$set(this.funcCopy.statusDefine[this.currentStatusKey], 'moreCommand', cmd);
+
+      this.updateCmd();
     }
   }
 }

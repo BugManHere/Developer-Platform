@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
 const templateFuncModel = require('../models/template');
-const { Object } = require('core-js');
 
 // 登录token
 const jwt = require('jsonwebtoken');

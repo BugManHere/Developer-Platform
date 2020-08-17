@@ -39,7 +39,7 @@
 <script>
 export default {
   props: {
-    contnet: {
+    content: {
       type: String,
       default: 'confirm',
     },
