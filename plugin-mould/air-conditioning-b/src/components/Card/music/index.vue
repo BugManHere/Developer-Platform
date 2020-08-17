@@ -1,30 +1,11 @@
 <template>
   <div
     class="card-music"
-    :style="{transform: `translate(0, ${headerHeight - headerMoveCurrent - headerMoveLast}px)`}"
-    @touchstart="startDrag"
-    @touchmove="dragCard"
-    @touchend="endDrag"
   >
-    <!-- 标题 -->
-    <div 
-      class="music-header"
-    >
-      <!-- 左边文字 -->
-      <div class="left">
-        <div v-text="'点播'" @click="imshowType = 0" :class="{select: imshowType === 0}"/>
-        <div v-text="'技能'" @click="imshowType = 1" :class="{select: imshowType === 1}"/>
-      </div>
-      <!-- 右边按钮 -->
-      <div class="right">
-        <img src="@assets/img/music/statistical.png" >
-        <img src="@assets/img/music/history.png" >
-      </div>
-    </div>
     <!-- 内容 -->
     <div class="music-main" style="{height: `100%`}">
       <keep-alive>
-        <component :is="['songList', 'voiceSkill'][imshowType]" :is-top="isTop" @isScrollTop="getSrollType"/>
+        <component :is="['songList', 'voiceSkill'][imshowType]"/>
       </keep-alive>
     </div>
   </div>
@@ -43,24 +24,15 @@ export default {
   data() {
     return {
       imshowType: 0, // 0：点播, 1：技能
-      headerPos: 0,
-      headerMoveLast: 0,
-      headerMoveCurrent: 0,
-      baseHeight: 0,
-      isTop: false,
-      isScrollTop: true,
     };
   },
   computed: {
     ...mapState({
       playMap: state => state.musicData.playMap,
+      listSongsMap: state => state.musicData.listSongsMap,
+      songInfosMap: state => state.musicData.songInfosMap,
+      lyricMap: state => state.musicData.lyricMap,
     }),
-    // 可拉伸高度
-    headerHeight() {
-      return (1800 - 1251) / 1920 * document.documentElement.clientHeight;
-    },
-  },
-  created() {
   },
   destroyed() {
     // 离开路由之后断开websocket连接
@@ -68,49 +40,11 @@ export default {
   },
   mounted() {
     this.initWebSocket();
-
-    this.baseHeight = document.documentElement.clientHeight / 1920 * 1251;
-
-    document.getElementsByClassName('list-main')[0].addEventListener('touchmove', e => {
-        if (this.isScrollTop && !this.isTop) {
-          this.$nextTick(() => {
-            e.preventDefault();
-          });
-        }
-    }, {passive: false});
   },
   methods: {
     ...mapMutations({
       setMusicData: 'SET_MUSIC_DATA',
     }),
-    // 记录开始点击的位置
-    startDrag(e) {
-      if (!this.isScrollTop) return;
-      this.headerPos = e.changedTouches[0].pageY;
-    },
-    // 拖动结束时记录拖动长度
-    endDrag() {
-      this.headerMoveLast += this.headerMoveCurrent;
-      this.headerMoveCurrent = 0;
-      this.headerPos = 0;
-    },
-    // 拖动函数
-    dragCard(e) {
-      if (!this.isScrollTop) return;
-      this.headerPos || (this.headerPos = e.changedTouches[0].pageY);
-      let moveY = this.headerPos - e.changedTouches[0].pageY; // 计算Y轴拖动距离
-      // 拖动计算
-      if (this.headerHeight - moveY - this.headerMoveLast <= 0) { // 到顶部
-        this.headerMoveCurrent = this.headerHeight - this.headerMoveLast;
-        this.isTop = true;
-      } else if (moveY + this.headerMoveLast <= 0) { // 到底部
-        this.headerMoveCurrent = -this.headerMoveLast;
-        this.isTop = false;
-      } else {
-        this.headerMoveCurrent = moveY;
-        this.isTop = false;
-      }
-    },
     // 初始化weosocket
     initWebSocket() {
       const wsuri = 'ws://192.168.31.94:9999';
@@ -136,16 +70,19 @@ export default {
       const data = JSON.parse(res.data);
       const params = res.params;
       const postUrl = res.postUrl;
-      const { playlistId, categoryId } = params.data.payload;
+      const payload = params.data.payload;
+      const { playlistId, categoryId, songsId, songId } = payload;
+      const groupsUnfold = [];
+      const songInfosMap = {};
 
       switch (postUrl) {
         // 请求类别
         case '/tme/playlist/category':
-          const imshowTypeList = [];
           data.payload.data.groups.forEach(group => {
-            imshowTypeList.push(...group.categories);
+            groupsUnfold.push(...group.categories);
           });
-          this.setMusicData({ imshowTypeList });
+          this.setMusicData({ groupsUnfold });
+          this.setMusicData({ groups: data.payload.data.groups });
           break;
         // 请求类别下的歌单
         case '/tme/playlist/awesome':
@@ -156,12 +93,40 @@ export default {
             }
           });
           break;
-        // 请求歌单下的歌曲
+        // 歌单下的歌曲
         case '/tme/playlist/song':
           this.setMusicData({
-            songsMap: {
-              [playlistId]: data.payload.data.songs
+            listSongsMap: {
+              [playlistId]: data.payload.data.songs,
+              ...this.listSongsMap
             }
+          });
+          break;
+        // 批量请求歌曲信息
+        case '/tme/song/infos':
+          songsId.forEach((songId, index) => {
+            songInfosMap[songId] = data.payload.data.songs[index];
+          });
+          this.setMusicData({ 
+            songInfosMap: {
+              ...songInfosMap,
+              ...this.songInfosMap
+            }
+          });
+          break;
+        // 歌词
+        case '/tme/song/lyric':
+          this.setMusicData({
+            lyricMap: {
+              [songId]: data.payload.data.lyric,
+              ...this.lyricMap
+            },
+          });
+          break;
+        // 歌曲资源
+        case '/tme/song/url':
+          this.setMusicData({
+            songUrl: data.payload.data
           });
           break;
         default:
@@ -190,57 +155,17 @@ export default {
 
 <style lang="scss">
 .card-music {
-  position: absolute;
+  position: relative;
   bottom: 0;
-  $headerHeight: 142px; 
-  $mainHeight: calc(100vh - 142px - 120px);
-  $fontSize: 44px;
+  $mainHeight: calc(100vh - 142px - 120px - 669px - 190px);
   width: 100%;
   background: #fff;
-  border-radius: 100px;
-  .music-header {
-    position: relative;
-    border-bottom: 1px solid #F2F2F2;
-    height: $headerHeight;
-    display: flex;
-    justify-content: space-between;
-    .left {
-      position: relative;
-      padding: 62px 0 0 12px;
-      font-size: $fontSize;
-      width: 380px;
-      display: flex;
-      justify-content: space-around;
-      div {
-        width: 200px;
-        display: flex;
-        justify-content: center;
-      }
-      .select {
-        color: rgb(0, 153, 255);
-        border-bottom: 6px solid rgb(0, 153, 255);
-      }
-    }
-    .right {
-      position: relative;
-      padding-top: 62px;
-      width: 380px;
-      display: flex;
-      justify-content: flex-end;
-      img {
-        width: 60px;
-        height: 54px;
-        padding-right: 70px;
-      }
-    }
-  }
   .music-main {
     position: relative;
-    height: $mainHeight;
+    top: 0;
+    min-height: $mainHeight;
+    height: 100%;
   }
-  // ::-webkit-scrollbar {
-  //   display: none;
-  // }
 }
 
 </style>

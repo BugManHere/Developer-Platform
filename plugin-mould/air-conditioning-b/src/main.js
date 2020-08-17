@@ -4,7 +4,7 @@ import VueI18n from 'vue-i18n';
 import VueClipboard from 'vue-clipboard2';
 import axios from 'axios';
 
-import { View, Page } from 'gree-ui';
+import { View, Page, Lazyload } from 'gree-ui';
 
 import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
@@ -29,13 +29,10 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.use(language);
+Vue.use(Lazyload, {loading: require('../src/assets/img/music/loading.png')});
 Vue.use(VueClipboard);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
-
-const VConsole = require('vconsole/dist/vconsole.min.js');
-// eslint-disable-next-line no-new
-new VConsole();
 
 // 使用语言包
 const i18n = new VueI18n({
@@ -142,11 +139,11 @@ class Storage {
 }
 
 /* 启用页面调试器 */
-// if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
-//   const VConsole = require('vconsole/dist/vconsole.min.js');
-//   // eslint-disable-next-line no-new
-//   new VConsole();
-// }
+if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+  const VConsole = require('vconsole/dist/vconsole.min.js');
+  // eslint-disable-next-line no-new
+  new VConsole();
+}
 
 dev ? createVue() : '';
 

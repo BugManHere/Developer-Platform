@@ -10,6 +10,8 @@
   src: url('../font/RobotoThin.ttf');
 }
 
+#app { position: relative; }
+
 .hidden {
   // display: none !important;
   opacity: 0;

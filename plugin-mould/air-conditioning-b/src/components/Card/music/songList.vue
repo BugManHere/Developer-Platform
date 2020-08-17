@@ -14,11 +14,7 @@
     <!-- 已登录显示 -->
     <div 
       v-else
-      class="list-main" 
-      :style="{'overflow-y': isTop ? 'scroll' : 'hidden'}" 
-      @touchmove="getScrollTop"
-      @touchend="setScrollTop"
-      >
+      class="list-main">
       <gree-search-bar 
         :placeholder="reWord" 
         shape="round" 
@@ -27,7 +23,7 @@
         :class="{focus: searchBarOnFocus}"
         @focus="searchBarOnFocus = true"
         @blur="searchBarOnFocus = false"/>
-      <div class="content" v-for="(category, typeIndex) in imshowTypeList" :key="typeIndex">
+      <div class="content" v-for="(category, typeIndex) in groupsUnfold" :key="typeIndex">
         <div class="content-header" @click="checkCollect">
           <span v-text="category.categoryName" />
           <span v-text="'更多'" />
@@ -35,7 +31,7 @@
         <div class="content-body">
           <div class="content-card" v-for="index in 10" :key="index" @click="checkDetail(category.categoryId, index - 1)">
             <div v-if="playMap[category.categoryId]">
-              <img :src="playMap[category.categoryId][index - 1].pic">
+              <img v-lazy="playMap[category.categoryId][index - 1].pic">
               <span v-text="playMap[category.categoryId][index - 1].playlistName.substr(0, 8)"/>
               <span v-text="playMap[category.categoryId][index - 1].playlistName.substr(8, 8).length > 6 ? `${playMap[category.categoryId][index - 1].playlistName.substr(8, 7)}...` : playMap[category.categoryId][index - 1].playlistName.substr(8, 8)"/>
             </div>
@@ -47,11 +43,10 @@
 </template>
 
 <script>
-import { Button, SearchBar, Icon, Lazyload } from 'gree-ui';
+import { Button, SearchBar, Icon } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
-  name: 'song-list',
   components: {
     [Button.name]: Button,
     [SearchBar.name]: SearchBar,
@@ -77,12 +72,13 @@ export default {
   computed: {
     ...mapState({
       playMap: state => state.musicData.playMap,
-      imshowTypeList: state => state.musicData.imshowTypeList,
+      groupsUnfold: state => state.musicData.groupsUnfold,
+      groups: state => state.musicData.groups,
     }),
     scrollRank() {
       if (document.getElementsByClassName('list-main')[0]) {
         const height = document.getElementsByClassName('list-main')[0].scrollHeight;
-        return this.scrollTopNum/height;
+        return this.scrollTopNum / height;
       }
       return this.scrollTopNum * 0;
     }
@@ -97,24 +93,15 @@ export default {
       },
       immediate: true
     },
-    'imshowTypeList.length': {
-      handler() {
-        // 请求歌单
-        this.imshowTypeList.forEach(category => {
-
-        });
-      }
-    },
     scrollRank: {
       handler(newVal) {
-        console.log(newVal);
         if (newVal && newVal + 10 > this.scrollPercen) {
-          const length = this.imshowTypeList.length;
+          const length = this.groupsUnfold.length;
           let nextRequestNum = Math.floor(length * (newVal * 100 + 10) / 100);
           if (nextRequestNum > this.hasRequestNum && this.hasRequestNum !== length) {
             if (nextRequestNum >= length) {
               for (let i = this.hasRequestNum; i < length; i += 1) {
-                const category = this.imshowTypeList[i];
+                const category = this.groupsUnfold[i];
                 const data = {
                   header: {},
                   payload: {
@@ -129,7 +116,7 @@ export default {
               }
             } else {
               for (let i = this.hasRequestNum; i < nextRequestNum; i += 1) {
-                const category = this.imshowTypeList[i];
+                const category = this.groupsUnfold[i];
                 const data = {
                   header: {},
                   payload: {
@@ -147,9 +134,9 @@ export default {
           }
         } else if (newVal === 0) {
           const timer = setInterval(() => {
-            if (this.imshowTypeList.length) {
+            if (this.groupsUnfold.length) {
               for (let i = 0; i < 10; i += 1) {
-                const category = this.imshowTypeList[i];
+                const category = this.groupsUnfold[i];
                 const data = {
                   header: {},
                   payload: {
@@ -171,13 +158,6 @@ export default {
       immediate: true
     }
   },
-  mounted() {
-    // document.getElementsByClassName('list-main')[0].addEventListener('touchmove', e => {
-    //     if (this.isScrollTop && !this.isTop) {
-    //       e.preventDefault();
-    //     }
-    // }, {passive: false});
-  },
   methods: {
     ...mapMutations({
       setMusicData: 'SET_MUSIC_DATA',
@@ -190,13 +170,12 @@ export default {
       this.$router.push('MusicCollect');
     },
     checkDetail(key, index) {
-      this.$router.push({
-        name: 'MusicDetail',
-        params: {
-          key,
-          index
-        }
-      });
+      if (!this.playMap[key]) return;
+      const listInfo = this.playMap[key][index];
+      const playlistId = listInfo.playlistId;
+      this.setMusicData({ playlistId });
+      this.setMusicData({ listInfo });
+      this.$router.push('MusicDetail');
     },
     postRequest(data) {
       const timer = setInterval(() => {
@@ -209,23 +188,6 @@ export default {
         }
       }, 100);
     },
-    getScrollTop() {
-      const dom = document.getElementsByClassName('list-main')[0];
-      this.scrollTopNum = dom.scrollTop;
-      if (dom && dom.scrollTop <= 0) {
-        this.isScrollTop || this.$emit('isScrollTop', true);
-        this.isScrollTop = true;
-      } else {
-        this.isScrollTop && this.$emit('isScrollTop', false);
-        this.isScrollTop = false;
-      }
-    },
-    setScrollTop() {
-      setTimeout(() => {
-        const dom = document.getElementsByClassName('list-main')[0];
-        this.scrollTopNum = dom.scrollTop;
-      }, 1000);
-    }
   },
 };
 </script>

@@ -529,6 +529,7 @@ export default {
         hasToast && showToast(hasToast, 1);
         return;
       }
+      console.log(json);
       const res = await sendDataToDevice(this.mac, json, false);
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {

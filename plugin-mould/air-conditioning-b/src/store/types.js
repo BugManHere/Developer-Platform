@@ -11,8 +11,7 @@ export const SET_STATE = 'SET_STATE'; //
 export const SET_CHART_DATA = 'SET_CHART_DATA'; // 
 export const SET_MUSIC_DATA = 'SET_MUSIC_DATA'; // 
 
-export const GET_CATEGORY = 'GET_CATEGORY'; // 酷狗音乐获取歌单分类
-export const GET_AWESOME = 'GET_AWESOME'; // 酷狗音乐获取分类下的推荐歌单
+export const MUSIC_CONTROL = 'MUSIC_CONTROL'; // 音乐控制
 
 // 根据业务逻辑修改
 
