@@ -21,3 +21,7 @@ export const DEL_DEV = 'DEL_DEV'; //
 export const DEL_DEV_FUNC = 'DEL_DEV_FUNC'; // 
 export const SET_DEV_DONE = 'SET_DEV_DONE'; // 
 
+// 账户接口
+export const SET_USER_MODULE = 'SET_USER_MODULE'; // 
+export const SET_AUTHENTICATED = 'SET_AUTHENTICATED'; // 
+export const SET_USER = 'SET_USER'; // 

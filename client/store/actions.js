@@ -18,7 +18,6 @@ import {
   SET_DEV_DONE,
 } from './types';
 import https from '@/https';
-// import { deepCopy } from "@/utils";
 
 export default {
   // 获取产品类别列表
@@ -42,12 +41,13 @@ export default {
   },
   // 获取用户设备列表
   async [GET_USERDEVICE_LIST]({ state, commit }) {
-    const res = await https.fetchPost("/userDevice", {
+    await https.fetchPost("/userDevice", {
       admin: state.userModule.admin, 
+    }).then(res => {
+      const status = res.status === 200;
+      status && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
+      return status;
     });
-    const status = res.status === 200;
-    status && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
-    return status;
   },
    // 获取模板信息
   async [GET_TEMPLATES]({ state, commit }) {
@@ -72,6 +72,7 @@ export default {
     }
     // 请求接口，返回：template
     const res = await https.fetchPost("/template/save", {
+      admin: state.userModule.admin, 
       funcDefine: JSON.stringify(funcDefine), 
       tempID: state.tempModule.tempID,
     });
@@ -83,6 +84,7 @@ export default {
   // 模板编辑功能（更新某一功能），传入funcDefine
   async [EDIT_TEMP_FUNC]({ state, commit }, subFuncDefine) {
     const  res = await https.fetchPost("/template/editFunc", {
+      admin: state.userModule.admin, 
       subFuncDefine: JSON.stringify(subFuncDefine),
       tempID: state.tempModule.tempID,
     });
@@ -93,6 +95,7 @@ export default {
   // 模板增加功能
   async [ADD_TEMP_FUNC]({ state, commit }, insertMap) {
     const res = await https.fetchPost("/template/addFunc", {
+      admin: state.userModule.admin, 
       insertMap: JSON.stringify(insertMap),
       tempID: state.tempModule.tempID,
     })
@@ -103,6 +106,7 @@ export default {
   // 模板删除功能
   async [DEL_TEMP_FUNC]({ state, commit }, index) {
     const res = await https.fetchPost("/template/delFunc", {
+      admin: state.userModule.admin, 
       index,
       tempID: state.tempModule.tempID,
     });
@@ -113,8 +117,9 @@ export default {
   // 模板配置完毕
   async [SET_TEMP_DONE]({ state, getters, commit }) {
     const res = await https.fetchPost("/template/done", {
+      admin: state.userModule.admin, 
       funcDefine: JSON.stringify(getters.funcDefine),
-      tempID: state.tempModule.tempID
+      tempID: state.tempModule.tempID,
     });
     commit(CHANGE_TEMPLATE, res.data);
     const status = res.status === 200;
@@ -124,8 +129,8 @@ export default {
   // 删除设备
   async [DEL_DEV]({ state, commit }, id) {
     const res = await https.fetchPost('/userDevice/delDevice', { 
-      id,
       admin: state.userModule.admin, 
+      id,
     });
     const status = res.status === 200;
     status && window.myvm.$toast.info('删除设备成功') && commit(SET_DEV_MODULE, ['userDeviceList', res.data]);
@@ -145,15 +150,20 @@ export default {
   },
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
-    console.log(state.devModule.moreOption);
-    const res = await https.fetchPost("/userDevice/done", {
-      admin: state.userModule.admin, 
-      id: state.devModule.deviceKey,
-      funcImport: getters.funcImport,
-      moreOption: JSON.stringify(state.devModule.moreOption)
-    });
-    const status = res.status === 200;
-    status && window.myvm.$toast.info('保存成功');
+    const newWin = window.open('', 'pluginPage');
+    // 前端先检验：如果权限不足，则不请求接口
+    if (state.userModule.user.identity <= 2) {
+      await https.fetchPost("/userDevice/done", {
+        admin: state.userModule.admin, 
+        id: state.devModule.deviceKey,
+        funcImport: getters.funcImport,
+        moreOption: JSON.stringify(state.devModule.moreOption)
+      });
+    }
+    window.myvm.$toast.info('请在新窗口预览效果');
+    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
+    // window.open(targetUrl, 'pluginPage', '', true);
+    newWin.location.href = targetUrl;
     return status;
   },
 };

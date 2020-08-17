@@ -35,15 +35,19 @@ const mixin = {
      * @description 初始化，并将小卡片传进来的值赋予state
      */
     init() {
+      const { key } = require('@/../plugin.id.json');
+      const { funcDefine, moreOption } = require(`@/../../../output/${key}.json`);
+
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
 
       const valArr = JSON.parse(dataArr);
+      console.log('----------url传值-----------');
       console.log(dataArr);
 
       const functype = JSON.parse(getQueryStringByName('functype'));
-      console.log(`functype: ${functype}`);
+      console.log(`是否场景模式: ${Boolean(functype)}`);
 
       const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
       hasReportedForRepair === 'true'
@@ -53,18 +57,23 @@ const mixin = {
       this.setMac(mac);
       this.getDeviceInfo(mac);
 
-      const key = JSON.parse(this.devOptions.statueJson2);
+      const jsonKey = moreOption.statueJson2;
       const DataObject = {};
 
-      key.forEach((item, index) => {
+      jsonKey.forEach((item, index) => {
         DataObject[item] = Number(valArr[index]);
       });
-      DataObject.functype = functype;
       
-      console.log(DataObject);
+      // 兼容辅热，如果开启了八度制热，则不更新辅热
+      if (funcDefine.some(item => item.identifier === 'AssHt(Auto)') && DataObject.StHt) {
+        DataObject.AssHt = 1;
+      }
+
+      (DataObject.functype = functype) && (DataObject.OutHome = 0);
+      
       valArr && this.setCheckObject(DataObject);
       valArr && this.setDataObject(DataObject);
-      console.log('finish');
+      console.log('-------------init finish--------------');
     }
   }
 };

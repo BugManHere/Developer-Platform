@@ -69,7 +69,7 @@
           <!-- 右边的按键 -->
           <td v-if="funcOptions.content && funcDefine">
             <p>
-              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="!funcDefine[realIndex[index]].page"/>
+              <span @click="insertPage(realIndex[index])" v-text="'插入页面'" v-show="tableOptions.operate.includes('insert')" v-if="funcDefine[realIndex[index]] && !funcDefine[realIndex[index]].page"/>
               <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue"/>
               <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')"/>
               <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete') && content && content[1] !== 'Pow'" />

@@ -180,15 +180,15 @@ module.exports = {
     FbidBloPer: '防直吹',
     UDFanPort: '下出风',
     'UDFanPort(Auto)': '下出风',
+    'UDFanPort(Auto)_默认': '下出风自动',
     AntiDirectBlow: '防直吹',
     // 商用
     OutHome: '外出模式',
-    LoopMod: '循环风',
+    LoopMod: '全新风',
     LoopMod_混合风: '混合风',
-    LoopMod_全新风: '全新风',
     SvSt: '节能',
     Blo: '干燥',
-    Humi: '除湿',
+    Humi: '加湿',
     x: '再热除湿',
   },
   sweep: {

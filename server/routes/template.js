@@ -4,7 +4,32 @@ const dayjs = require('dayjs');
 const templateFuncModel = require('../models/template');
 const { Object } = require('core-js');
 
+// 登录token
+const jwt = require('jsonwebtoken');
+const keys = require('../config/keys');
 require('../mongoose.js');
+// 权限判断
+const permit = require("../api/permit");
+
+router.use(function(req, res, next) {
+  // 拿取token 数据 按照自己传递方式写
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  if (token) {      
+      // 解码 token (验证 secret 和检查有效期（exp）)
+      jwt.verify(token, keys.secretOrKey, function(err, decoded) {      
+            if (err) {
+              return res.status(403).send('用户信息过期');
+            } else {
+              // 如果验证通过，在req中写入解密结果
+              req.decoded = decoded;  
+              next(); //继续下一步路由
+        }
+      });
+  } else {
+    // 没有拿到token 返回错误 
+    return res.status(403).send('用户信息过期');
+  }
+});
 
 router.get('/', function(req, res) {
   templateFuncModel.find().then(params => {
@@ -14,6 +39,10 @@ router.get('/', function(req, res) {
 
 // 创建模板
 router.post('/create', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const params = await templateFuncModel.findOne({
     seriesID: req.body.seriesID,
     productID: req.body.productID
@@ -36,6 +65,10 @@ router.post('/create', async function(req, res) {
 
 // 模板保存功能
 router.post('/save', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
   funcDefine.forEach(funcItem => {
@@ -59,6 +92,10 @@ router.post('/save', async function(req, res) {
 
 // 模板编辑功能
 router.post('/editFunc', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const productInfo = await getProductInfo(req.body.tempID);
   const subFuncDefine = JSON.parse(req.body.subFuncDefine);
   const subFuncDefineCopy = productInfo.funcDefine.id(subFuncDefine._id);
@@ -76,6 +113,10 @@ router.post('/editFunc', async function(req, res) {
 
 // 模板添加新功能
 router.post('/addFunc', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const productInfo = await getProductInfo(req.body.tempID);
   const insetMap = JSON.parse(req.body.insertMap);
   productInfo.funcDefine.push(insetMap); // 插入新功能
@@ -85,6 +126,10 @@ router.post('/addFunc', async function(req, res) {
 
 // 模板删除功能
 router.post('/delFunc', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const productInfo = await getProductInfo(req.body.tempID);
   const suvbFuncDefine = productInfo.funcDefine[req.body.index];
   suvbFuncDefine.remove();
@@ -94,6 +139,10 @@ router.post('/delFunc', async function(req, res) {
 
 // 模板配置完毕
 router.post('/done', async function(req, res) {
+  if (!await permit(res, req.body.admin, 1)) {
+    res.status(401).send('没有此权限');
+    return;
+  }
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
   productInfo.funcDefine = funcDefine;
@@ -106,4 +155,5 @@ async function getProductInfo(tempID) {
   const seriesID = tempID.split('&')[1];
   return await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
 }
+
 module.exports = router;

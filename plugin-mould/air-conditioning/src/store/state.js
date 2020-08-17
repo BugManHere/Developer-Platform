@@ -9,7 +9,7 @@ const state = {
   isStHt: false,
   dataObject: {
     Pow: 1,
-    Mod: 1,
+    Mod: 3,
     SetTem: 18,
     WdSpd: 1,
     'Add0.5': 0,
@@ -19,7 +19,7 @@ const state = {
     ElcEn: 1, // 电量统计
     functype: 0, // 0代表正常，1代表集中控制
     CO2: 401,
-    SmartSlpModEx: 0
+    SmartSlpModEx: 0,
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

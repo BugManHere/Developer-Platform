@@ -222,7 +222,7 @@ export default {
         class: "btn-primary"
       };
       const done = {
-        text: "保存配置",
+        text: "预览效果",
         func: {
           defined: this.setDevDone
         },

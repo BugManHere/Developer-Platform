@@ -59,7 +59,7 @@
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow && !loading" key="temSwiper"/>
         <!-- 温度单位图标 -->
-        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && Mod">
+        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
         <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
@@ -177,7 +177,7 @@ export default {
       return {
         backgroundImage,
         'background-size': `${isB ? 1 : 5}00% 100%`,
-        'background-position': `${isB ? 0 : this.Mod * 25}% 0%`
+        'background-position': `${isB ? 0 : (this.Mod % 5) * 25}% 0%`
       };
     },
     showPowOff() {
@@ -366,15 +366,10 @@ export default {
     // 场景模式保存按钮
     sceneSave() {
       const remarks = '...';
-      const opt = JSON.parse(
-        this.devOptions.statueJson2
-      );
+      const opt = JSON.parse(this.devOptions.statueJson2);
+      console.log(opt);
       const p = opt.map(item => {
-        // 兼容炫光
-        if (item === 'Dazzling') {
-          return this.Pow;
-        }
-        return this.dataObject[item];
+        return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
       });
 
       const json = JSON.stringify({ opt, p, t: 'cmd' });

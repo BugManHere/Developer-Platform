@@ -1,10 +1,10 @@
 import axios from 'axios'
 import qs from 'qs'
 
-axios.defaults.timeout = 5000;                        //响应时间
+axios.defaults.timeout = 5000;                        // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';        //配置请求头
-// axios.defaults.baseURL = 'http://8.210.116.167:3000';   //配置接口地址
-axios.defaults.baseURL = 'http://localhost:3000';   //配置接口地址
+
+axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`;   // 配置接口地址
 
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
@@ -36,8 +36,13 @@ axios.interceptors.response.use((res) =>{
 }, (error) => {
     if (typeof window !== 'undefined' && window.myvm) {
         const vm = window.myvm;
-        vm.$toast.error('网络异常');
         vm.$loading.hide();
+        if (error.response && error.response.data) {
+            vm.$toast.error(error.response.data);
+            error.response.status === 403 && vm.$router.push('/Account/Login');
+        } else {
+            vm.$toast.error('网络异常');
+        }
     }
     return Promise.reject(error);
 });
@@ -45,11 +50,14 @@ axios.interceptors.response.use((res) =>{
 //返回一个Promise(发送post请求)
 export function fetchPost(url, params) {
     return new Promise((resolve, reject) => {
-        axios.post(url, params)
+        const eleToken = localStorage.getItem('eleToken');
+        let token = '';
+        eleToken && (token = eleToken.split('Bearer ')[1]);
+        axios.post(url, {...params, token})
             .then(response => {
                 resolve(response);
-            }, err => {
-                reject(err);
+            }, error => {
+                reject(error);
             })
             .catch((error) => {
                 reject(error)
@@ -59,7 +67,10 @@ export function fetchPost(url, params) {
 ////返回一个Promise(发送get请求)
 export function fetchGet(url, param) {
     return new Promise((resolve, reject) => {
-        axios.get(url, {params: param})
+        const eleToken = localStorage.getItem('eleToken');
+        let token = '';
+        eleToken && (token = eleToken.split('Bearer ')[1]);
+        axios.get(url, { params: {...param, token} })
             .then(response => {
                 resolve(response)
             }, err => {

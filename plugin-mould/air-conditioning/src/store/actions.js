@@ -147,7 +147,7 @@ function getStatusOfDev({ state, commit }) {
         commit(SET_DATA_OBJECT, DataObject);
         lastObject = state.checkObject;
       }
-      console.log('--------轮询的字段值--------');
+      console.log('--------------DataObject-------------');
       console.log(DataObject);
       return DataObject;
     })

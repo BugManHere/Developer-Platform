@@ -1,27 +1,30 @@
 // var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require("passport");
 
 // 引入json解析中间件
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
-var indexRouter = require('./routes/index');
-var productTypeRouter = require('./routes/productType');
-var productFuncRouter = require('./routes/productFunc');
-var userDeviceRouter = require('./routes/userDevice');
-var templateRouter = require('./routes/template');
-// var httpsRouter = require('./routes/https');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const productTypeRouter = require('./routes/productType');
+const userDeviceRouter = require('./routes/userDevice');
+const templateRouter = require('./routes/template');
+const pluginRouter = require('./routes/plugin');
 
-var app = express();
+const usersRouter = require('./routes/users');
 
-global.key = 'greekey';
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+// 初始化passport
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // 自定义跨域中间件
 var allowCors = function(req, res, next) {
@@ -48,26 +51,20 @@ app.use(bodyParser.urlencoded({
 
 app.use('/', indexRouter);
 app.use('/productType', productTypeRouter);
-app.use('/productFunc', productFuncRouter);
 app.use('/userDevice', userDeviceRouter);
 app.use('/template', templateRouter);
-// app.use('/https', httpsRouter);
+app.use('/plugin', pluginRouter);
 app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
 
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // // render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
 });
 
 // 访问静态资源
@@ -76,4 +73,8 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 // 监听
 app.listen(3000, function () {
   console.log('success listen...3000');
+});
+
+app.get("/secret", passport.authenticate('jwt', { session: false }), function(req, res){
+  res.json("Success! You can not see this without a token");
 });
