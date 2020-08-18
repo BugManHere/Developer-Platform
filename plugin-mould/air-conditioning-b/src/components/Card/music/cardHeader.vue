@@ -4,8 +4,8 @@
   >
     <!-- 左边文字 -->
     <div class="left">
-      <div v-text="'点播'" @click="imshowType = 0" :class="{select: imshowType === 0}"/>
-      <div v-text="'技能'" @click="imshowType = 1" :class="{select: imshowType === 1}"/>
+      <div v-text="'点播'" @click="changeImshow(0)" :class="{select: imshowType === 0}"/>
+      <div v-text="'技能'" @click="changeImshow(1)" :class="{select: imshowType === 1}"/>
     </div>
     <!-- 右边按钮 -->
     <div class="right">
@@ -16,12 +16,26 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
-      imshowType: 0
     }
   },
+  computed: {
+    ...mapState({
+      imshowType: state => state.musicData.imshowType,
+    }),
+  },
+  methods: {
+    ...mapMutations({
+      setMusicData: 'SET_MUSIC_DATA',
+    }),
+    changeImshow(type) {
+      this.setMusicData({imshowType: type});
+    }
+  }
 };
 </script>
 

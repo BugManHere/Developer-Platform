@@ -23,11 +23,11 @@ export default {
   },
   data() {
     return {
-      imshowType: 0, // 0：点播, 1：技能
     };
   },
   computed: {
     ...mapState({
+      imshowType: state => state.musicData.imshowType,
       playMap: state => state.musicData.playMap,
       listSongsMap: state => state.musicData.listSongsMap,
       songInfosMap: state => state.musicData.songInfosMap,
@@ -47,7 +47,7 @@ export default {
     }),
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'ws://192.168.31.94:9999';
+      const wsuri = 'ws://172.28.4.201:9999';
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
