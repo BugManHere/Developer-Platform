@@ -83,7 +83,7 @@ export default {
       HumiSvStTemMin: state => state.dataObject.HumiSvStTemMin || 18,
       HeatSvStTemMax: state => state.dataObject.HeatSvStTemMax || 18
     }),
-    ...mapGetters(['modIdentifier', 'temSetVal', 'temSetJson']),
+    ...mapGetters(['modIdentifier', 'temSetVal', 'temSetJson', 'temMinVal', 'temMaxVal']),
     ...mapGetters('machine', ['statusMap']),
     swiper() {
       return this.$refs.svstSwiper.$swiper;
@@ -193,6 +193,12 @@ export default {
         }
       },
       immediate: true
+    },
+    temMinVal(newVal) {
+      newVal > this.temSetVal && this.sendData({ [this.temSetJson]: newVal });
+    },
+    temMaxVal(newVal) {
+      newVal < this.temSetVal && this.sendData({ [this.temSetJson]: newVal });
     }
   },
   methods: {
@@ -201,7 +207,8 @@ export default {
       setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: types.SEND_CTRL
+      sendCtrl: types.SEND_CTRL,
+      sendData: types.SEND_DATA
     }),
     // 返回按钮
     turnBack() {
@@ -213,21 +220,13 @@ export default {
     saveBtn() {
       this.switchStatus(true);
     },
-    // 发送数据
-    changeData(map) {
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
     // 开关
     switchStatus(boolean = !this.isActive) {
       const sendData = { SvSt: Number(boolean) };
       const json = this.silderType.json;
       const value = this.selectTem;
       sendData[json] = value;
-      // 如果设置的下限比当前温度高
-      value > this.temSetVal && (sendData[this.temSetJson] = value);
-      this.changeData(sendData);
+      this.sendData(sendData);
     },
     // 改变温度
     changeTem(el) {
