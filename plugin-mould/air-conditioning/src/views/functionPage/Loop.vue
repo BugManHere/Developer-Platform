@@ -41,7 +41,7 @@ export default {
   mixins: [errorConfig],
   data() {
     return {
-      LoopModList: ['全新风', '混合风'],
+      LoopModList: ['混合风', '全新风',],
     };
   },
   computed: {

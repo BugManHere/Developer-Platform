@@ -38,9 +38,9 @@ import {
   ToolBar,
   ErrorPage 
 } from 'gree-ui';
-import { mapState } from 'vuex';
 import { changeBarColor, closePage, toWebPage, callNumber} from '@PluginInterface';
 import errorConfig from '@/mixins/utils/error'
+
 export default {
   components: {
     [Header.name]: Header,
@@ -78,7 +78,9 @@ export default {
   },
   methods: {
     clickBack() {
-      if (this.JFerr || this.ErrCode1 ) {
+      const bit = 0
+      const errCode2Colsepage = (( this.ErrCode2 >> bit)  % 2 ) === 1 // ErrCode2中closePage的位 第0位
+      if (this.JFerr || this.ErrCode1 || errCode2Colsepage) {
         closePage();
       }  else {
         this.$router.push({ name: 'Home' });

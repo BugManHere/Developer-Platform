@@ -39,10 +39,7 @@
             </gree-col>
           </gree-row>
         </div>
-        <!-- <div class="bar-co2" v-if="!functype && Air && devOptions.statueJson2.includes('CO2')">
-          <img :src="co2Img">
-          <span v-text="'CO2浓度等级'" @click="showCO2"/>
-        </div> -->
+
         <!-- 模式滑轮 -->
         <modeSwiper v-if="Pow && !loading" key="modeSwiper"/>
 

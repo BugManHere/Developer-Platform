@@ -25,7 +25,14 @@ const state = {
     ErrCode1: 0,
     ErrCode2: 0,
     JFerr: 0,
-    ErrCodeType: 0
+    ErrCodeType: 0,
+    SieveState: 0, //滤网状态
+    WdSupPM: 0, // 送风PM2.5浓度
+    AirCO2: 0, //回风CO2浓度
+    WdSupTem: 50, // 送风温度
+    InAirHumi: 50, // 室内回风湿度
+    InAirTem: 50, // 室内回风温度
+    OutEnvTem: 50, // 室外环境温度
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

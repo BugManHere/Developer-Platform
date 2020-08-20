@@ -148,15 +148,18 @@ export default {
             title: '提示',
             content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
             confirmText: '确定',
-            onConfirm: () => this.setHumi(50),
+            onConfirm: () =>  {               
+              window.storage.set('ishiddenTip', true)
+              this.setHumi(50)
+            },
             cancelText: '取消',
             onCancel: () => {
-              window.storage.set('ishiddenTip', true)
               this.isActive = false;
             }
           });
         } else {
-           this.isActive = false;
+           this.isActive = true;
+           this.setHumi(50);
         }
       } else {
         this.setHumi(0);

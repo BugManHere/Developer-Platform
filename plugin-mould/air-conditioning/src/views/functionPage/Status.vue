@@ -1,6 +1,6 @@
 <template>
   <gree-view bg-color="#404040">
-    <gree-header @on-click-back="clickBack" :left-options="{ preventGoBack: true }" >{{ $language('btn.LoopMod') }}</gree-header>
+    <gree-header @on-click-back="clickBack" :left-options="{ preventGoBack: true }" >机组运行状态</gree-header>
     <gree-page class="page-status">
       <div class="status">
         <h3 class="headline" style="border-top: 1px solid #D6D6D6">机组运行状态</h3>
@@ -28,10 +28,10 @@
 
         <h3 class="headline">滤网状态</h3>
         <gree-list>
-          <gree-list-item title="新风粗效滤网" :text="SieveStateBit3" media-item />
-          <gree-list-item title="回风粗效滤网" :text="SieveStateBit2" media-item />
-          <gree-list-item title="高效滤网" :text="SieveStateBit1" media-item />
-          <gree-list-item title="换热芯体" :text="SieveStateBit0" media-item />
+          <gree-list-item title="新风粗效滤网" :text="getSieveStateStatus(1)" media-item />
+          <gree-list-item title="回风粗效滤网" :text="getSieveStateStatus(2)" media-item />
+          <gree-list-item title="高效滤网" :text="getSieveStateStatus(0)" media-item />
+          <gree-list-item title="换热芯体" :text="getSieveStateStatus(3)" media-item />
         </gree-list>
 
         <h3 class="status-bottom">到底啦~</h3>
@@ -101,7 +101,7 @@ export default {
     },
     // 室内回风湿度
     InAirHumiStatus() {
-      return `${this.InAirHumi}℃`; 
+      return `${this.InAirHumi}%RH`; 
     },
     // 送风温度
     WdSupTemStatus() {
@@ -119,21 +119,18 @@ export default {
     AirCO2Status() {
       return `${this.AirCO2}ppm`;
     },
-    // 滤网状态  换热芯体
-    SieveStateBit0() {
-      return this.getSieveStateStatus(0);
-    },
-    // 滤网状态 高效滤网  
-    SieveStateBit1() {
-      return this.getSieveStateStatus(1);
-    },
-    // 滤网状态 回风粗效滤网  
-    SieveStateBit2() {
-      return this.getSieveStateStatus(2);
-    },
-    // 滤网状态 新风粗效滤网  
-    SieveStateBit3() {
-      return this.getSieveStateStatus(3);
+
+    /**
+     * @description 设置正常状态判断
+     */    
+    getSieveStateStatus(){
+      return function(index){
+        const value = this.SieveState >> index;
+        if (value % 2 === 1) {
+          return '更换/清洗';
+        }
+        return '正常';
+      }
     },
   },
 
@@ -177,17 +174,6 @@ export default {
       closePage();
     }, 
 
-    /**
-     * @description 设置正常状态判断
-     */    
-    getSieveStateStatus(index) {
-      const value = this.SieveState >> index;
-      if (value % 2 === 1) {
-        return '更换';
-      }
-      return '正常';
-    },
-    
     /**
      * @description 退出当前页面
      */    

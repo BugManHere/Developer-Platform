@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "dayjs": "^1.8.15",
+    "dayjs": "^1.8.33",
     "echarts": "4.0.4",
     "gree-ui": "F:\\plugin-open-platform\\iotfe-gdp\\gree-ui\\gree-ui-20200706-3439b60d1f6ca9c3f80595fda0356d6c4d22188a",
     "vconsole": "^3.3.0",

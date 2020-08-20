@@ -35,7 +35,7 @@ const errorList = {
   ],
   ErrCode2: [
     {
-      code: 'b8',
+      code: 'b8', // 不可控
       title: 'notify_fault_name_b8',
       text: 'notify_Fault_resolve_H5',
       index: 0
