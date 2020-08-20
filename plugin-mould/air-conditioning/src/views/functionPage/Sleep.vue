@@ -449,9 +449,6 @@ export default {
       handler(newVal) {
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
-        if (newVal === 3) {
-          // this.getSlpVal();
-        }
       },
       immediate: true
     },
@@ -491,6 +488,9 @@ export default {
     this.$nextTick(() => {
       this.updateLocal(this.dataObject);
     });
+    setInterval(() => {
+      this.getSlpVal();
+    }, 10000);
   },
   methods: {
     ...mapMutations({
@@ -523,13 +523,13 @@ export default {
         opt,
         p
       });
-      console.table([opt, p]);
+      // console.table([opt, p]);
       this.updateDataObject(obj);
       if (this.functype) {
         hasToast && showToast(hasToast, 1);
         return;
       }
-      console.log(json);
+      // console.log(json);
       const res = await sendDataToDevice(this.mac, json, false);
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
@@ -547,15 +547,12 @@ export default {
         t: 'status',
         cols
       });
-      showLoading();
       const res = await sendDataToDevice(this.mac, statueJson, false);
       const _res = JSON.parse(res);
       const dataObject = {};
       _res.forEach((item, index) => {
         dataObject[cols[index]] = item;
       });
-
-      hideLoading();
 
       if (this.$store.state.uilock) return;
 
@@ -623,7 +620,7 @@ export default {
     },
     updateData(key) {
       if (!key) return;
-      this.data = this.modToTem[key];
+      // this.data = this.modToTem[key];
     },
     changeSlp(key, type) {
       if (type === 'on') {
