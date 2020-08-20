@@ -3,20 +3,40 @@
     <gree-page class="page-skill-detail no-navbar">
       <!-- 标题 -->
       <div class="page-header">
-        <gree-header theme='transparent'></gree-header>
+        <gree-header theme='transparent'>
+          <button 
+            slot="right"
+            v-show="hasSettings"
+            class="btn"
+            @click="gotoSettings"
+          >技能设置</button>
+        </gree-header>
         <div class="background"></div>
+        <div class="icon-wrapper">
+          <div class="icon">icon</div>
+          <span>天气</span>
+        </div>
       </div>
       <!-- 内容 -->
       <div class="page-main">
-        <div class="illustrate-content">
-          <p>您可以这么说</p>
+        <div class="panel">
+          <p class="title">您可以这么说</p>
           <ul>
             <li v-for="(item, index) in illustrate" :key="index">
-              {{item}}
+              <span>{{item}}</span>
             </li>
           </ul>
         </div>
+        <div class="panel">
+          <p class="title">技能介绍</p>
+          <p>{{introduce}}</p>
+        </div>
+        <div class="panel">
+          <p class="title">使用说明</p>
+          <p>{{direction_use}}</p>
+        </div>
       </div>
+      <footer>此技能由xxx提供</footer>
     </gree-page>
   </gree-view>
 </template>
@@ -28,7 +48,15 @@ export default {
   },
   data() {
     return {
-      illustrate: ['今天天气怎么样', '今天适合穿什么衣服']
+      illustrate: ['今天天气怎么样', '今天适合穿什么衣服'],
+      introduce: '可以查询当天和未来七天内的天气预报',
+      direction_use: '可以查询天气、冷热、气象、湿度、空气质量、紫外线等',
+      hasSettings: true
+    }
+  },
+  methods: {
+    gotoSettings() {
+      alert('settings');
     }
   }
 }
@@ -46,18 +74,76 @@ export default {
       z-index: -1;
       background-color: rgb(107, 74, 32);
     }
+    .btn {
+      border: 1px solid #fff;
+      outline: none;
+      appearance: none;
+      color: #fff;
+      height: 80px;
+      line-height: 80px;
+      border-radius: 80px;
+      padding: 0 40px;
+      background-color: transparent;
+    }
+    .icon-wrapper {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      .icon {
+        height: 160px;
+        width: 160px;
+        border-radius: 100%;
+        background-color: #fff;
+        margin-bottom: 20px;
+      }
+      span {
+        color: #fff;
+      }
+    }
   }
   .page-main {
-    .illustrate-content {
+    .panel {
       background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      .title {
+        padding-bottom: 20px;
+      }
       ul {
         list-style: none;
         li {
-          border-radius: 10px;
-          background-color: rgb(121, 121, 121);
+          span {
+            border-radius: 10px;
+            background-color: #B2B2B2;
+            display: inline-block;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            &::before {
+              position: absolute;
+              content: '';
+              width: 20px;
+              height: 20px;
+              top: 50%;
+              left: 0;
+              transform: translate(-50%, -50%) rotate(45deg);
+              background-color: #B2B2B2;
+            }
+          }
+          padding-bottom: 20px;
         }
       }
     }
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    padding-bottom: 20px;
   }
 }
 </style>

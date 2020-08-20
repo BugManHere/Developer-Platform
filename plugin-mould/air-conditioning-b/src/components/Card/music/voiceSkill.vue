@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="right">
-        <gree-icon name="search" size="lg"/>
+        <gree-icon name="search" size="lg" @click="gotoSearch"/>
       </div>
     </div>
     <div class="content">
@@ -26,25 +26,36 @@
         </gree-sidebar>
       </div>
       <div class="main">
-        <gree-list>
-          <gree-list-item
-            link
-            title="天气"
-            footer="今天天气怎么样"
-            no-hairlines
-            media-item
-            @click.native="gotoDetail"
-          >
-            <div slot="media" class="placeholder"></div>
-          </gree-list-item>
-        </gree-list>
+        <gree-scroll-view
+          ref="scrollView"
+          :scrolling-x="false"
+          @end-reached="onEndReached"
+        >
+         <gree-list>
+            <gree-list-item
+              link
+              title="天气"
+              footer="今天天气怎么样"
+              no-hairlines
+              media-item
+              @click.native="gotoDetail"
+            >
+              <div slot="media" class="placeholder"></div>
+            </gree-list-item>
+          </gree-list>
+          <gree-scroll-view-more
+            slot="more"
+            :is-finished="isFinished"
+          ></gree-scroll-view-more>
+        </gree-scroll-view>
+        
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Icon, Sidebar, SidebarItem, List, Item  } from 'gree-ui'; 
+import { Icon, Sidebar, SidebarItem, List, Item, ScrollView, ScrollViewMore } from 'gree-ui'; 
 export default {
   components: {
     [Icon.name]: Icon,
@@ -52,6 +63,8 @@ export default {
     [SidebarItem.name]: SidebarItem,
     [List.name]: List,
     [Item.name]: Item,
+    [ScrollView.name]: ScrollView,
+    [ScrollViewMore.name]: ScrollViewMore,
   },
   data() {
     return {
@@ -72,12 +85,26 @@ export default {
           index: 2,
           name: '教育'
         }
-      ]
+      ],
+      isFinished: false
     }
   },
   methods: {
     gotoDetail() {
       this.$router.push('/SkillDetail');
+    },
+    gotoSearch() {
+      this.$router.push('/SkillSearch');
+    },
+    onEndReached() {
+      if (this.isFinished) {
+        this.$refs.scrollView.finishLoadMore();
+        return;
+      }
+      setTimeout(() => {
+        this.isFinished = true;
+        this.$refs.scrollView.finishLoadMore();
+      }, 1000);
     }
   }
 };

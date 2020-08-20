@@ -49,6 +49,8 @@ const MusicPlay = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/play.vue')));
 const SkillDetail = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/skillDetail.vue')));
+const SkillSearch = r => 
+  require.ensure([], () => r(require('./../src/components/Card/music/page/skillSearch.vue')));
 
 Vue.use(Router);
 
@@ -165,6 +167,11 @@ const router = new Router({
       path: '/SkillDetail',
       name: 'SkillDetail',
       component: SkillDetail
+    },
+    {
+      path: '/SkillSearch',
+      name: 'SkillSearch',
+      component: SkillSearch
     }
   ]
 });
