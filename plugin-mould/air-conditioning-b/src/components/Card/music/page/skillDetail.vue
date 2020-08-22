@@ -11,10 +11,12 @@
             @click="gotoSettings"
           >技能设置</button>
         </gree-header>
-        <div class="background"></div>
+        <div class="background">
+          <img :src="back">
+        </div>
         <div class="icon-wrapper">
-          <div class="icon">icon</div>
-          <span>天气</span>
+          <img :src="icon" class="icon" />
+          <span>{{name}}</span>
         </div>
       </div>
       <!-- 内容 -->
@@ -42,16 +44,36 @@
 </template>
 <script>
 import { Header } from 'gree-ui';
+import { voiceACgetSkillInfo } from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Header.name]: Header,
   },
+  props: ['id'],
   data() {
     return {
-      illustrate: ['今天天气怎么样', '今天适合穿什么衣服'],
-      introduce: '可以查询当天和未来七天内的天气预报',
-      direction_use: '可以查询天气、冷热、气象、湿度、空气质量、紫外线等',
-      hasSettings: true
+      illustrate: [],
+      introduce: '',
+      direction_use: '',
+      name: '',
+      hasSettings: true,
+      back: '',
+      icon: '',
+    }
+  },
+  async created() {
+    let result = await voiceACgetSkillInfo(Number(this.id));
+    console.log(result);
+    if (result) {
+      if (typeof result === 'string') {
+        result = JSON.parse(result);
+      }
+      this.illustrate = result.illustrate;
+      this.name = result.name;
+      this.direction_use = result.direction_use;
+      this.introduce = result.introduce;
+      this.back = result.picture;
+      this.icon = result.icon;
     }
   },
   methods: {
@@ -94,8 +116,7 @@ export default {
       .icon {
         height: 160px;
         width: 160px;
-        border-radius: 100%;
-        background-color: #fff;
+        display: block;
         margin-bottom: 20px;
       }
       span {

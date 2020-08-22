@@ -1460,3 +1460,69 @@ export const getMsg = () => {
     }
   });
 };
+
+//语音空调技能列表获取
+export const voiceACgetSkillList = (mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillList(mac, data, (...params) => {
+        console.log('获取技能列表：', ...params);
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+//语音空调技能详情获取
+export const voiceACgetSkillInfo = (id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillInfo(id, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+//语音空调技能搜索
+export const voiceACgetSkillSearch = (mac, skill) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearch(mac, skill, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+//语音技能热门与历史搜索记录接口
+export const voiceACgetSkillSearchJudge = (mac) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearchJudge(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+//语音技能用户历史搜索记录清空接口
+export const voiceACgetSkillSearchTruncate = (mac) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearchTruncate(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}

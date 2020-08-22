@@ -746,5 +746,25 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function (
     getMsg: function (callback) {
       exec(callback, null, 'PluginInterface', 'getMsg', []);
     },
+    //语音空调技能列表获取
+    voiceACgetSkillList: function(mac,data,callback) {
+      exec(callback, null, 'PluginInterface', 'voiceACgetSkillList', [mac,data]);
+    },
+    //语音空调技能详情获取
+    voiceACgetSkillInfo: function(id,callback) {
+        exec(callback, null, 'PluginInterface', 'voiceACgetSkillInfo', [id]);
+    },
+    //语音空调技能搜索
+    voiceACgetSkillSearch: function(mac,skill,callback) {
+        exec(callback, null, 'PluginInterface', 'voiceACgetSkillSearch', [mac,skill]);
+    },
+    //语音技能热门与历史搜索记录接口
+    voiceACgetSkillSearchJudge: function(mac,callback) {
+        exec(callback, null, 'PluginInterface', 'voiceACgetSkillSearchJudge', [mac]);
+    },
+    //语音技能用户历史搜索记录清空接口
+    voiceACgetSkillSearchTruncate: function(mac,callback) {
+        exec(callback, null, 'PluginInterface', 'voiceACgetSkillSearchTruncate', [mac]);
+    },
   };
 });

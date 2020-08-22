@@ -60,23 +60,26 @@
         </span>
         <gree-list v-show="!isSearching && data && data.length">
           <gree-list-item
+            v-for="item in data"
+            :key="item.id"
             link
-            title="天气"
-            footer="今天天气怎么样"
+            :title="item.name"
+            :footer="item.illustrate"
             media-item
-            @click.native="gotoDetail"
+            @click.native="gotoDetail(item.id)"
           >
-            <div slot="media" class="placeholder"></div>
+            <img :src="item.iosIcon" slot="media" class="skill-icon" />
           </gree-list-item>
         </gree-list>
       </div>
-      
     </gree-page>
   </gree-view>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Header, SearchBar, Button, Tag, Icon, Dialog, List, Item } from 'gree-ui';
+import { showLoading, hideLoading, showToast, changeBarColor, voiceACgetSkillSearch, voiceACgetSkillSearchJudge, voiceACgetSkillSearchTruncate } from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Header.name]: Header,
@@ -91,12 +94,17 @@ export default {
   data() {
     return {
       value: '',
-      hot: ['天气', '空调', '笑话', '百科', '音乐', '新闻', '贝瓦儿歌','天气', '空调', '笑话', '百科', '音乐', '新闻',],
-      history: ['天气', '空调', '笑话', '百科', '音乐', '新闻', '贝瓦儿歌'],
+      hot: [],
+      history: [],
       data: [],
       isSearching: false,
       tips: ''
     }
+  },
+  computed: {
+    ...mapState({
+      mac: state => state.mac
+    }),
   },
   watch: {
     value(val) {
@@ -104,27 +112,76 @@ export default {
         this.data = [];
         this.isSearching = false;
         this.tips = '';
+        this.setHistoryAndHotItems();
       }
     }
   },
+  async created() {
+    changeBarColor('#fffffe');
+    this.setHistoryAndHotItems();
+  },
   methods: {
-    onSearch() {
-      if (!this.value) {
+    async setHistoryAndHotItems() {
+      showLoading();
+      let result = await voiceACgetSkillSearchJudge(this.mac);
+      hideLoading();
+      if (result) {
+        if (typeof result === 'string') {
+          result = JSON.parse(result);
+        }
+        this.hot = result.hot;
+        this.history = result.history;
+      }
+    },
+    gotoDetail(id) {
+      this.$router.push(`/SkillDetail/${id}`);
+    },
+    async onSearch() {
+      let keyword = this.value && this.value.trim();
+      if (!keyword) {
         return;
       }
       this.isSearching = true;
-      setTimeout(() => {
-        this.isSearching = false;
-        // this.tips = '对不起，没有搜到相关技能';
-        this.data = ['天气'];
-      }, 2000);
+      showLoading();
+      let result = await voiceACgetSkillSearch(this.mac, keyword);
+      hideLoading();
+      console.log(result);
+      this.isSearching = false;
+      if (result) {
+        if (typeof result === 'string') {
+          result = JSON.parse(result);
+        }
+        if (typeof(result.data) !== 'undefined') {
+          if (result.data.length > 0) {
+            this.data = result.data;
+          } else {
+            this.tips = '对不起，没有搜到相关技能';
+          } 
+        } else {
+          this.tips = '对不起，没有搜到相关技能';
+        }
+      }
     },
     clearHistory() {
       Dialog.confirm({
         title: '',
         content: '确定要清空全部历史记录吗？',
         confirmText: '确定',
-        onConfirm: () => console.log('[Dialog.confirm] confirm clicked'),
+        onConfirm: async() => {
+          let result = await voiceACgetSkillSearchTruncate(this.mac);
+          console.log(result);
+          if (result) {
+            if (typeof result === 'string') {
+              result = JSON.parse(result);
+            }
+            if (result.code === 200) {
+              this.history = [];
+              showToast('清空成功', 1);
+            } else {
+              showToast('清空失败', 1);
+            }
+          }
+        },
         cancelText: '取消',
         onCancel: () => console.log('[Dialog.confirm] cancel clicked')
       });
@@ -147,7 +204,7 @@ export default {
       .panel {
         padding: 20px;
         .title {
-          font-size: 24px;
+          font-size: 36px;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -175,10 +232,9 @@ export default {
       }
       .list {
         margin: 0;
-        .placeholder {
+        .skill-icon {
           width: 100px;
           height: 100px;
-          background-color: #ccc;
         }
         .item-content {
           padding-top: 30px;

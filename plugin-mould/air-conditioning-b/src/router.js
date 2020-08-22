@@ -164,8 +164,9 @@ const router = new Router({
       },
     },
     {
-      path: '/SkillDetail',
+      path: '/SkillDetail/:id',
       name: 'SkillDetail',
+      props: true,
       component: SkillDetail
     },
     {

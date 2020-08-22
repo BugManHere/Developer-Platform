@@ -16,7 +16,7 @@
     </div>
     <div class="content">
       <div class="sidebar">
-        <gree-sidebar v-model="activeKey">
+        <gree-sidebar v-model="activeKey" @change="onChangeDomain">
           <gree-sidebar-item 
             v-for="item in sidebarItems" 
             :key="item.index"
@@ -33,14 +33,16 @@
         >
          <gree-list>
             <gree-list-item
+              v-for="item in skillItems"
+              :key="item.id"
               link
-              title="天气"
-              footer="今天天气怎么样"
+              :title="item.name"
+              :footer="item.illustrate"
               no-hairlines
               media-item
-              @click.native="gotoDetail"
+              @click.native="gotoDetail(item.id)"
             >
-              <div slot="media" class="placeholder"></div>
+              <img :src="item.icon" slot="media" class="skill-icon"/>
             </gree-list-item>
           </gree-list>
           <gree-scroll-view-more
@@ -55,7 +57,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Icon, Sidebar, SidebarItem, List, Item, ScrollView, ScrollViewMore } from 'gree-ui'; 
+import { voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Icon.name]: Icon,
@@ -86,12 +90,51 @@ export default {
           name: '教育'
         }
       ],
+      skillItems: [],
       isFinished: false
     }
   },
+  computed: {
+    ...mapState({
+      mac: state => state.mac
+    }),
+  },
+  async mounted() {
+    try {
+      let queryArgs = {domain: '生活', getPic: true, pageNum: 1, pageSize: 10};
+      let result = await voiceACgetSkillList(this.mac, JSON.stringify(queryArgs));
+      console.log(result);
+      result = JSON.parse(result);
+      if (result) {
+        if (result.data) {
+          this.skillItems.splice(0, this.skillItems.length, ...result.data);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
-    gotoDetail() {
-      this.$router.push('/SkillDetail');
+    async onChangeDomain(index) {
+      this.skillItems.splice(0, this.skillItems.length);
+      let domain = this.sidebarItems.find(x => x.index === index);
+      if (domain) {
+        let queryArgs = {domain: domain.name,  getPic: true, pageNum: 1, pageSize: 10};
+        let result = await this.getSkillList(JSON.stringify(queryArgs));
+        if (result) {
+          result = JSON.parse(result);
+          if (result.data) {
+            this.skillItems.splice(0, this.skillItems.length, ...result.data);
+          }
+        }
+      }
+    },
+    async getSkillList(args) {
+      let result = await voiceACgetSkillList(this.mac, args);
+      return result;
+    },
+    gotoDetail(id) {
+      this.$router.push(`/SkillDetail/${id}`);
     },
     gotoSearch() {
       this.$router.push('/SkillSearch');
@@ -114,9 +157,9 @@ export default {
 .voice-skill {
   overflow: scroll;
   width: 100%;
-  height: 100%;
-  $mainHeight: calc(100vh - 120px);
-  min-height: $mainHeight;
+  // height: 100%;
+  $mainHeight: calc(100vh - 302px);
+  height: $mainHeight;
   display: flex;
   flex-direction: column;
   .toolbar {
@@ -168,10 +211,9 @@ export default {
       flex: 1;
       .list {
         margin: 0;
-        .placeholder {
+        .skill-icon {
           width: 100px;
           height: 100px;
-          background-color: #ccc;
         }
         .item-content {
           padding-top: 30px;
