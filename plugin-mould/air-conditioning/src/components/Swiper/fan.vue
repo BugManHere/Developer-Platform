@@ -45,13 +45,13 @@ export default {
       const result = [
         {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0, key: 'Fan_auto'},
         {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low'},
-        // {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low_b'},
+        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low_b'},
         {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2, key: 'Fan_medium_low'},
         {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3, key: 'Fan_medium'},
-        // {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 2, key: 'Fan_medium_b'},
+        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 2, key: 'Fan_medium_b'},
         {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4, key: 'Fan_medium_high'},
         {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5, key: 'Fan_high'},
-        // {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 3, key: 'Fan_high_b'},
+        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 3, key: 'Fan_high_b'},
         {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
       ];
       // 如果开启智眠，则不能开启强劲档
