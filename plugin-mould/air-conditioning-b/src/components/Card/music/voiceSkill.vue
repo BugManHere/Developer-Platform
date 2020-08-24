@@ -37,10 +37,10 @@
               :key="item.id"
               link
               :title="item.name"
-              :footer="item.illustrate"
+              :footer="item.illustrate | format"
               no-hairlines
               media-item
-              @click.native="gotoDetail(item.id)"
+              @click.native="gotoDetail(item)"
             >
               <img :src="item.icon" slot="media" class="skill-icon"/>
             </gree-list-item>
@@ -101,6 +101,13 @@ export default {
   },
   async mounted() {
     try {
+      let initHeight = document.querySelector('.main').clientHeight;
+      document.querySelector('.page-content').addEventListener('scroll', function(ev) {
+        console.log(this.scrollTop);
+        let scrollTop = this.scrollTop;
+        document.querySelector('.main').style.height = `${scrollTop + initHeight}px`;
+      });
+      
       let queryArgs = {domain: '生活', getPic: true, pageNum: 1, pageSize: 10};
       let result = await voiceACgetSkillList(this.mac, JSON.stringify(queryArgs));
       console.log(result);
@@ -112,6 +119,11 @@ export default {
       }
     } catch (error) {
       console.log(error);
+    }
+  },
+  filters: {
+    format(str) {
+      return `“${str}”`;
     }
   },
   methods: {
@@ -133,8 +145,8 @@ export default {
       let result = await voiceACgetSkillList(this.mac, args);
       return result;
     },
-    gotoDetail(id) {
-      this.$router.push(`/SkillDetail/${id}`);
+    gotoDetail(item) {
+      this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.icon}`);
     },
     gotoSearch() {
       this.$router.push('/SkillSearch');
@@ -208,7 +220,9 @@ export default {
       
     }
     .main {
-      flex: 1;
+      border: 1px solid red;
+      width: calc(100% - 200px);
+      height: calc(100% - 669px);
       .list {
         margin: 0;
         .skill-icon {

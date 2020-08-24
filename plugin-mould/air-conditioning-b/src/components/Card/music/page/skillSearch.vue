@@ -2,7 +2,7 @@
   <gree-view>
     <gree-page class="page-skill-search">
       <gree-header style="background-color: #fff;">技能搜索</gree-header>
-      <div>
+      <div >
         <gree-search-bar
           v-model="value"
           placeholder="请输入要搜索的内容"
@@ -94,7 +94,7 @@ export default {
   data() {
     return {
       value: '',
-      hot: [],
+      hot: ['test', 'test2'],
       history: [],
       data: [],
       isSearching: false,
@@ -196,29 +196,51 @@ export default {
     .page-content {
       position: relative;
       .gree-search-bar {
+        padding-top: 22px;
+        padding-left: 42px;
+        padding-bottom: 26px;
+        .gree-search-bar__content{
+          background-color: rgba($color: #000000, $alpha: 0.05);
+          .gree-field-item-content{
+            height: 110px;
+          }
+        }
         .gree-field-item-left {
           visibility: hidden;
           margin: 0;
         }
+        .gree-search-bar__action {
+          .gree-button--small {
+            height: 110px;
+          }
+          .gree-button--primary {
+            font-size: 45px;
+            background-color: #00AEFF;
+          }
+        }
       }
       .panel {
-        padding: 20px;
+        padding: 35px 60px 0px 50px;
         .title {
-          font-size: 36px;
+          font-size: 43px;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          color: #404657;
+          margin-bottom: 43px;
         }
         .tags {
           display: flex;
           flex-wrap: wrap;
           .gree-tag {
-            margin: 0px 20px 20px 0px;
+            margin: 0px 43px 30px 0px; 
             .type-fill {
-              color: #000;
+              color: rgba($color: #404657, $alpha: 0.6) ;
             }
             .size-small {
+              padding: 17px 46px;
               font-size: 36px;
+              background-color: #F2F2F2;
             }
           }
         }
