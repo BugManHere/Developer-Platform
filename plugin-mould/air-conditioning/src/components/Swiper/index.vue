@@ -243,7 +243,6 @@ export default {
       this.noSwiping = val;
     },
     textShowToast() {
-      if (!this.noSwiping) return;
       this.$emit('text-show-toast');
     },
     swiperShowDisable() {
