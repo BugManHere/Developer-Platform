@@ -28,44 +28,46 @@ const errorConfig = {
      * @description 检测是否有故障
      */
     errStatus() {
-      let errState;
       const isError = this.ErrCode1 || this.ErrCode2 || this.JFerr;
-      console.log('----------isError------', isError);
-      // debugger;
-      if (isError) {
-        errState = true;
-        if (this.$route.name === 'Error') {
-          this.updateError(); // 如果当前页是故障页，则显示长List 去故障页看 改函数在error 页
-          return errState;
-        } else {
-          this.updataErrMsg()
-        }
-      } else {
-        errState = false;
-      }
-      this.changeRoute(errState)
-      return errState;
+      return isError;
     }
   },
   watch: {
-
+    errStatus: {
+      immediate: true,
+      handler(newV) {
+        let errState;
+        if (newV) {
+          errState = true;
+          if (this.$route.name === 'Error') {
+            this.updateError(); // 如果当前页是故障页，则显示长List 该函数在error 页
+          } else {
+            this.updataErrMsg();
+          }
+        } else {
+          errState = false;
+        }
+        this.changeRoute(errState);
+      }
+    }
   },
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
     }),
+
     changeRoute(value) {
+      // 有故障 非故障页 需要跳故障页
+      const err2ToErr = this.getErr2toErrorStatus();
+      const toErrorPage = (this.ErrCode1 || this.JFerr || err2ToErr) && this.$route.name !== 'Error';
+
       // 无故障 且在 故障页。 跳回首页
-      if (!value && this.$route.name === 'Error') { 
+      if (!value && this.$route.name === 'Error') {
         this.$router.push({
           name: 'Home'
         });
         return;
       }
-
-      // 有故障 非故障页 需要跳故障页
-      const err2ToErr = this.getErr2toErrorStatus()
-      const toErrorPage = (this.ErrCode1 || this.JFerr || err2ToErr) && this.$route.name !== 'Error'
 
       if (toErrorPage) {
         this.$router.push({
@@ -79,16 +81,21 @@ const errorConfig = {
      * @description 判断err2 是否需要跳故障页
      */
     getErr2toErrorStatus() {
-      if (this.ErrCode2) {  
-        let toError = false
-        const err2IndexList = this.HandleErrorCode(this.ErrCode2)
+      let toError = false;
+      if (this.ErrCode2) {
+        const err2IndexList = this.HandleErrorCode(this.ErrCode2);
+        console.log('err2IndexList', err2IndexList);
+
         // 如果是第0位或第四位需要跳故障页
-        toError = Boolean(err2IndexList.includes(0) || err2IndexList.includes(4))
+        toError = Boolean(err2IndexList.includes(0) || err2IndexList.includes(4));
         this.setDataObject({
           ErrCodeType: !toError >> 0
         });
         return toError;
-      } 
+      }
+      this.setDataObject({
+        ErrCodeType: 0
+      });
       return false;
     },
 
@@ -127,5 +134,4 @@ const errorConfig = {
   }
 };
 
-export default errorConfig
-
+export default errorConfig;

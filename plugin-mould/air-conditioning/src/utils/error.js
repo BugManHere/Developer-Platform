@@ -59,7 +59,7 @@ const errorList = {
       index: 3
     },
     {
-      code: 'LP',
+      code: 'LP', // 不可控
       title: 'notify_fault_name_LP',
       text: 'notify_Fault_resolve_F4',
       index: 4

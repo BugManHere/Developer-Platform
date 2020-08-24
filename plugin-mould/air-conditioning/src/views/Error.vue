@@ -1,8 +1,9 @@
 
 <template>
   <gree-view class="error" bg-color="#f4f4f4">
-    <gree-header :left-options="{preventGoBack: true}"
-                 @on-click-back="clickBack">故障详情
+    <gree-header 
+      :left-options="{preventGoBack: true}"
+      @on-click-back="clickBack">故障详情
     </gree-header>
     <gree-page>
       <gree-error-page
@@ -24,7 +25,6 @@
           <h3>{{ item.Name }}</h3>
         </gree-col>
       </gree-row>
-      <div style="display:none">{{errStatus}}</div>
     </gree-toolbar>
   </gree-view>
 </template>
@@ -39,7 +39,7 @@ import {
   ErrorPage 
 } from 'gree-ui';
 import { changeBarColor, closePage, toWebPage, callNumber} from '@PluginInterface';
-import errorConfig from '@/mixins/utils/error'
+import errorConfig from '@/mixins/utils/error';
 
 export default {
   components: {
@@ -78,11 +78,12 @@ export default {
   },
   methods: {
     clickBack() {
-      const bit = 0
-      const errCode2Colsepage = (( this.ErrCode2 >> bit)  % 2 ) === 1 // ErrCode2中closePage的位 第0位
+      const bit0 = 0;
+      const bit4 = 4;
+      const errCode2Colsepage = ((this.ErrCode2 >> bit0) % 2) === 1 || ((this.ErrCode2 >> bit4) % 2) === 1; // ErrCode2中closePage的位 第0位 和 第四位
       if (this.JFerr || this.ErrCode1 || errCode2Colsepage) {
         closePage();
-      }  else {
+      } else {
         this.$router.push({ name: 'Home' });
       }
     },
@@ -118,7 +119,7 @@ export default {
 
       errorIndexList = this.HandleErrorCode(this.ErrCode2);
       for (let index = 0; index < errorIndexList.length; index++) {
-        this.errorMultiText.push(this.handleSingleErrObj(this.errorList.ErrCode2[errorIndexList[index]]) );
+        this.errorMultiText.push(this.handleSingleErrObj(this.errorList.ErrCode2[errorIndexList[index]]));
       }
       if (this.JFerr) {
         this.errorMultiText.push(this.handleSingleErrObj(this.errorList.wifiErrorList[0]));
@@ -128,12 +129,12 @@ export default {
     /**
      * @description 单故障处理
      */
-    handleSingleErrObj(item){
-      const element = JSON.parse(JSON.stringify(item))
-      element.title = this.$language(`error.${item.title}`)
-      element.text = this.$language(`error.${item.text}`)
-      element.headtitle = this.$language('error.headtitle')
-      element.subtitle = this.$language('error.subtitle')
+    handleSingleErrObj(item) {
+      const element = JSON.parse(JSON.stringify(item));
+      element.title = this.$language(`error.${item.title}`);
+      element.text = this.$language(`error.${item.text}`);
+      element.headtitle = this.$language('error.headtitle');
+      element.subtitle = this.$language('error.subtitle');
       return element;
     }
 

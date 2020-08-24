@@ -111,26 +111,38 @@ export default {
     ActualElecStatus() {
       return `${this.ActualElec}KW/h`; 
     },
-    // 送风PM2.5浓度
+
+    // 送风PM2.5浓度 区间取值
     WdSupPMStatus() {
-      return `${this.WdSupPM}ug/m³`; 
+      const district = [75, 115, 250, 999999];
+      const districtValue = ['优', '良', '中', '差'];
+      const index = district.findIndex(value => {
+        return value >= this.WdSupPM;
+      });
+      return districtValue[index]; 
     },
-    // 回风CO2浓度
+
+    // 回风CO2浓度 区间取值
     AirCO2Status() {
-      return `${this.AirCO2}ppm`;
+      const district = [1000, 2000, 999999];
+      const districtValue = ['底', '中', '高'];
+      const index = district.findIndex(value => {
+        return value >= this.AirCO2;
+      });
+      return districtValue[index]; 
     },
 
     /**
      * @description 设置正常状态判断
      */    
-    getSieveStateStatus(){
-      return function(index){
+    getSieveStateStatus() {
+      return function (index) {
         const value = this.SieveState >> index;
         if (value % 2 === 1) {
           return '更换/清洗';
         }
         return '正常';
-      }
+      };
     },
   },
 
@@ -144,11 +156,11 @@ export default {
     },
 
     ErrCode2(newVal) {
-       if (newVal) this.colse('设备出现故障');
+      if (newVal) this.colse('设备出现故障');
     },
 
     JFerr(newVal) {
-       if (newVal) this.colse('设备出现故障');
+      if (newVal) this.colse('设备出现故障');
     },
 
     isOffline(newVal) {
@@ -170,7 +182,7 @@ export default {
     /**
      * @description 返回键
      */
-    clickBack(){
+    clickBack() {
       closePage();
     }, 
 

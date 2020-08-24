@@ -7,10 +7,10 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
-      @touch-cancel="clearSwiperHold(slidesData.key)"
-      :class="{'swiper-no-swiping': noSwiping}"
+      @touchstart.native="swiperShowDisable"
       v-show="!isShowText"
     >
+      <!-- :class="{'swiper-no-swiping': noSwiping}" -->
       <swiper-slide 
         v-for="(item, index) in slidesData.list" 
         :key="index">
@@ -34,6 +34,7 @@
       class="swiper-text"
       :class="{isNumber}">
       <nobr
+        @touchend="textShowToast"
         v-if="isShowText"
         v-text="textContent" />
     </div>
@@ -97,6 +98,9 @@ export default {
       swiperHold: state => state.swiperHold,
       Pow: state => state.dataObject.Pow,
     }),
+    addDisableClass() {
+      return this.noSwiping || (this.swiperHold && this.swiperHold !== this.slidesData.key);
+    }
   },
   watch: {
     Pow() {
@@ -105,13 +109,24 @@ export default {
       }, 20);
     },
     swiperHold(newVal) {
-      if (newVal) return;
       const key = this.slidesData.key;
+      if (newVal) return;
       if (this.swiperPerView[key] && this.swiperPerView[key].length) {
         while (this.swiperPerView[key].length) {
           const swiper = this.swiperPerView[key].pop();
           swiper && (swiper.style.visibility = 'hidden');
         }
+      }
+    },
+    // 兼容格力2代
+    addDisableClass(newVal) {
+      const key = this.slidesData.key;
+      const ref = this.$refs[key];
+      if (newVal) {
+        ref.$el.className += ' swiper-no-swiping';
+      } else {
+        const classVal = ref.$el.className.replace(' swiper-no-swiping', '');
+        ref.$el.className = classVal;
       }
     }
   },
@@ -153,7 +168,7 @@ export default {
     }),
     setSwiperHold(key) {
       this.$nextTick(() => {
-        !this.swiperHold && this.setState(['swiperHold', true]);
+        this.setState(['swiperHold', key]);
         const ref = this.$refs[key];
         this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
         const realIndex = ref.swiper.realIndex;
@@ -226,6 +241,14 @@ export default {
     },
     banTouch(val) {
       this.noSwiping = val;
+    },
+    textShowToast() {
+      if (!this.noSwiping) return;
+      this.$emit('text-show-toast');
+    },
+    swiperShowDisable() {
+      if (!this.noSwiping) return;
+      this.$emit('swiper-show-toast');
     }
   }
 };

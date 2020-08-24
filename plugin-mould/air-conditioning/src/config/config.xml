@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <device>
   <mid>3020</mid>
-  <version>1.0</version>
+  <version>1.1</version>
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
   <statueJson>["Pow","Mod","SetTem","OutHome","JFerr", "ErrCode1", "ErrCode2"]</statueJson>

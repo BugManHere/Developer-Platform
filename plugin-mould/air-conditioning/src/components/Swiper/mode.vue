@@ -26,7 +26,7 @@ export default {
     return {
       ref: 'modeSwiper',
       itemList: [],
-      swiperIndex: 3,
+      swiperValue: 3,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
       modeList: [
@@ -71,7 +71,7 @@ export default {
   },
   watch: {
     currentIndex(newVal) {
-      const moveLen = newVal - this.swiperIndex;
+      const moveLen = newVal - this.swiperValue;
       const toIndex = this.leftLen + moveLen;
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
@@ -98,10 +98,10 @@ export default {
     },
     // 给滑轮赋予初始区间
     setList() {
-      this.swiperIndex = this.currentIndex;
+      this.swiperValue = this.currentIndex;
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
-        const index = this.countIndex(this.swiperIndex, i);
+        const index = this.countIndex(this.swiperValue, i);
         list.push(this.imshowList[index]);  
       }
       this.itemList = list;
@@ -111,7 +111,7 @@ export default {
       const moveLen = index - this.leftLen;
       this.removeSlide(moveLen);
       this.insertSlide(moveLen);
-      this.swiperIndex = this.currentIndex;
+      this.swiperValue = this.currentIndex;
     },
     // 滑轮定位到当前位置
     updateSwiper() {
@@ -135,7 +135,7 @@ export default {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(moveLen); i += 1) {
-        const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex = this.swiperValue + direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
         this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
@@ -151,18 +151,18 @@ export default {
     // 滑动事件
     swiperChange(index) {
       if (index === this.leftLen) return;
-      const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
+      const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
+      // const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
 
       // 缓存温度
-      // const temSetting = window.storage.get('temSetting') || {};
-      // let sendData = {...temSetting[toIndex], Mod: toIndex, Emod: 0};
-      // temSetting[this.dataObject.Mod] = {
-      //   SetTem: this.dataObject.SetTem,
-      //   'Add0.5': this.dataObject['Add0.5'],
-      //   'Add0.1': this.dataObject['Add0.1'],
-      // };
-      // window.storage.set('temSetting', temSetting);
+      const temSetting = window.storage.get('temSetting') || {};
+      let sendData = {...temSetting[toIndex], Mod: this.imshowList[toIndex].value, Emod: 0};
+      temSetting[this.dataObject.Mod] = {
+        SetTem: this.dataObject.SetTem,
+        'Add0.5': this.dataObject['Add0.5'],
+        'Add0.1': this.dataObject['Add0.1'],
+      };
+      window.storage.set('temSetting', temSetting);
 
       // 自动模式需要发送温度
       // toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
@@ -177,10 +177,10 @@ export default {
     },
     setFanName(index) {
       if (index === undefined) {
-        this.modeName = this.imshowList[this.swiperIndex].name;
+        this.modeName = this.imshowList.find(item => item.value === this.swiperValue).name;
         return;
       }
-      const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
+      const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
       this.modeName = this.imshowList[toIndex].name;
     }
   }

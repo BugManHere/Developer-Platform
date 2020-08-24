@@ -10,7 +10,7 @@
           </gree-col>
         </gree-row>
       </div>
-      <div style="display:none">{{errStatus}}</div>
+      <div style="display:none">{{ errStatus }}</div>
     </gree-page>
   </gree-view>
 </template>
@@ -22,7 +22,7 @@ import {
   showToast,
   hideLoading
 } from '@PluginInterface';
-import errorConfig from '@/mixins/utils/error'
+import errorConfig from '@/mixins/utils/error';
 
 export default {
   name: 'Loop',
@@ -41,7 +41,7 @@ export default {
   mixins: [errorConfig],
   data() {
     return {
-      LoopModList: ['混合风', '全新风',],
+      LoopModList: ['全新风', '循环风'],
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
     }
   },
   mounted() {
-    hideLoading()
+    hideLoading();
   },
   methods: {
     ...mapMutations({

@@ -4,12 +4,16 @@
       :ref="ref" 
       class="tem-swiper"
       :slides-data="options" 
-      @realIndex="swiperChange"/>
+      @realIndex="swiperChange"
+      @text-show-toast="textShowToast"
+      @swiper-show-toast="swiperShowDisable"
+    />
   </div>
 </template>
 
 <script>
 import temChange from '@/mixins/config/tem';
+import { showToast } from '@PluginInterface';
 import LogicDefine from '@/logic/define';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import Swiper from './index';
@@ -144,6 +148,15 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
+    textShowToast() {
+      console.log('-------自动模式下不可滑动---------');
+      showToast('自动模式下不可滑动', 1);
+    },
+    swiperShowDisable() {
+      console.log('-------故障下不可滑动---------');
+      showToast('故障下不可滑动', 1);
+    },
+
     changeData(val) {
       this.setDataObject(val);
       this.sendCtrl(val);
