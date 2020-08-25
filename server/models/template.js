@@ -6,10 +6,10 @@ const funcSchema = new mongoose.Schema({
   identifier: String,
   json: String,
   order: [String],
-  map: Object,
+  map: {},
   type: String,
-  statusDefine: Object,
-  page: Object
+  statusDefine: {},
+  page: {}
 })
 
 // 创建Schema
