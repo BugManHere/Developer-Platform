@@ -16,7 +16,7 @@
     </div>
     <div class="content">
       <div class="sidebar">
-        <gree-sidebar v-model="activeKey" @change="onChangeDomain">
+        <gree-sidebar v-model="activeDomainIndex" @change="onChangeDomain">
           <gree-sidebar-item 
             v-for="item in sidebarItems" 
             :key="item.index"
@@ -25,13 +25,13 @@
           </gree-sidebar-item>
         </gree-sidebar>
       </div>
-      <div class="main">
-        <gree-scroll-view
-          ref="scrollView"
-          :scrolling-x="false"
-          @end-reached="onEndReached"
-        >
-         <gree-list>
+      <div 
+        ref="skillList"
+        class="main" 
+        :class="{'loading': isLoading}">
+         <gree-list
+           @scroll.native="skillListScrollHandler"
+           v-show="!isLoadFailed">
             <gree-list-item
               v-for="item in skillItems"
               :key="item.id"
@@ -45,12 +45,16 @@
               <img :src="item.icon" slot="media" class="skill-icon"/>
             </gree-list-item>
           </gree-list>
-          <gree-scroll-view-more
-            slot="more"
-            :is-finished="isFinished"
-          ></gree-scroll-view-more>
-        </gree-scroll-view>
-        
+          <div 
+            class="error-msg-block" 
+            v-show="isLoadFailed"
+            @click="reload"
+          >
+            <div class="content">
+              <span>加载失败了!</span>
+              <span>重新加载</span>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -58,7 +62,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Icon, Sidebar, SidebarItem, List, Item, ScrollView, ScrollViewMore } from 'gree-ui'; 
+import { Icon, Sidebar, SidebarItem, List, Item } from 'gree-ui'; 
 import { voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
@@ -67,12 +71,10 @@ export default {
     [SidebarItem.name]: SidebarItem,
     [List.name]: List,
     [Item.name]: Item,
-    [ScrollView.name]: ScrollView,
-    [ScrollViewMore.name]: ScrollViewMore,
   },
   data() {
     return {
-      activeKey: 0,
+      activeDomainIndex: 0,
       toobarItems: [
         {
           imgUrl: '',
@@ -91,7 +93,13 @@ export default {
         }
       ],
       skillItems: [],
-      isFinished: false
+      isFinished: false,
+      isLoading: true,
+      isLoadFailed: false,
+      initListHeight: 0, //初始技能列表的高度
+      pageNum: 1,
+      pageSize: 5,
+      hasNextPage: false,
     }
   },
   computed: {
@@ -99,24 +107,44 @@ export default {
       mac: state => state.mac
     }),
   },
-  async mounted() {
+  activated() {
+    console.log('actived');
+    if (this.initListHeight) {
+      this.$refs.skillList.style.height = `${this.initListHeight}px`;
+    }
+  },
+  mounted() {
     try {
-      let initHeight = document.querySelector('.main').clientHeight;
-      document.querySelector('.page-content').addEventListener('scroll', function(ev) {
+      let self = this;
+      let listHeight = this.$refs.skillList.clientHeight;
+      this.initListHeight = listHeight;
+      let pageContent = document.querySelector('.page-content');
+
+      function scrollHandler(ev) {
         console.log(this.scrollTop);
         let scrollTop = this.scrollTop;
-        document.querySelector('.main').style.height = `${scrollTop + initHeight}px`;
-      });
+        self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
+      }
       
-      let queryArgs = {domain: '生活', getPic: true, pageNum: 1, pageSize: 10};
-      let result = await voiceACgetSkillList(this.mac, JSON.stringify(queryArgs));
-      console.log(result);
-      result = JSON.parse(result);
-      if (result) {
-        if (result.data) {
-          this.skillItems.splice(0, this.skillItems.length, ...result.data);
+      function skillListScrollHandler(ev) {
+        console.log('hit');
+        let deviation = 5;
+        if ((this.scrollTop + this.clientHeight) >= (this.scrollHeight - deviation)) {
+          if (self.hasNextPage) {
+            self.loadSkillList(self.pageNum + 1);
+          }
         }
       }
+
+      pageContent.addEventListener('scroll', scrollHandler, false);
+      // this.$refs.skillList.addEventListener('scroll', skillListScrollHandler, false);
+      this.$once('hook:beforeDestroy', () => {
+        pageContent.removeEventListener('scroll', scrollHandler, false);
+        // this.$refs.skillList.removeEventListener('scroll', skillListScrollHandler, false);
+      });
+
+      this.loadSkillList(1);
+     
     } catch (error) {
       console.log(error);
     }
@@ -127,23 +155,56 @@ export default {
     }
   },
   methods: {
-    async onChangeDomain(index) {
-      this.skillItems.splice(0, this.skillItems.length);
+    onChangeDomain(index) {
       let domain = this.sidebarItems.find(x => x.index === index);
       if (domain) {
-        let queryArgs = {domain: domain.name,  getPic: true, pageNum: 1, pageSize: 10};
-        let result = await this.getSkillList(JSON.stringify(queryArgs));
-        if (result) {
-          result = JSON.parse(result);
-          if (result.data) {
-            this.skillItems.splice(0, this.skillItems.length, ...result.data);
-          }
-        }
+        let queryArgs = {domain: domain.name, pageNum: 1};
+        this.getSkillList(index, queryArgs);
       }
     },
-    async getSkillList(args) {
-      let result = await voiceACgetSkillList(this.mac, args);
-      return result;
+    async getSkillList(index, args) {
+      try {
+        this.pageNum = args.pageNum;
+        args.getPic = true;
+        args.pageSize = this.pageSize;
+        this.skillItems.splice(0, this.skillItems.length);
+        this.isLoading = true;
+        this.isLoadFailed = false;
+        this.hasNextPage = false;
+        let result = await voiceACgetSkillList(this.mac, JSON.stringify(args));
+        if (index !== this.activeDomainIndex) {
+          return;
+        }
+        this.isLoading = false;
+        if (!result) {
+          throw new Error('result is empty');
+        }
+        if (typeof result === 'string') {
+          result = JSON.parse(result);
+        }
+        if (!result.data) {
+          throw new Error('data is null or empty');
+        }
+        this.skillItems = result.data; 
+        let total = result.total;
+        if (total > this.pageNum * this.pageSize) {
+          this.hasNextPage = true;
+        }
+      } catch (error) {
+        this.isLoading = false;
+        this.isLoadFailed = true;
+      }    
+    },
+    reload() {
+      this.loadSkillList(1);
+    },
+    loadSkillList(pageNum) {
+      let index = this.activeDomainIndex;
+      let domain = this.sidebarItems.find(x => x.index === index);
+      if (domain) {
+        let queryArgs = {domain: domain.name, pageNum: pageNum};
+        this.getSkillList(index, queryArgs);
+      }
     },
     gotoDetail(item) {
       this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.icon}`);
@@ -151,26 +212,32 @@ export default {
     gotoSearch() {
       this.$router.push('/SkillSearch');
     },
-    onEndReached() {
-      if (this.isFinished) {
-        this.$refs.scrollView.finishLoadMore();
-        return;
-      }
-      setTimeout(() => {
-        this.isFinished = true;
-        this.$refs.scrollView.finishLoadMore();
-      }, 1000);
+    skillListScrollHandler() {
+      console.log('hit');
     }
   }
 };
 </script>
 
 <style lang="scss">
+// 共同的属性抽取出来
+@mixin commonPart($size, $url) {
+  position: absolute;
+  content: '';
+  background-image: url($url);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: $size;
+  height: $size;
+}
 .voice-skill {
-  overflow: scroll;
+  overflow: hidden;
   width: 100%;
   // height: 100%;
-  $mainHeight: calc(100vh - 302px);
+  $mainHeight: calc(100vh - 142px - 1.18rem);
   height: $mainHeight;
   display: flex;
   flex-direction: column;
@@ -220,10 +287,12 @@ export default {
       
     }
     .main {
-      border: 1px solid red;
+      // border: 1px solid red;
       width: calc(100% - 200px);
-      height: calc(100% - 669px);
+      height: calc(100% - 849px);
       .list {
+        height: 100%;
+        overflow-y: auto;
         margin: 0;
         .skill-icon {
           width: 100px;
@@ -237,6 +306,46 @@ export default {
               .item-footer {
                 margin-top: 30px;
               }
+            }
+          }
+        }
+      }
+      &.loading {
+        @keyframes loading-rotate {
+            0% {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+              transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        position: relative;
+        &::before {
+          @include commonPart(120px, '../../../assets/img/skill/share_icon_logo.png');
+        }
+        &::after {
+          @include commonPart(160px, '../../../assets/img/skill/share_icon_loading_rotate.png');
+          animation: loading-rotate 1s linear infinite;
+        }
+      }
+      .error-msg-block {
+        height: 100%;
+        position: relative;
+        .content {
+          @include commonPart(580px, '../../../assets/img/skill/share_reload_new.png');
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          span {
+            &:first-child {
+              font-size: 48px;
+              color: rgba($color: #404657, $alpha: 0.6);
+              margin-top: 120px;
+              margin-bottom: 20px;
+            }
+            &:last-child {
+              font-size: 32px;
+              color: #ffd800;
             }
           }
         }
