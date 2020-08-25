@@ -149,13 +149,8 @@ router.post('/done', async function (req, res, next) {
   const { output, deviceKey, plugin } = await saveAndOutput(req.body); // 获取输出/设备id/模板目录地址
 
   // 写入文件
-  fs.writeFile(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output), err => {
-    if (err) throw err;
-    fs.writeFile(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }), err => {
-      if (err) throw err;
-    });
-  });
-  
+  fs.writeFileSync(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output));
+  fs.writeFileSync(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }));
   res.json(output);
 });
 
