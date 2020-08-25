@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import go from 'gojs';
 import draggable from "vuedraggable";
 import { deepCopy } from "@/utils";
 import _difference from 'lodash/difference';
@@ -109,51 +108,6 @@ export default {
       this.setTempModule(["activeStatusList", null]);
       this.setPulicModule(["statusSetStep", 0]);
     },
-    createdNode() {
-      let $ = gojs.GraphObject.make;
-      this.diagram.nodeTemplate = $(gojs.Node, 'Auto',
-        {
-          // 添加点击事件
-          click: function(e, obj) {}
-        },
-        // 将节点数据nodeDataArray .loc与图表位置建立联系
-        new gojs.Binding('position', 'loc', gojs.Point.parse),
-        //设置节点形状：带圆角的长方形
-        $(gojs.Shape, 'RoundedRectangle',
-          // 设置大小，边框大小、颜色，背景色，鼠标手势
-          {desiredSize: new gojs.Size(160, NaN), strokeWidth: 0, fill: 'white', cursor: 'grab'},
-          //将节点数据nodeDataArray .color与节点背景色建立联系
-          new gojs.Binding('fill', 'color'), 
-         //将节点数据nodeDataArray .cursor与节点鼠标手势建立联系
-          new gojs.Binding('cursor', 'cursor')
-        ),
-        // 设置文本节点
-        $(gojs.TextBlock,
-          // 设置文本样式：大小，是否换行，margin
-          {
-            desiredSize: new gojs.Size(100, NaN),
-            wrap: gojs.TextBlock.WrapFit,
-            margin: 8
-          }, 
-          // bind TextBlock.text to Node.data.name
-          new gojs.Binding('text', 'name'), 
-          new gojs.Binding('cursor', 'cursor')
-        )
-      )
-      this.diagram.linkTemplate = $(gojs.Link,
-        $(gojs.Shape, // the link shape
-          {strokeWidth: 2, stroke: 'white'}),
-        $(gojs.Shape, // the arrowhead
-          {toArrow: 'OpenTriangle',
-            fill: null, stroke: 'white'})
-      );
-      // 将图表在画布中居中显示
-      this.diagram.initialContentAlignment = go.Spot.Center;
-      // 操作支持ctrl+z、ctrl+Y 实现undo和redo
-      this.diagram.undoManager.isEnabled = true;
-      // 通过节点数据和关系数组完成关系图。
-      this.diagram.model = new gojs.GraphLinksModel(this.nodeDataArray, this.relation); //nodeDataArray:graph, linkDataArray: relation
-    }
   }
 }
 </script>
