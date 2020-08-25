@@ -16,4 +16,4 @@ const VerifySchema = new mongoose.Schema({
   },
 });
 
-module.exports = verify = mongoose.model("verify", VerifySchema);
+module.exports = mongoose.model("verify", VerifySchema);
