@@ -20,6 +20,7 @@ export const SET_TEMP_DONE = 'SET_TEMP_DONE'; //
 export const DEL_DEV = 'DEL_DEV'; // 
 export const DEL_DEV_FUNC = 'DEL_DEV_FUNC'; // 
 export const SET_DEV_DONE = 'SET_DEV_DONE'; // 
+export const DOWNLOAD_CONFIG = 'DOWNLOAD_CONFIG'; // 下载配置
 
 // 账户接口
 export const SET_USER_MODULE = 'SET_USER_MODULE'; // 

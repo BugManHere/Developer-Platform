@@ -17,39 +17,39 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
   // 拿取token 数据 按照自己传递方式写
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (token) {      
-      // 解码 token (验证 secret 和检查有效期（exp）)
-      jwt.verify(token, keys.secretOrKey, function(err, decoded) {      
-            if (err) {
-              return res.status(403).send('用户信息过期');
-            } else {
-              // 如果验证通过，在req中写入解密结果
-              req.decoded = decoded;  
-              next(); //继续下一步路由
-        }
-      });
+  if (token) {
+    // 解码 token (验证 secret 和检查有效期（exp）)
+    jwt.verify(token, keys.secretOrKey, function (err, decoded) {
+      if (err) {
+        return res.status(403).send('用户信息过期');
+      } else {
+        // 如果验证通过，在req中写入解密结果
+        req.decoded = decoded;
+        next(); //继续下一步路由
+      }
+    });
   } else {
     // 没有拿到token 返回错误 
     return res.status(403).send('用户信息过期');
   }
 });
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function (req, res, next) {
+  const admin = req.query.admin;
+  const userDevice = await getAdminDevice(admin);
+  res.json(userDevice.userDeviceList);
+});
+
+router.post('/', async function (req, res, next) {
   const admin = req.body.admin;
   const userDevice = await getAdminDevice(admin);
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/', async function(req, res, next) {
-  const admin = req.body.admin;
-  const userDevice = await getAdminDevice(admin);
-  res.json(userDevice.userDeviceList);
-});
-
-router.post('/create', async function(req, res, next) {
+router.post('/create', async function (req, res, next) {
   if (!await permit(res, req.body.admin, 2)) {
     res.status(401).send('没有此权限');
     return;
@@ -94,7 +94,7 @@ router.post('/create', async function(req, res, next) {
   res.json(userDeviceList);
 });
 
-router.post('/delDevice', async function(req, res, next) {
+router.post('/delDevice', async function (req, res, next) {
   if (!await permit(res, req.body.admin, 2)) {
     res.status(401).send('没有此权限');
     return;
@@ -108,7 +108,7 @@ router.post('/delDevice', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/save', async function(req, res, next) {
+router.post('/save', async function (req, res, next) {
   if (!await permit(res, req.body.admin, 2)) {
     res.status(401).send('没有此权限');
     return;
@@ -124,7 +124,7 @@ router.post('/save', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/delFunc', async function(req, res, next) {
+router.post('/delFunc', async function (req, res, next) {
   if (!await permit(res, req.body.admin, 2)) {
     res.status(401).send('没有此权限');
     return;
@@ -141,43 +141,79 @@ router.post('/delFunc', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/done', async function(req, res, next) {
+router.post('/done', async function (req, res, next) {
   if (!await permit(res, req.body.admin, 2)) {
     res.status(200).send('只有预览权限');
     return;
   }
-  const admin = req.body.admin;
-  const id = req.body.id;
-  const moreOption = JSON.parse(req.body.moreOption);
-  const userDevice = await getAdminDevice(admin);
-  const device = await userDevice.userDeviceList.id(id);
+  const { output, deviceKey, plugin } = await saveAndOutput(req.body); // 获取输出/设备id/模板目录地址
 
-  const productID = device.productID;
-  const seriesID = device.seriesID;
-  const template = await templateFuncModel.findOne({productID, seriesID}); // 寻找对应模板
-  const { plugin } = await productTypeModel.findById(productID); // 模板地址
+  // 写入文件
+  fs.writeFile(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output), err => {
+    if (err) throw err;
+    fs.writeFile(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }), err => {
+      if (err) throw err;
+    });
+  });
   
+  res.json(output);
+});
+
+router.get('/download', function (req, res, next) {
+  const deviceKey = req.query.deviceKey;
+  const downloadUrl = resolve(`../../output/${deviceKey}.json`)
+  res.download(downloadUrl);
+});
+
+// 获取用户下的设备信息
+async function getAdminDevice(admin) {
+  let Signture = crypto.createHmac('sha1', keys.secretOrKey);
+  Signture.update(admin);
+  const Ciphertext = Signture.digest().toString('base64');
+  const res = await userDeviceModel.findOne({ admin: Ciphertext });
+  return res || { userDeviceList: [] };
+}
+
+// 保存并输出对象
+async function saveAndOutput(input) {
+  const admin = input.admin; // 用户
+  const deviceKey = input.deviceKey; // 设备key
+  const moreOption = JSON.parse(input.moreOption); // 更多配置项
+  const userDevice = await getAdminDevice(admin); // 获取用户下的设备信息
+  const device = await userDevice.userDeviceList.id(deviceKey); // 找到对应的设备
+
+  const productID = device.productID; // 获取产品id
+  const seriesID = device.seriesID; // 获取分类id
+  const template = await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
+  const { plugin } = await productTypeModel.findById(productID); // 模板目录地址
+
+  // 根据功能id寻找功能信息
   const funcDefine = device.funcImport.map(key => {
     return template.funcDefine.id(key);
   })
 
-  device.moreOption = moreOption;
-  userDevice.save();
+  device.moreOption = moreOption; // 将更多配置项存入设备配置中
+  userDevice.save(); // 保存
 
+  // 输出的对象
   const output = {
-    excludeMap: {},
-    hideMap: {},
-    productModel: device.productModel,
-    deviceName: device.deviceName,
-    funcDefine,
-    moreOption
+    excludeMap: {}, // 排斥逻辑
+    hideMap: {}, // 隐藏逻辑
+    productModel: device.productModel, // mid
+    deviceName: device.deviceName, // 系列名
+    funcDefine, // 功能定义
+    moreOption // 更多配置项
   };
+
+  // 提取逻辑
   const extractLogic = (status, key) => {
     if (status[key] && status[key].length) { // 如果存在互斥逻辑
-     return status[key]; // 返回互斥
+      return status[key]; // 返回互斥
     }
     return [];
   };
+
+  // 遍历功能,提取排斥/隐藏逻辑
   funcDefine.forEach(func => {
     const id = func.identifier; // 获取id
     // 轮询功能里面的状态，提取互斥
@@ -196,23 +232,7 @@ router.post('/done', async function(req, res, next) {
     });
   });
 
-  // 写入文件
-  fs.writeFile(resolve(`../../output/${id}.json`), JSON.stringify(output), err => {
-    if (err) throw err;
-    fs.writeFile(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({key: id}), err => {
-      if (err) throw err;
-    });
-  });
-
-  res.json(output);
-});
-
-async function getAdminDevice(admin) {
-  let Signture = crypto.createHmac('sha1', keys.secretOrKey);
-  Signture.update(admin);
-  const Ciphertext = Signture.digest().toString('base64');
-  const res = await userDeviceModel.findOne({ admin: Ciphertext });
-  return res || {userDeviceList: []};
+  return { output, deviceKey, plugin };
 }
 
 module.exports = router;

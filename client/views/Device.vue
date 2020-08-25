@@ -221,6 +221,13 @@ export default {
         },
         class: "btn-primary"
       };
+      const download = {
+        text: "下载配置",
+        func: {
+          defined: this.downloadConfig
+        },
+        class: "btn-default"
+      };
       const done = {
         text: "预览效果",
         func: {
@@ -233,7 +240,7 @@ export default {
           result.push(saveAndNext);
           return result;
         case 1:
-          result.push(lastStep, done);
+          result.push(lastStep, download, done);
           return result;
         default:
           result.push(lastStep, done);
@@ -269,7 +276,8 @@ export default {
       setPulicModule: "SET_PULIC_MODULE",
     }),
     ...mapActions({
-      setDevDone: 'SET_DEV_DONE'
+      setDevDone: 'SET_DEV_DONE',
+      downloadConfig: 'DOWNLOAD_CONFIG'
     }),
     $_quote() {
       if (this.developType === 0) {

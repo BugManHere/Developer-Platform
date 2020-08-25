@@ -16,6 +16,8 @@ import {
   SET_TEMP_DONE,
   DEL_DEV_FUNC,
   SET_DEV_DONE,
+
+  DOWNLOAD_CONFIG, // 下载配置
 } from './types';
 import https from '@/https';
 
@@ -151,14 +153,16 @@ export default {
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
     const newWin = window.open('', 'pluginPage');
+    let status = true;
     // 前端先检验：如果权限不足，则不请求接口
     if (state.userModule.user.identity <= 2) {
-      await https.fetchPost("/userDevice/done", {
+      const res = await https.fetchPost("/userDevice/done", {
         admin: state.userModule.admin, 
-        id: state.devModule.deviceKey,
+        deviceKey: state.devModule.deviceKey,
         funcImport: getters.funcImport,
         moreOption: JSON.stringify(state.devModule.moreOption)
       });
+      status = res.status === 200;
     }
     window.myvm.$toast.info('请在新窗口预览效果');
     const targetUrl = `${process.env.VUE_APP_SERVE_URL}:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
@@ -166,4 +170,26 @@ export default {
     newWin.location.href = targetUrl;
     return status;
   },
+  // 下载配置
+  async [DOWNLOAD_CONFIG]({ state, getters }) {
+    const newWin = window.open('', '_parent');
+    const deviceKey = state.devModule.deviceKey;
+    let status = true;
+    // 前端先检验：如果权限不足，则不请求接口
+    if (state.userModule.user.identity <= 2) {
+      const res = await https.fetchPost("/userDevice/done", {
+        admin: state.userModule.admin, 
+        deviceKey,
+        funcImport: getters.funcImport,
+        moreOption: JSON.stringify(state.devModule.moreOption)
+      });
+      status = res.status === 200;
+    }
+
+    const eleToken = localStorage.getItem('eleToken');
+    let token = '';
+    eleToken && (token = eleToken.split('Bearer ')[1]);
+    newWin.location.href = `${process.env.VUE_APP_SERVE_URL}:3000/userDevice/download?deviceKey=${deviceKey}&token=${token}`;
+    return true;
+  }
 };
