@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      isLogin: true,
+      isLogin: false,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
       isScrollTop: true,
@@ -202,7 +202,7 @@ export default {
   // justify-content: center;
   // flex-wrap: wrap;
   .no-login {
-    height: 100%;
+    height: calc(100vh - 142px - 120px - 669px - 190px);
     display: flex;
     flex-direction: column;
     justify-content: center;
