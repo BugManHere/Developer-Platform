@@ -185,7 +185,7 @@ module.exports = {
     // 商用
     OutHome: '外出模式',
     LoopMod: '全新风',
-    LoopMod_混合风: '混合风',
+    LoopMod_循环风: '循环风',
     SvSt: '节能',
     Blo: '干燥',
     Humi: '加湿',

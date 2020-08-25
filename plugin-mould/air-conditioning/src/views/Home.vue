@@ -60,6 +60,8 @@
         <temSwiper v-if="Pow && !loading" key="temSwiper"/>
         <!-- 温度单位图标 -->
         <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
+        <!-- 室内温度 -->
+        <div class="room-tem" v-text="`当前室温${TemSen - 40}℃`" v-if="hasTemSen"/>
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
         <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
@@ -162,6 +164,7 @@ export default {
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
       TemUn: state => state.dataObject.TemUn,
+      TemSen: state => state.dataObject.TemSen,
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
       CO2: state => state.dataObject.CO2,
@@ -273,7 +276,10 @@ export default {
     },
     hasAir() {
       return this.devOptions.statueJson2.includes('Air');
-    }
+    },
+    hasTemSen() {
+      return this.devOptions.statueJson2.includes('TemSen');
+    },
   },
   watch: {
     colorChange: {
