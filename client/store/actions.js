@@ -101,6 +101,7 @@ export default {
       insertMap: JSON.stringify(insertMap),
       tempID: state.tempModule.tempID,
     })
+    console.log(res);
     const status = res.status === 200;
     status &&  commit(CHANGE_TEMPLATE, res.data);
     return status;

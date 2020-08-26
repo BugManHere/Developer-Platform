@@ -3,10 +3,7 @@
     <div class="status-input">
       <caption>
         <span v-text="'状态详情'"/>
-        <span>
-          标识：
-          <span v-text="keyNote(currentStatusKey)" class="text-label"/>
-        </span>
+        <span v-text="keyNote(currentStatusKey)" class="text-label"/>
       </caption>
       <div class="status-info">
         <div class="info-name">
@@ -94,16 +91,17 @@
       </div>
       <!-- 删除按钮 -->
       <div class="del-btn">
-        <button type="button" class="btn btn-danger" v-text="'删除状态'" v-show="!['default', 'undefined'].includes(currentStatusKey)"/>
+        <button 
+        type="button" 
+        v-show="!['default', 'undefined'].includes(currentStatusKey)"
+        class="btn btn-danger" 
+        v-text="'删除状态'" 
+        @click="delStatus"/>
       </div>
     </div>
     <div class="status-order">
       <caption>
         <span v-text="'状态指向'"/>
-        <span>
-          当前状态名称：
-          <span v-text="currentStatus.name && currentStatus.name.length >= 10 ? `${currentStatus.name.slice(0, 10)}...` : currentStatus.name" class="text-label"/>
-        </span>
       </caption>
       <!-- 图表 -->
       <div class="order-chart" ref="mychart"/>
@@ -120,7 +118,6 @@ export default {
   data() {
     return {
       funcCopy: [], // 功能副本
-      statusList: [], 
       currentStatusIndex: 0, // 当前选中状态的下标
       currentDrection: 'default',
       cmdMap: {
@@ -147,7 +144,7 @@ export default {
         weights[key] = (weights[key] || 0) + 1;
       })
       this.statusList.forEach(item => {
-        const curve = item.key === map[map[item.key]];
+        const curve = item.key === map[item.direction];
         nodes.push(
           {
             itemStyle: {
@@ -168,7 +165,7 @@ export default {
             id: item.key,
             name: 'null',
             source: item.key,
-            target: map[item.key],
+            target: item.direction,
             // symbol: [null, 'triangle'],
             // symbolSize: 13,
             lineStyle: {
@@ -281,7 +278,7 @@ export default {
     },
     currentStatus() {
       if (!this.statusList.length) return {};
-      const key = this.statusList[this.currentStatusIndex].key;
+      const key = this.currentStatusKey;
       const statusDefine = this.funcCopy.statusDefine;
       return statusDefine[key];
     },
@@ -289,6 +286,21 @@ export default {
       if (!this.statusList.length) return 'default';
       return this.statusList[this.currentStatusIndex].key;
     },
+    statusList() {
+      let result = [];
+      if (this.funcCopy.statusDefine) {
+        const statusKeyList = Object.keys(this.funcCopy.statusDefine); // 取出功能下的状态名
+        result =  statusKeyList.map(key => {
+          // 根据状态获取名称
+          return {
+            name: this.funcCopy.statusDefine[key].name, 
+            key,
+            direction: this.funcCopy.map[key]
+          };
+        });
+      }
+      return result;
+    }
   },
   watch: {
     currentStatusIndex(newVal) {
@@ -301,15 +313,7 @@ export default {
   },
   mounted() {
     this.funcCopy = deepCopy(this.funcDefine[this.currentFuncId]); // 复制funcDefine
-    const statusKeyList = Object.keys(this.funcCopy.statusDefine); // 取出功能下的状态名
-    this.statusList = statusKeyList.map(key => {
-      // 根据状态获取名称
-      return {
-        name: this.funcCopy.statusDefine[key].name, 
-        key,
-        direction: this.funcCopy.map[key]
-      };
-    });
+    this.updateStatusList(); // 更新状态列表
     this.initEchart(); // 初始化图表
   },
   methods: {
@@ -321,6 +325,7 @@ export default {
       editTempFunc: "EDIT_TEMP_FUNC",
     }),
     async settingDone() {
+      console.log(this.funcCopy);
     },
     // 初始化图表
     initEchart(){
@@ -362,12 +367,25 @@ export default {
       const value = this.currentStatus[valueKey];
       if (this.statusList[index][valueKey] === value) return;
       this.$set(this.funcCopy.statusDefine[key], valueKey, value);
-      this.$set(this.statusList[index], valueKey, value);
+      // this.$set(this.statusList[index], valueKey, value);
 
       this.updateEchart();
     },
     updateEchart() {
       this.myChart.setOption(this.opt);
+    },
+    // 更新状态列表
+    updateStatusList() {
+      // const statusKeyList = Object.keys(this.funcCopy.statusDefine); // 取出功能下的状态名
+      // console.log(this.funcCopy);
+      // this.statusList = statusKeyList.map(key => {
+      //   // 根据状态获取名称
+      //   return {
+      //     name: this.funcCopy.statusDefine[key].name, 
+      //     key,
+      //     direction: this.funcCopy.map[key]
+      //   };
+      // });
     },
     // 添加状态
     addStatus() {
@@ -384,10 +402,22 @@ export default {
         isCheck: true,
         customize: false,
       });
-      this.statusList.push({ name, key });
+      this.updateStatusList(); // 更新状态列表
+
       this.$set(this.funcCopy.map, key, 'default');
       this.currentStatusIndex = this.statusList.length - 1;
 
+      this.updateEchart();
+    },
+    // 删除状态
+    delStatus() {
+      const key = this.currentStatusKey;
+      this.$delete(this.funcCopy.statusDefine, this.currentStatusKey);
+      this.$delete(this.funcCopy.map, key);
+      this.updateStatusList(); // 更新状态列表
+      this.currentStatusIndex = 0;
+
+      this.updateCmd();
       this.updateEchart();
     },
     // 设置状态指向
@@ -414,29 +444,38 @@ export default {
     },
     updateCmd() {
       this.cmdMap = {
-        keys: [''],
-        vals: [''],
-        oldKeys: [''],
+        keys: [],
+        vals: [],
+        oldKeys: [],
       };
       const moreCommand = this.funcCopy.statusDefine[this.currentStatusKey].moreCommand;
       if (moreCommand) {
         Object.keys(moreCommand).forEach(key => {
-          this.cmdMap.keys.unshift(key);
-          this.cmdMap.oldKeys.unshift(key);
-          this.cmdMap.vals.unshift(moreCommand[key]);
+          this.cmdMap.keys.push(key);
+          this.cmdMap.vals.push(moreCommand[key]);
         })
       }
+      this.cmdMap.keys.push('');
+      this.cmdMap.vals.push('');
+      this.cmdMap.oldKeys = this.cmdMap.keys;
     },
     setCmd() {
       const cmd = {};
       this.cmdMap.keys.forEach((key, index) => {
         const val = this.cmdMap.vals[index];
-        if (key === '' || val === '') return;
+        if (key === '' && val === '') return;
         cmd[key] = val;
       });
       this.$set(this.funcCopy.statusDefine[this.currentStatusKey], 'moreCommand', cmd);
 
       this.updateCmd();
+    },
+    // 完成
+    async settingDone() {
+      await this.editTempFunc(this.funcCopy);
+      this.setTempModule(["currentFuncId", false]);
+      this.setTempModule(["activeStatusList", null]);
+      this.setPulicModule(["statusSetStep", 0]);
     }
   }
 }

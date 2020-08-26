@@ -34,6 +34,7 @@ module.exports = {
         '@assets': resolve('client/assets'),
         '@public': resolve('public'),
         '@plugin': resolve('plugin-mould'),
+        '@server': resolve('server'),
         },
       })
   },

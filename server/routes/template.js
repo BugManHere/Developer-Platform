@@ -70,20 +70,23 @@ router.post('/save', async function(req, res) {
   }
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
-  funcDefine.forEach(funcItem => {
-    const map = {
-      default: String(funcItem.order[0]),
-      undefined: 'default'
-    };
-    console.log(funcItem.order);
-    funcItem.order.forEach((statusName, index) => {
-      map[statusName] = funcItem.order[index + 1] || 'default';
-    });
-    Object.keys(funcItem.statusDefine).forEach(statusName => {
-      map[statusName] || (map[statusName] =  'default');
-    });
-    funcItem.map = map;
-  });
+  console.log(funcDefine.map)
+
+  // funcDefine.forEach(funcItem => {
+  //   const map = {
+  //     default: String(funcItem.order[0]),
+  //     undefined: 'default'
+  //   };
+  //   console.log(funcItem.order);
+  //   funcItem.order.forEach((statusName, index) => {
+  //     map[statusName] = funcItem.order[index + 1] || 'default';
+  //   });
+  //   Object.keys(funcItem.statusDefine).forEach(statusName => {
+  //     map[statusName] || (map[statusName] =  'default');
+  //   });
+  //   funcItem.map = map;
+  // });
+
   productInfo.funcDefine = funcDefine;
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
@@ -95,17 +98,13 @@ router.post('/editFunc', async function(req, res) {
     res.status(401).send('没有此权限');
     return;
   }
-  const productInfo = await getProductInfo(req.body.tempID);
+  const productInfo = await getProductInfo(req.body.tempID); 
   const subFuncDefine = JSON.parse(req.body.subFuncDefine);
   const subFuncDefineCopy = productInfo.funcDefine.id(subFuncDefine._id);
   // 赋值
-  subFuncDefineCopy.order = subFuncDefine.order;
-  subFuncDefineCopy.name = subFuncDefine.name;
-  subFuncDefineCopy.identifier = subFuncDefine.identifier;
-  subFuncDefineCopy.json = subFuncDefine.json;
-  subFuncDefineCopy.type = subFuncDefine.type;
-  subFuncDefineCopy.page = subFuncDefine.page;
-  subFuncDefineCopy.statusDefine = subFuncDefine.statusDefine;
+  Object.keys(subFuncDefine).forEach(key => {
+    subFuncDefineCopy[key] = subFuncDefine[key];
+  });
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
 });

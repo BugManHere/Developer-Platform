@@ -329,10 +329,14 @@ export default {
           }
         },
         order: [],
-        map: {}
+        map: {
+          default: "status_1",
+          undefined: "default"
+        }
       };
       if (!this.setTempStep) {
         insertMap.type = "active";
+        insertMap.map.status_1 = "default";
         insertMap.statusDefine.status_1 = {
           name: "开启",
           value: 1,
@@ -341,6 +345,7 @@ export default {
         };
         insertMap.order.push("status_1");
       }
+      console.log(insertMap);
       this.addTempFunc(insertMap);
     },
     $_quote() {
