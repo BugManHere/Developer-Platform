@@ -1,0 +1,73 @@
+@import "home";
+@import "circle-slider";
+@import "offline";
+@import "iconfont";
+@import "components/FuncPopup.scss";
+@import "components/ModPopup.scss";
+@import "components/FanPopup.scss";
+
+@font-face {
+  font-family: "appleLight";
+  src: url("../iconfont/SF-UI-Display-Light.otf");
+}
+
+@font-face {
+  font-family: "appleUltralight";
+  src: url("../iconfont/SF-UI-Display-Ultralight.otf");
+}
+
+.hidden {
+  display: none !important;
+}
+
+.page {
+  .list {
+    margin: 0;
+    ul {
+      li {
+        .item-content {
+          min-height: 122px;
+          padding-left: 0;
+          .item-inner {
+            min-height: 122px;
+            padding-left: 55px;
+            .item-title,
+            .item-after {
+              font-size: 42px;
+            }
+            .item-after {
+              color: #404657;
+            }
+          }
+        }
+        &.item-time-before {
+          .item-title {
+            flex-grow: 1;
+          }
+          .item-after {
+            flex-basis: 50%;
+            white-space: normal;
+          }
+        }
+      }
+    }
+    &.last {
+      margin-top: 280px;
+      ul {
+        li {
+          .item-content {
+            .item-inner {
+              .item-title {
+                width: 100%;
+                text-align: center;
+                span {
+                  color: #ff0101;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

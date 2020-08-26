@@ -1,0 +1,40 @@
+.gree-error {
+  .gree-offline-content {
+    .gree-offline-pic {
+      width: 224px !important;
+      height: 72px !important;
+    }
+    .gree-offline-text {
+      font-size: 48px !important;
+    }
+  }
+}
+.optrel {
+  .gree-error {
+    .gree-offline-content {
+      .gree-offline-pic {
+        width: 312px !important;
+        height: 63px !important;
+      }
+    }
+    .gree-offline-text {
+      .link {
+        color: #00aeff;
+        padding-bottom: 2px;
+        position: relative;
+        text-decoration: none;
+        &::after {
+          content: ' ';
+          position: absolute;
+          top: 0;
+          left: 0;
+          border-bottom: 1px solid #00aeff;
+          width: 200%;
+          height: 200%;
+          transform: scale(0.5);
+          transform-origin: 0 0;
+        }
+      }
+    }
+  }
+}

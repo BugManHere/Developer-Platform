@@ -1,0 +1,275 @@
+{
+  "id": "1920248",
+  "name": "空调插件图标",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "空调插件图标",
+  "glyphs": [
+    {
+      "icon_id": "15988016",
+      "name": "送风",
+      "font_class": "songfeng",
+      "unicode": "e68d",
+      "unicode_decimal": 59021
+    },
+    {
+      "icon_id": "15693573",
+      "name": "高级",
+      "font_class": "gaoji",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "15693574",
+      "name": "健康",
+      "font_class": "jiankang",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "15693575",
+      "name": "换气",
+      "font_class": "huanqi",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "15693576",
+      "name": "化霜",
+      "font_class": "huashuang",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "15693577",
+      "name": "开关",
+      "font_class": "kaiguan",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "15693578",
+      "name": "干燥",
+      "font_class": "ganzao",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "15693579",
+      "name": "模式",
+      "font_class": "moshi",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "15693580",
+      "name": "节能",
+      "font_class": "jieneng",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "15693581",
+      "name": "加湿",
+      "font_class": "jiashi",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "15693582",
+      "name": "辅热",
+      "font_class": "fure",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "15693583",
+      "name": "室内温度",
+      "font_class": "shineiwendu",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "15693584",
+      "name": "区域送风",
+      "font_class": "quyusongfeng",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    },
+    {
+      "icon_id": "15693585",
+      "name": "禁止吹人",
+      "font_class": "jinzhichuiren",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "15693587",
+      "name": "语音技能",
+      "font_class": "yuyinjineng",
+      "unicode": "e664",
+      "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "15693588",
+      "name": "上下扫风",
+      "font_class": "shangxiasaofeng",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "15693589",
+      "name": "语音",
+      "font_class": "yuyin",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "15693590",
+      "name": "睡眠",
+      "font_class": "shuimian",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "15693591",
+      "name": "新风",
+      "font_class": "xinfeng",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "15693592",
+      "name": "炫光",
+      "font_class": "xuanguang",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "15693593",
+      "name": "右出风",
+      "font_class": "youchufeng",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    },
+    {
+      "icon_id": "15693594",
+      "name": "上下定格",
+      "font_class": "shangxiadingge",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "15693595",
+      "name": "预约",
+      "font_class": "yuyue",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "15693596",
+      "name": "制热",
+      "font_class": "zhire",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "15693597",
+      "name": "智享",
+      "font_class": "zhixiang",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "15693598",
+      "name": "制冷",
+      "font_class": "zhileng",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "15693599",
+      "name": "自动",
+      "font_class": "zidong",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "15693600",
+      "name": "自动清洁",
+      "font_class": "zidongqingjie",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "15693601",
+      "name": "左出风",
+      "font_class": "zuochufeng",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "15693602",
+      "name": "左右扫风",
+      "font_class": "zuoyousaofeng",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "15693603",
+      "name": "除湿",
+      "font_class": "chushi",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    },
+    {
+      "icon_id": "15693604",
+      "name": "智能送风",
+      "font_class": "zhinengsongfeng",
+      "unicode": "e675",
+      "unicode_decimal": 58997
+    },
+    {
+      "icon_id": "15693605",
+      "name": "左右定格",
+      "font_class": "zuoyoudingge",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "15693606",
+      "name": "风速",
+      "font_class": "fengsu",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "15693607",
+      "name": "8度制热",
+      "font_class": "8duzhire",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+      "icon_id": "15693608",
+      "name": "电量查询",
+      "font_class": "dianliangchaxun",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "15693609",
+      "name": "灯光",
+      "font_class": "dengguang",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "15693610",
+      "name": "左右出风",
+      "font_class": "zuoyouchufeng",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    }
+  ]
+}
