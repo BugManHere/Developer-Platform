@@ -2,75 +2,41 @@
   <gree-view>
     <gree-page class="page-skill-search">
       <gree-header style="background-color: #fff;">技能搜索</gree-header>
-      <div >
-        <gree-search-bar
-          v-model="value"
-          placeholder="请输入要搜索的内容"
-          show-action
-          shape="round"
-          @search="onSearch"
-        >
-          <gree-button 
-            round 
-            size="small"
-            type="primary" 
-            slot="action" 
-            @click="onSearch">搜索</gree-button>
-        </gree-search-bar>
-      </div>
-      <div v-show="!value">
-        <div class="panel">
-          <p class="title">热门搜索</p>
-          <div class="tags">
-            <gree-tag 
-              v-for="(item, index) in hot" 
-              :key="index"
-              size="small" 
-              shape="circle" 
-              type="fill" 
-              fill-color="#F2F2F2">
-              {{item}}
-            </gree-tag>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="title">
-            <span>历史记录</span>
-            <gree-icon 
-              @click="clearHistory"
-              name="photo"
-              size="md"></gree-icon>
-          </div>
-          <div class="tags">
-            <gree-tag 
-              v-for="(item, index) in history" 
-              :key="index"
-              size="small" 
-              shape="circle" 
-              type="fill" 
-              fill-color="#F2F2F2">
-              {{item}}
-            </gree-tag>
-          </div>
-        </div>
-      </div>
-      <div v-show="value"> 
-        <span class="tips" v-show="!isSearching && tips">
-         {{tips}}
-        </span>
-        <gree-list v-show="!isSearching && data && data.length">
-          <gree-list-item
-            v-for="item in data"
-            :key="item.id"
-            link
-            :title="item.name"
-            :footer="item.illustrate"
-            media-item
-            @click.native="gotoDetail(item.id)"
+      <div class="main">
+        <div>
+          <gree-search-bar
+            v-model="value"
+            placeholder="请输入要搜索的内容"
+            show-action
+            shape="round"
+            @search="onSearch"
           >
-            <img :src="item.iosIcon" slot="media" class="skill-icon" />
-          </gree-list-item>
-        </gree-list>
+            <gree-button 
+              round 
+              size="small"
+              type="primary" 
+              slot="action" 
+              @click="onSearch">搜索</gree-button>
+          </gree-search-bar>
+        </div>
+        <div class="search-result-panel"> 
+          <span class="tips" v-show="!isSearching && tips">
+          {{tips}}
+          </span>
+          <gree-list v-show="!isSearching && data && data.length">
+            <gree-list-item
+              v-for="item in data"
+              :key="item.id"
+              link
+              :title="item.name"
+              :footer="item.illustrate"
+              media-item
+              @click.native="gotoDetail(item)"
+            >
+              <img :src="item.iosIcon" slot="media" class="skill-icon" />
+            </gree-list-item>
+          </gree-list>
+        </div>
       </div>
     </gree-page>
   </gree-view>
@@ -78,15 +44,13 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Header, SearchBar, Button, Tag, Icon, Dialog, List, Item } from 'gree-ui';
-import { showLoading, hideLoading, showToast, changeBarColor, voiceACgetSkillSearch, voiceACgetSkillSearchJudge, voiceACgetSkillSearchTruncate } from '../../../../../public/static/lib/PluginInterface.promise';
+import { Header, SearchBar, Button, Dialog, List, Item } from 'gree-ui';
+import { showLoading, hideLoading, showToast, changeBarColor, voiceACgetSkillSearch } from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Header.name]: Header,
     [SearchBar.name]: SearchBar,
     [Button.name]: Button,
-    [Tag.name]: Tag,
-    [Icon.name]: Icon,
     [Dialog.name]: Dialog,
     [List.name]: List,
     [Item.name]: Item,
@@ -94,8 +58,6 @@ export default {
   data() {
     return {
       value: '',
-      hot: ['test', 'test2'],
-      history: [],
       data: [],
       isSearching: false,
       tips: ''
@@ -106,42 +68,26 @@ export default {
       mac: state => state.mac
     }),
   },
-  watch: {
-    value(val) {
-      if (!val) {
-        this.data = [];
-        this.isSearching = false;
-        this.tips = '';
-        this.setHistoryAndHotItems();
-      }
+  created() {
+    changeBarColor('#fffffe');
+    if (this.$route.query && this.$route.query.keyword) {
+      this.search(this.$route.query.keyword);
+    } else {
+      this.search('');
     }
   },
-  async created() {
-    changeBarColor('#fffffe');
-    this.setHistoryAndHotItems();
-  },
   methods: {
-    async setHistoryAndHotItems() {
-      showLoading();
-      let result = await voiceACgetSkillSearchJudge(this.mac);
-      hideLoading();
-      if (result) {
-        if (typeof result === 'string') {
-          result = JSON.parse(result);
-        }
-        this.hot = result.hot;
-        this.history = result.history;
-      }
+    gotoDetail(item) {
+      this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.iosIcon}`);
     },
-    gotoDetail(id) {
-      this.$router.push(`/SkillDetail/${id}`);
+    onSearch() {
+      let keyword = this.value;
+      this.search(keyword);
     },
-    async onSearch() {
-      let keyword = this.value && this.value.trim();
-      if (!keyword) {
-        return;
-      }
+    async search(keyword) {
       this.isSearching = true;
+      this.data = [];
+      this.tips = '';
       showLoading();
       let result = await voiceACgetSkillSearch(this.mac, keyword);
       hideLoading();
@@ -161,30 +107,6 @@ export default {
           this.tips = '对不起，没有搜到相关技能';
         }
       }
-    },
-    clearHistory() {
-      Dialog.confirm({
-        title: '',
-        content: '确定要清空全部历史记录吗？',
-        confirmText: '确定',
-        onConfirm: async() => {
-          let result = await voiceACgetSkillSearchTruncate(this.mac);
-          console.log(result);
-          if (result) {
-            if (typeof result === 'string') {
-              result = JSON.parse(result);
-            }
-            if (result.code === 200) {
-              this.history = [];
-              showToast('清空成功', 1);
-            } else {
-              showToast('清空失败', 1);
-            }
-          }
-        },
-        cancelText: '取消',
-        onCancel: () => console.log('[Dialog.confirm] cancel clicked')
-      });
     }
   }
 }
@@ -194,6 +116,7 @@ export default {
   .page-skill-search {
     background-color: #fff;
     .page-content {
+      padding-bottom: 0px;
       position: relative;
       .gree-search-bar {
         padding-top: 22px;
@@ -219,57 +142,47 @@ export default {
           }
         }
       }
-      .panel {
-        padding: 35px 60px 0px 50px;
-        .title {
-          font-size: 43px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: #404657;
-          margin-bottom: 43px;
+      .main {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        .tips {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 45px;
+          color: rgba($color: #404657, $alpha: 0.5);
         }
-        .tags {
-          display: flex;
-          flex-wrap: wrap;
-          .gree-tag {
-            margin: 0px 43px 30px 0px; 
-            .type-fill {
-              color: rgba($color: #404657, $alpha: 0.6) ;
+        .search-result-panel {
+          flex: 1;
+          overflow-y: auto;
+           .list {
+            margin: 0;
+            .skill-icon {
+              width: 100px;
+              height: 100px;
             }
-            .size-small {
-              padding: 17px 46px;
-              font-size: 36px;
-              background-color: #F2F2F2;
-            }
-          }
-        }
-      }
-
-      .tips {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .list {
-        margin: 0;
-        .skill-icon {
-          width: 100px;
-          height: 100px;
-        }
-        .item-content {
-          padding-top: 30px;
-          padding-bottom: 30px;
-          .item-inner {
-            .item-title {
-              .item-footer {
-                margin-top: 30px;
+            .item-content {
+              padding-top: 30px;
+              padding-bottom: 30px;
+              .item-inner {
+                &::before {
+                  width: 45px;
+                  height: 45px;
+                  background-image: url('../../../../assets/img/skill/voice_input_search.png');
+                }
+                .item-title {
+                  .item-footer {
+                    margin-top: 30px;
+                  }
+                }
               }
             }
           }
         }
-      }
+      } 
     }
   }
 </style>

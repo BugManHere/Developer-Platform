@@ -29,22 +29,28 @@
         ref="skillList"
         class="main" 
         :class="{'loading': isLoading}">
-         <gree-list
-           @scroll.native="skillListScrollHandler"
-           v-show="!isLoadFailed">
-            <gree-list-item
-              v-for="item in skillItems"
-              :key="item.id"
-              link
-              :title="item.name"
-              :footer="item.illustrate | format"
-              no-hairlines
-              media-item
-              @click.native="gotoDetail(item)"
-            >
-              <img :src="item.icon" slot="media" class="skill-icon"/>
-            </gree-list-item>
-          </gree-list>
+          <div style="height: 100%;">
+            <gree-list
+            v-show="!isLoadFailed">
+              <gree-list-item
+                v-for="item in skillItems"
+                :key="item.id"
+                link
+                :title="item.name"
+                :footer="item.illustrate | format"
+                no-hairlines
+                media-item
+                @click.native="gotoDetail(item)"
+              >
+                <img :src="item.icon" slot="media" class="skill-icon"/>
+              </gree-list-item>
+              <div class="load-more-item" @click="loadMore">
+                <a v-show="hasNextPage && !isLoading" href="javascript:void 0;">加载更多</a>
+                <span v-show="hasNextPage && isLoading">加载中...</span>
+                <span v-show="!hasNextPage && !isLoading">没有更多了</span>
+              </div>
+            </gree-list>
+          </div>
           <div 
             class="error-msg-block" 
             v-show="isLoadFailed"
@@ -62,7 +68,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Icon, Sidebar, SidebarItem, List, Item } from 'gree-ui'; 
+import { Icon, Sidebar, SidebarItem, List, Item, } from 'gree-ui'; 
 import { voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
@@ -126,16 +132,6 @@ export default {
         self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
       }
       
-      function skillListScrollHandler(ev) {
-        console.log('hit');
-        let deviation = 5;
-        if ((this.scrollTop + this.clientHeight) >= (this.scrollHeight - deviation)) {
-          if (self.hasNextPage) {
-            self.loadSkillList(self.pageNum + 1);
-          }
-        }
-      }
-
       pageContent.addEventListener('scroll', scrollHandler, false);
       // this.$refs.skillList.addEventListener('scroll', skillListScrollHandler, false);
       this.$once('hook:beforeDestroy', () => {
@@ -155,11 +151,11 @@ export default {
     }
   },
   methods: {
-    onChangeDomain(index) {
+    async onChangeDomain(index) {
       let domain = this.sidebarItems.find(x => x.index === index);
       if (domain) {
         let queryArgs = {domain: domain.name, pageNum: 1};
-        this.getSkillList(index, queryArgs);
+        await this.getSkillList(index, queryArgs);
       }
     },
     async getSkillList(index, args) {
@@ -167,10 +163,14 @@ export default {
         this.pageNum = args.pageNum;
         args.getPic = true;
         args.pageSize = this.pageSize;
-        this.skillItems.splice(0, this.skillItems.length);
+        if (this.pageNum === 1) {
+          this.skillItems.splice(0, this.skillItems.length);
+          this.hasNextPage = false;
+        }
         this.isLoading = true;
         this.isLoadFailed = false;
-        this.hasNextPage = false;
+        
+        console.log(JSON.stringify(args));
         let result = await voiceACgetSkillList(this.mac, JSON.stringify(args));
         if (index !== this.activeDomainIndex) {
           return;
@@ -185,14 +185,24 @@ export default {
         if (!result.data) {
           throw new Error('data is null or empty');
         }
-        this.skillItems = result.data; 
+
+        if (this.pageNum === 1) {
+          this.skillItems = result.data; 
+        } else {
+          this.skillItems.push(...result.data);
+        }
+        
         let total = result.total;
         if (total > this.pageNum * this.pageSize) {
+          console.log('hasNextPage');
           this.hasNextPage = true;
+        } else {
+          this.hasNextPage = false;
         }
       } catch (error) {
         this.isLoading = false;
         this.isLoadFailed = true;
+        this.hasNextPage = false;
       }    
     },
     reload() {
@@ -210,10 +220,20 @@ export default {
       this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.icon}`);
     },
     gotoSearch() {
-      this.$router.push('/SkillSearch');
+      this.$router.push('/SkillSearchHistory');
     },
-    skillListScrollHandler() {
-      console.log('hit');
+    async loadMore() {
+      console.log('onEndReached');
+      if(!this.hasNextPage) {
+        return;
+      }
+      console.log('load more');
+      let index = this.activeDomainIndex;
+      let domain = this.sidebarItems.find(x => x.index === index);
+      if (domain) {
+        let queryArgs = {domain: domain.name, pageNum: this.pageNum + 1};
+        await this.getSkillList(index, queryArgs);
+      }
     }
   }
 };
@@ -288,12 +308,18 @@ export default {
     }
     .main {
       // border: 1px solid red;
+      position: relative;
       width: calc(100% - 200px);
       height: calc(100% - 849px);
       .list {
         height: 100%;
         overflow-y: auto;
         margin: 0;
+        ul {
+          &::after, &::before {
+            visibility: hidden;
+          }
+        }
         .skill-icon {
           width: 100px;
           height: 100px;
@@ -307,6 +333,18 @@ export default {
                 margin-top: 30px;
               }
             }
+          }
+        }
+        .load-more-item {
+          text-align: center;
+          padding: 30px 0px;
+          font-size: 40px;
+          a {
+            text-decoration: none;
+            color: #ffd800;
+          }
+          span {
+            color: rgba($color: #404657, $alpha: 0.4);
           }
         }
       }
@@ -329,8 +367,11 @@ export default {
         }
       }
       .error-msg-block {
+        position: absolute;
+        top: 0;
+        left: 0;
         height: 100%;
-        position: relative;
+        width: 100%;
         .content {
           @include commonPart(580px, '../../../assets/img/skill/share_reload_new.png');
           display: flex;
