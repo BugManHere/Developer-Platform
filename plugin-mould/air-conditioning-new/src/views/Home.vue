@@ -26,7 +26,7 @@
           </article>
         </div>
         <div class="pow-off" v-show="!Pow" :style="{ width: svgRadius + 40 + 'px', height: svgRadius + 40 + 'px' }">
-          <img src="../../assets/img/off_bg.png">
+          <img src="@assets/img/off_bg.png">
           <h3 v-text="'已关机'"/>
         </div>
       </div>
@@ -95,7 +95,7 @@ import '@assets/icons/mode.svg';
 import '@assets/icons/wind-speed.svg';
 import '@assets/icons/subscribe.svg';
 import '@assets/icons/advanced.svg';
-import { closePage, editDevice } from '../../../../static/lib/PluginInterface.promise';
+import { closePage, editDevice } from '@PluginInterface';
 
 export default {
   components: {

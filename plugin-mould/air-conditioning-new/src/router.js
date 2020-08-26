@@ -5,11 +5,11 @@ import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插�
 const Home = r =>
   require.ensure(
     [],
-    () => r(require('./views/70300/Home')),
+    () => r(require('./views/Home')),
     'home'
   );
 const Offline = r =>
-  require.ensure([], () => r(require('./views/70300/Offline')), 'offline');
+  require.ensure([], () => r(require('./views/Offline')), 'offline');
   
 // 高级功能倒三角进入
 const Test = r =>

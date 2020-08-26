@@ -1,12 +1,12 @@
 {
   "name": "iotfe-vuecli4-boilerplate",
   "version": "0.1.0",
-  "description": "A vue h5 template with Gree UI",
-  "author": "Liyaofei <316683022@qq.com>",
+  "author": "陈文中 <560180@gree.com.cn>",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service serve --mode test",
+    "local": "vue-cli-service serve --mode localserve",
     "debug": "vue-cli-service build --mode debug",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
@@ -15,7 +15,7 @@
     "@jaames/iro": "^4.5.1",
     "core-js": "^3.6.4",
     "echarts": "^4.8.0",
-    "gree-ui": "F:\\WebCode\\commit\\gree-ui-master",
+    "gree-ui": "F:\\WebCode\\commit\\gree-ui",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "round-slider": "^1.3.3",

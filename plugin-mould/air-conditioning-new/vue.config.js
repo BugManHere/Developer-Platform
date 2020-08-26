@@ -8,6 +8,18 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
+// eslint-disable-next-line func-names
+(function () {
+  const { key } = require('./plugin.id.json');
+  const { productModel, moreOption } = require(`../../output/${key}.json`);
+  const statueJson = moreOption.statueJson;
+  const statueJson2 = moreOption.statueJson2;
+  process.env.VUE_APP_VER = moreOption.pluginVer;
+  process.env.VUE_APP_MID = productModel;
+  process.env.VUE_APP_JSON = JSON.stringify(statueJson);
+  process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
+}());
+
 module.exports = {
   publicPath: '',
   outputDir: `dist/plugins/Plugins/${process.env.VUE_APP_MID}`,
@@ -71,7 +83,13 @@ module.exports = {
               const options = { explicitArray: false };
               xml2js.parseString(content.toString(), options, (err, result) => {
                 const builder = new xml2js.Builder();
-                xml = new Buffer.from(builder.buildObject(result));
+                const outPut = result;
+                outPut.device.version = process.env.VUE_APP_VER;
+                outPut.device.mid = process.env.VUE_APP_MID;
+                outPut.device.statueJson = process.env.VUE_APP_JSON;
+                outPut.device.statueJson2 = process.env.VUE_APP_JSON2;
+                // eslint-disable-next-line new-cap
+                xml = new Buffer.from(builder.buildObject(outPut));
               });
               return xml;
             }
@@ -122,7 +140,7 @@ module.exports = {
   devServer: {
     open: process.platform === 'darwin',
     host: '0.0.0.0',
-    port: 3000,
+    port: 8081,
     https: false,
     hotOnly: false,
     proxy: '',

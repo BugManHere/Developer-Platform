@@ -1,19 +1,27 @@
-import { Page, View } from 'gree-ui';
 import 'jquery';
 import 'round-slider';
+
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
-import { changeBarColor, closePage, getInfo } from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
-import '../node_modules/round-slider/dist/roundslider.min.css';
+
+import { Page, View } from 'gree-ui';
+import { closePage, getInfo } from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
+
+import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
+
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
+import Storage from './utils/storage'; // 对i18n的封装
+import axios from 'axios';
+
+import { SET_STATE } from './store/types';
 
 // 安装插件
 Vue.use(VueI18n);
@@ -28,7 +36,8 @@ const i18n = new VueI18n({
   messages: {
     en: require('./i18n/en'),
     zh_CN: require('./i18n/zh_CN')
-  }
+  },
+  silentTranslationWarn: true
 });
 
 Vue.config.productionTip = false;
@@ -36,15 +45,57 @@ Vue.config.productionTip = false;
 const dev = process.env.NODE_ENV === 'development';
 const test = process.env.VUE_APP_MODE === 'test';
 
-if (dev && !test) {
-  new Vue({
-    el: '#app',
-    i18n,
-    store,
-    router,
+async function createVue() {
+  const vm = new Vue({
+    // el: '#app',
     mixins: dev ? [debugMixin] : [initMixin],
-    render: h => h(App)
+    // mixins: [initMixin],
+    render: h => h(App),
+    router,
+    store,
+    i18n
   });
+  window.myvm = vm;
+  
+  console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
+  
+  // 如果是开发模式，加载服务器/缓存配置
+  if (dev) {
+    window.storage = new Storage();
+    // 解析传入参数, id: 设备key, admin: 用户名
+    let { id, admin } = router.currentRoute.query;
+    const storage = window.storage;
+    // 已有id，则记录，没有则读取
+    if (id) {
+      // 更新mac
+      vm.$store.commit(SET_STATE, ['mac', id]);
+      // 去服务器请求设备配置
+      const res = await axios.get('/plugin/config', {
+        params: {
+          id, admin
+        }
+      });
+      // 清空缓存配置
+      storage.clear();
+      // 缓存配置
+      localStorage.setItem('device_config_id', id);
+      storage.set('config', res.data);
+    } else {
+      // 取出缓存的配置
+      let oldId = localStorage.getItem('device_config_id');
+      // 更新mac
+      vm.$store.commit(SET_STATE, ['mac', oldId]);
+    }
+
+    const { name } = router.currentRoute;
+    name === 'Loading' && vm.$router.push('Home');
+  } else {
+    vm.init();
+    window.storage = new Storage();
+  }
+
+  // 挂载到#app上
+  vm.$mount('#app');
 }
 
 /* 启用页面调试器 */
@@ -53,6 +104,8 @@ if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
   new VConsole();
 }
 
+dev && createVue();
+
 /* ********************************* Native Func ********************************* */
 
 /**
@@ -60,7 +113,7 @@ if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
  */
 window.backButton = function backButton() {
   const { name } = router.currentRoute;
-  if (name === 'Home' || name === 'Offline') {
+  if (['Home', 'Offline', 'Error'].includes(name)) {
     closePage();
   } else {
     router.back(-1);
@@ -99,19 +152,5 @@ window.onResume = function onResume(msg) {
 
 // 根据加载页面改变状态栏颜色
 window.init = function init() {
-  if (!dev || test) {
-    new Vue({
-      el: '#app',
-      i18n,
-      store,
-      router,
-      mixins: dev ? [debugMixin] : [initMixin],
-      render: h => h(App)
-    });
-  }
-  router.beforeEach((to, from, next) => {
-    const color = '#000000';
-    changeBarColor(color);
-    next();
-  });
+  createVue();
 };

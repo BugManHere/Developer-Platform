@@ -1,74 +1,79 @@
 // 根据实际业务修改
-import { GET_DEVICE_INFO, GET_THIRD_INFO, IS_SCENE, SET_DATA_OBJECT, SET_MAC } from '@/store/types';
-import { getQueryStringByName } from '@/utils';
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import updateStatus from './updateStatus';
+import LogicDefine from './../../logic/define';
 
-function parseData(data) {
-  // 更新state状态，需更改
-  const obj = JSON.parse(data);
-  const DataObject = {};
-  DataObject.OnLine = obj[0];
-  DataObject.Percentage = obj[1];
-  DataObject.RemoteStatus = obj[2];
-  DataObject.RunStatus = obj[3];
-  DataObject.alarm = obj[4] || 'false';
-  DataObject.batteryLow = obj[5] || (obj[8] < 10 ? 'true' : 'false'); // 电量小于10%即为低电量
-  DataObject.close = obj[6];
-  DataObject.continuousIntrusion = obj[7];
-  DataObject.electricity = obj[8] || '100';
-  DataObject.keyNo = obj[9];
-  DataObject.press = obj[10];
-  DataObject.temperature = obj[11];
-  DataObject.humidity = obj[12];
-  DataObject.pass = obj[13];
-  DataObject.brightness = obj[14];
-  DataObject.color = obj[15];
-  DataObject.colorTemperature = obj[16];
-  return DataObject;
-}
+import {
+  GET_DEVICE_INFO,
+  SET_MAC,
+  SET_DATA_OBJECT,
+  SET_CHECK_OBJECT,
+  SET_REPAIR,
+  IS_SCENE
+} from '../../store/types';
+import { getQueryStringByName } from '../../utils';
 
 const mixin = {
-  mixins: [updateStatus], // 该mixin自定义初始化时检测故障等功能，需更改
+  mixins: [updateStatus, LogicDefine], // 该mixin自定义初始化时检测故障等功能，需更改
   computed: {
-    ...mapState({ mac: state => state.mac })
-  },
-  created() {
-    this.init();
+    ...mapState({ 
+      mac: state => state.mac,
+      dataObject: state => state.dataObject,
+      devOptions: state => state.devOptions,
+    })
   },
   methods: {
     ...mapMutations({
       setMac: SET_MAC,
       setDataObject: SET_DATA_OBJECT,
+      setCheckObject: SET_CHECK_OBJECT,
+      setRepair: SET_REPAIR,
       updateIsScene: IS_SCENE
     }),
-    ...mapActions({
-      getDeviceInfo: GET_DEVICE_INFO,
-      getThirdInfo: GET_THIRD_INFO
-    }),
+    ...mapActions({ getDeviceInfo: GET_DEVICE_INFO }),
     /**
      * @description 初始化，并将小卡片传进来的值赋予state
      */
     init() {
+      const { key } = require('@/../plugin.id.json');
+      const { funcDefine, moreOption } = require(`@/../../../output/${key}.json`);
+
       const mac = getQueryStringByName('mac');
+      const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
 
-      if (process.env.VUE_APP_MID.startsWith('702')) {
-        const dataArr = decodeURIComponent(getQueryStringByName('data'));
-        const DataObject = parseData(dataArr);
-        console.log('DataObject', DataObject);
-        this.setDataObject(DataObject);
-      }
+      const valArr = JSON.parse(dataArr);
+      console.log('----------url传值-----------');
+      console.log(dataArr);
 
-      const isScene = getQueryStringByName('functype');
-      console.log(`functype: ${isScene}`);
+      const functype = JSON.parse(getQueryStringByName('functype'));
+      console.log(`是否场景模式: ${Boolean(functype)}`);
 
+      const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
+      hasReportedForRepair === 'true'
+        ? this.setRepair(true)
+        : this.setRepair(false);
+      
       this.setMac(mac);
       this.getDeviceInfo(mac);
-      if (process.env.VUE_APP_MID.startsWith('703')) {
-        this.getThirdInfo(mac);
+
+      const jsonKey = moreOption.statueJson2;
+      const DataObject = {};
+
+      jsonKey.forEach((item, index) => {
+        DataObject[item] = Number(valArr[index]);
+      });
+      
+      // 兼容辅热，如果开启了八度制热，则不更新辅热
+      if (funcDefine.some(item => item.identifier === 'AssHt(Auto)') && DataObject.StHt) {
+        DataObject.AssHt = 1;
       }
-      Number(isScene) ? this.updateIsScene(1) : this.updateIsScene(0); // 场景
+
+      (DataObject.functype = functype) && (DataObject.OutHome = 0);
+      
+      valArr && this.setCheckObject(DataObject);
+      valArr && this.setDataObject(DataObject);
+      console.log('-------------init finish--------------');
     }
   }
 };

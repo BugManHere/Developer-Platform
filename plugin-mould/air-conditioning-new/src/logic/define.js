@@ -17,7 +17,9 @@ const LogicDefine = {
   },
   mounted() {
     const { key } = require('@/../plugin.id.json');
-    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = require(`@/../../output/${key}.json`);
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = process.env.NODE_ENV === 'development' ? 
+      window.storage.get('config') :
+      require(`@/../../../output/${key}.json`);
     this.g_deviceName = deviceName;
     this.g_moreOption = moreOption;
     this.g_funcDefine = funcDefine;

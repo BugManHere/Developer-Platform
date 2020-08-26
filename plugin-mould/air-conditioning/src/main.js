@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
-import VueClipboard from 'vue-clipboard2';
 import axios from 'axios';
 
 import { View, Page } from 'gree-ui';
@@ -29,7 +28,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.use(language);
-Vue.use(VueClipboard);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 

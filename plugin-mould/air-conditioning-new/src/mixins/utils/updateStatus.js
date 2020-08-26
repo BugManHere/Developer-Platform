@@ -5,49 +5,32 @@ import { mapState } from 'vuex';
 const updateStatus = {
   computed: {
     ...mapState({
-      isOffline: state => (process.env.VUE_APP_MID.startsWith('703') ? state.deviceInfo.deviceState : state.dataObject.OnLine)
+      isOffline: state => state.deviceInfo.deviceState,
+      lang: state => state.deviceInfo.lang
     })
   },
   watch: {
     /**
      * @description 设备离线时跳转离线页面
      */
-    isOffline(newV) {
-      if (process.env.VUE_APP_MID.startsWith('702')) {
-        if (newV !== 'online') {
-          this.$router.push({ name: 'Offline' });
-        }
-      }
-      if (process.env.VUE_APP_MID.startsWith('703')) {
+    isOffline: {
+      handler(newV, oldV) {
         if (newV === -1) {
-          this.$router.push({ name: 'Offline' });
+          this.$router.push({ name: 'Offline' }).catch(err => { err; });
+        } else if (oldV === -1) {
+          this.$router.push({ path: '/Home' }).catch(err => { err; });
         }
-      }
+      },
+      immediate: true,
+    },
+    lang: {
+      handler(newVal) {
+        this.$i18n.locale = newVal;
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.initApp();
   },
   methods: {
-    /**
-     * @description APP初始化时检查有没有故障, 有没有预约
-     */
-    initApp() {
-      if (process.env.VUE_APP_MID.startsWith('702')) {
-        if (this.isOffline !== 'online') {
-          this.$router.push({ name: 'Offline' });
-        } else {
-          this.$router.push({ path: '/' });
-        }
-      }
-      if (process.env.VUE_APP_MID.startsWith('703')) {
-        if (this.isOffline === -1) {
-          this.$router.push({ name: 'Offline' });
-        } else {
-          this.$router.push({ path: '/' });
-        }
-      }
-    }
   }
 };
 export default updateStatus;
