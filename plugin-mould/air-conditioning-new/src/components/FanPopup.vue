@@ -79,7 +79,6 @@ export default {
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE',
     }),
     onPickerInitialed1() {
       const value = this.$refs.pickerTime.getColumnValues();

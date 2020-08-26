@@ -198,7 +198,7 @@ export default {
         typeof data.SwingLfRig !== 'undefined' &&
         this.SwingLfRig !== data.SwingLfRig
       ) {
-        this.setState(['ableSend', true]);
+        this.setState({ ableSend: true });
         this.setDataObject({...data, SmartWind: 0});
         this.sendCtrl({...data, SmartWind: 0});
         if (data.SwingLfRig === 0) {
@@ -211,7 +211,7 @@ export default {
       }
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
-        this.setState(['ableSend', true]);
+        this.setState({ ableSend: true });
         this.setDataObject({...data, SmartWind: 0, AntiDirectBlow: 0});
         this.sendCtrl({...data, SmartWind: 0, AntiDirectBlow: 0});
         if (data.SwUpDn === 0) {

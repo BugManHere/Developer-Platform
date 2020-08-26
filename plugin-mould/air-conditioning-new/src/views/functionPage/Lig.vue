@@ -105,7 +105,7 @@ export default {
         default:
           break;
       }
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject({
         Lig,
         LigSen

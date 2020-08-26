@@ -92,7 +92,7 @@ export default {
     }),
     changeLoopMod(index) {
       const obj = {LoopMod: index + 1};
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(obj);
       this.sendCtrl(obj);
     },

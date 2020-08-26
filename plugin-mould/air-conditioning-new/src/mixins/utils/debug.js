@@ -14,7 +14,7 @@ const mixin = {
   },
   mounted() {
     this.setCheckObject(this.dataObject);
-    this.setState(['ableSend', true]);
+    this.setState({ ableSend: true });
   },
   methods: {
     ...mapMutations({

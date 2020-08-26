@@ -91,8 +91,8 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     setLig(option) {
-      this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
+      this.setState({ watchLock: false });
+      this.setState({ ableSend: true });
       this.setDataObject({
         Air: option.value
       });

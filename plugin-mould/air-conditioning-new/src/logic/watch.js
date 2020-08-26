@@ -62,10 +62,12 @@ const LogicWatch = {
     },
     g_identifierArr: {
       handler(newVal) {
-        this.setState(['devOptions', {
-          ...this.devOptions,
-          identifierArr: newVal
-        }]);
+        this.setState({
+          devOptions: {
+            ...this.devOptions,
+            identifierArr: newVal
+          }
+        });
       },
     }
   },

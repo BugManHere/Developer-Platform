@@ -27,13 +27,16 @@ const LogicDefine = {
     this.g_hideMap = hideMap;
     this.g_mid = productModel;
     
-    this.$store.state.devOptions.statueJson2 === '[]' && this.setState(['devOptions', {
-      pluginVer: moreOption.pluginVer,
-      mid: productModel,
-      statueJson: JSON.stringify(moreOption.statueJson),
-      statueJson2: JSON.stringify(moreOption.statueJson2),
-      identifierArr: this.$store.state.devOptions.identifierArr,
-    }]);
+    this.$store.state.devOptions.statueJson2 === '[]' && 
+    this.setState({
+      devOptions: {
+        pluginVer: moreOption.pluginVer,
+        mid: productModel,
+        statueJson: JSON.stringify(moreOption.statueJson),
+        statueJson2: JSON.stringify(moreOption.statueJson2),
+        identifierArr: this.$store.state.devOptions.identifierArr,
+      }
+    });
     this.g_outputMap = this.g_init();
   },
   computed: {
@@ -248,9 +251,6 @@ const LogicDefine = {
       const checkIdArr = []; // 需要检查的id
       const identifier = this.g_Pow; // 获取在define.js里面定义的g_Pow
       const powState = this.g_statusMap[identifier].state; // pow的当前状态
-      console.log('----------------------');
-      console.log(this.g_hideMap);
-      console.log(powState);
       const hideStateArr = this.g_hideMap[powState]; // 被pow隐藏的State
       if (!hideStateArr) return [];
       hideStateArr.forEach(stateItem => { // 挑选出需要检查的id

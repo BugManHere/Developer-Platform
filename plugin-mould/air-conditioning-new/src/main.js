@@ -68,7 +68,7 @@ async function createVue() {
     // 已有id，则记录，没有则读取
     if (id) {
       // 更新mac
-      vm.$store.commit(SET_STATE, ['mac', id]);
+      vm.$store.commit(SET_STATE, { mac: id });
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
@@ -84,7 +84,7 @@ async function createVue() {
       // 取出缓存的配置
       let oldId = localStorage.getItem('device_config_id');
       // 更新mac
-      vm.$store.commit(SET_STATE, ['mac', oldId]);
+      vm.$store.commit(SET_STATE, { mac: oldId });
     }
 
     const { name } = router.currentRoute;

@@ -135,6 +135,9 @@ export default {
     this.lottieRadius = this.svgRadius * 1.8;
   },
   mounted() {
+    this.$nextTick(() => {
+      this.setCheckObject(this.dataObject);
+    });
     // init circular slider
     this.circleObj = $('#slider').roundSlider({
       min: 16,
@@ -166,6 +169,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      setCheckObject: 'SET_CHECK_OBJECT',
       setDataObject: 'SET_DATA_OBJECT'
     }),
     ...mapActions({

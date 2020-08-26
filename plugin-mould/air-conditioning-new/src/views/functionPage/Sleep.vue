@@ -500,7 +500,7 @@ export default {
       updateDataObject: 'UPDATE_DATAOBJECT',
     }),
     async changeDataObject(obj, hasToast = false) {
-      this.setState(['uilock', true]);
+      this.setState({ uilock: true });
       const control = obj;
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
@@ -535,7 +535,7 @@ export default {
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
       }
-      this.setState(['uilock', false]);
+      this.setState({ uilock: false });
     },
     async getSlpVal() {
       if ((this.functype && this.dataObject.Slp1L1) || this.$store.state.uilock) return; // 场景模式下不重复查询

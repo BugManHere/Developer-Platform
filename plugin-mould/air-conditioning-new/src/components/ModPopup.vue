@@ -65,7 +65,6 @@ export default {
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE',
     }),
     setMod(Mod) {
       this.setDataObject({Mod});

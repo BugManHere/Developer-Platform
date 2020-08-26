@@ -221,8 +221,8 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(obj) {
-      this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
+      this.setState({ watchLock: false });
+      this.setState({ ableSend: true });
       this.setDataObject(obj);
       this.sendCtrl(obj);
     },

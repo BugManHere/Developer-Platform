@@ -114,13 +114,13 @@ export default {
       if (active) {
         setData.UnmanedOffTime = 2;
       }
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
     setNobodySave(option) {
       const setData = {UnmanedOffTime: option.value};
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     }

@@ -113,7 +113,7 @@ export default {
         SwUpDn: 0,
         SwingLfRig: 0
       };
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
@@ -123,7 +123,7 @@ export default {
         SwUpDn: 0,
         SwingLfRig: 0
       };
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     }

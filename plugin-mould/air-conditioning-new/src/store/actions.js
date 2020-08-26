@@ -26,9 +26,9 @@ let sendTime = 0;
  */
 function sendControl({ state, commit }, dataMap) {
   _timer2 && clearTimeout(_timer2) && (_timer2 = null);
-  (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]); // 互斥锁
+  (sendTime += 1) >= 500 && commit(SET_STATE, { watchLock: true }); // 互斥锁
   setData = {...setData, ...dataMap};
-  commit(SET_STATE, ['uilock', true]); // ui锁
+  commit(SET_STATE, { uilock: true }); // ui锁
   _timer2 = setTimeout(async () => {
     if (state.swiperHold) {
       sendControl({ state, commit }, {});
@@ -54,7 +54,7 @@ function sendControl({ state, commit }, dataMap) {
     console.table([opt, p]);
     
     // 8度制热相关操作
-    state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
+    state.isStHt && commit(SET_STATE, { isStHt: false }); // 关闭8度制热标志位
     if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
       setOpt.push('AssHt');
       setP.push(1);
@@ -66,11 +66,11 @@ function sendControl({ state, commit }, dataMap) {
     const json = JSON.stringify({ mac, t, opt, p });
     
     if (state.dataObject.functype || !state.ableSend) {
-      commit(SET_STATE, ['uilock', false]); // ui锁
+      commit(SET_STATE, { uilock: false }); // ui锁
       return;
     }
-    commit(SET_STATE, ['watchLock', true]);
-    commit(SET_STATE, ['ableSend', false]);
+    commit(SET_STATE, { watchLock: true });
+    commit(SET_STATE, { ableSend: false });
 
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
@@ -95,12 +95,12 @@ function sendControl({ state, commit }, dataMap) {
       const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] === undefined ? 0 : state.dataObject[json]);
 
       // 成功之后更新主体状态
-      commit(SET_STATE, ['swiperHold', false]);
-      commit(SET_STATE, ['uilock', false]);
+      commit(SET_STATE, { swiperHold: false });
+      commit(SET_STATE, { uilock: false });
       r === 200 && updateStates(state.mac, JSON.stringify(_p));
     } catch (err) {
-      commit(SET_STATE, ['swiperHold', false]);
-      commit(SET_STATE, ['uilock', false]);
+      commit(SET_STATE, { swiperHold: false });
+      commit(SET_STATE, { uilock: false });
       err;
     }
   }, 350);
@@ -195,7 +195,7 @@ export default {
     await getStatusOfDev({ state, commit }).then(res => res);
     finishLoad();
     setTimeout(() => {
-      commit(SET_STATE, ['loading', false]);
+      commit(SET_STATE, { loading: false });
     }, 1000);
     if (_timer === 0) {
       _timer = setInterval(() => {
@@ -232,7 +232,7 @@ export default {
     if (p.length !== 0) {
       sendControl({ state, commit }, dataMap);
     } else {
-      !_timer2 && commit(SET_STATE, ['watchLock', true]);
+      !_timer2 && commit(SET_STATE, { watchLock: true });
     }
   },
 

@@ -113,13 +113,13 @@ export default {
     }),
     switchDazzling(active) {
       const setData = {Dazzling: Number(active)};
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
     setDazzling(option) {
       const setData = {Dazzling: option.value};
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     }

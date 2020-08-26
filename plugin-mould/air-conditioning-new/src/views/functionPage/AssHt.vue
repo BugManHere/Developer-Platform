@@ -86,7 +86,7 @@ export default {
       sendCtrl: 'SEND_CTRL',
     }),
     setAssHt(option) {
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject({AssHt: option.value});
       this.sendCtrl({AssHt: option.value});
     }

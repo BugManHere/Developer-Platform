@@ -152,8 +152,8 @@ const Customize = {
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(map) {
-      this.setState(['watchLock', false]);
-      this.setState(['ableSend', true]);
+      this.setState({ watchLock: false });
+      this.setState({ ableSend: true });
       this.setDataObject(map);
       this.sendCtrl(map);
     },

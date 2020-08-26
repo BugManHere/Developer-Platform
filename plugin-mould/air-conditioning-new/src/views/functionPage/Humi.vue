@@ -129,7 +129,7 @@ export default {
 
     setHumi(value) {
       const setData = { Humi: value };
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
@@ -142,7 +142,7 @@ export default {
       if (type === 'subtract') {
         setData.Humi = this.Humi - 5;
       }
-      this.setState(['ableSend', true]);
+      this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     }
