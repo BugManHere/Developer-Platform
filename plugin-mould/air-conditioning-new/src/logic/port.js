@@ -6,7 +6,7 @@ const LogicPort = {
       g_inputMap: {},
       g_Pow: 'Pow', // 开关的identifier
       g_Mod: 'Mod', // 模式的identifier
-      g_Fan: 'WdSpd', // 风档的identifier
+      g_Fan: 'WdSpd' // 风档的identifier
     };
   },
   watch: {
@@ -15,14 +15,14 @@ const LogicPort = {
         this.g_inputMap = newVal;
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   computed: {
     ...mapState({
-      dataObject: state => state.dataObject,
+      dataObject: state => state.dataObject
     })
-  },
+  }
 };
 
 export default LogicPort;

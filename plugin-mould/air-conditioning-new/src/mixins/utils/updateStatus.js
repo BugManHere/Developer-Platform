@@ -16,12 +16,16 @@ const updateStatus = {
     isOffline: {
       handler(newV, oldV) {
         if (newV === -1) {
-          this.$router.push({ name: 'Offline' }).catch(err => { err; });
+          this.$router.push({ name: 'Offline' }).catch(err => {
+            err;
+          });
         } else if (oldV === -1) {
-          this.$router.push({ path: '/Home' }).catch(err => { err; });
+          this.$router.push({ path: '/Home' }).catch(err => {
+            err;
+          });
         }
       },
-      immediate: true,
+      immediate: true
     },
     lang: {
       handler(newVal) {
@@ -30,7 +34,6 @@ const updateStatus = {
       immediate: true
     }
   },
-  methods: {
-  }
+  methods: {}
 };
 export default updateStatus;

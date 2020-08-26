@@ -4,20 +4,10 @@
       <gree-header>{{ $language('btn.Dazzling') }}</gree-header>
       <gree-list>
         <gree-list-item title="炫光">
-          <gree-switch
-            slot="after"
-            v-model="isActive"
-            @change="switchDazzling(isActive)"
-          ></gree-switch>
+          <gree-switch slot="after" v-model="isActive" @change="switchDazzling(isActive)"></gree-switch>
         </gree-list-item>
       </gree-list>
-      <gree-radio-list
-        :options="modes"
-        :value="DazzlingStatus"
-        icon-size="md"
-        @change="setDazzling"
-        v-show="isActive"
-      ></gree-radio-list>
+      <gree-radio-list :options="modes" :value="DazzlingStatus" icon-size="md" @change="setDazzling" v-show="isActive"></gree-radio-list>
     </gree-page>
   </gree-view>
 </template>
@@ -25,10 +15,7 @@
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  showToast,
-  hideLoading
-} from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   name: 'Dazzling',
@@ -39,32 +26,32 @@ export default {
     [Switch.name]: Switch,
     [List.name]: List,
     [Item.name]: Item,
-    [Toast.name]: Toast,
+    [Toast.name]: Toast
   },
   data() {
     return {
-      isActive: true,
+      isActive: true
     };
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      Dazzling: state => state.dataObject.Dazzling,
+      Dazzling: state => state.dataObject.Dazzling
     }),
     modes() {
       return [
         {
           value: 1,
-          text: '炫光模式',
+          text: '炫光模式'
         },
         {
           value: 9,
-          text: '流光模式',
+          text: '流光模式'
         },
         {
           value: 10,
-          text: '小夜灯模式',
-        },
+          text: '小夜灯模式'
+        }
       ];
     },
     DazzlingStatus() {
@@ -87,7 +74,9 @@ export default {
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
         try {
           showToast('空调已被关闭，自动退出炫光设置。', 1);
         } catch (e) {
@@ -112,13 +101,13 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     switchDazzling(active) {
-      const setData = {Dazzling: Number(active)};
+      const setData = { Dazzling: Number(active) };
       this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);
     },
     setDazzling(option) {
-      const setData = {Dazzling: option.value};
+      const setData = { Dazzling: option.value };
       this.setState({ ableSend: true });
       this.setDataObject(setData);
       this.sendCtrl(setData);

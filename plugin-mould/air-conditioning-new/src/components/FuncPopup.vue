@@ -1,31 +1,28 @@
 <template>
-  <gree-popup 
-    v-model="showPopup" 
-    position="bottom">
+  <gree-popup v-model="showPopup" position="bottom">
     <div class="func-popup-bottom">
-      <div class="popup-title" v-text="title"/>
+      <div class="popup-title" v-text="title" />
       <div class="popup-buttons">
         <gree-row>
-          <gree-col 
-            v-for="(btn, index) in g_funcDefine_btn" 
-            :key="index" width="25"
+          <gree-col
+            v-for="(btn, index) in g_funcDefine_btn"
+            :key="index"
+            width="25"
             :class="{
               'set-gray': g_hideFuncArr.includes(btn.identifier),
               'set-hide': powHideArr.includes(btn.identifier)
-            }">
+            }"
+          >
             <!-- 图标 -->
             <div class="icon" @click="changeStatus(btn.identifier, g_hideFuncArr.includes(btn.identifier))">
-              <img :src="imgList[index].img" v-if="imgList[index].img">
+              <img :src="imgList[index].img" v-if="imgList[index].img" />
               <div v-else class="blank-btn">
-                <img src="@/assets/img/functionBtn/blank.png" >
-                <span v-html="imgList[index].text" class="blank-text"/>
+                <img src="@/assets/img/functionBtn/blank.png" />
+                <span v-html="imgList[index].text" class="blank-text" />
               </div>
             </div>
             <!-- 名称 -->
-            <span 
-              :class="{triangle: btn.page}"
-              v-text="btnName[index]"
-              @click="goPage(index, g_hideFuncArr.includes(btn.identifier), btn.page)"/>
+            <span :class="{ triangle: btn.page }" v-text="btnName[index]" @click="goPage(index, g_hideFuncArr.includes(btn.identifier), btn.page)" />
           </gree-col>
         </gree-row>
       </div>
@@ -35,7 +32,7 @@
 
 <script>
 import { Row, Col, Popup } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import LogicDefine from '../logic/define';
 import LogicWatch from '../logic/watch';
 import Customize from '../logic/customize';
@@ -53,7 +50,7 @@ export default {
   data() {
     return {
       showPopup: false,
-      title: '高级',
+      title: '高级'
     };
   },
   computed: {
@@ -134,10 +131,14 @@ export default {
       } catch {
         console.log('showLoading');
       }
-      this.$router.push({
-        name: routerName,
-        params,
-      }).catch(err => { console.log(err); });
+      this.$router
+        .push({
+          name: routerName,
+          params
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

@@ -43,7 +43,7 @@ const i18n = new VueI18n({
 Vue.config.productionTip = false;
 
 const dev = process.env.NODE_ENV === 'development';
-const test = process.env.VUE_APP_MODE === 'test';
+// const test = process.env.VUE_APP_MODE === 'test';
 
 async function createVue() {
   const vm = new Vue({
@@ -56,9 +56,9 @@ async function createVue() {
     i18n
   });
   window.myvm = vm;
-  
+
   console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
-  
+
   // 如果是开发模式，加载服务器/缓存配置
   if (dev) {
     window.storage = new Storage();
@@ -72,7 +72,8 @@ async function createVue() {
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
-          id, admin
+          id,
+          admin
         }
       });
       // 清空缓存配置

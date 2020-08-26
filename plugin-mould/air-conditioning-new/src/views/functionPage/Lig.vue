@@ -2,12 +2,7 @@
   <gree-view bg-color="#404040">
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.Lig') }}</gree-header>
-      <gree-radio-list
-        :options="modes"
-        icon-size="md"
-        :value="LigStatus"
-        @change="setLig"
-      ></gree-radio-list>
+      <gree-radio-list :options="modes" icon-size="md" :value="LigStatus" @change="setLig"></gree-radio-list>
     </gree-page>
   </gree-view>
 </template>
@@ -15,10 +10,7 @@
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  showToast,
-  hideLoading
-} from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   name: 'Lig',
@@ -29,33 +21,32 @@ export default {
     [Switch.name]: Switch,
     [List.name]: List,
     [Item.name]: Item,
-    [Toast.name]: Toast,
+    [Toast.name]: Toast
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
       Lig: state => state.dataObject.Lig,
-      LigSen: state => state.dataObject.LigSen,
+      LigSen: state => state.dataObject.LigSen
     }),
     modes() {
       return [
         {
           value: 1,
-          text: '开',
+          text: '开'
         },
         {
           value: 0,
-          text: '关',
+          text: '关'
         },
         {
           value: 2,
           text: '自动',
           brief: '根据环境的亮度自动开启，关闭空调面板灯光'
-        },
+        }
       ];
     },
     LigStatus() {
@@ -65,7 +56,9 @@ export default {
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
         try {
           showToast('空调已被关闭，自动退出灯光设置。', 1);
         } catch (e) {
@@ -75,7 +68,7 @@ export default {
           });
         }
       }
-    },
+    }
   },
   mounted() {
     hideLoading();
@@ -86,7 +79,7 @@ export default {
       setState: 'SET_STATE'
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL',
+      sendCtrl: 'SEND_CTRL'
     }),
     setLig(option) {
       let Lig = 0;

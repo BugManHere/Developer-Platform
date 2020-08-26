@@ -1,20 +1,5 @@
-import {
-  sendDataToDevice,
-  getInfo,
-  updateStates,
-  finishLoad
-} from '@PluginInterface'; // 主体接口
-import {
-  GET_DEVICE_INFO,
-  GET_ALL_STATES,
-  SET_DEVICE_INFO,
-  SET_DATA_OBJECT,
-  SET_CHECK_OBJECT,
-  SET_STATE,
-  SEND_CTRL,
-  UPDATE_DATAOBJECT
-} from './types';
-
+import { sendDataToDevice, getInfo, updateStates, finishLoad } from '@PluginInterface'; // 主体接口
+import { GET_DEVICE_INFO, GET_ALL_STATES, SET_DEVICE_INFO, SET_DATA_OBJECT, SET_CHECK_OBJECT, SET_STATE, SEND_CTRL, UPDATE_DATAOBJECT } from './types';
 
 let _timer = 0; // 轮询定时器
 let _timer2 = null;
@@ -27,7 +12,7 @@ let sendTime = 0;
 function sendControl({ state, commit }, dataMap) {
   _timer2 && clearTimeout(_timer2) && (_timer2 = null);
   (sendTime += 1) >= 500 && commit(SET_STATE, { watchLock: true }); // 互斥锁
-  setData = {...setData, ...dataMap};
+  setData = { ...setData, ...dataMap };
   commit(SET_STATE, { uilock: true }); // ui锁
   _timer2 = setTimeout(async () => {
     if (state.swiperHold) {
@@ -50,9 +35,9 @@ function sendControl({ state, commit }, dataMap) {
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
-    
+
     console.table([opt, p]);
-    
+
     // 8度制热相关操作
     state.isStHt && commit(SET_STATE, { isStHt: false }); // 关闭8度制热标志位
     if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
@@ -62,9 +47,9 @@ function sendControl({ state, commit }, dataMap) {
       setOpt.push('StHt');
       setP.push(0);
     }
-    
+
     const json = JSON.stringify({ mac, t, opt, p });
-    
+
     if (state.dataObject.functype || !state.ableSend) {
       commit(SET_STATE, { uilock: false }); // ui锁
       return;
@@ -80,8 +65,8 @@ function sendControl({ state, commit }, dataMap) {
         setTimeout(() => {
           if (!_timer) {
             _timer = setInterval(() => {
-              getDeviceInfo({state, commit});
-              getStatusOfDev({state, commit});
+              getDeviceInfo({ state, commit });
+              getStatusOfDev({ state, commit });
             }, 5000);
           }
         }, 3000);
@@ -92,7 +77,7 @@ function sendControl({ state, commit }, dataMap) {
     try {
       const result = JSON.parse(res);
       const { r } = result;
-      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] === undefined ? 0 : state.dataObject[json]);
+      const _p = JSON.parse(state.devOptions.statueJson).map(json => (state.dataObject[json] === undefined ? 0 : state.dataObject[json]));
 
       // 成功之后更新主体状态
       commit(SET_STATE, { swiperHold: false });
@@ -226,8 +211,8 @@ export default {
     // 所有操作都需要关掉8度制热，所以直接在这写好了
     if (!state.isStHt && state.ableSend) {
       dataMap.StHt = 0;
-      commit(SET_DATA_OBJECT, {StHt: 0});
-      commit(SET_CHECK_OBJECT, {StHt: 0});
+      commit(SET_DATA_OBJECT, { StHt: 0 });
+      commit(SET_CHECK_OBJECT, { StHt: 0 });
     }
     if (p.length !== 0) {
       sendControl({ state, commit }, dataMap);

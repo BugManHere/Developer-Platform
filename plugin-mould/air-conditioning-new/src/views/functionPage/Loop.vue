@@ -3,14 +3,13 @@
     <gree-page class="page-nobodysave">
       <gree-header>{{ $language('btn.LoopMod') }}</gree-header>
 
-      <div class="Loop-btn-block"> 
+      <div class="Loop-btn-block">
         <gree-row v-for="(item, index) in LoopModList" :key="index">
           <gree-col>
             <gree-button round :type="LoopMod === index + 1 ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
           </gree-col>
         </gree-row>
       </div>
-
     </gree-page>
   </gree-view>
 </template>
@@ -18,10 +17,7 @@
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item, Button, Row, Col } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  showToast,
-  hideLoading
-} from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   name: 'Dazzling',
@@ -35,11 +31,11 @@ export default {
     [Toast.name]: Toast,
     [Button.name]: Button,
     [Row.name]: Row,
-    [Col.name]: Col,
+    [Col.name]: Col
   },
   data() {
     return {
-      LoopModList: ['全新风', '混合风', '循环风'],
+      LoopModList: ['全新风', '混合风', '循环风']
     };
   },
   computed: {
@@ -47,8 +43,8 @@ export default {
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       LoopMod: state => state.dataObject.LoopMod,
-      Dazzling: state => state.dataObject.Dazzling,
-    }),
+      Dazzling: state => state.dataObject.Dazzling
+    })
   },
   watch: {
     Pow(newVal) {
@@ -61,7 +57,9 @@ export default {
             position: 'bottom'
           });
         }
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
       }
     },
 
@@ -75,7 +73,9 @@ export default {
             position: 'bottom'
           });
         }
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
       }
     }
   },
@@ -91,11 +91,11 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     changeLoopMod(index) {
-      const obj = {LoopMod: index + 1};
+      const obj = { LoopMod: index + 1 };
       this.setState({ ableSend: true });
       this.setDataObject(obj);
       this.sendCtrl(obj);
-    },
+    }
   }
 };
 </script>
@@ -109,16 +109,16 @@ export default {
   .gree-switch {
     font-size: 50px;
   }
-  .Loop-btn-block{
+  .Loop-btn-block {
     margin-top: 110px;
-    text-align: center;    
-    .gree-button{
+    text-align: center;
+    .gree-button {
       width: 478px;
       height: 160px;
       font-size: 56px;
     }
-    .gree-button:nth-of-type(1){
-        margin-top: 110px;
+    .gree-button:nth-of-type(1) {
+      margin-top: 110px;
     }
   }
 }

@@ -12,7 +12,7 @@ const state = {
   dataObject: {
     Pow: 1,
     Mod: 1,
-    WdSpd: 5,
+    WdSpd: 5
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

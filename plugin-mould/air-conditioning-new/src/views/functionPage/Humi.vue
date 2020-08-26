@@ -4,29 +4,21 @@
       <gree-header>{{ $language('humidify.title') }}</gree-header>
       <gree-list>
         <gree-list-item title="加湿设置">
-          <gree-switch
-            slot="after"
-            v-model="isActive"
-            @change="switchDazzling(isActive)"
-          ></gree-switch>
+          <gree-switch slot="after" v-model="isActive" @change="switchDazzling(isActive)"></gree-switch>
         </gree-list-item>
       </gree-list>
 
-      <div
-        class="humi-wheel"
-        :style="{ backgroundImage: 'url(' + humi_bg + ')' }"
-        v-if="Humi"
-      >
+      <div class="humi-wheel" :style="{ backgroundImage: 'url(' + humi_bg + ')' }" v-if="Humi">
         <span class="humi-value">{{ Humi }}</span>
         <span class="humi-unit">%</span>
       </div>
 
       <gree-row class="humi-btn" v-show="Humi">
         <gree-col class="humi-col">
-          <gree-button round type="default" style="width: 50%" :disabled="Humi===30" @click="changeHumiValue('subtract')">-</gree-button>
+          <gree-button round type="default" style="width: 50%" :disabled="Humi === 30" @click="changeHumiValue('subtract')">-</gree-button>
         </gree-col>
         <gree-col class="humi-col">
-          <gree-button round type="default" style="width: 50%" :disabled="Humi===70" @click="changeHumiValue('add')">+</gree-button>
+          <gree-button round type="default" style="width: 50%" :disabled="Humi === 70" @click="changeHumiValue('add')">+</gree-button>
         </gree-col>
       </gree-row>
     </gree-page>
@@ -34,19 +26,7 @@
 </template>
 
 <script>
-import {
-  Header,
-  Toast,
-  Radio,
-  RadioList,
-  Switch,
-  List,
-  Item,
-  Dialog,
-  Row,
-  Col,
-  Button
-} from 'gree-ui';
+import { Header, Toast, Radio, RadioList, Switch, List, Item, Dialog, Row, Col, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
 
@@ -63,7 +43,7 @@ export default {
     [Dialog.name]: Dialog,
     [Row.name]: Row,
     [Col.name]: Col,
-    [Button.name]: Button,
+    [Button.name]: Button
   },
   data() {
     return {
@@ -180,11 +160,11 @@ export default {
       left: 70%;
       font-size: 100px;
       color: #404657;
-      }
+    }
   }
-  .humi-btn{
+  .humi-btn {
     margin-top: 90px;
-    .humi-col{
+    .humi-col {
       text-align: center;
     }
   }

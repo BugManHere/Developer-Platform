@@ -15,19 +15,19 @@
           <article>
             <gree-block>
               <div class="left">
-                <span>{{['自动','制冷','除湿','送风','制热'][Mod]}}</span>
+                <span>{{ ['自动', '制冷', '除湿', '送风', '制热'][Mod] }}</span>
               </div>
-              <div class="bar"/>
+              <div class="bar" />
               <div class="right">
-                <span>{{['自动风','低风','中低风','中风','中高风','高风','强风','静音'][WdSpd]}}</span>
+                <span>{{ ['自动风', '低风', '中低风', '中风', '中高风', '高风', '强风', '静音'][WdSpd] }}</span>
               </div>
             </gree-block>
             <h3>{{ circleVal }}</h3>
           </article>
         </div>
         <div class="pow-off" v-show="!Pow" :style="{ width: svgRadius + 40 + 'px', height: svgRadius + 40 + 'px' }">
-          <img src="@assets/img/off_bg.png">
-          <h3 v-text="'已关机'"/>
+          <img src="@assets/img/off_bg.png" />
+          <h3 v-text="'已关机'" />
         </div>
       </div>
       <gree-block>
@@ -47,25 +47,25 @@
     <!-- 底部按钮 -->
     <gree-toolbar position="bottom" no-hairline>
       <gree-row>
-        <div class="pow-button" :class="{off: !Pow - 0}" @click="changeData({Pow: !Pow - 0})">
+        <div class="pow-button" :class="{ off: !Pow - 0 }" @click="changeData({ Pow: !Pow - 0 })">
           <span class="iconfont icon-kaiguan" />
-          <div class="button-boder"/>
-          <div class="ripple" v-show="!Pow"/>
+          <div class="button-boder" />
+          <div class="ripple" v-show="!Pow" />
         </div>
-        <gree-col @click.native="showPopUp('ModPopup', Pow)" :class="{gray: !Pow}">
-            <gree-icon name="mode" color="black" size="lg" svg />
+        <gree-col @click.native="showPopUp('ModPopup', Pow)" :class="{ gray: !Pow }">
+          <gree-icon name="mode" color="black" size="lg" svg />
           <h3>模式</h3>
         </gree-col>
-        <gree-col @click.native="showPopUp('FanPopup', Pow)" :class="{gray: !Pow}">
-            <gree-icon name="wind-speed" color="black" size="lg" svg />
+        <gree-col @click.native="showPopUp('FanPopup', Pow)" :class="{ gray: !Pow }">
+          <gree-icon name="wind-speed" color="black" size="lg" svg />
           <h3>风速</h3>
         </gree-col>
         <gree-col>
-            <gree-icon name="subscribe" color="black" size="lg" svg />
+          <gree-icon name="subscribe" color="black" size="lg" svg />
           <h3>预约</h3>
         </gree-col>
         <gree-col @click.native="showPopUp('FuncPopup', true)">
-            <gree-icon name="advanced" color="black" size="lg" svg />
+          <gree-icon name="advanced" color="black" size="lg" svg />
           <h3>高级</h3>
         </gree-col>
       </gree-row>
@@ -110,7 +110,7 @@ export default {
     [ToolBar.name]: ToolBar,
     FuncPopup,
     ModPopup,
-    FanPopup,
+    FanPopup
   },
   data() {
     return {

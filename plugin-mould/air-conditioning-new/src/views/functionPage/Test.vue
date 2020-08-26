@@ -3,34 +3,39 @@
     <gree-page class="page-test">
       <gree-header>
         接口测试
-        <a class="header-clear" v-text="'清空字段'" slot="right" @click="clearAll"/>
+        <a class="header-clear" v-text="'清空字段'" slot="right" @click="clearAll" />
       </gree-header>
       <div class="json-list">
-        <div 
-          class="json-item" 
-          v-for="(json, index) in imshowJson" 
-          :key="index" 
-          @click="delJsonItem(json, delJson)" 
-          v-clipboard:copy="json" 
-          v-clipboard:success="onCopy" 
-          v-clipboard:error="onError">
-          <span v-text="json" class="json-name"/>
-          <span v-text="[undefined, ''].includes(jsonValue[json]) ? '无数据' : jsonValue[json]" class="json-value" :class="{change: changeItem.includes(index)}"/>
+        <div
+          class="json-item"
+          v-for="(json, index) in imshowJson"
+          :key="index"
+          @click="delJsonItem(json, delJson)"
+          v-clipboard:copy="json"
+          v-clipboard:success="onCopy"
+          v-clipboard:error="onError"
+        >
+          <span v-text="json" class="json-name" />
+          <span
+            v-text="[undefined, ''].includes(jsonValue[json]) ? '无数据' : jsonValue[json]"
+            class="json-value"
+            :class="{ change: changeItem.includes(index) }"
+          />
           <gree-icon name="close" size="md" v-show="delJson"></gree-icon>
         </div>
       </div>
       <div class="btn">
         <div>
-          <span v-text="'添加'" @click="showDialog('addJson')"/>
+          <span v-text="'添加'" @click="showDialog('addJson')" />
         </div>
         <div>
-          <span v-text="'发送'" @click="showDialog('sendJson')"/>
+          <span v-text="'发送'" @click="showDialog('sendJson')" />
         </div>
         <div>
-          <span v-text="delJson ? '取消' : '删除'" @click="delJson = !delJson"/>
+          <span v-text="delJson ? '取消' : '删除'" @click="delJson = !delJson" />
         </div>
         <div>
-          <span v-text="'引入'" @click="showDialog('Introduce')"/>
+          <span v-text="'引入'" @click="showDialog('Introduce')" />
         </div>
       </div>
       <!-- 添加字段 -->
@@ -76,18 +81,13 @@
           </gree-row>
         </div>
         <gree-row v-for="(btnList, listIndex) in testBtns" :key="`${btnList[0]}${listIndex}`">
-          <gree-button v-for="(btn, index) in btnList" type="primary" size="normal" @click="sendCmd(listIndex, index)" :key="index" v-text="btn"/>
+          <gree-button v-for="(btn, index) in btnList" type="primary" size="normal" @click="sendCmd(listIndex, index)" :key="index" v-text="btn" />
         </gree-row>
       </gree-dialog>
       <!-- 引入字段 -->
       <gree-dialog v-model="Introduce" title="引入模块" :btns="multiDialog" class="dialog-add-json">
         <gree-list>
-          <gree-radio-list
-            :options="jsonModel"
-            v-model="selectModel"
-            icon="check"
-            icon-inverse
-          ></gree-radio-list>
+          <gree-radio-list :options="jsonModel" v-model="selectModel" icon="check" icon-inverse></gree-radio-list>
         </gree-list>
       </gree-dialog>
     </gree-page>
@@ -97,9 +97,7 @@
 <script>
 import { Header, Toast, Dialog, InputItem, Row, Col, Icon, List, Item, RadioList, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  sendDataToDevice
-} from '@PluginInterface';
+import { sendDataToDevice } from '@PluginInterface';
 import LogicWatch from '@/logic/watch';
 
 export default {
@@ -115,7 +113,7 @@ export default {
     [List.name]: List,
     [Item.name]: Item,
     [RadioList.name]: RadioList,
-    [Button.name]: Button,
+    [Button.name]: Button
   },
   mixins: [LogicWatch],
   data() {
@@ -132,21 +130,9 @@ export default {
       changeItem: [],
       selectModel: 1,
       testBtns: [
-        [
-          '儿童偏冷',
-          '儿童平和',
-          '儿童偏热'
-        ],
-        [
-          '成人偏冷',
-          '成人平和',
-          '成人偏热'
-        ],
-        [
-          '老人偏冷',
-          '老人平和',
-          '老人偏热'
-        ],
+        ['儿童偏冷', '儿童平和', '儿童偏热'],
+        ['成人偏冷', '成人平和', '成人偏热'],
+        ['老人偏冷', '老人平和', '老人偏热']
       ]
     };
   },
@@ -154,17 +140,17 @@ export default {
     ...mapState({
       dataObject: state => state.dataObject,
       devOptions: state => state.devOptions,
-      mac: state => state.mac,
+      mac: state => state.mac
     }),
     multiDialog() {
       return [
         {
-          text: '取消',
+          text: '取消'
         },
         {
           text: '确定',
           handler: this.confirmJson
-        },
+        }
       ];
     },
     jsonModel() {
@@ -172,21 +158,61 @@ export default {
         {
           value: 0,
           text: '睡眠模块',
-          json: ['AntiDirectBlow', 'SmartSlpMod', 'SmartSlpModEx',
-            'StSlp1C', 'StSlp1CInc', 'StSlp1CSp', 'StSlp1H', 'StSlp1HInc', 'StSlp1HSp',
-            'StSlp2C', 'StSlp2CInc', 'StSlp2CSp', 'StSlp2H', 'StSlp2HInc', 'StSlp2HSp',
-            'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',
-            'StSlp4C', 'StSlp4CInc', 'StSlp4CSp', 'StSlp4H', 'StSlp4HInc', 'StSlp4HSp',
-            'SwhSlp', 'SlpMod', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4',
-            'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']
+          json: [
+            'AntiDirectBlow',
+            'SmartSlpMod',
+            'SmartSlpModEx',
+            'StSlp1C',
+            'StSlp1CInc',
+            'StSlp1CSp',
+            'StSlp1H',
+            'StSlp1HInc',
+            'StSlp1HSp',
+            'StSlp2C',
+            'StSlp2CInc',
+            'StSlp2CSp',
+            'StSlp2H',
+            'StSlp2HInc',
+            'StSlp2HSp',
+            'StSlp3C',
+            'StSlp3CInc',
+            'StSlp3CSp',
+            'StSlp3H',
+            'StSlp3HInc',
+            'StSlp3HSp',
+            'StSlp4C',
+            'StSlp4CInc',
+            'StSlp4CSp',
+            'StSlp4H',
+            'StSlp4HInc',
+            'StSlp4HSp',
+            'SwhSlp',
+            'SlpMod',
+            'Slp1L1',
+            'Slp1H1',
+            'Slp1L2',
+            'Slp1H2',
+            'Slp1L3',
+            'Slp1H3',
+            'Slp1L4',
+            'Slp1H4',
+            'Slp1L5',
+            'Slp1H5',
+            'Slp1L6',
+            'Slp1H6',
+            'Slp1L7',
+            'Slp1H7',
+            'Slp1L8',
+            'Slp1H8'
+          ]
         },
         {
           value: 1,
           text: '控制字段',
           json: JSON.parse(this.devOptions.statueJson2)
-        },
+        }
       ];
-    },
+    }
   },
   mounted() {
     setInterval(async () => {
@@ -258,11 +284,36 @@ export default {
     async sendCmd(type, val) {
       this.sendJson = false;
       let res;
-      const opt = ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx',
-        'StSlp1C', 'StSlp1CInc', 'StSlp1CSp', 'StSlp1H', 'StSlp1HInc', 'StSlp1HSp',
-        'StSlp2C', 'StSlp2CInc', 'StSlp2CSp', 'StSlp2H', 'StSlp2HInc', 'StSlp2HSp',
-        'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',
-        'StSlp4C', 'StSlp4CInc', 'StSlp4CSp', 'StSlp4H', 'StSlp4HInc', 'StSlp4HSp'];
+      const opt = [
+        'SwhSlp',
+        'SlpMod',
+        'SmartSlpMod',
+        'SmartSlpModEx',
+        'StSlp1C',
+        'StSlp1CInc',
+        'StSlp1CSp',
+        'StSlp1H',
+        'StSlp1HInc',
+        'StSlp1HSp',
+        'StSlp2C',
+        'StSlp2CInc',
+        'StSlp2CSp',
+        'StSlp2H',
+        'StSlp2HInc',
+        'StSlp2HSp',
+        'StSlp3C',
+        'StSlp3CInc',
+        'StSlp3CSp',
+        'StSlp3H',
+        'StSlp3HInc',
+        'StSlp3HSp',
+        'StSlp4C',
+        'StSlp4CInc',
+        'StSlp4CSp',
+        'StSlp4H',
+        'StSlp4HInc',
+        'StSlp4HSp'
+      ];
       let p;
       let json;
       let _res;
@@ -313,11 +364,11 @@ export default {
                 break;
             }
             break;
-        
+
           default:
             break;
         }
-        json = JSON.stringify({ 
+        json = JSON.stringify({
           mac: this.mac,
           t: 'cmd',
           opt,
@@ -356,7 +407,7 @@ export default {
           const opt = Object.keys(sendData);
           if (!opt.length) return;
           const p = Object.values(sendData);
-          const json = JSON.stringify({ 
+          const json = JSON.stringify({
             mac: this.mac,
             t: 'cmd',
             opt,
@@ -410,7 +461,7 @@ export default {
       padding: 20px 15px;
       margin: 10px 10px;
       background-image: linear-gradient(to left, PowDerBlue, #89d9e4);
-      border: 1px #00D0D0 solid;
+      border: 1px #00d0d0 solid;
       border-radius: 13px;
       font-size: 30px;
       color: #404657;
@@ -441,7 +492,7 @@ export default {
       width: 151px;
       height: 151px;
       background-image: url('../../assets/img/functionBtn/blank.png');
-      background-repeat:no-repeat;
+      background-repeat: no-repeat;
       background-size: 100% 100%;
       display: flex;
       justify-content: center;
@@ -449,8 +500,12 @@ export default {
     }
   }
   @keyframes json-value-hide {
-    0% {color: red;}
-    100% {color: blue;}
+    0% {
+      color: red;
+    }
+    100% {
+      color: blue;
+    }
   }
 }
 .dialog-add-json {

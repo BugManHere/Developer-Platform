@@ -12,7 +12,7 @@ module.exports = {
     smart: '智能',
     timing: '定时',
     CO2: '二氧化碳浓度',
-    Electric: '电量查询',
+    Electric: '电量查询'
   },
   ban: {
     Auto: '自动',
@@ -63,7 +63,7 @@ module.exports = {
     SvSt: '节能',
     Blo: '干燥',
     Humi: '加湿',
-    x: '再热除湿',
+    x: '再热除湿'
   },
   error: {
     notify_fault_title: '故障通知',
@@ -78,8 +78,7 @@ module.exports = {
     notify_fault_reson: '故障原因',
     notify_fault_name_WiFi: 'WiFi通讯异常',
     notify_fault_code_WiFi: '',
-    notify_fault_resolve_WiFi:
-      '故障恢复后自动退出, 若长时间不退出, 重新上电仍出现, 请送指定维修点维修',
+    notify_fault_resolve_WiFi: '故障恢复后自动退出, 若长时间不退出, 重新上电仍出现, 请送指定维修点维修',
     notify_fault_name_E1: '系统高压保护',
     notify_fault_name_E2: '防冻结保护',
     notify_fault_name_E3: '低压保护',
@@ -234,7 +233,7 @@ module.exports = {
     SvSt: '节能',
     Blo: '干燥',
     Humi: '加湿',
-    x: '再热除湿',
+    x: '再热除湿'
   },
   sweep: {
     speedTitle: '扫风',
@@ -248,8 +247,7 @@ module.exports = {
     sweep_lr_turnoff_tips: '左右扫风已关闭。',
     sweep_powoff_tips: '空调已被关闭，自动退出扫风设置。',
     Stage_tips: '提示:',
-    sweep_txt2:
-      '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。'
+    sweep_txt2: '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。'
   },
   air: {
     title: '新风',
@@ -274,7 +272,7 @@ module.exports = {
     btn_lock: '童锁',
     sleep_side: '睡眠模式',
     study_side: '学习模式',
-    diy_side: '自定义模式',
+    diy_side: '自定义模式'
   },
   setting: {
     save: '保存',
@@ -307,6 +305,6 @@ module.exports = {
     sweepUp: '上',
     sweepDown: '下',
     sweepUd: '上下',
-    recovery: '恢复出厂设置',
+    recovery: '恢复出厂设置'
   }
 };

@@ -29,5 +29,5 @@ export default {
   },
   [type.SET_CHART_DATA](state, obj) {
     state.chartData = { ...state.chartData, ...obj };
-  },
+  }
 };

@@ -17,26 +17,25 @@ const LogicDefine = {
   },
   mounted() {
     const { key } = require('@/../plugin.id.json');
-    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = process.env.NODE_ENV === 'development' ? 
-      window.storage.get('config') :
-      require(`@/../../../output/${key}.json`);
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } =
+      process.env.NODE_ENV === 'development' ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
     this.g_deviceName = deviceName;
     this.g_moreOption = moreOption;
     this.g_funcDefine = funcDefine;
     this.g_excludeMap = excludeMap;
     this.g_hideMap = hideMap;
     this.g_mid = productModel;
-    
-    this.$store.state.devOptions.statueJson2 === '[]' && 
-    this.setState({
-      devOptions: {
-        pluginVer: moreOption.pluginVer,
-        mid: productModel,
-        statueJson: JSON.stringify(moreOption.statueJson),
-        statueJson2: JSON.stringify(moreOption.statueJson2),
-        identifierArr: this.$store.state.devOptions.identifierArr,
-      }
-    });
+
+    this.$store.state.devOptions.statueJson2 === '[]' &&
+      this.setState({
+        devOptions: {
+          pluginVer: moreOption.pluginVer,
+          mid: productModel,
+          statueJson: JSON.stringify(moreOption.statueJson),
+          statueJson2: JSON.stringify(moreOption.statueJson2),
+          identifierArr: this.$store.state.devOptions.identifierArr
+        }
+      });
     this.g_outputMap = this.g_init();
   },
   computed: {
@@ -198,11 +197,7 @@ const LogicDefine = {
         const currentIndex = order.indexOf(currentStatus);
         let status = 'default';
         let index = 1;
-        while (
-          ![len - 1, -1].includes(currentIndex) &&
-          order[currentIndex + index] &&
-          status === 'default'
-        ) {
+        while (![len - 1, -1].includes(currentIndex) && order[currentIndex + index] && status === 'default') {
           const statusName = order[currentIndex + index];
           const state = `${item.identifier}_${statusName}`;
           !this.g_hideStateArr.includes(state) && (status = order[currentIndex + index]);
@@ -232,10 +227,10 @@ const LogicDefine = {
       const arr = [];
       this.g_funcDefine.forEach(item => {
         Object.keys(item.statusDefine).forEach(statusItem => {
-          statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || arr.includes(item.json) || (arr.push(item.json));
+          statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || arr.includes(item.json) || arr.push(item.json);
           if (item.statusDefine[statusItem].moreCommand) {
             Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
-              arr.includes(moreJson) || (arr.push(moreJson));
+              arr.includes(moreJson) || arr.push(moreJson);
             });
           }
         });
@@ -253,25 +248,27 @@ const LogicDefine = {
       const powState = this.g_statusMap[identifier].state; // pow的当前状态
       const hideStateArr = this.g_hideMap[powState]; // 被pow隐藏的State
       if (!hideStateArr) return [];
-      hideStateArr.forEach(stateItem => { // 挑选出需要检查的id
+      hideStateArr.forEach(stateItem => {
+        // 挑选出需要检查的id
         const checkId = this.g_stateToId[stateItem];
         checkId && (checkIdArr.includes(checkId) || checkIdArr.push(checkId));
       });
       checkIdArr.forEach(idItem => {
         let pass = true; // 是否满足条件
         const checkOrder = this.g_funcDefineMap[idItem].order; // id对应激活的status
-        checkOrder.forEach(statusItem => { // order下的所有status是否都被隐藏
+        checkOrder.forEach(statusItem => {
+          // order下的所有status是否都被隐藏
           const checkState = `${idItem}_${statusItem}`;
           !hideStateArr.includes(checkState) && (pass = false);
         });
         pass && result.push(idItem); // 如满足条件，记下
       });
       return result;
-    },
+    }
   },
   methods: {
     ...mapMutations({
-      setState: 'SET_STATE',
+      setState: 'SET_STATE'
     }),
     g_init() {
       const result = {};
@@ -335,7 +332,8 @@ const LogicDefine = {
       order.forEach(statusName => {
         if (statusName === 'undefined') return;
         const state = `${key}_${statusName}`;
-        if (isHide && hideState.includes(state)) { // 被隐藏的state不参与计算
+        if (isHide && hideState.includes(state)) {
+          // 被隐藏的state不参与计算
           return;
         }
         const val = funcItem.statusDefine[statusName].value;
