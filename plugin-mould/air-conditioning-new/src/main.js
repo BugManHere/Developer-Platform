@@ -23,6 +23,10 @@ import axios from 'axios';
 
 import { SET_STATE } from './store/types';
 
+axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
+axios.defaults.timeout = 5000; // 响应时间
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
+
 // 安装插件
 Vue.use(VueI18n);
 Vue.use(language);
@@ -88,8 +92,7 @@ async function createVue() {
       vm.$store.commit(SET_STATE, { mac: oldId });
     }
 
-    const { name } = router.currentRoute;
-    name === 'Loading' && vm.$router.push('Home');
+    vm.$router.push('Home');
   } else {
     vm.init();
     window.storage = new Storage();

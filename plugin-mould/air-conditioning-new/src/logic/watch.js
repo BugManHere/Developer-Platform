@@ -22,7 +22,7 @@ const LogicWatch = {
     g_outputMap: {
       handler(newVal) {
         if (newVal) {
-          this.setDataObject({ ...newVal });
+          this.setDataObject(newVal);
         }
       },
       deep: true,

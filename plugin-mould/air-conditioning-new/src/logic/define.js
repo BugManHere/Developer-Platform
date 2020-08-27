@@ -5,26 +5,26 @@ const LogicDefine = {
   mixins: [LogicPort],
   data() {
     return {
-      g_moreOption: {},
-      g_outputMap: {},
-      g_funcDefine: [],
-      g_excludeMap: {},
-      g_hideMap: {},
-      g_hideState: '[]',
-      g_deviceName: undefined,
-      g_mid: ''
+      g_moreOption: {}, // 更多配置项
+      g_outputMap: {}, // 更多配置项
+      g_funcDefine: [], // 功能定义
+      g_excludeMap: {}, // 排斥关系
+      g_hideMap: {}, // 隐藏关系
+      g_hideState: '[]', // 被隐藏的state，在watch.js里面有赋值
+      g_deviceName: undefined, // 设备名称
+      g_mid: '' // mid
     };
   },
   mounted() {
-    const { key } = require('@/../plugin.id.json');
+    const { key } = require('@/../plugin.id.json'); // 配置key
     const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } =
-      process.env.NODE_ENV === 'development' ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
-    this.g_deviceName = deviceName;
-    this.g_moreOption = moreOption;
-    this.g_funcDefine = funcDefine;
-    this.g_excludeMap = excludeMap;
-    this.g_hideMap = hideMap;
-    this.g_mid = productModel;
+      process.env.NODE_ENV === 'development' ? window.storage.get('config') : require(`@/../../../output/${key}.json`); // 获取配置
+    this.g_deviceName = deviceName; // 设备名称
+    this.g_moreOption = moreOption; // 更多配置项
+    this.g_funcDefine = funcDefine; // 功能定义
+    this.g_excludeMap = excludeMap; // 排斥关系
+    this.g_hideMap = hideMap; // 隐藏关系
+    this.g_mid = productModel; // mid
 
     this.$store.state.devOptions.statueJson2 === '[]' &&
       this.setState({
@@ -65,26 +65,40 @@ const LogicDefine = {
       return result;
     },
     /**
-     * @description 根据identifier与value获取当前伪状态
+     * @description g_hideMap的反义，根据被隐藏的state获取state
+     * @return Object {state: [state]}
+     */
+    g_hideMapReverse() {
+      const result = {};
+      Object.keys(this.g_hideMap).forEach(state => {
+        // 提取被隐藏的state
+        this.g_hideMap[state].forEach(hideState => {
+          result[hideState] ? result[hideState].push(state) : (result[hideState] = [state]);
+        });
+      });
+      return result;
+    },
+    /**
+     * @description 根据identifier与value获取当前status
      * @return Object {identifier: {value: status}}
      */
     g_valToStatus() {
       const result = {};
       this.g_funcDefine.forEach(funcItem => {
-        const key = funcItem.identifier;
-        result[key] = this.g_getStatus(funcItem, true);
+        const id = funcItem.identifier;
+        result[id] = this.g_getStatus(funcItem, true);
       });
       return result;
     },
     /**
-     * @description 根据identifier与value获取当前伪状态（没经过隐藏处理）
+     * @description 根据identifier与value获取当前status（没经过隐藏处理）
      * @return Object {identifier: {value: status}}
      */
     g_valToRealStatus() {
       const result = {};
       this.g_funcDefine.forEach(funcItem => {
-        const key = funcItem.identifier;
-        result[key] = this.g_getStatus(funcItem, false);
+        const id = funcItem.identifier;
+        result[id] = this.g_getStatus(funcItem, false);
       });
       return result;
     },
@@ -168,16 +182,82 @@ const LogicDefine = {
       return result;
     },
     /**
-     * @description 隐藏的function列表
+     * @description status循环
+     * @return Object: {identifier: [status]}
+     */
+    g_statusLoop() {
+      const result = {};
+      // 设定规则，undefined不能被指向，会被重新指向为default
+      const rule = status => {
+        let result = status || 'default';
+        result === 'undefined' && (result = 'default');
+        return result;
+      };
+      // 遍历功能，提取status关系
+      this.g_funcDefine.forEach(func => {
+        const id = func.identifier;
+        const map = func.map; // 指向关系
+        let status = this.g_statusMap[id].status; // function的当前status
+        const statusArr = []; // status顺序数组形式
+        if (map) {
+          let directionStatus = rule(map[status]); // status指向
+          // 再次指向原点时推出，形成闭环
+          while (!statusArr.includes(directionStatus)) {
+            status = directionStatus; // 下一个status
+            statusArr.push(directionStatus); // 按顺序存入数组
+            directionStatus = rule(map[status]) || 'default'; // 更新status指向
+          }
+        } else {
+          statusArr.push(status);
+        }
+        result[id] = statusArr;
+      });
+      return result;
+    },
+    /**
+     * @description function的当前指向status
+     * @return Object: {identifier: status}
+     */
+    g_statusDirectionMap() {
+      const result = {};
+      // 遍历功能，提取function当前指向status
+      this.g_identifierArr.forEach(id => {
+        const directionStatus = this.g_statusLoop[id].find(status => {
+          const state = `${id}_${status}`; // 获取指向state
+          return !this.g_hideStateArr.includes(state); // 如果没被隐藏，则返回
+        });
+        result[id] = directionStatus || this.g_statusMap[id].status; // 如果都被隐藏， 则返回当前status
+      });
+      return result;
+    },
+    /**
+     * @description 没有指向的function
      * @return Array: [identifier]
      */
-    g_hideFuncArr() {
-      const result = [];
-      this.g_funcDefine.forEach(item => {
-        const identifier = item.identifier;
-        const stateOrder = item.order.map(item => `${identifier}_${item}`);
-        if (this.g_checkHide(stateOrder, this.g_hideStateArr)) {
-          result.push(identifier);
+    g_noDirectionFuncArr() {
+      const result = this.g_identifierArr.filter(id => {
+        const currentStatus = this.g_statusMap[id].status; // function的当前status
+        const directionStatus = this.g_statusDirectionMap[id]; // function的指向status
+        return currentStatus === directionStatus;
+      });
+      return result;
+    },
+    /**
+     * @description 输入被隐藏的function的identifier，返回参与隐藏的function的identifier
+     * @return Object: {identifier: {state: state}}
+     */
+    g_hideByStateMap() {
+      const result = {};
+      this.g_noDirectionFuncArr.forEach(id => {
+        const statusArr = this.g_statusLoop[id]; // 获取status指向数组
+        result[id] = {};
+        if (statusArr.length >= 1) {
+          // 轮询每个states指向
+          statusArr.forEach(status => {
+            const state = `${id}_${status}`;
+            const stateArr = this.g_hideMapReverse[state];
+            stateArr && (result[id] = { ...result[id], [state]: stateArr });
+          });
         }
       });
       return result;
@@ -186,27 +266,13 @@ const LogicDefine = {
      * @description 当前状态的下一状态列表
      * @return Object: {identifier: {status, define, json, setData, customize}}
      */
-    g_NextStatusMap() {
+    g_nextStatusMap() {
       const result = {};
-      this.g_funcDefine.forEach(item => {
-        const id = item.identifier;
-        const json = item.json;
-        const order = ['default', ...item.order];
-        const len = order.length;
-        const currentStatus = this.g_statusMap[id].status;
-        const currentIndex = order.indexOf(currentStatus);
-        let status = 'default';
-        let index = 1;
-        while (![len - 1, -1].includes(currentIndex) && order[currentIndex + index] && status === 'default') {
-          const statusName = order[currentIndex + index];
-          const state = `${item.identifier}_${statusName}`;
-          !this.g_hideStateArr.includes(state) && (status = order[currentIndex + index]);
-          index += 1;
-        }
-        // if (![len - 1, -1].includes(currentIndex)) {
-        //   status = order[currentIndex + 1];
-        // }
-        const define = item.statusDefine[status];
+      this.g_funcDefine.forEach(func => {
+        const id = func.identifier;
+        const json = func.json;
+        const status = this.g_statusDirectionMap[id]; // function的指向status
+        const define = func.statusDefine[status];
         let setData = {};
         const moreCommand = define.moreCommand;
         const customize = define.customize;
@@ -214,16 +280,16 @@ const LogicDefine = {
         setData[json] = define.value;
         result[id] = {
           status,
-          define,
           json,
+          define,
           setData,
           customize
         };
       });
       return result;
     },
-    // 登记的所有功能的JSON字段
-    jsonArr() {
+    // 所有功能的JSON字段
+    g_jsonArr() {
       const arr = [];
       this.g_funcDefine.forEach(item => {
         Object.keys(item.statusDefine).forEach(statusItem => {
@@ -236,34 +302,6 @@ const LogicDefine = {
         });
       });
       return arr;
-    },
-    /**
-     * @description 开关机下隐藏的图标
-     * @return Array
-     */
-    powHideArr() {
-      const result = [];
-      const checkIdArr = []; // 需要检查的id
-      const identifier = this.g_Pow; // 获取在define.js里面定义的g_Pow
-      const powState = this.g_statusMap[identifier].state; // pow的当前状态
-      const hideStateArr = this.g_hideMap[powState]; // 被pow隐藏的State
-      if (!hideStateArr) return [];
-      hideStateArr.forEach(stateItem => {
-        // 挑选出需要检查的id
-        const checkId = this.g_stateToId[stateItem];
-        checkId && (checkIdArr.includes(checkId) || checkIdArr.push(checkId));
-      });
-      checkIdArr.forEach(idItem => {
-        let pass = true; // 是否满足条件
-        const checkOrder = this.g_funcDefineMap[idItem].order; // id对应激活的status
-        checkOrder.forEach(statusItem => {
-          // order下的所有status是否都被隐藏
-          const checkState = `${idItem}_${statusItem}`;
-          !hideStateArr.includes(checkState) && (pass = false);
-        });
-        pass && result.push(idItem); // 如满足条件，记下
-      });
-      return result;
     }
   },
   methods: {
@@ -309,27 +347,17 @@ const LogicDefine = {
       return 4;
     },
     /**
-     * @description 获取对象之间的关系
-     * @return Number 0.相离 1.相交 2.被包含 3.包含 4.相等
+     * @description 获取function的status
+     * @input funcItem: 功能， isHide： 是否考虑被隐藏的state
+     * @return Object {value: status}
      */
-    g_checkHide(stateArr, hideArr) {
-      let result = true;
-      if (stateArr && hideArr && stateArr.length && hideArr.length) {
-        stateArr.forEach(item => {
-          !hideArr.includes(item) && (result = false);
-        });
-      } else {
-        return false;
-      }
-      return result;
-    },
     g_getStatus(funcItem, isHide = false) {
       const result = {};
       const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
       const key = funcItem.identifier;
-      const order = Object.keys(funcItem.statusDefine);
+      const statusKeys = Object.keys(funcItem.statusDefine);
       // result[key] = {};
-      order.forEach(statusName => {
+      statusKeys.forEach(statusName => {
         if (statusName === 'undefined') return;
         const state = `${key}_${statusName}`;
         if (isHide && hideState.includes(state)) {

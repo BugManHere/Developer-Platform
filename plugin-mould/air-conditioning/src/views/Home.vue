@@ -39,7 +39,9 @@
             </gree-col>
           </gree-row>
         </div>
-        <div class="bar-co2" v-if="!functype && Air && devOptions.statueJson2.includes('CO2')">
+        <div 
+          class="bar-co2" 
+          v-if="!functype && Air && devOptions.statueJson2.includes('CO2')">
           <img :src="co2Img">
           <span v-text="'CO2浓度等级'" @click="showCO2"/>
         </div>
@@ -61,9 +63,9 @@
         <!-- 温度单位图标 -->
         <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
         <!-- 室内温度 -->
-        <div class="room-tem" v-text="`当前室温${TemSen - 40}℃`" v-if="hasTemSen"/>
+        <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen"/>
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow && !loading" key="fanSwiper"/>
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper" @click="onTest"/>
         <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
       </div>
       <!-- 尾部 -->

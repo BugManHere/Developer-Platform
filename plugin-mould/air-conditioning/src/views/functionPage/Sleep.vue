@@ -83,7 +83,6 @@ import { Header, Toast, Switch, List, Item, RadioList } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import {
   showToast,
-  showLoading,
   hideLoading,
   sendDataToDevice,
 } from '@PluginInterface';
@@ -619,7 +618,8 @@ export default {
       this.updatePosition(true);
     },
     updateData(key) {
-      if (!key) return;
+      key;
+      // if (!key) return;
       // this.data = this.modToTem[key];
     },
     changeSlp(key, type) {
