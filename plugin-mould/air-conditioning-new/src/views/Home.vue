@@ -61,7 +61,7 @@
           <h3>风速</h3>
         </gree-col>
         <gree-col>
-          <gree-icon name="subscribe" color="black" size="lg" svg />
+          <i class="iconfont icon-gaoji" />
           <h3>预约</h3>
         </gree-col>
         <gree-col @click.native="showPopUp('FuncPopup', true)">

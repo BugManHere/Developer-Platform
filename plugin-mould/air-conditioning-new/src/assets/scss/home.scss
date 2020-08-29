@@ -70,18 +70,34 @@
           margin-top: 35px !important;
         }
         article {
-          font-family: 'appleLight';
+          font-family: 'appleUltralight';
+          font-weight: 500;
           color: #fff;
+          font-size: 270px;
           h3 {
-            font-size: 270px;
-            &::after {
-              content: '°C';
+            &::before {
+              content: '°';
               position: absolute;
-              top: 130px;
-              right: -80px;
+              top: 151px;
+              right: 8px;
               bottom: 0;
               left: auto;
-              font-size: 79px;
+              font-size: 46px;
+              font-family: 'appleUltralight';
+              font-weight: 300;
+              text-align: left;
+            }
+            &::after {
+              content: 'C';
+              position: absolute;
+              top: 145px;
+              right: -40px;
+              bottom: 0;
+              left: auto;
+              font-size: 66px;
+              font-family: 'appleUltralight';
+              font-weight: 600;
+              text-align: left;
             }
           }
           .block {

@@ -2,46 +2,38 @@
   <div class="status-page" role="group">
     <div class="status-input">
       <caption>
-        <span v-text="'状态详情'"/>
-        <span v-text="keyNote(currentStatusKey)" class="text-label"/>
+        <span v-text="'状态详情'" />
+        <span v-text="keyNote(currentStatusKey)" class="text-label" />
       </caption>
       <div class="status-info">
         <div class="info-name">
-          <span v-text="'名称'" class="text-label"/>
-          <input
-            type="text"
-            class="form-control"
-            v-model="currentStatus.name"
-            @blur="changeData(currentStatusIndex, 'name')"
-          />
+          <span v-text="'名称'" class="text-label" />
+          <input type="text" class="form-control" v-model="currentStatus.name" @blur="changeData(currentStatusIndex, 'name')" />
         </div>
         <div class="info-direction">
-          <span v-text="'指向'" class="text-label"/>
+          <span v-text="'指向'" class="text-label" />
           <select class="select-medium form-control" v-model="currentDrection" @change="setDirection">
-            <option 
-              v-for="(status, key) in statusList.filter((item, index) => ![currentStatusIndex, 1].includes(index))" 
-              :value="status.key" 
+            <option
+              v-for="(status, key) in statusList.filter((item, index) => ![currentStatusIndex, 1].includes(index))"
+              :value="status.key"
               :key="key"
-              v-text="status.name"/>
+              v-text="status.name"
+            />
           </select>
         </div>
         <div class="info-value">
-          <span v-text="'状态值'" class="text-label"/>
-          <input
-            type="text"
-            class="form-control"
-            v-model="currentStatus.value"
-          />
+          <span v-text="'状态值'" class="text-label" />
+          <input type="text" class="form-control" v-model="currentStatus.value" />
         </div>
         <div class="info-check">
-          <span v-text="'是否检查互斥'" class="text-label"/>
+          <span v-text="'是否检查互斥'" class="text-label" />
           <select class="form-control" v-model="currentStatus.isCheck">
             <option :value="true">是</option>
             <option :value="false">否</option>
           </select>
         </div>
         <div class="info-customize">
-          <span v-text="'自定义函数'" class="text-label"/>
+          <span v-text="'自定义函数'" class="text-label" />
           <select class="select-medium form-control" v-model="currentStatus.customize">
             <option :value="false">不使用</option>
             <option value="replace">替代</option>
@@ -49,9 +41,13 @@
             <option value="after">执行后</option>
           </select>
         </div>
+        <div class="info-icon-select">
+          <span v-text="'图标'" class="text-label" />
+          <i class="iconfont tubiao" title="更改图标设置" />
+        </div>
         <!-- 新增额外命令 -->
         <div class="info-cmd">
-          <span v-text="'额外命令'" class="text-label"/>
+          <span v-text="'额外命令'" class="text-label" />
           <!-- <button type="button" class="btn btn-default">
             <div class="close" aria-label="Close">
               <span aria-hidden="true">+</span>
@@ -77,42 +73,36 @@
               <tbody>
                 <tr class="active" v-for="(key, index) in cmdMap.keys" :key="index">
                   <td>
-                    <input type="text" class="form-control" v-model="cmdMap.keys[index]" @change="setCmd('key', index)"/>
+                    <input type="text" class="form-control" v-model="cmdMap.keys[index]" @change="setCmd('key', index)" />
                   </td>
                   <td>
-                    <input type="text" class="form-control" v-model="cmdMap.vals[index]" @change="setCmd('val', index)"/>
+                    <input type="text" class="form-control" v-model="cmdMap.vals[index]" @change="setCmd('val', index)" />
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
       </div>
       <!-- 删除按钮 -->
       <div class="del-btn">
-        <button 
-        type="button" 
-        v-show="!['default', 'undefined'].includes(currentStatusKey)"
-        class="btn btn-danger" 
-        v-text="'删除状态'" 
-        @click="delStatus"/>
+        <button type="button" v-show="!['default', 'undefined'].includes(currentStatusKey)" class="btn btn-danger" v-text="'删除状态'" @click="delStatus" />
       </div>
     </div>
     <div class="status-order">
       <caption>
-        <span v-text="'状态指向'"/>
+        <span v-text="'状态指向'" />
       </caption>
       <!-- 图表 -->
-      <div class="order-chart" ref="mychart"/>
+      <div class="order-chart" ref="mychart" />
     </div>
   </div>
 </template>
 
 <script>
-import echarts from "echarts";
-import { deepCopy, randomKey } from "@/utils";
-import { mapState, mapMutations, mapActions } from 'vuex'
+import echarts from 'echarts';
+import { deepCopy, randomKey } from '@/utils';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -123,15 +113,15 @@ export default {
       cmdMap: {
         keys: [''],
         vals: [''],
-        oldKeys: [''],
+        oldKeys: ['']
       }
-    }
+    };
   },
   computed: {
     ...mapState({
       currentFuncId: state => state.tempModule.currentFuncId,
       statusSetStep: state => state.pulicModule.statusSetStep,
-      funcDefine: (state, getters) => getters.funcDefine,
+      funcDefine: (state, getters) => getters.funcDefine
     }),
     // 图表配置
     opt() {
@@ -142,47 +132,43 @@ export default {
       const weights = {}; // 权重
       Object.values(map).forEach(key => {
         weights[key] = (weights[key] || 0) + 1;
-      })
+      });
       this.statusList.forEach(item => {
         const curve = item.key === map[item.direction];
-        nodes.push(
-          {
-            itemStyle: {
-              color: '#E9906F'
-            },
-            symbolSize: 27 + (weights[item.key] || 0) * 1.8,
-            category: 1,
-            x: null,
-            y: null,
-            draggable: true,
-            name: item.name.length > 3 ? `${item.name.slice(0, 3)}...` : item.name,
-            cursor: 'pointer',
-            id: item.key,
+        nodes.push({
+          itemStyle: {
+            color: '#E9906F'
+          },
+          symbolSize: 27 + (weights[item.key] || 0) * 1.8,
+          category: 1,
+          x: null,
+          y: null,
+          draggable: true,
+          name: item.name.length > 3 ? `${item.name.slice(0, 3)}...` : item.name,
+          cursor: 'pointer',
+          id: item.key
+        });
+        links.push({
+          id: item.key,
+          name: 'null',
+          source: item.key,
+          target: item.direction,
+          // symbol: [null, 'triangle'],
+          // symbolSize: 13,
+          lineStyle: {
+            color: curve ? '#334B5C' : '#797B7F',
+            width: 2,
+            opacity: 1,
+            curveness: curve * 0.5,
+            borderColor: '#fff',
+            borderWidth: 1,
+            shadowBlur: 10,
+            shadowColor: 'rgba(0, 0, 0, 0.3)'
           }
-        );
-        links.push(
-          {
-            id: item.key,
-            name: 'null',
-            source: item.key,
-            target: item.direction,
-            // symbol: [null, 'triangle'],
-            // symbolSize: 13,
-            lineStyle: {
-              color: curve ? '#334B5C' : '#797B7F',
-              width: 2,
-              opacity: 1,
-              curveness: curve * 0.5,
-              borderColor: '#fff',
-              borderWidth: 1,
-              shadowBlur: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.3)',
-            }
-          }
-        );
+        });
         categories.push({
           name: item.name
-        })
+        });
       });
       let obj = {
         tooltip: {
@@ -191,40 +177,40 @@ export default {
             return `${status.name}：${status.value}`;
           }
         },
-        series : [
-            {
-                type: 'graph',
-                layout: 'force',
-                // coordinateSystem: 'cartesian2d',
-                data: nodes,
-                links,
-                categories,
-                // draggable: true,
-                focusNodeAdjacency: false,
-                legendHoverLink: false,
-                zoom: 2.5,
-                roam: true,
-                label: {
-                  show: true,
-                  position: 'inside'
-                },
-                itemStyle: {
-                  borderColor: '#fff',
-                  borderWidth: 1,
-                  shadowBlur: 10,
-                  shadowColor: 'rgba(0, 0, 0, 0.3)',
-                },
-                edgeSymbol: [null, 'arrow'],
-                edgeSymbolSize: [0, 13],
-                force: {
-                  repulsion: 100
-                },
-                emphasis: {
-                  itemStyle: {
-                    color: '#CD6600'
-                  }
-                }
+        series: [
+          {
+            type: 'graph',
+            layout: 'force',
+            // coordinateSystem: 'cartesian2d',
+            data: nodes,
+            links,
+            categories,
+            // draggable: true,
+            focusNodeAdjacency: false,
+            legendHoverLink: false,
+            zoom: 2.5,
+            roam: true,
+            label: {
+              show: true,
+              position: 'inside'
+            },
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 1,
+              shadowBlur: 10,
+              shadowColor: 'rgba(0, 0, 0, 0.3)'
+            },
+            edgeSymbol: [null, 'arrow'],
+            edgeSymbolSize: [0, 13],
+            force: {
+              repulsion: 100
+            },
+            emphasis: {
+              itemStyle: {
+                color: '#CD6600'
+              }
             }
+          }
         ],
         graphic: [
           {
@@ -237,8 +223,8 @@ export default {
             style: {
               image: require('@assets/img/plus.png'),
               width: 26,
-              height: 26,
-            },
+              height: 26
+            }
           },
           {
             type: 'text',
@@ -247,7 +233,7 @@ export default {
             style: {
               text: '新增状态',
               font: '16px sans-serif',
-              fill: '#404657',
+              fill: '#404657'
             }
           },
           {
@@ -264,7 +250,7 @@ export default {
               stroke: '#aaa',
               lineWidth: 1,
               shadowBlur: 12,
-              shadowColor: 'rgba(0, 0, 0, 0.3)',
+              shadowColor: 'rgba(0, 0, 0, 0.3)'
             }
           }
         ]
@@ -290,10 +276,10 @@ export default {
       let result = [];
       if (this.funcCopy.statusDefine) {
         const statusKeyList = Object.keys(this.funcCopy.statusDefine); // 取出功能下的状态名
-        result =  statusKeyList.map(key => {
+        result = statusKeyList.map(key => {
           // 根据状态获取名称
           return {
-            name: this.funcCopy.statusDefine[key].name, 
+            name: this.funcCopy.statusDefine[key].name,
             key,
             direction: this.funcCopy.map[key]
           };
@@ -318,21 +304,16 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setTempModule: "SET_TEMP_MODULE",
-      setPulicModule: "SET_PULIC_MODULE",
+      setTempModule: 'SET_TEMP_MODULE',
+      setPulicModule: 'SET_PULIC_MODULE'
     }),
     ...mapActions({
-      editTempFunc: "EDIT_TEMP_FUNC",
+      editTempFunc: 'EDIT_TEMP_FUNC'
     }),
-    async settingDone() {
-      console.log(this.funcCopy);
-    },
     // 初始化图表
-    initEchart(){
+    initEchart() {
       // 载入图表参数
-      this.myChart.setOption(
-        this.opt
-      );
+      this.myChart.setOption(this.opt);
       // 绑定点击事件
       this.myChart.on('click', param => {
         switch (param.componentType) {
@@ -354,13 +335,13 @@ export default {
     highlightStatus(index = 0) {
       this.myChart.dispatchAction({
         type: 'downplay',
-        seriesIndex: 0,
+        seriesIndex: 0
       });
       this.myChart.dispatchAction({
         type: 'highlight',
         seriesIndex: 0,
         dataIndex: index
-      })
+      });
     },
     changeData(index, valueKey) {
       const key = this.statusList[index].key;
@@ -381,7 +362,7 @@ export default {
       // this.statusList = statusKeyList.map(key => {
       //   // 根据状态获取名称
       //   return {
-      //     name: this.funcCopy.statusDefine[key].name, 
+      //     name: this.funcCopy.statusDefine[key].name,
       //     key,
       //     direction: this.funcCopy.map[key]
       //   };
@@ -400,7 +381,7 @@ export default {
         name,
         value: 1,
         isCheck: true,
-        customize: false,
+        customize: false
       });
       this.updateStatusList(); // 更新状态列表
 
@@ -446,14 +427,14 @@ export default {
       this.cmdMap = {
         keys: [],
         vals: [],
-        oldKeys: [],
+        oldKeys: []
       };
       const moreCommand = this.funcCopy.statusDefine[this.currentStatusKey].moreCommand;
       if (moreCommand) {
         Object.keys(moreCommand).forEach(key => {
           this.cmdMap.keys.push(key);
           this.cmdMap.vals.push(moreCommand[key]);
-        })
+        });
       }
       this.cmdMap.keys.push('');
       this.cmdMap.vals.push('');
@@ -473,10 +454,10 @@ export default {
     // 完成
     async settingDone() {
       await this.editTempFunc(this.funcCopy);
-      this.setTempModule(["currentFuncId", false]);
-      this.setTempModule(["activeStatusList", null]);
-      this.setPulicModule(["statusSetStep", 0]);
+      this.setTempModule({ currentFuncId: false });
+      this.setTempModule({ activeStatusList: null });
+      this.setPulicModule({ statusSetStep: 0 });
     }
   }
-}
+};
 </script>

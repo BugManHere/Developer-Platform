@@ -44,18 +44,8 @@
           <!-- 标题 -->
           <span v-html="pageOption.title" />
           <!-- 按钮组 -->
-          <div 
-            class="btn-group"
-            role="group"
-            aria-label="..."
-            v-for="(item, index) in pageOption.rightBtnList"
-            :key="index">
-            <button
-              type="button"
-              class="btn btn-default"
-              @click="item.method"
-              v-html="item.name"
-            />
+          <div class="btn-group" role="group" aria-label="..." v-for="(item, index) in pageOption.rightBtnList" :key="index">
+            <button type="button" class="btn btn-default" @click="item.method" v-html="item.name" />
           </div>
         </div>
         <!-- 内容 -->
@@ -70,74 +60,70 @@
         class="btn"
         :class="item.class"
         :key="setDevStep * 10 + index"
-        @click="
-          item.func.parameter !== undefined
-            ? item.func.defined(item.func.parameter)
-            : item.func.defined()
-        "
+        @click="item.func.parameter !== undefined ? item.func.defined(item.func.parameter) : item.func.defined()"
         v-text="item.text"
       />
     </div>
-    <Panel :options="QuoteFuncOptions"/>
+    <Panel :options="QuoteFuncOptions" />
   </div>
 </template>
 
 <script>
-import ActiveTable from "@components/layout/Table/ActiveFunc";
-import ImportFuncTable from "@components/layout/Table/ImportFunc";
-import OtherConfigTable from "@components/layout/Table/OtherConfig";
-import Panel from "@components/layout/Panel/index";
-import https from "@/https";
-import { mapState, mapMutations, mapActions } from "vuex";
+import ActiveTable from '@components/layout/Table/ActiveFunc';
+import ImportFuncTable from '@components/layout/Table/ImportFunc';
+import OtherConfigTable from '@components/layout/Table/OtherConfig';
+import Panel from '@components/layout/Panel/index';
+import https from '@/https';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: "ProductInfo",
+  name: 'ProductInfo',
   components: {
     ActiveTable,
     ImportFuncTable,
     OtherConfigTable,
     Panel
   },
-  props: ["deviceKey"],
+  props: ['deviceKey'],
   data() {
     return {
-      quoteShow: false,
+      quoteShow: false
     };
   },
   watch: {
     setDevStep(newVal) {
       if (newVal >= 2) {
-        this.$router.push({ name: "Home" });
-        this.$toast.info("保存成功");
+        this.$router.push({ name: 'Home' });
+        this.$toast.info('保存成功');
       }
     }
   },
   destroyed() {
-    this.setTempModule(["setDevStep", 0]);
+    this.setTempModule({ setDevStep: 0 });
   },
   created() {
-    this.setDevModule(["deviceKey", this.deviceKey]); // 记录设备key
+    this.setDevModule({ deviceKey: this.deviceKey }); // 记录设备key
   },
   async mounted() {
     // 进入页面时判断是否存在数据，不存在就获取
     if (!this.userDeviceList.length) {
       const admin = this.admin;
-      const res = await https.fetchPost("/userDevice", { admin });
-      this.setDevModule(['userDeviceList', res.data]);
-      this.setDevModule(['moreOption', this.currentDevice.moreOption]);
+      const res = await https.fetchPost('/userDevice', { admin });
+      this.setDevModule({ userDeviceList: res.data });
+      this.setDevModule({ moreOption: this.currentDevice.moreOption });
     }
     if (!Object.keys(this.productTypeList).length) {
-      const res = await https.fetchGet("/productType");
-      this.setPulicModule(["productTypeList", res.data]);
+      const res = await https.fetchGet('/productType');
+      this.setPulicModule({ productTypeList: res.data });
     }
     if (!this.funcDefine) {
-      const res = await https.fetchGet("/template");
-      this.setTempModule(["templates", res.data]);
+      const res = await https.fetchGet('/template');
+      this.setTempModule({ templates: res.data });
     }
     const productID = this.currentDevice.productID;
     const seriesID = this.currentDevice.seriesID;
-    this.setTempModule(['productID', productID]); // 模板id对应的productID
-    this.setTempModule(['seriesID', seriesID]);  // 模板id对应的deviceID
+    this.setTempModule({ productID }); // 模板id对应的productID
+    this.setTempModule({ seriesID }); // 模板id对应的deviceID
   },
   computed: {
     ...mapState({
@@ -148,26 +134,26 @@ export default {
       setDevStep: state => state.pulicModule.setDevStep,
       currentFuncId: state => state.tempModule.currentFuncId,
       currentDevice: (state, getters) => getters.currentDevice, // hasDeviceList下对应的设备
-      funcDefine: (state, getters) => getters.funcDefine, // currentDevice里的funcImport
+      funcDefine: (state, getters) => getters.funcDefine // currentDevice里的funcImport
     }),
     // 页面内容设置
     pageOption() {
       switch (this.setDevStep) {
         case 0:
           return {
-            title: "功能定义",
+            title: '功能定义',
             rightBtnList: [
               {
                 name: '引入',
                 method: this.$_quote
               }
             ],
-            component: "ImportFuncTable"
+            component: 'ImportFuncTable'
           };
         case 1:
           return {
-            title: "其他配置",
-            component: "OtherConfigTable"
+            title: '其他配置',
+            component: 'OtherConfigTable'
           };
         default:
           return {};
@@ -193,13 +179,13 @@ export default {
               // eslint-disable-next-line vue/no-side-effects-in-computed-properties
               this.quoteShow = false;
             },
-            selfMethod: "importDone",
+            selfMethod: 'importDone',
             both: true
           }
         },
         component: {
-          name: "QuoteFunc",
-          ref: "QuoteFunc"
+          name: 'QuoteFunc',
+          ref: 'QuoteFunc'
         }
       };
       return options;
@@ -208,32 +194,32 @@ export default {
     bottomBtnOptions() {
       const result = [];
       const lastStep = {
-        text: "上一步",
+        text: '上一步',
         func: {
           defined: this.setStep
         },
-        class: "btn-default"
+        class: 'btn-default'
       };
       const saveAndNext = {
-        text: "下一步",
+        text: '下一步',
         func: {
           defined: this.saveRes
         },
-        class: "btn-primary"
+        class: 'btn-primary'
       };
       const download = {
-        text: "下载配置",
+        text: '下载配置',
         func: {
           defined: this.downloadConfig
         },
-        class: "btn-default"
+        class: 'btn-default'
       };
       const done = {
-        text: "预览效果",
+        text: '预览效果',
         func: {
           defined: this.setDevDone
         },
-        class: "btn-primary"
+        class: 'btn-primary'
       };
       switch (this.setDevStep) {
         case 0:
@@ -265,15 +251,15 @@ export default {
         产品型号: this.currentDevice.productModel,
         通讯协议: this.currentDevice.protocol,
         修改时间: this.currentDevice.editTime,
-        产品名称: this.currentDevice.deviceName,
+        产品名称: this.currentDevice.deviceName
       };
     }
   },
   methods: {
     ...mapMutations({
-      setDevModule: "SET_DEV_MODULE",
-      setTempModule: "SET_TEMP_MODULE",
-      setPulicModule: "SET_PULIC_MODULE",
+      setDevModule: 'SET_DEV_MODULE',
+      setTempModule: 'SET_TEMP_MODULE',
+      setPulicModule: 'SET_PULIC_MODULE'
     }),
     ...mapActions({
       setDevDone: 'SET_DEV_DONE',
@@ -287,12 +273,12 @@ export default {
       }
     },
     setStep(val = -1) {
-      this.setPulicModule(["setDevStep", this.setDevStep + val]);
+      this.setPulicModule({ setDevStep: this.setDevStep + val });
     },
     // 点击暂存
     saveRes() {
       this.setStep(1);
-    },
+    }
   }
 };
 </script>

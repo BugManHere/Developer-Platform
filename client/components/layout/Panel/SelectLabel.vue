@@ -3,16 +3,13 @@
     <div class="panel-body">
       <!-- 全选按钮 -->
       <div class="btn-all">
-        <div class="edit-check"
-        :class="{ checking: isAllSelect }"
-        @click="selectItem('all')">
-        </div>
-        <span v-text="'全选'"/>
+        <div class="edit-check" :class="{ checking: isAllSelect }" @click="selectItem('all')"></div>
+        <span v-text="'全选'" />
       </div>
       <!-- 标签 -->
       <div class="label-group">
         <div v-for="(item, index) in labelList" :key="index">
-          <div class="label-item" :class="{select: selectType[index]}" @click="selectItem(index)" v-text="item.name"/>
+          <div class="label-item" :class="{ select: selectType[index] }" @click="selectItem(index)" v-text="item.name" />
         </div>
       </div>
     </div>
@@ -21,13 +18,13 @@
 
 <script>
 import { deepCopy } from '@/utils';
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   data() {
     return {
-      selectType: [],
-    }
+      selectType: []
+    };
   },
   watch: {
     labelList: {
@@ -36,19 +33,19 @@ export default {
         this.updateSelect(newVal);
       },
       deep: true,
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   computed: {
     ...mapState({
       selectPanel: state => state.pulicModule.selectPanel,
       selectLabel: state => state.pulicModule.selectLabel,
-      labelList: (state, getters) => getters.labelList,
+      labelList: (state, getters) => getters.labelList
     }),
     isAllSelect() {
       return !this.selectType.some(item => {
         return item === false;
-      })
+      });
     },
     selectSide() {
       return ['col', 'row'][this.selectPanel];
@@ -56,8 +53,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setTempModule: "SET_TEMP_MODULE",
-      setPulicModule: "SET_PULIC_MODULE",
+      setPulicModule: 'SET_PULIC_MODULE'
     }),
     selectItem(index) {
       if (index === 'all') {
@@ -66,7 +62,7 @@ export default {
         this.$set(this.selectType, index, !this.selectType[index]);
       }
     },
-    updateSelect(labelList=this.labelList) {
+    updateSelect(labelList = this.labelList) {
       const selectLabel = deepCopy(this.selectLabel);
       const val = selectLabel[this.selectSide];
       if (val.length) {
@@ -78,8 +74,8 @@ export default {
     commitSelect() {
       const selectLabel = deepCopy(this.selectLabel);
       selectLabel[this.selectSide] = this.selectType.concat();
-      this.setPulicModule(['selectLabel', selectLabel]);
+      this.setPulicModule({ selectLabel });
     }
-  },
-}
+  }
+};
 </script>
