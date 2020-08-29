@@ -1,4 +1,4 @@
-const models = require('../models/index');
+// const models = require('../models/index');
 const express = require('express');
 const router = express.Router();
 const productTypeModel = require('../models/productType');
@@ -28,7 +28,7 @@ router.use(function(req, res, next) {
   }
 });
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   productTypeModel.find().then(params => {
     data = params;
     res.json(data);

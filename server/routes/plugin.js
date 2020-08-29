@@ -6,7 +6,7 @@ const templateFuncModel = require('../models/template');
 // 登录token
 const keys = require('../config/keys');
 
-router.get('/config', async function(req, res, next) {
+router.get('/config', async function(req, res) {
   const admin = req.query.admin;
   const id = req.query.id;
   const userDevice = await getAdminDevice(admin);

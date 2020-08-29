@@ -12,7 +12,7 @@ const keys = require('../config/keys');
 // 邮箱验证
 const mail = require('../api/mail');
 // 日期模块
-const dayjs = require('dayjs');
+// const dayjs = require('dayjs');
 
 // post请求：注册接口 users/register
 router.post('/register', (req, res) => {
@@ -103,8 +103,8 @@ router.post('/mail', (req, res) => {
       Verify.findOne({ email }).then(verify => {
         console.log(verify);
         if (verify && verify.register) {
-          const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
-          const lastDate = verify.register.time;
+          // const currentDate = dayjs().format('YYYY-MM-DD HH:mm:ss');
+          // const lastDate = verify.register.time;
         } else {
           mail(email).then(data => {
             const newVerify = new Verify({
