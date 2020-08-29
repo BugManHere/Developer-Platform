@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // 创建子Schema
 const infoSchema = new mongoose.Schema({
@@ -13,4 +13,4 @@ const productTypeSchema = new mongoose.Schema({
   plugin: String
 });
 
-module.exports = mongoose.model("product-type", productTypeSchema);
+module.exports = mongoose.model('product-type', productTypeSchema);

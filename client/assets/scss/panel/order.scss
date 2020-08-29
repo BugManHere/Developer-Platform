@@ -30,17 +30,17 @@
     // align-items: flex-start;
     .status-info {
       $paddingTop: 15px;
-      position: relative; 
+      position: relative;
       top: 0;
       display: flex;
       flex-wrap: wrap;
       align-content: flex-start;
       padding: 0 22px 0 17px;
       padding-top: $paddingTop;
-      height: $pageHeight -  $captionHeight - $paddingTop - $btnHeight;
+      height: $pageHeight - $captionHeight - $paddingTop - $btnHeight;
       width: 100%;
       overflow-y: overlay;
-      >div {
+      > div {
         display: flex;
         justify-content: space-between;
         width: 100%;
@@ -73,7 +73,7 @@
         flex-wrap: wrap;
         .close {
           padding-left: 5px;
-          opacity: .5;
+          opacity: 0.5;
           // height: 22px;
           // border: 1px #000 solid;
           // border-radius: 50px;
@@ -90,14 +90,16 @@
           margin-top: 10px;
           display: flex;
           flex-wrap: nowrap;
-          td, th {
+          td,
+          th {
             width: 50%;
             text-align: center;
           }
           #main {
             margin-bottom: 0;
             width: 100%;
-            tr, td {
+            tr,
+            td {
               height: 40px;
             }
           }
@@ -118,18 +120,54 @@
       // transform: translateY(-120%);
     }
   }
-  .status-order {
+  .status-order,
+  .iconfont-library {
     position: relative;
     width: 75%;
     height: 530px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    .order-chart {
+    .order-chart,
+    .library-body {
       position: relative;
       padding-top: 15px;
       height: 93%;
       width: 100%;
     }
+    .library-body {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      .icon-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        height: 50px;
+        margin: 0 30px;
+        width: 50px;
+        cursor: pointer;
+        i {
+          font-size: 42px;
+        }
+      }
+    }
   }
+  //  {
+  //   position: relative;
+  //   width: 75%;
+  //   height: 530px;
+  //   display: flex;
+  //   justify-content: center;
+  //   flex-wrap: wrap;
+  //   .library-body {
+  //     position: relative;
+  //     padding-top: 15px;
+  //     height: 93%;
+  //     width: 100%;
+  //   }
+  // }
 }

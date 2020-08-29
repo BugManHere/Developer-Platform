@@ -43,7 +43,7 @@
         </div>
         <div class="info-icon-select">
           <span v-text="'图标'" class="text-label" />
-          <i class="iconfont tubiao" title="更改图标设置" />
+          <i class="iconfont tubiao" title="更改图标设置" @click="iconfontSelect = !iconfontSelect" />
         </div>
         <!-- 新增额外命令 -->
         <div class="info-cmd">
@@ -89,7 +89,21 @@
         <button type="button" v-show="!['default', 'undefined'].includes(currentStatusKey)" class="btn btn-danger" v-text="'删除状态'" @click="delStatus" />
       </div>
     </div>
-    <div class="status-order">
+    <!-- 图标库 -->
+    <div class="iconfont-library" v-if="iconfontSelect">
+      <caption>
+        <span v-text="'选择图标'" />
+      </caption>
+      <!-- 图标 -->
+      <div class="library-body">
+        <div class="icon-item" v-for="(icon, index) in iconArr" :key="`icon_${index}`">
+          <i class="iconfont tubiao" :class="icon" />
+          <span v-text="icon" />
+        </div>
+      </div>
+    </div>
+    <!-- 状态预览 -->
+    <div class="status-order" v-show="!iconfontSelect">
       <caption>
         <span v-text="'状态指向'" />
       </caption>
@@ -114,13 +128,15 @@ export default {
         keys: [''],
         vals: [''],
         oldKeys: ['']
-      }
+      },
+      iconfontSelect: false
     };
   },
   computed: {
     ...mapState({
       currentFuncId: state => state.tempModule.currentFuncId,
       statusSetStep: state => state.pulicModule.statusSetStep,
+      iconArr: state => state.userModule.iconArr,
       funcDefine: (state, getters) => getters.funcDefine
     }),
     // 图表配置

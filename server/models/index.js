@@ -1,6 +1,6 @@
 import structs from '../../public/struct';
 // var structs = require('../../public/struct')
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const modules = {};
 
 console.log(structs);

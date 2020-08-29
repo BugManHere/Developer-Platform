@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 // 权限判断
 module.exports = (res, admin, root) => {
@@ -9,5 +9,5 @@ module.exports = (res, admin, root) => {
     } else {
       resolve(false);
     }
-  })
+  });
 };
