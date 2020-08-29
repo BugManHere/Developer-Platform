@@ -1,5 +1,5 @@
 <template>
-  <gree-view bg-color="#ffffff">
+  <gree-view bg-color="#301021">
     <gree-page class="page-skill-detail no-navbar">
       <!-- 标题 -->
       <div class="page-header">

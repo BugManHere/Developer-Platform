@@ -47,7 +47,7 @@
               <div class="load-more-item" @click="loadMore">
                 <a v-show="hasNextPage && !isLoading" href="javascript:void 0;">加载更多</a>
                 <span v-show="hasNextPage && isLoading">加载中...</span>
-                <span v-show="!hasNextPage && !isLoading">没有更多了</span>
+                <span v-show="!hasNextPage && !isLoading">没有更多内容了</span>
               </div>
             </gree-list>
           </div>
@@ -106,6 +106,7 @@ export default {
       pageNum: 1,
       pageSize: 5,
       hasNextPage: false,
+      currentRequestId: 0, // 当前请求ID
     }
   },
   computed: {
@@ -133,10 +134,8 @@ export default {
       }
       
       pageContent.addEventListener('scroll', scrollHandler, false);
-      // this.$refs.skillList.addEventListener('scroll', skillListScrollHandler, false);
       this.$once('hook:beforeDestroy', () => {
         pageContent.removeEventListener('scroll', scrollHandler, false);
-        // this.$refs.skillList.removeEventListener('scroll', skillListScrollHandler, false);
       });
 
       this.loadSkillList(1);
@@ -169,10 +168,15 @@ export default {
         }
         this.isLoading = true;
         this.isLoadFailed = false;
-        
+        this.currentRequestId = new Date().getTime();
         console.log(JSON.stringify(args));
-        let result = await voiceACgetSkillList(this.mac, JSON.stringify(args));
-        if (index !== this.activeDomainIndex) {
+        let [requestId, result] = await voiceACgetSkillList(this.currentRequestId, this.mac, JSON.stringify(args));
+        console.log('返回的请求ID：', requestId);
+        // if (index !== this.activeDomainIndex) {
+        //   return;
+        // }
+        // 非当前请求直接返回
+        if (requestId !== this.currentRequestId) {
           return;
         }
         this.isLoading = false;
@@ -200,6 +204,7 @@ export default {
           this.hasNextPage = false;
         }
       } catch (error) {
+        console.log(error.message);
         this.isLoading = false;
         this.isLoadFailed = true;
         this.hasNextPage = false;
@@ -223,7 +228,6 @@ export default {
       this.$router.push('/SkillSearchHistory');
     },
     async loadMore() {
-      console.log('onEndReached');
       if(!this.hasNextPage) {
         return;
       }

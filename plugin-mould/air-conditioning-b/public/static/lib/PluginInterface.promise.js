@@ -1462,12 +1462,12 @@ export const getMsg = () => {
 };
 
 //语音空调技能列表获取
-export const voiceACgetSkillList = (mac, data) => {
+export const voiceACgetSkillList = (requestId, mac, data) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.voiceACgetSkillList(mac, data, (...params) => {
         console.log('获取技能列表：', ...params);
-        resolve(...params);
+        resolve([requestId, ...params]);
       });
     } catch (error) {
       reject(error);

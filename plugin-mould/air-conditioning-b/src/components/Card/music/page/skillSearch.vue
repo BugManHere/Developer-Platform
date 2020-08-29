@@ -1,5 +1,5 @@
 <template>
-  <gree-view>
+  <gree-view bg-color="#ffffff">
     <gree-page class="page-skill-search">
       <gree-header style="background-color: #fff;">技能搜索</gree-header>
       <div class="main">
@@ -71,6 +71,8 @@ export default {
   created() {
     changeBarColor('#fffffe');
     if (this.$route.query && this.$route.query.keyword) {
+      this.value = this.$route.query.keyword;
+      console.log(this.value);
       this.search(this.$route.query.keyword);
     } else {
       this.search('');

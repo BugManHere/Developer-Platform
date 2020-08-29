@@ -1,5 +1,5 @@
 <template>
-  <gree-view>
+  <gree-view bg-color="#ffffff">
     <gree-page class="page-skill-search-history">
       <gree-header style="background-color: #fff;">技能搜索</gree-header>
       <div >
