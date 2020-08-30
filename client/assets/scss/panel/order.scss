@@ -40,6 +40,7 @@
       height: $pageHeight - $captionHeight - $paddingTop - $btnHeight;
       width: 100%;
       overflow-y: overlay;
+      border-bottom: 1px #f0f0f0 solid;
       > div {
         display: flex;
         justify-content: space-between;
@@ -64,9 +65,88 @@
             width: 35%;
           }
         }
-        .iconfont {
-          font-size: 28px;
-          cursor: pointer;
+        &.info-icon-select {
+          .btn-switch {
+            height: 100%;
+            display: flex;
+            align-items: center;
+          }
+          .iconfont {
+            font-size: 28px;
+            cursor: pointer;
+          }
+          label {
+            position: relative;
+            margin-left: 10px;
+            cursor: pointer;
+            width: 70px;
+            height: 25px;
+            margin-bottom: 0;
+            input {
+              width: 100%;
+              opacity: 0;
+            }
+            .on {
+              &.on-hide {
+                transition: 0.4s linear all;
+                opacity: 0;
+                visibility: hidden;
+              }
+              transition: 0.4s linear all;
+              opacity: 1;
+              visibility: visible;
+              color: #ffffff;
+              font-size: 12px;
+              font-weight: 600;
+              line-height: 25px;
+              position: absolute;
+              white-space: nowrap;
+              top: -1px;
+              z-index: 1;
+              left: 7px;
+            }
+            .off {
+              &.off-hide {
+                transition: 0.4s linear all;
+                opacity: 0;
+                visibility: hidden;
+                color: #404657;
+              }
+              left: 38px;
+              font-size: 12px;
+              font-weight: 600;
+              line-height: 25px;
+              position: absolute;
+              white-space: nowrap;
+              top: 0px;
+              z-index: 1;
+            }
+            .toggle-inner {
+              background-color: #e9ecef;
+              bottom: 0;
+              left: 0;
+              position: absolute;
+              right: 0;
+              top: 0;
+              &.right {
+                background-color: #3bb6b6;
+                &::before {
+                  transition: 0.4s linear all;
+                  transform: translateX(31px);
+                }
+              }
+              &::before {
+                background-color: #ffffff;
+                content: '';
+                height: 20px;
+                left: 5px;
+                position: absolute;
+                top: 2px;
+                transition: 0.4s linear all;
+                width: 30px;
+              }
+            }
+          }
         }
       }
       .info-cmd {
@@ -117,7 +197,6 @@
       &.split {
         border-top: 1px #ddd solid;
       }
-      // transform: translateY(-120%);
     }
   }
   .status-order,
@@ -141,17 +220,22 @@
       justify-content: center;
       flex-wrap: wrap;
       align-items: flex-start;
+      overflow-y: auto;
       .icon-item {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         flex-wrap: wrap;
-        height: 50px;
-        margin: 0 30px;
-        width: 50px;
+        height: 100px;
+        width: 140px;
         cursor: pointer;
         i {
           font-size: 42px;
+        }
+        span {
+          width: 100%;
+          text-align: center;
+          font-size: 12px;
         }
       }
     }

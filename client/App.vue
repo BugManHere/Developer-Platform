@@ -37,8 +37,8 @@ export default {
       .get(process.env.VUE_APP_ICONFONT_URL)
       .then(
         response => {
-          const reg = /\.(.*):before {/;
           const regGlobal = /\.(.*):before {/g;
+          const reg = /\.iconfont-(.*):before {/;
           const value = response.data.match(regGlobal).map(str => str.match(reg)[1]);
           console.log(value);
           this.setUserModule({

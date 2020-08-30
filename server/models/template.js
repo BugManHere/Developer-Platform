@@ -8,7 +8,7 @@ const funcSchema = new mongoose.Schema({
   order: [String],
   map: {},
   type: String,
-  statusDefine: {},
+  statusDefine: mongoose.Schema.Types.Mixed,
   page: {}
 });
 

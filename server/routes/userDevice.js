@@ -37,19 +37,19 @@ router.use(function(req, res, next) {
   }
 });
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   const admin = req.query.admin;
   const userDevice = await getAdminDevice(admin);
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', async function(req, res) {
   const admin = req.body.admin;
   const userDevice = await getAdminDevice(admin);
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/create', async function(req, res, next) {
+router.post('/create', async function(req, res) {
   if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
@@ -95,7 +95,7 @@ router.post('/create', async function(req, res, next) {
   res.json(userDeviceList);
 });
 
-router.post('/delDevice', async function(req, res, next) {
+router.post('/delDevice', async function(req, res) {
   if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
@@ -109,7 +109,7 @@ router.post('/delDevice', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/save', async function(req, res, next) {
+router.post('/save', async function(req, res) {
   if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
@@ -125,7 +125,7 @@ router.post('/save', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/delFunc', async function(req, res, next) {
+router.post('/delFunc', async function(req, res) {
   if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
@@ -142,7 +142,7 @@ router.post('/delFunc', async function(req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/done', async function(req, res, next) {
+router.post('/done', async function(req, res) {
   if (!(await permit(res, req.body.admin, 2))) {
     res.status(200).send('只有预览权限');
     return;
@@ -155,7 +155,7 @@ router.post('/done', async function(req, res, next) {
   res.json(output);
 });
 
-router.get('/download', function(req, res, next) {
+router.get('/download', function(req, res) {
   const deviceKey = req.query.deviceKey;
   const downloadUrl = resolve(`../../output/${deviceKey}.json`);
   res.download(downloadUrl);

@@ -42,8 +42,36 @@
           </select>
         </div>
         <div class="info-icon-select">
-          <span v-text="'图标'" class="text-label" />
-          <i class="iconfont tubiao" title="更改图标设置" @click="iconfontSelect = !iconfontSelect" />
+          <div class="btn-switch">
+            <span v-text="'按钮图标'" class="text-label" />
+            <label for="config-input-voice">
+              <input id="config-input-voice" type="checkbox" v-model="btnType" @change="changeBtnType" />
+              <span class="on" :class="{ 'on-hide': !btnType }">亮起</span>
+              <span class="off" :class="{ 'off-hide': btnType }">默认</span>
+              <div class="toggle-inner" :class="{ right: btnType }"></div>
+            </label>
+          </div>
+          <i
+            class="iconfont iconfont-undefined"
+            :class="`iconfont-${currentStatus.icon ? currentStatus.icon.key : 'undefined'}`"
+            title="更改图标设置"
+            @click="
+              btnIconSelectType = true;
+              miniIconSelectType = false;
+            "
+          />
+        </div>
+        <div class="info-icon-select">
+          <span v-text="'状态图标'" class="text-label" />
+          <i
+            class="iconfont iconfont-undefined"
+            :class="`iconfont-${currentStatus.miniIcon ? currentStatus.miniIcon.key : 'undefined'}`"
+            title="更改图标设置"
+            @click="
+              btnIconSelectType = false;
+              miniIconSelectType = true;
+            "
+          />
         </div>
         <!-- 新增额外命令 -->
         <div class="info-cmd">
@@ -86,24 +114,24 @@
       </div>
       <!-- 删除按钮 -->
       <div class="del-btn">
-        <button type="button" v-show="!['default', 'undefined'].includes(currentStatusKey)" class="btn btn-danger" v-text="'删除状态'" @click="delStatus" />
+        <button type="button" class="btn btn-danger" v-text="'删除状态'" @click="delStatus" :disabled="['default', 'undefined'].includes(currentStatusKey)" />
       </div>
     </div>
     <!-- 图标库 -->
-    <div class="iconfont-library" v-if="iconfontSelect">
+    <div class="iconfont-library" v-if="btnIconSelectType || miniIconSelectType">
       <caption>
-        <span v-text="'选择图标'" />
+        <span v-text="btnIconSelectType ? '选择按钮图标' : '选择状态图标'" />
       </caption>
       <!-- 图标 -->
       <div class="library-body">
-        <div class="icon-item" v-for="(icon, index) in iconArr" :key="`icon_${index}`">
-          <i class="iconfont tubiao" :class="icon" />
+        <div class="icon-item" v-for="(icon, index) in iconArr" :key="`icon_${index}`" @click="selectIcon(icon)">
+          <i class="iconfont tubiao" :class="`iconfont-${icon}`" />
           <span v-text="icon" />
         </div>
       </div>
     </div>
     <!-- 状态预览 -->
-    <div class="status-order" v-show="!iconfontSelect">
+    <div class="status-order" v-show="!(btnIconSelectType || miniIconSelectType)">
       <caption>
         <span v-text="'状态指向'" />
       </caption>
@@ -129,7 +157,9 @@ export default {
         vals: [''],
         oldKeys: ['']
       },
-      iconfontSelect: false
+      btnIconSelectType: false,
+      miniIconSelectType: false,
+      btnType: false
     };
   },
   computed: {
@@ -311,6 +341,8 @@ export default {
       this.currentDrection = this.funcCopy.map[this.currentStatusKey];
       // 获取额外命令
       this.updateCmd();
+      // 获取图标状态
+      this.btnType = this.currentStatus.icon.type === 'on';
     }
   },
   mounted() {
@@ -397,7 +429,10 @@ export default {
         name,
         value: 1,
         isCheck: true,
-        customize: false
+        customize: false,
+        icon: this.funcCopy.identifier,
+        miniIcon: this.funcCopy.identifier,
+        type: 'on'
       });
       this.updateStatusList(); // 更新状态列表
 
@@ -408,6 +443,7 @@ export default {
     },
     // 删除状态
     delStatus() {
+      if (['default', 'undefined'].includes(this.currentStatusKey)) return;
       const key = this.currentStatusKey;
       this.$delete(this.funcCopy.statusDefine, this.currentStatusKey);
       this.$delete(this.funcCopy.map, key);
@@ -466,6 +502,20 @@ export default {
       this.$set(this.funcCopy.statusDefine[this.currentStatusKey], 'moreCommand', cmd);
 
       this.updateCmd();
+    },
+    // 选择图标
+    selectIcon(icon) {
+      if (this.btnIconSelectType) {
+        this.$set(this.funcCopy.statusDefine[this.currentStatusKey].icon, 'key', icon);
+      } else if (this.miniIconSelectType) {
+        this.$set(this.funcCopy.statusDefine[this.currentStatusKey].miniIcon, 'key', icon);
+      }
+      this.btnIconSelectType = false;
+      this.miniIconSelectType = false;
+    },
+    // 改变图标状态
+    changeBtnType() {
+      this.$set(this.funcCopy.statusDefine[this.currentStatusKey].icon, 'type', this.btnType ? 'on' : 'off');
     },
     // 完成
     async settingDone() {

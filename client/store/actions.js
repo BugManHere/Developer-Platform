@@ -56,6 +56,7 @@ export default {
   async [GET_TEMPLATES]({ state, commit }) {
     if (state.tempModule.templates.length) return true;
     const res = await https.fetchGet('/template');
+    console.log(res);
     const status = res.status === 200;
     status && commit(SET_TEMP_MODULE, { templates: res.data });
     return status;
