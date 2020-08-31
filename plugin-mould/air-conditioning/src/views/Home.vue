@@ -390,7 +390,6 @@ export default {
       switch (key) {
         case 'Pow':
           setData.Pow = !this.Pow - 0;
-          setData.Dazzling = !this.Pow - 0;
           if (this.hasAir) {
             if (this.Pow) {
               setData.Air = 0;
