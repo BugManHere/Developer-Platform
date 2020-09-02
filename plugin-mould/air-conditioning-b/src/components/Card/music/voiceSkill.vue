@@ -5,6 +5,7 @@
         <div 
           v-for="(item, index) in toobarItems" 
           class="item"
+          @click="gotoSkillSettings"
           :key="index">
           <div></div>
           <span>{{ item.name }}</span>
@@ -84,7 +85,7 @@ export default {
       toobarItems: [
         {
           imgUrl: '',
-          name: '语音留言簿'
+          name: '语音留言'
         }
       ],
       sidebarItems: [{
@@ -238,12 +239,16 @@ export default {
         let queryArgs = {domain: domain.name, pageNum: this.pageNum + 1};
         await this.getSkillList(index, queryArgs);
       }
+    },
+    gotoSkillSettings() {
+      this.$router.push('/VoiceMessage');
     }
   }
 };
 </script>
 
 <style lang="scss">
+$sidebarWidth: 270px;
 // 共同的属性抽取出来
 @mixin commonPart($size, $url) {
   position: absolute;
@@ -280,14 +285,15 @@ export default {
         padding: 0 24px;
         height: 100%;
         div {
-          height: 60px;
-          width: 60px;
+          height: 90px;
+          width: 90px;
           background-color: #ccc;
           margin-bottom: 10px;
         }
         span {
-          font-size: 20px;
+          font-size: 33px;
           line-height: 1;
+          margin-top: 13px;
         }
       }
     }
@@ -301,11 +307,25 @@ export default {
     flex: 1;
     display: flex;
     .sidebar {
-      width: 200px;
+      width: $sidebarWidth;
+      background-color: #F9F9F9;
       .gree-sidebar {
         width: 100%;
-        .gree-sidebar-item--select{
-          border-color: rgb(0, 153, 255);
+        .gree-sidebar-item {
+          height: 140px;
+          position: relative;
+          color: #404657;
+          .gree-sidebar-item__text {
+            font-size: 42px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+          }
+          &.gree-sidebar-item--select{
+            color: #00AEFF;
+            border-left: 12px solid #00AEFF;
+          }
         }
       }
       
@@ -313,7 +333,7 @@ export default {
     .main {
       // border: 1px solid red;
       position: relative;
-      width: calc(100% - 200px);
+      width: calc(100% - #{$sidebarWidth});
       height: calc(100% - 849px);
       .list {
         height: 100%;
@@ -324,18 +344,32 @@ export default {
             visibility: hidden;
           }
         }
-        .skill-icon {
-          width: 100px;
-          height: 100px;
-        }
+       
         .item-content {
-          padding-top: 30px;
-          padding-bottom: 30px;
+          padding: 42px 0px 42px 42px;
+          .item-media {
+            align-self: flex-start;
+            .skill-icon {
+              width: 107px;
+              height: 107px;
+              padding: 0;
+            }
+          }
           .item-inner {
+            margin-left: 72px;
             .item-title {
+              font-size: 48px;
+              color: #404657;
               .item-footer {
-                margin-top: 30px;
+                margin: 24px 0px;
+                font-size: 36px;
+                color: rgba($color: #404657, $alpha: 0.6);
               }
+            }
+            &::before {
+              width: 30px;
+              height: 68px;
+              right: 61px;
             }
           }
         }
