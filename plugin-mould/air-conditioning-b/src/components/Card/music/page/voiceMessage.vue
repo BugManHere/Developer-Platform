@@ -10,36 +10,12 @@
           <img src="../../../../assets/img/skill/voice_message_bg.png">
         </div>
         <div v-else>
-          <ul class="list">
-            <li
-              v-for="(item, index) in messageList"
-              :key="index">
-              <div class="content">
-                <div>
-                  <span class="title">
-                    {{item.name}}
-                    <img src="../../../../assets/img/skill/readed_tag.png"/>
-                  </span>
-                  <h3 class="subtitle">{{item.date}}</h3>
-                </div>
-                <button></button>
-              </div>
-            </li>
-          </ul>
-          <div class="panel">
+          <voice-msg-list :message-list="unreadList"></voice-msg-list>
+          <div class="panel" v-show="readList && readList.length">
             <div class="title">
               已读留言保留7天，过期自动删除
             </div>
-            <ul>
-              <li
-                v-for="(item, index) in messageList"
-                link
-                :key="index"
-                :title="item.name"
-                :footer="item.date"
-              >
-              </li>
-            </ul>
+            <voice-msg-list :message-list="readList"></voice-msg-list>
           </div>
         </div>
       </div>
@@ -86,14 +62,17 @@
 </template>
 <script>
 import { Header, Dialog } from 'gree-ui';
+import VoiceMessageList from './voiceMessageList';
 export default {
   components: {
     [Header.name]: Header,
     [Dialog.name]: Dialog,
+    'voice-msg-list': VoiceMessageList,
   },
   data() {
     return {
-      messageList: [], // 语音留言列表
+      readList: [], // 已读语音留言列表
+      unreadList: [], // 未读语音留言列表
       isEmpty: true, // 语音留言是否为空
       isRecording: false, // 是否正在留言
       voiceMsgName: '', // 留言人姓名或昵称
@@ -106,12 +85,13 @@ export default {
     voiceMsgName(val) {
       this.isNameValid = true;
       console.log('val', val);
-      if (val.trim()) {
-        let isValid = /^[\u4e00-\u9fa5\s]*$/gi.test(val.trim());
+      const name = val && val.trim();
+      if (name) {
+        let isValid = /^[\u4e00-\u9fa5\s]*$/gi.test(name);
         if(!isValid) {
           this.isNameValid = false;
         }
-        this.countLabel = `${val.trim().length}/10`;
+        this.countLabel = `${name.length}/10`;
       } else {
         this.voiceMsgName = '';
         this.countLabel = '0/10';
@@ -128,7 +108,7 @@ export default {
       this.countLabel = '0/10';
     },
     edit() {
-
+      this.$router.push('/EditVoiceMessage');
     },
     finishRecord() {
       this.isRecording = false;
@@ -146,7 +126,7 @@ export default {
     onConfirm() {
       const name = this.voiceMsgName;
       this.resetData();
-      this.messageList.push({name, date: '2020年08月01日', duration: '23秒'});
+      this.unreadList.push({label: name, createAt: '2020年08月01日', duration: 23000, status: 1, isUploading: false});
       this.isEmpty = false;
     }
   }
@@ -255,14 +235,13 @@ export default {
   .page-voice-message {
     .page-content {
       padding-bottom: calc(0px + env(safe-area-inset-bottom));
+      .gree-header {
+        .gree-header-right {
+          right: 54px;
+        }
+      }
       .page-main {
         height: 100%;
-        .gree-header {
-          .gree-header-right {
-            right: 54px;
-          }
-        }
-        
         .placeholder {
           padding-top: 292px;
           text-align: center;
@@ -272,38 +251,6 @@ export default {
           }
         }
 
-        .list {
-          margin: 0;
-          list-style: none;
-          li {
-            padding-left: 54px;
-            background: #fff;
-            &:not(:last-child) {
-              .content {
-                border-bottom: 1px solid #dbdbdb;
-              }
-            }
-            .content {
-              padding: 41px 54px 41px 0px;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              .title {
-                font-size: 46px;
-                color:#404657;
-                img {
-                  height: 40px;
-                  width: 74px;
-                }
-              }
-              .subtitle {
-                font-size: 42px;
-                color: #989898;
-                margin-top: 16px;
-              }
-            }
-          }
-        }
         .panel {
           .title {
             color: #CDCDCD;

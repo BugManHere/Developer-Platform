@@ -55,6 +55,8 @@ const SkillSearchHistory = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/skillSearchHistory.vue')));
 const VoiceMessage = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/voiceMessage.vue')));
+const EditVoiceMessage = r =>
+  require.ensure([], () => r(require('./../src/components/Card/music/page/editVoiceMessage.vue')));
 Vue.use(Router);
 
 const router = new Router({
@@ -186,6 +188,11 @@ const router = new Router({
       path: '/VoiceMessage',
       name: 'VoiceMessage',
       component: VoiceMessage
+    },
+    {
+      path: '/EditVoiceMessage',
+      name: 'EditVoiceMessage',
+      component: EditVoiceMessage
     }
   ]
 });
