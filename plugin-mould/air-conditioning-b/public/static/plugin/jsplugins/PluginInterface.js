@@ -766,5 +766,20 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function (
     voiceACgetSkillSearchTruncate: function(mac,callback) {
         exec(callback, null, 'PluginInterface', 'voiceACgetSkillSearchTruncate', [mac]);
     },
+    voiceSkillMsgAudioControl: function(mac,cmd,callback) { //语音留言录音控制
+      exec(callback, null, 'PluginInterface', 'voiceSkillMsgAudioControl', [mac,cmd]);
+    },
+    voiceSkillMsgAdd: function(mac,data,callback) { //语音留言提交接口
+        exec(callback, null, 'PluginInterface', 'voiceSkillMsgAdd', [mac,data]);
+    },
+    voiceSkillMsgList: function(mac,callback) { //语音留言列表接口
+        exec(callback, null, 'PluginInterface', 'voiceSkillMsgList', [mac]);
+    },
+    voiceSkillMsgPlay: function(data,callback) { //语音留言播放接口
+        exec(callback, null, 'PluginInterface', 'voiceSkillMsgPlay', [data]);
+    },
+    voiceSkillMsgDel: function(data,callback) { //语音留言删除接口
+        exec(callback, null, 'PluginInterface', 'voiceSkillMsgDel', [data]);
+    },
   };
 });

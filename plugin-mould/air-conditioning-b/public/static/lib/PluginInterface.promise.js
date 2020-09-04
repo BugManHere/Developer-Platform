@@ -3,6 +3,8 @@
  * @desc 原生与WebView通讯接口promise封装
  */
 
+import { resolve, reject } from "core-js/fn/promise";
+
 /**
  * Toast提示
  * @param {string} msg
@@ -1473,7 +1475,7 @@ export const voiceACgetSkillList = (requestId, mac, data) => {
       reject(error);
     }
   });
-}
+};
 
 //语音空调技能详情获取
 export const voiceACgetSkillInfo = (id) => {
@@ -1486,7 +1488,7 @@ export const voiceACgetSkillInfo = (id) => {
       reject(error);
     }
   });
-}
+};
 
 //语音空调技能搜索
 export const voiceACgetSkillSearch = (mac, skill) => {
@@ -1499,7 +1501,7 @@ export const voiceACgetSkillSearch = (mac, skill) => {
       reject(error);
     }
   });
-}
+};
 
 //语音技能热门与历史搜索记录接口
 export const voiceACgetSkillSearchJudge = (mac) => {
@@ -1512,7 +1514,7 @@ export const voiceACgetSkillSearchJudge = (mac) => {
       reject(error);
     }
   });
-}
+};
 
 //语音技能用户历史搜索记录清空接口
 export const voiceACgetSkillSearchTruncate = (mac) => {
@@ -1525,4 +1527,70 @@ export const voiceACgetSkillSearchTruncate = (mac) => {
       reject(error);
     }
   });
-}
+};
+
+//语音留言录音控制
+export const voiceSkillMsgAudioControl = (mac, cmd) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgAudioControl(mac, cmd, (...params) => {
+        console.log('audio:', ...params);
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言提交接口
+export const voiceSkillMsgAdd = (mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgAdd(mac, data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言列表接口
+export const voiceSkillMsgList = (mac) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgList(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言播放接口
+export const voiceSkillMsgPlay = (data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgPlay(data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言删除接口
+export const voiceSkillMsgDel = (data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgDel(data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

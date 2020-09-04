@@ -26,10 +26,10 @@
         <transition name="fade">
           <div class="voice-indicator" v-show="isRecording">
             <div class="title">
-              <button class="btn-close" @click="stopRecord"></button>
+              <button class="btn-close" @click="cancelRecord"></button>
             </div>
             <div class="content">
-
+              <audio-wave></audio-wave>
             </div>
           </div>
         </transition>
@@ -46,7 +46,7 @@
       </div>
       <gree-dialog v-model="showDialog">
         <div class="text-input-wrapper">
-          <input v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
+          <input ref="msgNameIput" v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
           <span :class="{'high-light': voiceMsgName}">{{countLabel}}</span>
           <div class="tips" v-show="!isNameValid">
             昵称仅限汉字哟~
@@ -54,7 +54,7 @@
         </div>
         <div class="btn-group">
           <button @click="onCancel">取消</button>
-          <button @click="onConfirm" :disabled="voiceMsgName ? false: true">确定</button>
+          <button @click="onConfirm" :disabled="(voiceMsgName && isNameValid) ? false: true">确定</button>
         </div>
       </gree-dialog>
     </gree-page>
@@ -63,11 +63,26 @@
 <script>
 import { Header, Dialog } from 'gree-ui';
 import VoiceMessageList from './voiceMessageList';
+import AudioWave from '../../../AudioWave';
+import { mapState } from 'vuex';
+import { 
+  voiceSkillMsgAudioControl, 
+  voiceSkillMsgList,
+  voiceSkillMsgAdd,
+  changeBarColor, 
+  showToast,
+  showLoading,
+  hideLoading, 
+} from '../../../../../public/static/lib/PluginInterface.promise';
+
+let gTimerForGetAudioStatus = null; // 定时器获取录音状态
+
 export default {
   components: {
     [Header.name]: Header,
     [Dialog.name]: Dialog,
     'voice-msg-list': VoiceMessageList,
+    'audio-wave': AudioWave,
   },
   data() {
     return {
@@ -79,7 +94,14 @@ export default {
       countLabel: '0/10', // 留言姓名计数
       showDialog: false, // 是否显示留言命名框
       isNameValid: true,
+      startTime: 0, // 留言开始时间,
+      duration: 0,
     }
+  },
+  computed: {
+    ...mapState({
+      mac: state => state.mac
+    }),
   },
   watch: {
     voiceMsgName(val) {
@@ -99,9 +121,30 @@ export default {
     }
   },
   created() {
-    // todo 获取数据
+    changeBarColor('#fffffe');
+    this.getMessageList();
   },
   methods: {
+    async getMessageList() {
+      showLoading();
+      let voiceMsgList = await voiceSkillMsgList(this.mac);
+      hideLoading();
+      console.log(voiceMsgList);
+      if (!voiceMsgList) {
+        this.isEmpty = true;
+        return;
+      }
+      if (typeof(voiceMsgList) === 'string') {
+        voiceMsgList = JSON.parse(voiceMsgList);
+      }
+      if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
+        this.isEmpty = true;
+        return;
+      }
+      this.isEmpty = false;
+      this.unreadList = voiceMsgList.data.filter(x => x.status === 1);
+      this.readList = voiceMsgList.data.filter(x => x.status === 2);
+    },
     resetData() {
       this.showDialog = false;
       this.voiceMsgName = '';
@@ -110,25 +153,97 @@ export default {
     edit() {
       this.$router.push('/EditVoiceMessage');
     },
+    clearInterval() {
+      if (gTimerForGetAudioStatus) {
+        clearInterval(gTimerForGetAudioStatus);
+        gTimerForGetAudioStatus = null;
+      }
+    },
     finishRecord() {
+      console.log('finishRecord');
       this.isRecording = false;
+      this.clearInterval();
+      this.duration = Date.now() - this.startTime; //录音时长
+      if (this.duration <= 1000) {
+        showToast('录音时间过短！', 0);
+        return;
+      } 
       this.showDialog = true;
+      voiceSkillMsgAudioControl(this.mac, 'stop');
     },
-    startRecord() {
-      this.isRecording = true
+    async startRecord() {
+      try {
+        const voiceMsgCount = this.unreadList.length + this.readList.length;
+        if (voiceMsgCount === 5) {
+          showToast('留言数量已达上限，请先删除历史留言!', 0);
+          return;
+        }
+        this.clearInterval();
+        voiceSkillMsgAudioControl(this.mac, 'start');
+        let result = await voiceSkillMsgAudioControl(this.mac, 'getStatus');
+        console.log('ret:', result);
+        if (result) {
+          if (typeof(result) === 'string') {
+            result = JSON.parse(result);
+          }
+        }
+        if (result.status !== 'recording') {
+          throw new Error('录音开启失败');
+        }
+        this.isRecording = true;
+        this.startTime = new Date().getTime();
+        gTimerForGetAudioStatus = setInterval(() => {
+          voiceSkillMsgAudioControl(this.mac, 'getStatus').then((data) => {
+            console.log(data);
+          });  
+        }, 100);
+        
+      } catch (error) {
+        console.log(error);
+        this.isRecording = false;
+        showToast('录音开启失败', 0);
+      }
     },
-    stopRecord() {
+    cancelRecord() {
       this.isRecording = false;
+      this.clearInterval();
+      voiceSkillMsgAudioControl(this.mac, 'cancel');
     },
     onCancel() {
+      voiceSkillMsgAudioControl(this.mac, 'cancel');
       this.resetData();
     },
-    onConfirm() {
-      const name = this.voiceMsgName;
-      this.resetData();
-      this.unreadList.push({label: name, createAt: '2020年08月01日', duration: 23000, status: 1, isUploading: false});
-      this.isEmpty = false;
-    }
+    getCreatedTime() {
+      const date = new Date(this.startTime);
+      const year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      month = month >= 10 ? month : `0${month}`;
+      let day = date.getDate();
+      day = day >= 10 ? day : `0${day}`;
+      return `${year}-${month}-${day}`;
+    },
+    async onConfirm() {
+      try {
+        const name = this.voiceMsgName;
+        const duration = this.duration;
+        this.resetData();
+        this.unreadList.push({label: name, createdAt: this.getCreatedTime(), duration, status: 1, isUploading: true});
+        this.isEmpty = false;
+        let result = await voiceSkillMsgAdd(this.mac, JSON.stringify({label: name, duration: duration}));
+        if (!result) {
+          throw new Error('保存失败');
+        }
+        if (typeof(result) === 'string') {
+          result = JSON.parse(result);
+        }
+        if (!result.code || result.code != 200) {
+          throw new Error('保存失败');
+        }
+      } catch (error) {
+        showToast(error.message, 0);
+      }
+      this.getMessageList(); // 刷新留言列表
+    },
   }
 }
 </script>
@@ -271,6 +386,7 @@ export default {
       .toolbar {
         z-index: 4;
         position: absolute;
+        // top: 1453px;
         bottom: 76px;
         width: 100%;
         display: flex;
@@ -313,9 +429,6 @@ export default {
             transform: translate(-50%, -50%);
             width: 863px;
             height: 167px;
-            background-image: url('../../../../assets/img/skill/wave.png');
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
           }
         }
         .btn-wrapper {

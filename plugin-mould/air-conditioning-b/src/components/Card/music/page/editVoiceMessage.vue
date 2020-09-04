@@ -10,22 +10,22 @@
           <img src="../../../../assets/img/skill/voice_message_bg.png">
         </div>
         <div v-else>
-          <voice-msg-list :messageList="messageList">
+          <voice-msg-list :message-list="unreadList">
             <template slot-scope="slotProps">
                <button @click="setState(slotProps.item)" :class="slotProps.item.selected ? 'btn-checked': 'btn-unchecked'"></button>
             </template>
           </voice-msg-list>
-          <div class="panel">
+          <div class="panel" v-show="readList && readList.length">
             <div class="title">
               已读留言保留7天，过期自动删除
             </div>
-            <voice-msg-list :messageList="messageList"></voice-msg-list>
+            <voice-msg-list :message-list="readList"></voice-msg-list>
           </div>
         </div>
       </div>
       <div class="toolbar">
         <div class="btn-wrapper">
-          <button class="btn-voice" @click="deleteRecord"></button>
+          <button class="btn-voice" @click="onDelete"></button>
           <span>删除</span>
         </div>
       </div>
@@ -34,8 +34,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Header, Dialog } from 'gree-ui';
 import VoiceMessageList from './voiceMessageList';
+import { 
+  voiceSkillMsgDel,
+  voiceSkillMsgList,
+  changeBarColor, 
+  showToast 
+} from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Header.name]: Header,
@@ -44,24 +51,90 @@ export default {
   },
   data() {
     return {
-      messageList: [], // 语音留言列表
+      readList: [], // 已读语音留言列表
+      unreadList: [], // 未读语音留言列表
       isEmpty: true, // 语音留言是否为空
     }
   },
+  computed: {
+    ...mapState({
+      mac: state => state.mac,
+    }),
+  },
   created() {
-    // test
-    this.messageList.push({name: '测试', date: '2020年08月01日', duration: '23秒', read: false, isUploading: false, selected: false});
-    this.isEmpty = false;
+    changeBarColor('#fffffe');  
+    this.getMessageList();
   },
   methods: {
+    async getMessageList() {
+      let voiceMsgList = await voiceSkillMsgList(this.mac);
+      console.log(voiceMsgList);
+      if (!voiceMsgList) {
+        this.isEmpty = true;
+        return;
+      }
+      if (typeof(voiceMsgList) === 'string') {
+        voiceMsgList = JSON.parse(voiceMsgList);
+      }
+      if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
+        this.isEmpty = true;
+        return;
+      }
+      this.isEmpty = false;
+      this.unreadList = voiceMsgList.data.filter(x => x.status === 1).map(x => { x.selected = false; return x;});
+      this.readList = voiceMsgList.data.filter(x => x.status === 2).map(x => { x.selected = false; return x;});;
+    },
     selectAll() {
-
+      this.unreadList.forEach(x => {
+        x.selected = true;
+      });
+      this.readList.forEach(x => {
+        x.selected = true;
+      });
     },
     setState(item) {
       item.selected = !item.selected;
     },
-    deleteRecord() {
-      console.log(this.messageList);
+    async deleteRecords(selectedRecords) {
+      try {
+        let data = {guidList: selectedRecords};
+        let result = await voiceSkillMsgDel(JSON.stringify(data));
+        console.log('del result', result);
+        if (!result) {
+          throw new Error('删除失败');
+        }
+        if (typeof(result) === 'string') {
+          result = JSON.parse(result);
+        }
+        if (!result.code || result.code != 200) {
+          throw new Error('删除失败');
+        }
+        this.getMessageList(); // 刷新语音留言列表  
+      } catch (error) {
+        showToast(error.message, 0);
+      }
+     
+    },
+    onDelete() {
+      const selectedRecords = [];
+      const selectedUnreadRecords = this.unreadList.filter(x => x.selected === true).map(x => x.guid);
+      if (selectedUnreadRecords && selectedUnreadRecords.length) {
+        selectedRecords.push(...selectedUnreadRecords);
+      }
+      const selectedReadRecords = this.readList.filter(x => x.selected === true).map(x => x.guid);
+      if (selectedReadRecords && selectedReadRecords.length) {
+        selectedRecords.push(...selectedReadRecords);
+      }
+      if (selectedRecords.length > 0) {
+        Dialog.confirm({
+          title: '提醒',
+          content: '确定要删除所选的留言吗？',
+          confirmText: '删除',
+          onConfirm: () => this.deleteRecords(selectedRecords),
+          cancelText: '取消',
+          onCancel: () => console.log('[Dialog.confirm] cancel clicked')
+        });
+      }
     }
   }
 }

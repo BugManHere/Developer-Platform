@@ -10,10 +10,10 @@
             <span v-if="item.status === 2" class="tag-read">已读</span>
             <span v-else class="tag-unread">未读</span>
           </span>
-          <div class="subtitle">{{item.createAt}}<span>{{item.duration / 1000}}秒</span></div>
+          <div class="subtitle">{{item.createdAt}}<span>{{item.duration / 1000}}秒</span></div>
         </div>
         <slot v-bind:item="item">
-          <button class="btn-play" v-show="!item.isUploading"></button>
+          <button class="btn-play" v-show="!item.isUploading" @click="playVoiceMsg(item)"></button>
           <img src="../../../../assets/img/skill/loading.png" class="icon-loading" v-show="item.isUploading">
         </slot>
       </div>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { voiceSkillMsgPlay } from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   props: {
     messageList: {
@@ -31,6 +32,13 @@ export default {
     isEditable: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    async playVoiceMsg(item) {
+      console.log(item.guid);
+      let result = await voiceSkillMsgPlay(item.guid);
+      console.log('play result', result);
     }
   }
 }
