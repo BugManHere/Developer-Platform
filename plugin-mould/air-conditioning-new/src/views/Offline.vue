@@ -1,25 +1,17 @@
 <template>
-  <gree-view>
-    <gree-error-page type="offline" :bg-url="BgUrl" :img-url="offlineImgUrl" :text="$language('offline.prompt')" />
-  </gree-view>
+  <offline-component :title="devname" />
 </template>
 
 <script>
-import { ErrorPage } from 'gree-ui';
 import { mapState } from 'vuex';
 
 export default {
-  components: {
-    [ErrorPage.name]: ErrorPage
-  },
   data() {
-    return {
-      BgUrl: require('@/assets/img/bg_off.png'),
-      offlineImgUrl: require('@/assets/img/offline.png')
-    };
+    return {};
   },
   computed: {
     ...mapState({
+      devname: state => state.deviceInfo.name,
       isOffline: state => state.deviceInfo.deviceState
     })
   },
@@ -32,12 +24,14 @@ export default {
         this.$router.push({ path: '/' });
       }
     }
+  },
+  methods: {
+    /**
+     * @description 返回键
+     */
+    goBack() {
+      closePage();
+    }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.gree-header {
-  top: calc(0px + #{env(safe-area-inset-top)});
-}
-</style>

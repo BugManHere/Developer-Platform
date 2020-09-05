@@ -1,6 +1,5 @@
 const state = {
   mac: '', // 设备mac
-  functype: 0, // 0代表正常，1代表集中控制
   isScene: 0, // 是否是场景模式
   ModHeat: 4, // 制热模式
   watchLock: true,
@@ -9,10 +8,18 @@ const state = {
   ableSend: false, // 是否允许发送命令
   loading: false,
   isStHt: false,
+  fanKey: 'Fan',
+  modKey: 'Mod',
   dataObject: {
+    functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,
     Mod: 1,
-    WdSpd: 5
+    SetTem: 25,
+    WdSpd: 5,
+    Quiet: 0,
+    Tur: 0,
+    Lig: 1,
+    TemSen: 23 // 室温
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

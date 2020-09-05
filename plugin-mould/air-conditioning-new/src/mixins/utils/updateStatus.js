@@ -33,7 +33,6 @@ const updateStatus = {
       },
       immediate: true
     }
-  },
-  methods: {}
+  }
 };
 export default updateStatus;

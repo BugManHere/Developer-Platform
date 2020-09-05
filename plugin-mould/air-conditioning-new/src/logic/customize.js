@@ -141,6 +141,21 @@ const Customize = {
         },
         LRFan: () => {
           this.changeData({ UDFanPort: 2 });
+        },
+        ConstUD: () => {
+          this.$router.push({
+            name: 'Sweep',
+            params: { id: 2 }
+          });
+        },
+        ConstLR: () => {
+          this.$router.push({
+            name: 'Sweep',
+            params: { id: 1 }
+          });
+        },
+        Elc: () => {
+          this.$router.push('Electric');
         }
       };
     },
@@ -148,7 +163,11 @@ const Customize = {
      * @description 自执行函数
      */
     initFunc() {
-      return {};
+      return {
+        Demo: () => {
+          console.log('run Demo init');
+        }
+      };
     }
   },
   methods: {

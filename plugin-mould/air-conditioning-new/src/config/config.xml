@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <device>
-  <mid>7020c</mid>
-  <version>1.0</version>
+  <mid></mid>
+  <version></version>
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
-  <statueJson>["OnLine", "Percentage", "RemoteStatus", "RunStatus", "alarm", "batteryLow", "close", "continuousIntrusion", "electricity", "keyNo", "press", "temperature", "humidity", "pass", "brightness", "color", "colorTemperature"]</statueJson>
-  <statueJson2>["OnLine", "Percentage", "RemoteStatus", "RunStatus", "alarm", "batteryLow", "close", "continuousIntrusion", "electricity", "keyNo", "press", "temperature", "humidity", "pass", "brightness", "color", "colorTemperature"]</statueJson2>
+  <statueJson></statueJson>
+  <statueJson2></statueJson2>
+  <moduleVer>1</moduleVer>
+  <uiVersion>1</uiVersion>
 </device>
-<!-- <device>
-  <mid>70300</mid>
-  <version>1.0</version>
-  <iconpath>/images/icon.png</iconpath>
-  <iconpath2>/images/iconGroup.png</iconpath2>
-  <statueJson>[]</statueJson>
-  <statueJson2>[]</statueJson2>
-</device> -->

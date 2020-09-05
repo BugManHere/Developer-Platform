@@ -304,13 +304,27 @@ export default {
             name: '默认',
             value: 0,
             isCheck: false,
-            customize: false
+            customize: false,
+            icon: {
+              key: 'undefined',
+              type: 'off'
+            },
+            miniIcon: {
+              key: 'undefined'
+            }
           },
           undefined: {
             name: '其他',
             value: '-',
             isCheck: false,
-            customize: false
+            customize: false,
+            icon: {
+              key: 'undefined',
+              type: 'off'
+            },
+            miniIcon: {
+              key: 'undefined'
+            }
           }
         },
         order: [],
@@ -326,7 +340,14 @@ export default {
           name: '开启',
           value: 1,
           isCheck: true,
-          customize: false
+          customize: false,
+          icon: {
+            key: 'undefined',
+            type: 'on'
+          },
+          miniIcon: {
+            key: 'undefined'
+          }
         };
         insertMap.order.push('status_1');
       }

@@ -95,7 +95,7 @@ const LogicWatch = {
           if (!id) return; // 如果功能id不存在于这个插件，则不处理
           const currentStatus = this.g_statusMap[id].realStatus;
           const currentState = `${id}_${currentStatus}`; // 该功能id的当前状态
-          item === currentState && this.g_defaultStatusMap[id] && this.g_runLogic(id); // 如果当前状态为需要互斥的状态，则执行互斥
+          item === currentState && this.g_runLogic(id); // 如果当前状态为需要互斥的状态，则执行互斥
         });
       }
     },
@@ -103,7 +103,15 @@ const LogicWatch = {
      * @description 执行互斥
      */
     g_runLogic(id) {
-      const setData = this.g_defaultStatusMap[id].setData;
+      console.log(id);
+      const toStatus = this.g_statusDirectionMap[id];
+      const func = this.g_funcDefineMap[id];
+      const json = func.json;
+      const statusDefine = func.statusDefine[toStatus];
+      const moreCommand = statusDefine.moreCommand;
+      console.log(moreCommand);
+      let setData = moreCommand || {};
+      setData[json] = statusDefine.value;
       this.g_changeData(setData);
     }
   }

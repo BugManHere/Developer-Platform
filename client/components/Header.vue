@@ -83,8 +83,8 @@ export default {
       developType: state => state.pulicModule.developType
     }),
     webTitle() {
-      if (this.$route.name === 'Account') return '格力风驰平台 | 登录';
-      return '格力风驰平台';
+      if (this.$route.name === 'Account') return 'Plugin自动化开发平台 | 登录';
+      return 'Plugin自动化开发平台';
     },
     userName() {
       return this.user.name;

@@ -73,7 +73,7 @@ const getters = {
     const result = [];
     getters.funcDefine.forEach((funcItem, funcIndex) => {
       const statusDefine = funcItem.statusDefine;
-      ['undefined', 'default', ...funcItem.order].forEach(item => {
+      Object.keys(statusDefine).forEach(item => {
         if (statusDefine[item].isCheck) {
           result.push({
             identifier: funcItem.identifier,

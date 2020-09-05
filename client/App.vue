@@ -12,7 +12,7 @@
 import Header from '@/components/Header';
 import jwt_decode from 'jwt-decode';
 import { mapMutations } from 'vuex';
-import axios from 'axios';
+// import axios from 'axios';
 
 export default {
   name: 'app',
@@ -33,25 +33,28 @@ export default {
       });
     }
 
-    axios
-      .get(process.env.VUE_APP_ICONFONT_URL)
-      .then(
-        response => {
-          const regGlobal = /\.(.*):before {/g;
-          const reg = /\.iconfont-(.*):before {/;
-          const value = response.data.match(regGlobal).map(str => str.match(reg)[1]);
-          console.log(value);
-          this.setUserModule({
-            iconArr: value
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      )
-      .catch(error => {
-        console.log(error);
-      });
+    // axios
+    //   .get(`${process.env.VUE_APP_ICONFONT_URL}.json`)
+    //   .then(
+    //     response => {
+    //       const glyphs = response.data.glyphs;
+    //       const classList = glyphs.map(icon => icon.font_class);
+    //       this.setUserModule({
+    //         iconArr: classList
+    //       });
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   )
+    //   .catch(error => {
+    //     console.log(error);
+    // });
+    const { glyphs } = require('@public/iconfont/iconfont.json');
+    const classList = glyphs.map(icon => icon.font_class);
+    this.setUserModule({
+      iconArr: classList
+    });
   },
   methods: {
     ...mapMutations({

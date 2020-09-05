@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      isLogin: false,
+      isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
       isScrollTop: true,

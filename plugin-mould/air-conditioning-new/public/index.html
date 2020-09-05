@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8" />
@@ -22,24 +21,89 @@
       }
       var script = document.createElement("script");
       if (trigger()) {
-        script.src = "//gree-iot.test.upcdn.net/ios/cordova.js";
+        // script.src = "http://iotfe.gree.com/ios/cordova.js";
+        script.src = "<%= BASE_URL %>static/plugin/ios/cordova.js"; // 本地调试
       } else {
-        script.src = "//gree-iot.test.upcdn.net/cordova.js";
+        // script.src = "http://iotfe.gree.com/cordova.js";
+        script.src = "<%= BASE_URL %>static/plugin/cordova.js"; // 本地调试;
       }
       document.head.appendChild(script);
     </script>
-    <script src="http://gree-iot.test.upcdn.net/cordovainit.js"></script>
+    <!-- <script src="http://iotfe.gree.com/cordovainit.js"></script> -->
+    <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
+    <script src="//192.168.31.94:8091/target.js"></script>
+    <style>
+      @font-face {
+        font-family: 'appleUltralight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+      }
+      @font-face {
+        font-family: 'appleLight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+      }
+    </style>
+    <% } else if (NODE_ENV === 'development') { %>
+    <style>
+      @font-face {
+        font-family: 'appleUltralight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+      }
+      @font-face {
+        font-family: 'appleLight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+      }
+      @font-face {
+        font-family: 'appleRegular';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
+      }
+      @font-face {
+        font-family: 'appleThin';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
+      }
+      @font-face {
+        font-family: 'FZLTHJ';
+        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
+      }
+      @font-face {
+        font-family: 'Roboto-Light';
+        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
+      }
+    </style>
     <% } else if (NODE_ENV === 'production') { %>
     <script src="./../../cordova.js"></script>
     <script src="./js/cordovainit.js"></script>
+    <style>
+      @font-face {
+        font-family: 'appleUltralight';
+        src: url('./../../font/SF-UI-Display-Ultralight.otf');
+      }
+      @font-face {
+        font-family: 'appleLight';
+        src: url('./../../font/SF-UI-Display-Light.otf');
+      }
+      @font-face {
+        font-family: 'appleRegular';
+        src: url('./../../font/SF-UI-Display-Regular.otf');
+      }
+      @font-face {
+        font-family: 'appleThin';
+        src: url('./../../font/SF-UI-Display-Thin.otf');
+      }
+      @font-face {
+        font-family: 'FZLTHJ';
+        src: url('./../../font/FZLTHJ.ttf');
+      }
+      @font-face {
+        font-family: 'Roboto-Light';
+        src: url('./../../font/Roboto-Light.ttf');
+      }
+    </style>
     <% } %>
   </head>
   <body>
     <noscript>
-      <strong
-        >We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript
-        enabled. Please enable it to continue.</strong
-      >
+      <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. 
+        Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

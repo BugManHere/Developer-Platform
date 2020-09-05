@@ -594,7 +594,7 @@ export default {
         opt,
         p
       });
-      // console.table([opt, p]);
+      console.table([opt, p]);
       this.updateDataObject(obj);
       if (this.functype) {
         hasToast && showToast(hasToast, 1);

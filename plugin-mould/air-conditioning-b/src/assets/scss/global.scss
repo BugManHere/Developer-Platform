@@ -10,6 +10,11 @@
   src: url('../font/RobotoThin.ttf');
 }
 
+@font-face {
+  font-family: 'RobotoLight';
+  src: url('../font/Roboto-Light.ttf');
+}
+
 #app { position: relative; }
 
 .hidden {

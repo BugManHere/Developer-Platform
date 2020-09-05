@@ -37,7 +37,7 @@
           @dragover.prevent
           draggable="true"
         >
-          <td v-for="(item, key) in content" :key="key">
+          <td v-for="(item, key) in content" :key="key" :id="funcOptions.types[key]">
             <!-- 文本 -->
             <p v-if="!Array.isArray(item)" v-show="index !== editItem[0] || key !== editItem[1]" @click="showInput(index, key, item)" v-text="item" />
             <!-- 点击文本后出现输入框 -->
@@ -58,7 +58,7 @@
             </span>
           </td>
           <!-- 右边的按键 -->
-          <td v-if="funcOptions.content && funcDefine">
+          <td v-if="funcOptions.content && funcDefine" id="btn">
             <p>
               <span
                 @click="insertPage(realIndex[index])"
@@ -159,15 +159,16 @@ export default {
       let content = [];
       try {
         if (this.imshowFunc.length) {
-          content = this.imshowFunc.map(val => {
-            if (!val) return undefined;
+          content = this.imshowFunc.map(func => {
+            if (!func) return undefined;
             const res = this.tableOptions.keyList.map(item => {
-              if (item === 'type') return { active: '显性功能-按钮', inertia: '隐性功能' }[val[item]];
-              return val[item];
+              if (item === 'type') return { active: '显性功能-按钮', inertia: '隐性功能' }[func[item]];
+              return func[item];
             });
             res.push([]);
-            ['default', ...val.order].forEach(item => {
-              const target = val.statusDefine[item];
+            Object.keys(func.statusDefine).forEach(status => {
+              if (status === 'undefined') return;
+              const target = func.statusDefine[status];
               let text = `${target.name}：${target.value}`;
               text += target.moreCommand ? '+' : '';
               res[res.length - 1].push(text);
@@ -181,7 +182,8 @@ export default {
       return {
         caption: this.tableOptions.caption,
         title: [...this.tableOptions.titleList, '状态简要', '操作'],
-        content
+        content,
+        types: [...this.tableOptions.keyList, 'brief']
       };
     },
     // 【插入页面】页面设置
@@ -286,7 +288,7 @@ export default {
       this.setTempModule({ currentFuncId: index }); // 该功能在所有功能内的位置
       const statusId = statusIndex ? statusIndex + 1 : 0; // 该状态在功能内的位置
       this.$nextTick(() => {
-        this.$refs.panel.$refs['statusDef'].currentStatusId = statusId; // 显示指定状态
+        this.$refs.panel.$refs['statusDef'].currentStatusIndex = statusId; // 显示指定状态
       });
     },
     // 显示指定位置的输入框
@@ -374,8 +376,6 @@ export default {
       if (this.dragFromIndex === this.dragToIndex) return;
       if (this.developType === 0) {
         const idList = deepCopy(this.funcImport);
-        console.log(idList);
-
         const toID = idList[this.dragToIndex];
         idList[this.dragToIndex] = idList[this.dragFromIndex];
         idList[this.dragFromIndex] = toID;

@@ -31,9 +31,9 @@
       <div class="page-main">
         <!-- 模式滑轮 -->
         <div class="tem-edit">
-          <gree-icon name="move" size="lg"/>
+          <gree-icon name="move" size="xl"/>
           <div v-text="SetTem" class="tem-value"/>
-          <gree-icon name="add" size="lg"/>
+          <gree-icon name="add" size="xl"/>
         </div>
 
         <cardHeader :style="cardHeaderShow ? {height: 0} : {}"/>

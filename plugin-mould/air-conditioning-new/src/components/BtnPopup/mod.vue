@@ -1,0 +1,142 @@
+<template>
+  <gree-popup v-model="showPopup" position="bottom">
+    <BtnPopup :showPopup="showPopup" :title="'模式'" :btn-list="btnList" />
+  </gree-popup>
+</template>
+
+<script>
+import { Popup } from 'gree-ui';
+import { mapState, mapMutations, mapActions } from 'vuex';
+import BtnPopup from './index';
+import LogicDefine from '@logic/define';
+import Customize from '@logic/customize';
+
+export default {
+  mixins: [LogicDefine, Customize],
+  components: {
+    BtnPopup,
+    [Popup.name]: Popup
+  },
+  data() {
+    return {
+      showPopup: false,
+      modStatusList: [], // 模式的顺序
+      currentStatus: '' // 当前状态
+    };
+  },
+  computed: {
+    ...mapState({
+      modKey: state => state.modKey,
+      value: state => state.dataObject.Mod
+    }),
+    // 模式的定义
+    modDefine() {
+      return this.g_funcDefineMap[this.modKey];
+    },
+    // 按钮列表
+    btnList() {
+      const modKey = this.modKey;
+      const result = this.modStatusList.map(modStatus => {
+        // status定义
+        const statusDefine = this.modDefine.statusDefine[modStatus];
+        // 定义key
+        const key = modStatus;
+        // 名称
+        const statusName = statusDefine.name;
+        const stateName = `${modKey}_${statusName}`;
+        const name = this.$language(`mod.${stateName}`);
+        // 图标
+        const icon = {
+          key: statusDefine.icon.key,
+          type: this.currentStatus === modStatus ? 'on' : 'off'
+        };
+        // 是否置灰
+        const gray = false;
+        // 是否隐藏
+        const hide = false;
+        // 跳转页面
+        const page = false;
+        // 执行的函数
+        const func = (modStatus, isGray = false) => {
+          this.changeStatus(modStatus, isGray);
+        };
+        return { key, name, icon, gray, hide, page, func };
+      });
+      return result;
+    }
+  },
+  watch: {
+    g_statusLoop: {
+      handler(newVal) {
+        const startStatus = 'default';
+        const modLoop = newVal[this.modKey];
+        if (modLoop) {
+          const result = JSON.parse(JSON.stringify(newVal[this.modKey]));
+          const length = result.length;
+          let i = 0;
+          while (result[0] !== startStatus && i < length) {
+            result.push(result.shift());
+            i += 1;
+          }
+          this.modStatusList = result;
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    g_statusMap: {
+      handler(newVal) {
+        const statusMap = newVal[this.modKey];
+        if (statusMap) this.currentStatus = statusMap.status;
+      },
+      immediate: true,
+      deep: true
+    }
+  },
+  methods: {
+    ...mapMutations({
+      setDataObject: 'SET_DATA_OBJECT',
+      setState: 'SET_STATE'
+    }),
+    ...mapActions({
+      sendCtrl: 'SEND_CTRL'
+    }),
+    changeStatus(status, isGray) {
+      if (isGray) return;
+      const funcDefine = this.modDefine;
+      const statusDefine = funcDefine.statusDefine[status];
+      const identifier = funcDefine.identifier;
+      const currentStatus = this.currentStatus;
+      const customize = statusDefine.customize;
+      // 执行自定义函数 'before'
+      switch (customize) {
+        case 'replace':
+          this.customizeFunc(identifier, currentStatus, status);
+          return;
+        case 'before':
+          this.customizeFunc(identifier, currentStatus, status);
+          break;
+        case 'after':
+          setTimeout(() => {
+            this.customizeFunc(identifier, currentStatus, status);
+          }, 0);
+          break;
+        default:
+          break;
+      }
+      const moreCommand = statusDefine.moreCommand;
+      const json = funcDefine.json;
+      const value = statusDefine.value;
+      let setData = moreCommand || {};
+      setData[json] = value;
+      this.changeData(setData);
+    },
+    changeData(map) {
+      this.setState({ watchLock: false });
+      this.setState({ ableSend: true });
+      this.setDataObject(map);
+      this.sendCtrl(map);
+    }
+  }
+};
+</script>

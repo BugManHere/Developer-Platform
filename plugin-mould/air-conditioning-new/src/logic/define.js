@@ -22,6 +22,20 @@ const LogicDefine = {
     this.g_deviceName = deviceName; // 设备名称
     this.g_moreOption = moreOption; // 更多配置项
     this.g_funcDefine = funcDefine; // 功能定义
+    // String转为Number
+    funcDefine.forEach((func, index) => {
+      const statusDefine = {};
+      Object.keys(func.statusDefine).forEach(status => {
+        statusDefine[status] = func.statusDefine[status];
+        statusDefine[status].value = Number(statusDefine[status].value);
+        if (func.statusDefine[status].moreCommand) {
+          Object.keys(func.statusDefine[status].moreCommand).forEach(json => {
+            statusDefine[status].moreCommand[json] = Number(statusDefine[status].moreCommand[json]);
+          });
+        }
+      });
+      this.g_funcDefine[index].statusDefine = statusDefine;
+    });
     this.g_excludeMap = excludeMap; // 排斥关系
     this.g_hideMap = hideMap; // 隐藏关系
     this.g_mid = productModel; // mid
@@ -154,10 +168,9 @@ const LogicDefine = {
         const id = item.identifier;
         const json = item.json;
         const defaultStatus = item.statusDefine.default;
-        let setData = {};
-        const moreCommand = defaultStatus.moreCommand;
-        moreCommand && (setData = moreCommand);
-        setData[json] = Number(defaultStatus.value);
+        const moreCommand = define.moreCommand;
+        let setData = moreCommand || {};
+        setData[json] = defaultStatus.value;
         result[id] = {
           setData,
           json,
@@ -199,12 +212,15 @@ const LogicDefine = {
         const map = func.map; // 指向关系
         let status = this.g_statusMap[id].status; // function的当前status
         const statusArr = []; // status顺序数组形式
+        const checkStatusArr = []; // 已检查的状态
         if (map) {
           let directionStatus = rule(map[status]); // status指向
           // 再次指向原点时推出，形成闭环
-          while (!statusArr.includes(directionStatus)) {
+          while (!checkStatusArr.includes(directionStatus)) {
             status = directionStatus; // 下一个status
-            statusArr.push(directionStatus); // 按顺序存入数组
+            const state = `${id}_${status}`;
+            this.g_hideStateArr.includes(state) || statusArr.push(directionStatus); // 按顺序存入数组
+            checkStatusArr.push(directionStatus); // 按顺序存入数组
             directionStatus = rule(map[status]) || 'default'; // 更新status指向
           }
         } else {
@@ -273,10 +289,9 @@ const LogicDefine = {
         const json = func.json;
         const status = this.g_statusDirectionMap[id]; // function的指向status
         const define = func.statusDefine[status];
-        let setData = {};
-        const moreCommand = define.moreCommand;
         const customize = define.customize;
-        moreCommand && (setData = moreCommand);
+        const moreCommand = define.moreCommand;
+        let setData = moreCommand || {};
         setData[json] = define.value;
         result[id] = {
           status,

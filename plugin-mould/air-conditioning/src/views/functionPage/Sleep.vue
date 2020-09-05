@@ -516,13 +516,15 @@ export default {
       }
       const opt = Object.keys(obj);
       const p = Object.values(obj);
+      opt.push('StHt');
+      p.push(0);
       const json = JSON.stringify({ 
         mac: this.mac,
         t: 'cmd',
         opt,
         p
       });
-      // console.table([opt, p]);
+      console.table([opt, p]);
       this.updateDataObject(obj);
       if (this.functype) {
         hasToast && showToast(hasToast, 1);

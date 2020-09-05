@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint",
     "go": "concurrently \"yarn start\" \"yarn serve\"",
     "local": "concurrently \"yarn start --mode localserve\" \"yarn serve\"",
+    "test": "concurrently \"yarn start --mode localserve\" \"yarn serve:const\"",
     "serve:const": "babel-node server/app.js --presets babel-preset-env",
     "start": "vue-cli-service serve"
   },

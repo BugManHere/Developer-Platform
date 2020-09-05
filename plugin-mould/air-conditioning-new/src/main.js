@@ -1,14 +1,14 @@
 import 'jquery';
-import 'round-slider';
 
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 
 import { Page, View } from 'gree-ui';
-import { closePage, getInfo } from '../../static/lib/PluginInterface.promise'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
 
+import 'round-slider';
 import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
@@ -27,12 +27,17 @@ axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接�
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
 
+import IotfeComponents from 'iotfe-components';
+import 'iotfe-components/dist/iotfeComponents.css';
+
 // 安装插件
 Vue.use(VueI18n);
 Vue.use(language);
 Vue.use(Vuex);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
+
+Vue.use(IotfeComponents);
 
 // 使用语言包
 const i18n = new VueI18n({
@@ -52,7 +57,7 @@ const dev = process.env.NODE_ENV === 'development';
 async function createVue() {
   const vm = new Vue({
     // el: '#app',
-    mixins: dev ? [debugMixin] : [initMixin],
+    mixins: [dev ? debugMixin : initMixin],
     // mixins: [initMixin],
     render: h => h(App),
     router,
@@ -67,7 +72,9 @@ async function createVue() {
   if (dev) {
     window.storage = new Storage();
     // 解析传入参数, id: 设备key, admin: 用户名
-    let { id, admin } = router.currentRoute.query;
+    // let { id, admin } = router.currentRoute.query;
+    let id = '5f4cc7c340a7fa41bc714160';
+    let admin = 'a1260011042@163.com';
     const storage = window.storage;
     // 已有id，则记录，没有则读取
     if (id) {

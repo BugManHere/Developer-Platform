@@ -42,15 +42,18 @@ router.get('/', function(req, res) {
     //           key: func.identifier,
     //           type: 'off'
     //         };
+    //         func.statusDefine[status].miniIcon = {
+    //           key: 'undefined'
+    //         };
     //       } else {
     //         func.statusDefine[status].icon = {
     //           key: func.identifier,
     //           type: 'on'
     //         };
+    //         func.statusDefine[status].miniIcon = {
+    //           key: func.identifier
+    //         };
     //       }
-    //       func.statusDefine[status].miniIcon = {
-    //         key: func.identifier
-    //       };
     //     }
     //   });
     //   template.funcDefine = funcDefineCopy;

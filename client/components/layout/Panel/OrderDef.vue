@@ -52,8 +52,8 @@
             </label>
           </div>
           <i
-            class="iconfont iconfont-undefined"
-            :class="`iconfont-${currentStatus.icon ? currentStatus.icon.key : 'undefined'}`"
+            class="iconfont"
+            :class="`iconfont-${currentStatus.icon && iconArr.includes(currentStatus.icon.key) ? currentStatus.icon.key : 'undefined'}`"
             title="更改图标设置"
             @click="
               btnIconSelectType = true;
@@ -339,6 +339,7 @@ export default {
       this.highlightStatus(newVal);
       // 获取状态指向
       this.currentDrection = this.funcCopy.map[this.currentStatusKey];
+      console.log('-----------updateCmd----------');
       // 获取额外命令
       this.updateCmd();
       // 获取图标状态
@@ -347,8 +348,9 @@ export default {
   },
   mounted() {
     this.funcCopy = deepCopy(this.funcDefine[this.currentFuncId]); // 复制funcDefine
-    this.updateStatusList(); // 更新状态列表
     this.initEchart(); // 初始化图表
+    // 获取图标状态
+    this.btnType = this.currentStatus.icon.type === 'on';
   },
   methods: {
     ...mapMutations({
@@ -396,25 +398,11 @@ export default {
       const value = this.currentStatus[valueKey];
       if (this.statusList[index][valueKey] === value) return;
       this.$set(this.funcCopy.statusDefine[key], valueKey, value);
-      // this.$set(this.statusList[index], valueKey, value);
 
       this.updateEchart();
     },
     updateEchart() {
       this.myChart.setOption(this.opt);
-    },
-    // 更新状态列表
-    updateStatusList() {
-      // const statusKeyList = Object.keys(this.funcCopy.statusDefine); // 取出功能下的状态名
-      // console.log(this.funcCopy);
-      // this.statusList = statusKeyList.map(key => {
-      //   // 根据状态获取名称
-      //   return {
-      //     name: this.funcCopy.statusDefine[key].name,
-      //     key,
-      //     direction: this.funcCopy.map[key]
-      //   };
-      // });
     },
     // 添加状态
     addStatus() {
@@ -430,11 +418,14 @@ export default {
         value: 1,
         isCheck: true,
         customize: false,
-        icon: this.funcCopy.identifier,
-        miniIcon: this.funcCopy.identifier,
-        type: 'on'
+        icon: {
+          key: this.funcCopy.identifier,
+          type: 'on'
+        },
+        miniIcon: {
+          key: this.funcCopy.identifier
+        }
       });
-      this.updateStatusList(); // 更新状态列表
 
       this.$set(this.funcCopy.map, key, 'default');
       this.currentStatusIndex = this.statusList.length - 1;
@@ -447,7 +438,6 @@ export default {
       const key = this.currentStatusKey;
       this.$delete(this.funcCopy.statusDefine, this.currentStatusKey);
       this.$delete(this.funcCopy.map, key);
-      this.updateStatusList(); // 更新状态列表
       this.currentStatusIndex = 0;
 
       this.updateCmd();
@@ -482,6 +472,8 @@ export default {
         oldKeys: []
       };
       const moreCommand = this.funcCopy.statusDefine[this.currentStatusKey].moreCommand;
+      console.log('----------------------this.currentStatusKey');
+      console.log(this.currentStatusKey);
       if (moreCommand) {
         Object.keys(moreCommand).forEach(key => {
           this.cmdMap.keys.push(key);

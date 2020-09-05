@@ -81,6 +81,13 @@ export default {
           data.payload.data.groups.forEach(group => {
             groupsUnfold.push(...group.categories);
           });
+          console.log(
+            groupsUnfold
+          );
+          groupsUnfold.unshift({
+            categoryId: '1110',
+            categoryName: '儿童'
+          })
           this.setMusicData({ groupsUnfold });
           this.setMusicData({ groups: data.payload.data.groups });
           break;

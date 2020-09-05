@@ -4,10 +4,11 @@ import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插�
 
 const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
+const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'ErrorWarning');
 
 // 高级功能倒三角进入
 const Test = r => require.ensure([], () => r(require('./views/functionPage/Test')));
-const Sweep = r => require.ensure([], () => r(require('./views/functionPage/Sweep')));
+const Sweep = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
 const SmartWind = r => require.ensure([], () => r(require('./views/functionPage/SmartWind')));
 const NoBodySave = r => require.ensure([], () => r(require('./views/functionPage/NoBodySave')));
 const Lig = r => require.ensure([], () => r(require('./views/functionPage/Lig')));
@@ -15,11 +16,10 @@ const Air = r => require.ensure([], () => r(require('./views/functionPage/Air'))
 const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
 const Dazzling = r => require.ensure([], () => r(require('./views/functionPage/Dazzling')));
 const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
-// const Electric = r =>
-//   require.ensure([], () => r(require('./views/functionPage/Electric')));
 const Humi = r => require.ensure([], () => r(require('./views/functionPage/Humi')));
 const Loop = r => require.ensure([], () => r(require('./views/functionPage/Loop')));
 const Sleep = r => require.ensure([], () => r(require('./views/functionPage/Sleep')));
+const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
 
 Vue.use(Router);
 
@@ -37,12 +37,17 @@ const router = new Router({
       component: Home
       // meta: {
       //   keepAlive: true
-      // },
+      // }
     },
     {
       path: '/Offline',
       name: 'Offline',
       component: Offline
+    },
+    {
+      path: '/ErrorWarning',
+      name: 'ErrorWarning',
+      component: ErrorWarning
     },
     {
       path: '/Test',
@@ -89,11 +94,11 @@ const router = new Router({
       name: 'UDFanPort',
       component: UDFanPort
     },
-    // {
-    //   path: '/Electric',
-    //   name: 'Electric',
-    //   component: Electric
-    // },
+    {
+      path: '/Electric',
+      name: 'Electric',
+      component: Electric
+    },
     {
       path: '/Humi',
       name: 'Humi',
@@ -118,12 +123,7 @@ router.beforeEach((to, from, next) => {
     router.go(0);
   }
   // 顶栏颜色操作
-  let color = '#404040';
-  if (to.name === 'Error') {
-    color = '#ddd5a3';
-  } else if (to.name === 'Offline') {
-    color = window.myvm.$store.state.dataObject.Mod === window.myvm.$store.state.ModHeat ? '#f78d00' : '#6ba0e2';
-  }
+  const color = '#F4F9F8';
   changeBarColor(color);
   next();
 });

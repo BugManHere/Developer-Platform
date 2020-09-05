@@ -1,23 +1,20 @@
 @import "home";
-@import "circle-slider";
 @import "offline";
 @import "iconfont";
-@import "components/FuncPopup.scss";
-@import "components/ModPopup.scss";
+@import "components/CenterSlider.scss";
+@import "components/BtnPopup.scss";
 @import "components/FanPopup.scss";
-
-@font-face {
-  font-family: "appleLight";
-  src: url("../iconfont/SF-UI-Display-Light.otf");
-}
-
-@font-face {
-  font-family: "appleUltralight";
-  src: url("../iconfont/SF-UI-Display-Ultralight.otf");
-}
 
 .hidden {
   display: none !important;
+}
+
+#app {
+  font-family: 'FZLTHJ';
+}
+
+.page-content {
+  overflow: hidden !important;
 }
 
 .page {
