@@ -22,14 +22,14 @@
       <transition name="fade">
         <div v-show="isRecording" class="mask"></div>
       </transition> 
-      <div class="toolbar">
+      <div class="toolbar" v-show="!showDialog">
         <transition name="fade">
           <div class="voice-indicator" v-show="isRecording">
             <div class="title">
               <button class="btn-close" @click="cancelRecord"></button>
             </div>
             <div class="content">
-              <audio-wave></audio-wave>
+              <audio-wave ref="audioWave"></audio-wave>
             </div>
           </div>
         </transition>
@@ -192,9 +192,12 @@ export default {
         }
         this.isRecording = true;
         this.startTime = new Date().getTime();
+        this.$refs.audioWave.startWave();
         gTimerForGetAudioStatus = setInterval(() => {
           voiceSkillMsgAudioControl(this.mac, 'getStatus').then((data) => {
             console.log(data);
+            data = JSON.parse(data);
+            this.$refs.audioWave.updateWave(data.wave);
           });  
         }, 100);
         
