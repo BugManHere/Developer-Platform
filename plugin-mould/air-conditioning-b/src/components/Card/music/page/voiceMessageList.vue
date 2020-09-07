@@ -10,7 +10,7 @@
             <span v-if="item.status === 2" class="tag-read">已读</span>
             <span v-else class="tag-unread">未读</span>
           </span>
-          <div class="subtitle">{{item.createdAt}}<span>{{item.duration / 1000}}秒</span></div>
+          <div class="subtitle">{{item.createdAt}}<span>{{parseInt(item.duration / 1000, 10)}}秒</span></div>
         </div>
         <slot v-bind:item="item">
           <button class="btn-play" v-show="!item.isUploading" @click="playVoiceMsg(item)"></button>
@@ -18,11 +18,12 @@
         </slot>
       </div>
     </li>
+    <audio id="audioPlayer" src="" autoplay></audio>
   </ul>
 </template>
 
 <script>
-import { voiceSkillMsgPlay } from '../../../../../public/static/lib/PluginInterface.promise';
+import { showToast, voiceSkillMsgPlay } from '../../../../../public/static/lib/PluginInterface.promise';
 export default {
   props: {
     messageList: {
@@ -36,9 +37,28 @@ export default {
   },
   methods: {
     async playVoiceMsg(item) {
-      console.log(item.guid);
-      let result = await voiceSkillMsgPlay(item.guid);
-      console.log('play result', result);
+      try {
+        console.log(item.guid);
+        let result = await voiceSkillMsgPlay(item.guid);
+        console.log('play result', result);
+        if (!result) {
+          throw new Error('获取链接失败');
+        }
+        result = JSON.parse(result);
+        if (!result.url) {
+          throw new Error('获取链接失败');
+        }
+        const audio = document.getElementById('audioPlayer');
+        audio.src = result.url;
+        audio.load();
+        // audio.addEventListener('canplay', () => {
+        //   console.log('canplay');
+        //   audio.play();
+        // });
+        
+      } catch (error) {
+        showToast('留言播放失败！', 0);
+      }
     }
   }
 }
@@ -62,7 +82,7 @@ export default {
       background: #fff;
       &:not(:last-child) {
         .content {
-          border-bottom: 1px solid #dbdbdb;
+          border-bottom: 1px solid #f4f4f4;
         }
       }
       .content {

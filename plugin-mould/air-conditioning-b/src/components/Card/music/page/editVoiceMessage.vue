@@ -139,7 +139,12 @@ export default {
   }
 }
 </script>
-
+<style lang="scss" scoped>
+.gree-dialog-content {
+  height: 459px;
+  width: 970px;
+}
+</style>
 <style lang="scss">
 @mixin iconBtn($size, $url) {
   appearance: none;

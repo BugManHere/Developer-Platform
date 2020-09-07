@@ -26,6 +26,10 @@
         <transition name="fade">
           <div class="voice-indicator" v-show="isRecording">
             <div class="title">
+              <div class="time-label">
+                <span v-show="countdown > 0">{{countdown}}秒后将结束录音</span>
+                <span>{{timing}}s</span>
+              </div>
               <button class="btn-close" @click="cancelRecord"></button>
             </div>
             <div class="content">
@@ -46,7 +50,7 @@
       </div>
       <gree-dialog v-model="showDialog">
         <div class="text-input-wrapper">
-          <input ref="msgNameIput" v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
+          <input autofocus v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
           <span :class="{'high-light': voiceMsgName}">{{countLabel}}</span>
           <div class="tips" v-show="!isNameValid">
             昵称仅限汉字哟~
@@ -76,6 +80,7 @@ import {
 } from '../../../../../public/static/lib/PluginInterface.promise';
 
 let gTimerForGetAudioStatus = null; // 定时器获取录音状态
+let gTimerForTiming = null; // 定时器用于计时显示
 
 export default {
   components: {
@@ -96,6 +101,8 @@ export default {
       isNameValid: true,
       startTime: 0, // 留言开始时间,
       duration: 0,
+      timing: 0, // 计时显示
+      countdown: 0, // 倒计时显示
     }
   },
   computed: {
@@ -158,6 +165,10 @@ export default {
         clearInterval(gTimerForGetAudioStatus);
         gTimerForGetAudioStatus = null;
       }
+      if (gTimerForTiming) {
+        clearInterval(gTimerForTiming);
+        gTimerForTiming = null;
+      }
     },
     finishRecord() {
       console.log('finishRecord');
@@ -178,6 +189,8 @@ export default {
           showToast('留言数量已达上限，请先删除历史留言!', 0);
           return;
         }
+        this.timing = 0;
+        this.countdown = 0;
         this.clearInterval();
         voiceSkillMsgAudioControl(this.mac, 'start');
         let result = await voiceSkillMsgAudioControl(this.mac, 'getStatus');
@@ -193,7 +206,17 @@ export default {
         this.isRecording = true;
         this.startTime = new Date().getTime();
         this.$refs.audioWave.startWave();
+        gTimerForTiming = setInterval(() => {
+          this.timing = this.timing + 1;
+          if (this.timing >= 50) {
+            this.countdown = 60 - this.timing;
+            if (this.timing === 60) {
+              this.finishRecord();
+            }
+          }
+        }, 1000);
         gTimerForGetAudioStatus = setInterval(() => {
+          // this.$refs.audioWave.updateWave(Math.random()); // add for test
           voiceSkillMsgAudioControl(this.mac, 'getStatus').then((data) => {
             console.log(data);
             data = JSON.parse(data);
@@ -424,12 +447,28 @@ export default {
               position: absolute;
               right: 0px;
             }
+            .time-label {
+              position: absolute;
+              top: 56px;
+              left: 50%;
+              transform: translateX(-50%);
+              span {
+                display: block;
+                font-size: 45px;
+                color: #404657;
+                &:first-child {
+                  font-size: 48px;
+                  color: #FF0202;
+                  margin-bottom: 52px;
+                }
+              }
+            }
           }
           .content {
             position: absolute;
-            top: 50%;
+            top: 267px;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             width: 863px;
             height: 167px;
           }

@@ -35,7 +35,7 @@
           <p class="text" :class="{'loading': isLoading}">{{direction_use}}</p>
         </div>
       </div>
-      <footer>此功能由<img src="../../../../assets/img/skill/gree_logo.png"/>与<img src="../../../../assets/img/skill/tencent_cloud_logo.png"/>联合提供</footer>
+      <footer>此技能由<img src="../../../../assets/img/skill/gree_logo.png"/>提供</footer>
     </gree-page>
   </gree-view>
 </template>
@@ -43,7 +43,10 @@
 import { Header } from 'gree-ui';
 import { voiceACgetSkillInfo, changeBarColor } from '../../../../../public/static/lib/PluginInterface.promise';
 
-const SKILLS_WITH_SETTINGS = ['语音留言'];
+const SKILLS_WITH_SETTINGS = [{
+  name: '语音留言',
+  path: '/VoiceMessage'
+}];
 export default {
   components: {
     [Header.name]: Header,
@@ -58,6 +61,7 @@ export default {
       hasSettings: false,
       icon: '',
       isLoading: true, //是否加载数据中
+      path: '/', // 跳转具体设置页的路径，如语音留言则跳转/VoiceMessage
     }
   },
   created() {
@@ -71,7 +75,7 @@ export default {
   },
   methods: {
     gotoSettings() {
-      console.log('settings');
+      this.$router.push(this.path);
     },
     async getSkillInfo(id) {
       let result = await voiceACgetSkillInfo(id);
@@ -83,8 +87,10 @@ export default {
         }
         this.illustrate = result.illustrate;
         this.name = result.name;
-        if (SKILLS_WITH_SETTINGS.indexOf(this.name) !== -1) {
+        const skill = SKILLS_WITH_SETTINGS.find(x => x.name === this.name);
+        if (skill) {
           this.hasSettings = true;
+          this.path = skill.path;
         }
         this.direction_use = result.direction_use;
         this.introduce = result.introduce;
@@ -110,15 +116,17 @@ export default {
     background-image: url('../../../../assets/img/skill/header_bg.png');
     background-size: 100% 100%;
     .btn {
-      border: 1px solid #fff;
+      border: 1px solid rgba($color: #fff, $alpha: 0.5);
       outline: none;
       appearance: none;
       color: #fff;
-      height: 80px;
-      line-height: 80px;
-      border-radius: 80px;
-      padding: 0 40px;
+      border-radius: 66px;
+      padding: 18px 33px;
+      font-size: 32px;
       background-color: transparent;
+      &:active {
+        opacity: 0.5;
+      }
     }
     .icon-wrapper {
       position: absolute;

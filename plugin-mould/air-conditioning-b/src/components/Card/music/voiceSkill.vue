@@ -1,18 +1,22 @@
 <template>
   <div class="voice-skill">
     <div class="toolbar">
-      <div class="left">
-        <div 
-          v-for="(item, index) in toobarItems" 
-          class="item"
-          @click="gotoSkillSettings"
-          :key="index">
-          <div></div>
-          <span>{{ item.name }}</span>
+      <div class="content">
+        <div class="left">
+          <div 
+            v-for="(item, index) in toobarItems" 
+            class="item"
+            @click="gotoSkillSettings(index)"
+            :key="index">
+            <img :src="item.icon">
+            <h4>{{ item.name }}</h4>
+          </div>
         </div>
-      </div>
-      <div class="right">
-        <gree-icon name="search" size="lg" @click="gotoSearch"/>
+        <img class="divider" src="../../../assets/img/skill/divider.png">
+        <div class="right">
+          <img src="../../../assets/img/skill/search_icon.png" @click="gotoSearch" >
+          <h4>搜索</h4>
+        </div>
       </div>
     </div>
     <div class="content">
@@ -45,8 +49,8 @@
               >
                 <img :src="item.icon" slot="media" class="skill-icon"/>
               </gree-list-item>
-              <div class="load-more-item" @click="loadMore">
-                <a v-show="hasNextPage && !isLoading" href="javascript:void 0;">加载更多</a>
+              <div class="load-more-item">
+                <a v-show="hasNextPage && !isLoading" href="javascript:void 0;" @click="loadMore">加载更多</a>
                 <span v-show="hasNextPage && isLoading">加载中...</span>
                 <span v-show="!hasNextPage && !isLoading">没有更多内容了</span>
               </div>
@@ -70,7 +74,7 @@
 <script>
 import { mapState } from 'vuex';
 import { Icon, Sidebar, SidebarItem, List, Item, } from 'gree-ui'; 
-import { voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
+import { showToast, voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
 export default {
   components: {
     [Icon.name]: Icon,
@@ -84,8 +88,12 @@ export default {
       activeDomainIndex: 0,
       toobarItems: [
         {
-          imgUrl: '',
-          name: '语音留言'
+          icon: require('../../../assets/img/skill/alarm_icon.png'),
+          name: '闹钟和提醒'
+        },
+        {
+          icon: require('../../../assets/img/skill/voice_icon.png'),
+          name: '语音留言簿'
         }
       ],
       sidebarItems: [{
@@ -173,9 +181,6 @@ export default {
         console.log(JSON.stringify(args));
         let [requestId, result] = await voiceACgetSkillList(this.currentRequestId, this.mac, JSON.stringify(args));
         console.log('返回的请求ID：', requestId);
-        // if (index !== this.activeDomainIndex) {
-        //   return;
-        // }
         // 非当前请求直接返回
         if (requestId !== this.currentRequestId) {
           return;
@@ -240,8 +245,16 @@ export default {
         await this.getSkillList(index, queryArgs);
       }
     },
-    gotoSkillSettings() {
-      this.$router.push('/VoiceMessage');
+    gotoSkillSettings(index) {
+      switch (index) {
+        case 1:
+          this.$router.push('/VoiceMessage');
+          break;
+        default:
+          showToast('该功能暂未开放！', 0);
+          break;
+      }
+      
     }
   }
 };
@@ -271,50 +284,64 @@ $sidebarWidth: 270px;
   display: flex;
   flex-direction: column;
   .toolbar {
-    padding: 10px 0px;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    justify-content: space-between;
-    .left {
-      display: inline-block;
-      .item {
+    padding: 29px 38px 80px 30px;
+    background-color: #F5F5F5;
+    .content {
+      height: 208px;
+      background-image: url('../../../assets/img/skill/toolbar_bg.png');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      display: flex;
+      align-items: center;
+      .left {
+        flex: 1;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .right {
+        margin: 0px 99px 0px 104px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0 24px;
-        height: 100%;
-        div {
-          height: 90px;
-          width: 90px;
-          background-color: #ccc;
-          margin-bottom: 10px;
-        }
-        span {
-          font-size: 33px;
-          line-height: 1;
-          margin-top: 13px;
-        }
+      }
+      img {
+        width: 70px;
+        height: 70px;
+      }
+      h4 {
+        font-size: 34px;
+        color: #404657;
+        margin-top: 17px;
+        line-height: 50px;
+      }
+      .divider {
+        height: 146px;
+        width: 4px;
       }
     }
-    .right {
-      border-left: 2px solid #ccc;
-      padding: 0px 60px;
-      line-height: 120px;
-    }
+    
   }
   .content {
     flex: 1;
     display: flex;
     .sidebar {
       width: $sidebarWidth;
-      background-color: #F9F9F9;
+      background-color: #F5F5F5;
       .gree-sidebar {
         width: 100%;
         .gree-sidebar-item {
           height: 140px;
           position: relative;
           color: #404657;
+          background-color: #F5F5F5;
           .gree-sidebar-item__text {
             font-size: 42px;
             position: absolute;
@@ -324,6 +351,7 @@ $sidebarWidth: 270px;
           }
           &.gree-sidebar-item--select{
             color: #00AEFF;
+            background-color: #fff;
             border-left: 12px solid #00AEFF;
           }
         }
@@ -346,7 +374,7 @@ $sidebarWidth: 270px;
         }
        
         .item-content {
-          padding: 42px 0px 42px 42px;
+          padding: 42px 0px 0px 42px;
           .item-media {
             align-self: flex-start;
             .skill-icon {
@@ -411,13 +439,13 @@ $sidebarWidth: 270px;
         height: 100%;
         width: 100%;
         .content {
-          @include commonPart(580px, '../../../assets/img/skill/share_reload_new.png');
+          @include commonPart(500px, '../../../assets/img/skill/share_reload_new.png');
           display: flex;
           flex-direction: column;
           align-items: center;
           span {
             &:first-child {
-              font-size: 48px;
+              font-size: 42px;
               color: rgba($color: #404657, $alpha: 0.6);
               margin-top: 120px;
               margin-bottom: 20px;
