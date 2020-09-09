@@ -18,7 +18,6 @@
         </slot>
       </div>
     </li>
-    <audio id="audioPlayer" src="" autoplay></audio>
   </ul>
 </template>
 
@@ -48,14 +47,6 @@ export default {
         if (!result.url) {
           throw new Error('获取链接失败');
         }
-        const audio = document.getElementById('audioPlayer');
-        audio.src = result.url;
-        audio.load();
-        // audio.addEventListener('canplay', () => {
-        //   console.log('canplay');
-        //   audio.play();
-        // });
-        
       } catch (error) {
         showToast('留言播放失败！', 0);
       }

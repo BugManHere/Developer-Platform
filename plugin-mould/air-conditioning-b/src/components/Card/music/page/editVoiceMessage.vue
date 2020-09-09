@@ -30,6 +30,12 @@
         </div>
       </div>
     </gree-page>
+    <gree-dialog 
+      title="提醒"
+      v-model="dialogOption.open" 
+      :btns="dialogOption.btns">
+      确定要删除所选的留言吗？
+    </gree-dialog>
   </gree-view>
 </template>
 
@@ -54,12 +60,26 @@ export default {
       readList: [], // 已读语音留言列表
       unreadList: [], // 未读语音留言列表
       isEmpty: true, // 语音留言是否为空
+      dialogOption: {
+        open: false,
+        btns: [{
+          text: '取消',
+          handler: () => { this.dialogOption.open = false; }
+        }, {
+          text: '删除',
+          handler: () => {}
+        }]
+      }
     }
   },
   computed: {
     ...mapState({
       mac: state => state.mac,
     }),
+  },
+  beforeRouteLeave(to, from, next) {
+    Dialog.closeAll();
+    next();
   },
   created() {
     changeBarColor('#fffffe');  
@@ -126,24 +146,50 @@ export default {
         selectedRecords.push(...selectedReadRecords);
       }
       if (selectedRecords.length > 0) {
-        Dialog.confirm({
-          title: '提醒',
-          content: '确定要删除所选的留言吗？',
-          confirmText: '删除',
-          onConfirm: () => this.deleteRecords(selectedRecords),
-          cancelText: '取消',
-          onCancel: () => console.log('[Dialog.confirm] cancel clicked')
-        });
+        this.dialogOption.open = true;
+        // this.deleteRecords(selectedRecords);
+        // Dialog.confirm({
+        //   title: '提醒',
+        //   content: '确定要删除所选的留言吗？',
+        //   confirmText: '删除',
+        //   onConfirm: () => ,
+        //   cancelText: '取消',
+        //   onCancel: () => console.log('[Dialog.confirm] cancel clicked')
+        // });
       }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.gree-dialog-content {
-  height: 459px;
-  width: 970px;
+ .gree-dialog {
+ /deep/.gree-dialog-content {
+    width: 970px;
+    .gree-dialog-body {
+      text-align: center;
+      font-size: 42px;
+      padding-bottom: 100px;
+      color: #404657;
+      .gree-dialog-title {
+        font-size: 45px;
+        margin-bottom: 57px;
+      }
+    }
+    
+    .gree-dialog-actions {
+      .gree-dialog-btn {
+        height: 148px;
+        line-height: 148px;
+        font-size: 46px;
+        color: #404657;
+        &:last-child {
+          color:#FF0202;
+        }
+      }
+    }
+  }
 }
+
 </style>
 <style lang="scss">
 @mixin iconBtn($size, $url) {

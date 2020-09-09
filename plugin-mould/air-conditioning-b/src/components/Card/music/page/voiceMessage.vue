@@ -50,7 +50,7 @@
       </div>
       <gree-dialog v-model="showDialog">
         <div class="text-input-wrapper">
-          <input autofocus v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
+          <input ref="nameInput" autofocus v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
           <span :class="{'high-light': voiceMsgName}">{{countLabel}}</span>
           <div class="tips" v-show="!isNameValid">
             昵称仅限汉字哟~
@@ -180,6 +180,13 @@ export default {
         return;
       } 
       this.showDialog = true;
+      setTimeout(() => {
+        const nameInput = this.$refs.nameInput;
+        console.log(nameInput);
+        if (nameInput) {
+          nameInput.focus();
+        }
+      }, 0);
       voiceSkillMsgAudioControl(this.mac, 'stop');
     },
     async startRecord() {
