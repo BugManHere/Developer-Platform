@@ -53,7 +53,6 @@ Vue.config.productionTip = false;
 
 const dev = process.env.NODE_ENV === 'development';
 // const test = process.env.VUE_APP_MODE === 'test';
-
 async function createVue() {
   const vm = new Vue({
     // el: '#app',
@@ -98,15 +97,13 @@ async function createVue() {
       // 更新mac
       vm.$store.commit(SET_STATE, { mac: oldId });
     }
-
-    vm.$router.push('Home');
   } else {
     vm.init();
     window.storage = new Storage();
   }
-
   // 挂载到#app上
   vm.$mount('#app');
+  vm.$router.push('Home').catch(e => console.log(e));
 }
 
 /* 启用页面调试器 */

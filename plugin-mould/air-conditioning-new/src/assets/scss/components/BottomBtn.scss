@@ -1,0 +1,64 @@
+.bottom-btn {
+  .toolbar-inner {
+    .iconfont {
+      font-size: 58px;
+    }
+  }
+  .pow-button {
+    position: relative;
+    min-height: 126px;
+    min-width: 126px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgb(139, 210, 236), rgb(99, 164, 248));
+    opacity: 0.5;
+    border: 0.5px solid #398acb;
+    border-radius: 50%;
+    z-index: 2;
+    // padding: 1px;
+    margin: 1px;
+    span {
+      font-size: 60px;
+      color: #fff;
+      z-index: inherit;
+    }
+    &.off {
+      border: 0.5px solid transparent;
+      // padding: 10px;
+      padding: 1px;
+      margin: 0;
+      span {
+        color: rgb(112, 187, 242);
+      }
+      .button-boder {
+        background: rgb(244, 249, 252);
+      }
+    }
+    .button-boder {
+      position: absolute;
+      min-height: 126px;
+      min-width: 126px;
+      left: .8px;
+      background: linear-gradient(#2e74dc, #60b7c9);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .ripple {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      min-height: 126px;
+      min-width: 126px;
+      background-color: transparent;
+      border-radius: 50%;
+      border: 1.5px solid;
+      border-color: rgb(244, 249, 252);
+      animation: rippling 1.2s ease infinite;
+    }
+  }
+  .select {
+    color: #619ce7;
+  }
+}

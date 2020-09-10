@@ -329,13 +329,14 @@ export default {
         },
         order: [],
         map: {
-          default: 'status_1',
+          default: 'default',
           undefined: 'default'
         }
       };
       if (!this.setTempStep) {
         insertMap.type = 'active';
         insertMap.map.status_1 = 'default';
+        insertMap.map.default = 'status_1';
         insertMap.statusDefine.status_1 = {
           name: '开启',
           value: 1,

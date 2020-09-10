@@ -2,12 +2,8 @@ const state = {
   mac: '', // 设备mac
   isScene: 0, // 是否是场景模式
   ModHeat: 4, // 制热模式
-  watchLock: true,
-  autoAbleSetTem: false,
-  swiperHold: false,
+  watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
-  loading: false,
-  isStHt: false,
   fanKey: 'Fan',
   modKey: 'Mod',
   dataObject: {

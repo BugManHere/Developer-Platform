@@ -156,6 +156,15 @@ const Customize = {
         },
         Elc: () => {
           this.$router.push('Electric');
+        },
+        ModPopup: () => {
+          this.setDataObject({ ModPopup: 1 });
+        },
+        FanPopup: () => {
+          this.setDataObject({ FanPopup: 1 });
+        },
+        FuncPopup: () => {
+          this.setDataObject({ FuncPopup: 1 });
         }
       };
     },

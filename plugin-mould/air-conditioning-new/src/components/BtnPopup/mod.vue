@@ -21,13 +21,16 @@ export default {
     return {
       showPopup: false,
       modStatusList: [], // 模式的顺序
-      currentStatus: '' // 当前状态
+      currentStatus: '', // 当前状态
+      lastStatus: '' // 上一个状态
     };
   },
   computed: {
     ...mapState({
       modKey: state => state.modKey,
-      value: state => state.dataObject.Mod
+      dataObject: state => state.dataObject,
+      value: state => state.dataObject.Mod,
+      ModPopup: state => state.dataObject.ModPopup
     }),
     // 模式的定义
     modDefine() {
@@ -57,8 +60,8 @@ export default {
         // 跳转页面
         const page = false;
         // 执行的函数
-        const func = (modStatus, isGray = false) => {
-          this.changeStatus(modStatus, isGray);
+        const func = (modStatus, disable = false) => {
+          this.changeStatus(modStatus, disable || this.currentStatus === modStatus);
         };
         return { key, name, icon, gray, hide, page, func };
       });
@@ -66,6 +69,18 @@ export default {
     }
   },
   watch: {
+    ModPopup(newVal) {
+      if (newVal) {
+        this.showPopup = true;
+      } else {
+        this.showPopup = false;
+      }
+    },
+    showPopup(newVal) {
+      if (!newVal) {
+        this.setDataObject({ ModPopup: 0 });
+      }
+    },
     g_statusLoop: {
       handler(newVal) {
         const startStatus = 'default';
@@ -87,7 +102,10 @@ export default {
     g_statusMap: {
       handler(newVal) {
         const statusMap = newVal[this.modKey];
-        if (statusMap) this.currentStatus = statusMap.status;
+        if (statusMap && this.currentStatus !== statusMap.status) {
+          this.lastStatus = this.currentStatus;
+          this.currentStatus = statusMap.status;
+        }
       },
       immediate: true,
       deep: true
@@ -101,6 +119,13 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
+    // 发送指令
+    changeData(map) {
+      this.setState({ watchLock: false });
+      this.setState({ ableSend: true });
+      this.setDataObject(map);
+      this.sendCtrl(map);
+    },
     changeStatus(status, isGray) {
       if (isGray) return;
       const funcDefine = this.modDefine;
@@ -129,13 +154,35 @@ export default {
       const value = statusDefine.value;
       let setData = moreCommand || {};
       setData[json] = value;
+      // 发送指令前缓存数据
+      const dataObject = JSON.parse(JSON.stringify(this.dataObject));
+      // 发送指令
       this.changeData(setData);
+      this.cacheData(dataObject);
     },
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
+    cacheData(dataObject) {
+      const isCacheTem = this.g_moreOption.temCache;
+      const isCacheFan = this.g_moreOption.fanCache;
+      const storage = window.storage;
+      const cache = (able, storageKey, jsons) => {
+        if (able) {
+          const data = storage.get(storageKey) || {};
+          const sendData = data[this.currentStatus] || {};
+          const lastData = {};
+          jsons.forEach(json => {
+            lastData[json] = dataObject[json] || 0;
+          });
+          data[this.lastStatus] = lastData;
+          storage.set(storageKey, data);
+          this.changeData(sendData);
+        }
+      };
+      setTimeout(() => {
+        this.$nextTick(() => {
+          cache(!isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
+          cache(!isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
+        });
+      }, 0);
     }
   }
 };

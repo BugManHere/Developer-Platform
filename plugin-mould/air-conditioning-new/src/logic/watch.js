@@ -103,13 +103,11 @@ const LogicWatch = {
      * @description 执行互斥
      */
     g_runLogic(id) {
-      console.log(id);
       const toStatus = this.g_statusDirectionMap[id];
       const func = this.g_funcDefineMap[id];
       const json = func.json;
       const statusDefine = func.statusDefine[toStatus];
       const moreCommand = statusDefine.moreCommand;
-      console.log(moreCommand);
       let setData = moreCommand || {};
       setData[json] = statusDefine.value;
       this.g_changeData(setData);

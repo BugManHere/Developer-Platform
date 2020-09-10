@@ -148,6 +148,7 @@ export default {
       selectItem: '',
       selectRadio: 1,
       selectBody: 1,
+      disableUpdate: false
     };
   },
   computed: {
@@ -479,6 +480,7 @@ export default {
   },
   created() {
     this.imshowType = this.$route.params.id;
+    this.setPolling(false);
   },
   mounted() {
     hideLoading();
@@ -489,7 +491,10 @@ export default {
     });
     setInterval(() => {
       this.getSlpVal();
-    }, 10000);
+    }, 5000);
+  },
+  destroyed() {
+    this.setPolling(true);
   },
   methods: {
     ...mapMutations({
@@ -497,9 +502,10 @@ export default {
     }),
     ...mapActions({
       updateDataObject: 'UPDATE_DATAOBJECT',
+      setPolling: 'SET_POLLING'
     }),
     async changeDataObject(obj, hasToast = false) {
-      this.setState(['uilock', true]);
+      this.disableUpdate = true;
       const control = obj;
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
@@ -536,11 +542,10 @@ export default {
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
       }
-      this.setState(['uilock', false]);
+      this.disableUpdate = false;
     },
     async getSlpVal() {
-      if ((this.functype && this.dataObject.Slp1L1) || this.$store.state.uilock) return; // 场景模式下不重复查询
-
+      if (this.disableUpdate) return;
       // data
       const cols = ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
       const statueJson = JSON.stringify({
@@ -555,7 +560,7 @@ export default {
         dataObject[cols[index]] = item;
       });
 
-      if (this.$store.state.uilock) return;
+      if (this.disableUpdate) return;
 
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
@@ -707,6 +712,7 @@ export default {
       });
 
       this.updatePosition();
+      this.disableUpdate = true;
     },
     showTooltip(dataIndex) {
       this.myChart.dispatchAction({

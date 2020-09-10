@@ -16,9 +16,9 @@
             <span v-text="fanName" />
           </div>
         </gree-block>
-        <h3 v-if="Mod" class="tem" v-text="SetTem" />
+        <h3 v-if="Mod" class="tem" v-text="circleVal" />
         <h3 v-else class="auto-span" v-text="'自动调温'" />
-        <div v-if="roomTemShow" class="room-tem" v-text="`室温 ${TemSen}℃`" />
+        <div v-if="roomTemShow" class="room-tem" v-text="`室温 ${TemSen > 40 ? TemSen - 40 : TemSen}℃`" />
       </article>
     </div>
     <div class="pow-off" v-show="!Pow" :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
@@ -43,8 +43,10 @@ export default {
       svgRadius: 0,
       lottieRadius: 0,
       circleVal: 26,
+      temChange: false, // 轮询回来的温度改变flag
       fanName: '',
-      modName: ''
+      modName: '',
+      circleObj: ''
     };
   },
   created() {
@@ -93,11 +95,13 @@ export default {
         this.circleVal = Math.round(e.value);
       },
       beforeValueChange: e => {
-        if (Math.abs(e.preValue - e.value) >= e.options.step * 30) return false;
+        if (Math.abs(e.preValue - e.value) >= e.options.step * 30 && !this.temChange) return false;
+        this.temChange = false;
+        this.circleVal = Math.round(e.value);
       },
       change: e => {
         this.circleVal = Math.round(e.value);
-        this.changeData({ SetTem: this.circleVal });
+        this.circleVal === this.SetTem || this.changeData({ SetTem: this.circleVal });
       }
     });
   },
@@ -116,6 +120,13 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    SetTem: {
+      handler(newVal) {
+        this.temChange = true;
+        $('#slider').roundSlider({ value: newVal });
+      },
+      immediate: true
     }
   },
   methods: {

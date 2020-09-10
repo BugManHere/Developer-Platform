@@ -13,7 +13,7 @@
           }"
         >
           <!-- 图标 -->
-          <div class="icon" @click="btn.func(btn.key, btn.gray)">
+          <div class="icon" @click="btn.func(btn.key)">
             <i class="iconfont" :class="{ [`iconfont-${btn.icon.key}`]: true, select: btn.icon.type === 'on' && !btn.gray }" />
           </div>
           <!-- 名称 -->

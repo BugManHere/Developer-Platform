@@ -9,6 +9,7 @@ export const IS_SCENE = 'IS_SCENE'; // 是否场景模式
 export const SET_REPAIR = 'SET_REPAIR'; // 是否报修
 export const SET_STATE = 'SET_STATE'; // 
 export const SET_CHART_DATA = 'SET_CHART_DATA'; // 
+export const SET_POLLING = 'SET_POLLING'; // 
 
 // 根据业务逻辑修改
 

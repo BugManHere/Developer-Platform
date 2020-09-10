@@ -1,16 +1,26 @@
-@import "home";
-@import "offline";
-@import "iconfont";
-@import "components/CenterSlider.scss";
-@import "components/BtnPopup.scss";
-@import "components/FanPopup.scss";
-
-.hidden {
-  display: none !important;
-}
+@import 'home';
+@import 'offline';
+@import 'iconfont';
+@import 'components/CenterSlider.scss';
+@import 'components/BtnPopup.scss';
+@import 'components/BottomBtn.scss';
+@import 'components/FanSwiper.scss';
 
 #app {
   font-family: 'FZLTHJ';
+  top: 0;
+}
+body {
+  top: 0;
+}
+.hidden {
+  display: none !important;
+}
+.set-gray {
+  opacity: 0.3;
+}
+.set-hide {
+  display: none;
 }
 
 .page-content {

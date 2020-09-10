@@ -23,47 +23,24 @@
         </div>
       </div>
     </gree-page>
-    <!-- 底部按钮 -->
-    <gree-toolbar position="bottom" no-hairline>
-      <gree-row>
-        <div class="pow-button" :class="{ off: !Pow - 0 }" @click="changeData({ Pow: !Pow - 0 })">
-          <span class="iconfont iconfont-kaiguan" />
-          <div class="button-boder" />
-          <div class="ripple" v-show="!Pow" />
-        </div>
-        <gree-col @click.native="showPopUp('ModPopup', Pow)" :class="{ gray: !Pow }">
-          <i class="iconfont iconfont-moshi" />
-          <h3>模式</h3>
-        </gree-col>
-        <gree-col @click.native="showPopUp('FanPopup', Pow && fanSetAble)" :class="{ gray: !Pow || !fanSetAble }">
-          <i class="iconfont iconfont-fengsu" />
-          <h3>风速</h3>
-        </gree-col>
-        <gree-col :class="{ gray: !Pow, on: SwhSlp }">
-          <i class="iconfont iconfont-Sleep" @click="Pow && changeData({ SwhSlp: !SwhSlp - 0, SlpMod: !SwhSlp - 0 })" />
-          <h3>睡眠</h3>
-        </gree-col>
-        <gree-col @click.native="showPopUp('FuncPopup', true)">
-          <i class="iconfont iconfont-gaoji" />
-          <h3>高级</h3>
-        </gree-col>
-      </gree-row>
-    </gree-toolbar>
+    <BottomBtn />
     <!-- 底部弹框 -->
     <FuncPopup ref="FuncPopup" />
     <ModPopup ref="ModPopup" />
-    <FanPopup ref="FanPopup" />
+    <FanSwiper ref="FanPopup" />
   </gree-view>
 </template>
 
 <script>
-import { Header, List, Item, Row, Col, Button, Icon, ToolBar } from 'gree-ui';
+import { Header, List, Item, Row, Col, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
+import VConsole from 'vconsole/dist/vconsole.min.js';
+import BottomBtn from '@/components/BottomBtn';
 import FuncPopup from '@/components/BtnPopup/func';
 import ModPopup from '@/components/BtnPopup/mod';
-import FanPopup from '@/components/FanPopup';
+import FanSwiper from '@/components/FanSwiper';
 import CenterSlider from '@/components/CenterSlider';
-import { closePage, editDevice, getCurrentMode } from '@PluginInterface';
+import { closePage, editDevice, getCurrentMode, newPage } from '@PluginInterface';
 import LogicWatch from '@logic/watch';
 
 export default {
@@ -75,11 +52,10 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
     [Button.name]: Button,
-    [Icon.name]: Icon,
-    [ToolBar.name]: ToolBar,
+    BottomBtn,
     FuncPopup,
     ModPopup,
-    FanPopup,
+    FanSwiper,
     CenterSlider
   },
   data() {
@@ -89,12 +65,11 @@ export default {
   },
   computed: {
     ...mapState({
+      statueJson2: state => state.devOptions.statueJson2,
       dataObject: state => state.dataObject,
       fanKey: state => state.fanKey,
-      Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       WdSpd: state => state.dataObject.WdSpd,
-      SwhSlp: state => state.dataObject.SwhSlp,
       SetTem: state => state.dataObject.SetTem,
       TemSen: state => state.dataObject.TemSen,
       devname: state => state.deviceInfo.name,
@@ -108,16 +83,13 @@ export default {
     },
     miniIconList() {
       if (!this.g_funcDefine_btn) return [];
-      const result = this.g_funcDefine_btn.map(func => {
+      const result = this.g_funcDefine.map(func => {
         const id = func.identifier;
         const statusName = this.g_statusMap[id].status;
         const miniIcon = func.statusDefine[statusName].miniIcon;
         return miniIcon;
       });
       return result;
-    },
-    fanSetAble() {
-      return !this.g_noDirectionFuncArr.includes(this.fanKey);
     }
   },
   mounted() {
@@ -179,13 +151,26 @@ export default {
     },
     // 点击10次进入调试模式
     onTest() {
+      const testUrl = () => {
+        const isIos = Boolean(navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/));
+        const statueJson2 = JSON.parse(this.statueJson2);
+        let data = '%5B';
+        statueJson2.forEach(json => {
+          data += `${this.dataObject[json] || 0},`;
+        });
+        data = data.replace(/.$/, '%5D');
+        const url = `http://192.168.31.94:8081/?mac=${this.mac}&data=${data}&functype=0#/Home`;
+        isIos ? (window.location.href = url) : newPage(url);
+      };
       getCurrentMode().then(res => {
-        console.log('-------');
-        console.log(res);
         if (res === '0' || res === 0) {
           this.onTestFlag += 1;
           this.onTestFlag === 5 && new VConsole();
-          this.onTestFlag === 10 && this.$router.push('Test');
+          // this.onTestFlag === 10 && this.$router.push('Test');
+          if (this.onTestFlag === 10) {
+            this.onTestFlag = 0;
+            testUrl();
+          }
         }
       });
     }

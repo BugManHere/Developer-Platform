@@ -1,52 +1,63 @@
 <template>
-  <div class="fan-picker" v-if="showPopup">
-    <gree-picker
-      v-model="showPopup"
-      :title="title"
-      ref="fanPicker"
-      :data="fanData"
-      :cols="1"
-      :line-height="40"
-      :multiLine="true"
-      :default-index="pickerDefalutData"
-      :multi-line="false"
-      is-cascade
-      ok-text=""
-      cancel-text=""
-      @change="setFan"
-    />
-  </div>
+  <gree-popup v-model="showPopup" position="bottom">
+    <div class="fan-swiper-box" v-if="showSwiper">
+      <div v-text="title" class="swiper-title" />
+      <swiper ref="fanSwiper" :options="swiperOption" class="fan-swiper-main" @slideChange="setFan" @touchMove="isTouch = true" @touchEnd="clearTouch">
+        <swiper-slide v-for="(fan, index) in fanData" :key="index">
+          <div v-text="fan.text" class="slide-text" />
+        </swiper-slide>
+      </swiper>
+    </div>
+  </gree-popup>
 </template>
 
 <script>
-import { Row, Col, Popup, Picker, Overlay } from 'gree-ui';
+import { Popup } from 'gree-ui';
+import 'swiper/swiper-bundle.css';
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import LogicDefine from '@logic/define';
 
 export default {
   mixins: [LogicDefine],
   components: {
-    [Row.name]: Row,
-    [Col.name]: Col,
     [Popup.name]: Popup,
-    [Picker.name]: Picker,
-    [Overlay.name]: Overlay
+    Swiper,
+    SwiperSlide
   },
   data() {
     return {
-      showPopup: false,
-      fanStatusList: [], // 风档的顺序
-      currentStatus: '', // 当前状态
       title: '风速',
-      pickerDefalutData: [0]
+      showPopup: false,
+      showSwiper: false,
+      translate: 0,
+      observer: true,
+      observeParents: true,
+      observeSlideChildren: true,
+      isTouch: false,
+      swiperOption: {
+        direction: 'vertical',
+        centeredSlides: true,
+        roundLengths: true,
+        slidesPerView: 5
+      },
+      freeMode: true,
+      freeModeSticky: true,
+      fanStatusList: [], // 风档的顺序
+      currentStatus: '' // 当前状态
     };
   },
   computed: {
     ...mapState({
-      fanKey: state => state.fanKey,
-      Pow: state => state.dataObject.Pow,
-      WdSpd: state => state.dataObject.WdSpd
+      FanPopup: state => state.dataObject.FanPopup,
+      fanKey: state => state.fanKey
     }),
+    swiper() {
+      return this.$refs.fanSwiper.$swiper;
+    },
+    disableSwiper() {
+      return this.g_hideStateArr.includes('FanPopup_status_1');
+    },
     // 风档定义
     fanDefine() {
       return this.g_funcDefineMap[this.fanKey];
@@ -64,18 +75,31 @@ export default {
         const text = this.$language(`fan.${stateName}`);
         return { text, key, value };
       });
-      return [result];
+      return result;
     }
   },
   watch: {
     showPopup(newVal) {
-      if (newVal) {
+      if (!newVal) {
+        this.setDataObject({ FanPopup: 0 });
+      } else {
         this.$nextTick(() => {
-          const index = this.fanData[0].findIndex(fan => fan.key === this.currentStatus);
-          this.pickerDefalutData = [index];
-          this.$refs.fanPicker.refresh();
+          this.showSwiper = true;
+          this.$nextTick(() => {
+            this.updateIndex();
+          });
         });
       }
+    },
+    FanPopup(newVal) {
+      if (newVal) {
+        this.showPopup = true;
+      } else {
+        this.showPopup = false;
+      }
+    },
+    disableSwiper(newVal) {
+      newVal && (this.showPopup = false);
     },
     g_statusLoop: {
       handler(newVal) {
@@ -99,6 +123,7 @@ export default {
       handler(newVal) {
         const statusMap = newVal[this.fanKey];
         if (statusMap) this.currentStatus = statusMap.status;
+        this.updateIndex();
       },
       immediate: true,
       deep: true
@@ -118,8 +143,17 @@ export default {
       this.setDataObject(map);
       this.sendCtrl(map);
     },
+    // 更新到对应位置
+    updateIndex() {
+      // 已显示picker且没有在滑动
+      if (this.showSwiper && this.swiper) {
+        const index = this.fanData.findIndex(fan => fan.key === this.currentStatus);
+        this.swiper.slideTo(index, 500);
+      }
+    },
     setFan() {
-      const status = this.$refs.fanPicker.getColumnValues()[0].key;
+      if (!this.isTouch) return;
+      const status = this.fanData[this.swiper.activeIndex].key;
       const funcDefine = this.fanDefine;
       const statusDefine = funcDefine.statusDefine[status];
       const identifier = funcDefine.identifier;
@@ -147,7 +181,14 @@ export default {
       let setData = moreCommand || {};
       setData[json] = value;
       this.changeData(setData);
+    },
+    clearTouch() {
+      this.$nextTick(() => {
+        this.isTouch = false;
+      });
     }
   }
 };
 </script>
+
+<style></style>

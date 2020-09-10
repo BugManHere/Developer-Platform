@@ -1,13 +1,13 @@
 var callBackDict = {};
 
-function getCallBackIdWithCallBack (callback) {
+function getCallBackIdWithCallBack(callback) {
   var my = new Date();
   var callbackId = 'Plugins' + my.getTime() + parseInt(Math.random() * 1000);
   callBackDict[callbackId] = callback;
   return callbackId;
 }
 
-function pluginsInterfaceCallBack (callbackId, param) {
+function pluginsInterfaceCallBack(callbackId, param) {
   var callBack = callBackDict[callbackId];
   if (callBack != undefined) {
     callBack(param);
@@ -15,7 +15,7 @@ function pluginsInterfaceCallBack (callbackId, param) {
   delete callBackDict[callbackId];
 }
 
-function gt_ios9 () {
+function gt_ios9() {
   var ver = navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
   ver = parseInt(ver[1], 10);
   if (ver >= 9) {
@@ -25,9 +25,8 @@ function gt_ios9 () {
   }
 }
 
-function PluginInterface () {
-
-  this.showToast = function (msg, type) {
+function PluginInterface() {
+  this.showToast = function(msg, type) {
     var arguments = [msg, type];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -37,7 +36,7 @@ function PluginInterface () {
     }
   };
 
-  this.editDevice = function (mac) {
+  this.editDevice = function(mac) {
     var arguments = [mac];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -47,7 +46,7 @@ function PluginInterface () {
     }
   };
 
-  this.startVoiceMainActivity = function (mac) {
+  this.startVoiceMainActivity = function(mac) {
     var arguments = [mac];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -57,7 +56,7 @@ function PluginInterface () {
     }
   };
 
-  this.timerListDevice = function (mac) {
+  this.timerListDevice = function(mac) {
     var arguments = [mac];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -67,7 +66,7 @@ function PluginInterface () {
     }
   };
 
-  this.sendDataToDevice = function (mac, json, isFollowSysVibration, callback) {
+  this.sendDataToDevice = function(mac, json, isFollowSysVibration, callback) {
     var arguments = [mac, json, isFollowSysVibration];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -78,12 +77,7 @@ function PluginInterface () {
     }
   };
 
-  this.sendDataToDevicePublic = function (
-    mac,
-    json,
-    isFollowSysVibration,
-    callback
-  ) {
+  this.sendDataToDevicePublic = function(mac, json, isFollowSysVibration, callback) {
     var arguments = [mac, json, isFollowSysVibration];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -94,7 +88,7 @@ function PluginInterface () {
     }
   };
 
-  this.closePage = function (json) {
+  this.closePage = function(json) {
     var arguments = [json];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -104,7 +98,7 @@ function PluginInterface () {
     }
   };
 
-  this.getCCcmd = function (mac, cmd, remarks, dat) {
+  this.getCCcmd = function(mac, cmd, remarks, dat) {
     var arguments = [mac, cmd, remarks, dat];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -114,7 +108,7 @@ function PluginInterface () {
     }
   };
 
-  this.getInfo = function (mac, callback) {
+  this.getInfo = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -125,7 +119,7 @@ function PluginInterface () {
     }
   };
 
-  this.changeBarColor = function (color, callback) {
+  this.changeBarColor = function(color, callback) {
     var arguments = [color];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -136,7 +130,7 @@ function PluginInterface () {
     }
   };
 
-  this.voiceDevice = function (mac) {
+  this.voiceDevice = function(mac) {
     var arguments = [mac];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -146,7 +140,7 @@ function PluginInterface () {
     }
   };
 
-  this.updateStates = function (mac, states) {
+  this.updateStates = function(mac, states) {
     var arguments = [mac, states];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -156,7 +150,7 @@ function PluginInterface () {
     }
   };
 
-  this.newPage = function (url, callback) {
+  this.newPage = function(url, callback) {
     var arguments = [url];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -167,7 +161,7 @@ function PluginInterface () {
     }
   };
 
-  this.onCallBack = function (callback) {
+  this.onCallBack = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -178,7 +172,7 @@ function PluginInterface () {
     }
   };
 
-  this.showTimePicker = function (type, callback) {
+  this.showTimePicker = function(type, callback) {
     var arguments = [type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -189,7 +183,7 @@ function PluginInterface () {
     }
   };
 
-  this.showAlert = function (title, msg, callback) {
+  this.showAlert = function(title, msg, callback) {
     var arguments = [title, msg];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -200,7 +194,7 @@ function PluginInterface () {
     }
   };
 
-  this.showConfirm = function (title, msg, callback) {
+  this.showConfirm = function(title, msg, callback) {
     var arguments = [title, msg];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -211,7 +205,7 @@ function PluginInterface () {
     }
   };
 
-  this.showMenuDialog = function (mac, callback) {
+  this.showMenuDialog = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -222,7 +216,7 @@ function PluginInterface () {
     }
   };
 
-  this.addStore = function (mac, key, val, callback) {
+  this.addStore = function(mac, key, val, callback) {
     var arguments = [mac, key, val];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -233,7 +227,7 @@ function PluginInterface () {
     }
   };
 
-  this.updateStore = function (mac, key, val, callback) {
+  this.updateStore = function(mac, key, val, callback) {
     var arguments = [mac, key, val];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -244,7 +238,7 @@ function PluginInterface () {
     }
   };
 
-  this.deleteStore = function (mac, key, callback) {
+  this.deleteStore = function(mac, key, callback) {
     var arguments = [mac, key];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -255,7 +249,7 @@ function PluginInterface () {
     }
   };
 
-  this.queryStore = function (mac, key, callback) {
+  this.queryStore = function(mac, key, callback) {
     var arguments = [mac, key];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -266,7 +260,7 @@ function PluginInterface () {
     }
   };
 
-  this.queryAllStore = function (mac, callback) {
+  this.queryAllStore = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -277,7 +271,7 @@ function PluginInterface () {
     }
   };
 
-  this.deleteAllStore = function (mac, callback) {
+  this.deleteAllStore = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -288,7 +282,7 @@ function PluginInterface () {
     }
   };
 
-  this.feedbackCommit = function (mac) {
+  this.feedbackCommit = function(mac) {
     var arguments = [mac];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -298,7 +292,7 @@ function PluginInterface () {
     }
   };
 
-  this.startVoice = function (callback) {
+  this.startVoice = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -309,7 +303,7 @@ function PluginInterface () {
     }
   };
 
-  this.startSpeak = function (text) {
+  this.startSpeak = function(text) {
     var arguments = [text];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -319,7 +313,7 @@ function PluginInterface () {
     }
   };
 
-  this.stopSpeak = function () {
+  this.stopSpeak = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -329,7 +323,7 @@ function PluginInterface () {
     }
   };
 
-  this.translateValue = function (jsonData) {
+  this.translateValue = function(jsonData) {
     var arguments = [jsonData];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -339,7 +333,7 @@ function PluginInterface () {
     }
   };
 
-  this.pluginTranslateData = function (url, jsonData, callback) {
+  this.pluginTranslateData = function(url, jsonData, callback) {
     var arguments = [url, jsonData];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -350,7 +344,7 @@ function PluginInterface () {
     }
   };
 
-  this.backToHomePage = function () {
+  this.backToHomePage = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -360,7 +354,7 @@ function PluginInterface () {
     }
   };
 
-  this.saveUserInfo = function (key, val) {
+  this.saveUserInfo = function(key, val) {
     var arguments = [key, val];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -370,7 +364,7 @@ function PluginInterface () {
     }
   };
 
-  this.getUserInfo = function (key, val, callback) {
+  this.getUserInfo = function(key, val, callback) {
     var arguments = [key, val];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -381,7 +375,7 @@ function PluginInterface () {
     }
   };
 
-  this.getPluginScript = function (path, callback) {
+  this.getPluginScript = function(path, callback) {
     var arguments = [path];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -392,7 +386,7 @@ function PluginInterface () {
     }
   };
 
-  this.startListening = function (callback) {
+  this.startListening = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -403,37 +397,28 @@ function PluginInterface () {
     }
   };
 
-  this.sendDataToDeviceNoCallback = function (mac, json, isFollowSysVibration) {
+  this.sendDataToDeviceNoCallback = function(mac, json, isFollowSysVibration) {
     var arguments = [mac, json, isFollowSysVibration];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
       navigator.gree.sendDataToDeviceNoCallback(param);
     } else {
-      window.webkit.messageHandlers.sendDataToDeviceNoCallback.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.sendDataToDeviceNoCallback.postMessage(param);
     }
   };
 
-  this.sendDataToDeviceDayPublic = function (
-    mac,
-    json,
-    isFollowSysVibration,
-    callback
-  ) {
+  this.sendDataToDeviceDayPublic = function(mac, json, isFollowSysVibration, callback) {
     var arguments = [mac, json, isFollowSysVibration];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.sendDataToDeviceDayPublic(param);
     } else {
-      window.webkit.messageHandlers.sendDataToDeviceDayPublic.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.sendDataToDeviceDayPublic.postMessage(param);
     }
   };
 
-  this.pluginHttpPost = function (url, head, body, callback) {
+  this.pluginHttpPost = function(url, head, body, callback) {
     var arguments = [url, head, body];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -444,7 +429,7 @@ function PluginInterface () {
     }
   };
 
-  this.getAllTimerList = function (mac, mainMac, callback) {
+  this.getAllTimerList = function(mac, mainMac, callback) {
     var arguments = [mac, mainMac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -455,7 +440,7 @@ function PluginInterface () {
     }
   };
 
-  this.getAllSubDevices = function (mac, mainMac, callback) {
+  this.getAllSubDevices = function(mac, mainMac, callback) {
     var arguments = [mac, mainMac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -466,7 +451,7 @@ function PluginInterface () {
     }
   };
 
-  this.printLog = function (msg) {
+  this.printLog = function(msg) {
     var arguments = [msg];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -476,7 +461,7 @@ function PluginInterface () {
     }
   };
 
-  this.finishLoad = function () {
+  this.finishLoad = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -486,7 +471,7 @@ function PluginInterface () {
     }
   };
 
-  this.callNumber = function (tel) {
+  this.callNumber = function(tel) {
     var arguments = [tel];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -496,7 +481,7 @@ function PluginInterface () {
     }
   };
 
-  this.toWebPage = function (url, title) {
+  this.toWebPage = function(url, title) {
     var arguments = [url, title];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -506,7 +491,7 @@ function PluginInterface () {
     }
   };
 
-  this.startVoice2 = function (text, callback) {
+  this.startVoice2 = function(text, callback) {
     var arguments = [text];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -517,7 +502,7 @@ function PluginInterface () {
     }
   };
 
-  this.showLoading = function () {
+  this.showLoading = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -527,7 +512,7 @@ function PluginInterface () {
     }
   };
 
-  this.hideLoading = function () {
+  this.hideLoading = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -537,7 +522,7 @@ function PluginInterface () {
     }
   };
 
-  this.getCurrentMode = function (callback) {
+  this.getCurrentMode = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -548,12 +533,7 @@ function PluginInterface () {
     }
   };
 
-  this.sendDataToDevicebyPower = function (
-    mac,
-    json,
-    isFollowSysVibration,
-    callback
-  ) {
+  this.sendDataToDevicebyPower = function(mac, json, isFollowSysVibration, callback) {
     var arguments = [mac, json, isFollowSysVibration];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -564,7 +544,7 @@ function PluginInterface () {
     }
   };
 
-  this.faceControl = function (mac, did) {
+  this.faceControl = function(mac, did) {
     var arguments = [mac, did];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -574,7 +554,7 @@ function PluginInterface () {
     }
   };
 
-  this.securityControl = function (mac, did) {
+  this.securityControl = function(mac, did) {
     var arguments = [mac, did];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -585,7 +565,7 @@ function PluginInterface () {
   };
 
   // lucasjunjie
-  this.placetroopsControl = function (mac, did) {
+  this.placetroopsControl = function(mac, did) {
     var arguments = [mac, did];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -596,7 +576,7 @@ function PluginInterface () {
   };
 
   // 海拔
-  this.getSeaHeight = function (mac, callback) {
+  this.getSeaHeight = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -608,7 +588,7 @@ function PluginInterface () {
   };
 
   // 离线弹框
-  this.showOfflineAlertView = function () {
+  this.showOfflineAlertView = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -619,7 +599,7 @@ function PluginInterface () {
   };
 
   // 获取光伏空调当日用电/发电量统计数据
-  this.getDayUseAndGenerElec = function (mac, oneday, callback) {
+  this.getDayUseAndGenerElec = function(mac, oneday, callback) {
     var arguments = [mac, oneday];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -631,7 +611,7 @@ function PluginInterface () {
   };
 
   // 获取光伏空调发电量统计数据
-  this.getElecGenerList = function (mac, type, oneday, callback) {
+  this.getElecGenerList = function(mac, type, oneday, callback) {
     var arguments = [mac, type, oneday];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -643,7 +623,7 @@ function PluginInterface () {
   };
 
   // 获取光伏空调用电统计数据
-  this.getGridConList = function (mac, type, callback) {
+  this.getGridConList = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -655,7 +635,7 @@ function PluginInterface () {
   };
 
   // 获取光伏空调用电统计数据（带参数）
-  this.getGridConListOneDay = function (mac, type, oneday, callback) {
+  this.getGridConListOneDay = function(mac, type, oneday, callback) {
     var arguments = [mac, type, oneday];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -667,7 +647,7 @@ function PluginInterface () {
   };
 
   // 清除普通空调历史电量数据
-  this.clearHistoricalPowerData = function (mac, type, callback) {
+  this.clearHistoricalPowerData = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -679,7 +659,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+写入用户自有数据
-  this.setUserData = function (key, value, callback) {
+  this.setUserData = function(key, value, callback) {
     var arguments = [key, value];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -691,7 +671,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+读取用户自有数据
-  this.getUserData = function (key, callback) {
+  this.getUserData = function(key, callback) {
     var arguments = [key];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -703,7 +683,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___获取云菜谱列表
-  this.getCloudMenuList = function (mid, index, cnt, callback) {
+  this.getCloudMenuList = function(mid, index, cnt, callback) {
     var arguments = [mid, index, cnt];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -715,7 +695,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___搜索一日三餐推荐菜谱
-  this.getRecommendedMenu = function (callback) {
+  this.getRecommendedMenu = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -727,7 +707,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___添加菜谱到菜篮子
-  this.addDishToBasket = function (addDatas, callback) {
+  this.addDishToBasket = function(addDatas, callback) {
     var arguments = [addDatas];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -739,7 +719,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___从菜篮子里移除菜谱
-  this.removeDishFromBasket = function (idsArr, callback) {
+  this.removeDishFromBasket = function(idsArr, callback) {
     var arguments = [idsArr];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -751,7 +731,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___获取菜篮子列表
-  this.getDishFromBasket = function (callback) {
+  this.getDishFromBasket = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -763,7 +743,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___长按监听震动
-  this.longClickListenerVibrator = function () {
+  this.longClickListenerVibrator = function() {
     var arguments = [];
     var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
@@ -774,7 +754,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___获取云菜单
-  this.searchCloudMenu = function (keyword, mid, index, cnt, callback) {
+  this.searchCloudMenu = function(keyword, mid, index, cnt, callback) {
     var arguments = [keyword, mid, index, cnt];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -786,7 +766,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___获取云菜单详细步骤
-  this.getCloudMenuDetailSteps = function (cid, callback) {
+  this.getCloudMenuDetailSteps = function(cid, callback) {
     var arguments = [cid];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -798,49 +778,43 @@ function PluginInterface () {
   };
 
   // 高泳诗+红外1
-  this.addDefineOfLearningResult = function (mac, opt, p, callback) {
+  this.addDefineOfLearningResult = function(mac, opt, p, callback) {
     var arguments = [mac, opt, p];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.addDefineOfLearningResult(param);
     } else {
-      window.webkit.messageHandlers.addDefineOfLearningResult.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.addDefineOfLearningResult.postMessage(param);
     }
   };
 
   // 高泳诗+红外2
-  this.delDefineOfLearningResult = function (mac, defineIds, callback) {
+  this.delDefineOfLearningResult = function(mac, defineIds, callback) {
     var arguments = [mac, defineIds];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.delDefineOfLearningResult(param);
     } else {
-      window.webkit.messageHandlers.delDefineOfLearningResult.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.delDefineOfLearningResult.postMessage(param);
     }
   };
 
   // 高泳诗+红外3
-  this.getDefineOfLearningResultList = function (mac, callback) {
+  this.getDefineOfLearningResultList = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.getDefineOfLearningResultList(param);
     } else {
-      window.webkit.messageHandlers.getDefineOfLearningResultList.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.getDefineOfLearningResultList.postMessage(param);
     }
   };
 
   // 高泳诗+欧瑞博
-  this.greeSmartHome = function (mac, type, callback) {
+  this.greeSmartHome = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -852,21 +826,19 @@ function PluginInterface () {
   };
 
   // 高泳诗+欧瑞博给插件查询设备所有状态的接口
-  this.getOuriboDevicesAllStatus = function (mac, type, callback) {
+  this.getOuriboDevicesAllStatus = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.getOuriboDevicesAllStatus(param);
     } else {
-      window.webkit.messageHandlers.getOuriboDevicesAllStatus.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.getOuriboDevicesAllStatus.postMessage(param);
     }
   };
 
   // 高泳诗+欧瑞博给插件RGB灯带控制颜色
-  this.setLightBeltControl = function (endpointId, payload, callback) {
+  this.setLightBeltControl = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -878,7 +850,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+欧瑞博+格力云绑定
-  this.bindThirdPartyDev = function (mac, type, callback) {
+  this.bindThirdPartyDev = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -890,7 +862,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+欧瑞博+格力云解绑
-  this.unbindHomeThirdPartyDev = function (mac, type, callback) {
+  this.unbindHomeThirdPartyDev = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -902,7 +874,7 @@ function PluginInterface () {
   };
 
   // 获取普通空调用电统计数据
-  this.getElecPowerConsumList = function (mac, type, callback) {
+  this.getElecPowerConsumList = function(mac, type, callback) {
     var arguments = [mac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -914,21 +886,19 @@ function PluginInterface () {
   };
 
   // 清除光伏空调历史电量数据
-  this.clearHistoricalPhotovoltaicPowerData = function (mac, callback) {
+  this.clearHistoricalPhotovoltaicPowerData = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.clearHistoricalPhotovoltaicPowerData(param);
     } else {
-      window.webkit.messageHandlers.clearHistoricalPhotovoltaicPowerData.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.clearHistoricalPhotovoltaicPowerData.postMessage(param);
     }
   };
 
   // 蓝牙接口
-  this.connectBleDevice = function (mac, callback) {
+  this.connectBleDevice = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -940,7 +910,7 @@ function PluginInterface () {
   };
 
   // 网关接口
-  this.connectBleSubDevice = function (mac, callback) {
+  this.connectBleSubDevice = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -951,7 +921,7 @@ function PluginInterface () {
     }
   };
 
-  this.getGatewayDevList = function (mac, callback) {
+  this.getGatewayDevList = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -962,7 +932,7 @@ function PluginInterface () {
     }
   };
 
-  this.addBleSubDevice = function (mac, callback) {
+  this.addBleSubDevice = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -973,7 +943,7 @@ function PluginInterface () {
     }
   };
 
-  this.startPlugin = function (mac, callback) {
+  this.startPlugin = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -985,7 +955,7 @@ function PluginInterface () {
   };
 
   // 传当前房间设备的个数给环境感知器 by朱运发
-  this.getRoomDeviceSize = function (mac, callback) {
+  this.getRoomDeviceSize = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -997,7 +967,7 @@ function PluginInterface () {
   };
 
   // 新风除霾机获取设备名称接口
-  this.GetDevCustomData = function (mac, submac, type, callback) {
+  this.GetDevCustomData = function(mac, submac, type, callback) {
     var arguments = [mac, submac, type];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1009,7 +979,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思H5回到格力+的主页面
-  this.GoBackMainHome = function (callback) {
+  this.GoBackMainHome = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1021,7 +991,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取查询T10实时数据
-  this.getDerucciGetBedStatus = function (endpointId, payload, callback) {
+  this.getDerucciGetBedStatus = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1033,7 +1003,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思保存或修改女性生理信息
-  this.getDerucciLadyInfo = function (endpointId, payload, callback) {
+  this.getDerucciLadyInfo = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1045,7 +1015,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取女性生理信息
-  this.getDerucciGetLadyInfo = function (endpointId, payload, callback) {
+  this.getDerucciGetLadyInfo = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1057,7 +1027,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取睡眠报告
-  this.getDerucciGetSleepData = function (endpointId, payload, callback) {
+  this.getDerucciGetSleepData = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1069,7 +1039,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取睡眠历史的日期列表
-  this.getDerucciGetDateList = function (endpointId, payload, callback) {
+  this.getDerucciGetDateList = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1081,7 +1051,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取控制T10软硬度接口
-  this.getDerucciSetPressure = function (endpointId, payload, callback) {
+  this.getDerucciSetPressure = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1093,7 +1063,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思获取控制T10自动补气时间
-  this.getDerucciSetTime = function (endpointId, payload, callback) {
+  this.getDerucciSetTime = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1105,21 +1075,19 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思T10软硬度精准推荐
-  this.getDerucciGetRecommendData = function (endpointId, payload, callback) {
+  this.getDerucciGetRecommendData = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.getDerucciGetRecommendData(param);
     } else {
-      window.webkit.messageHandlers.getDerucciGetRecommendData.postMessage(
-        param
-      );
+      window.webkit.messageHandlers.getDerucciGetRecommendData.postMessage(param);
     }
   };
 
   // 高泳诗+慕思周、月睡眠报告补充字段
-  this.getDerucciWeekList = function (endpointId, payload, callback) {
+  this.getDerucciWeekList = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1131,7 +1099,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思T10智能模式配置接口
-  this.getDerucciSmartConfig = function (endpointId, payload, callback) {
+  this.getDerucciSmartConfig = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1143,7 +1111,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+慕思T10获取当前配置参数接口
-  this.getDerucciGetSmartConfig = function (endpointId, payload, callback) {
+  this.getDerucciGetSmartConfig = function(endpointId, payload, callback) {
     var arguments = [endpointId, payload];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1155,7 +1123,7 @@ function PluginInterface () {
   };
 
   // 新风除霾机存储设备名称接口
-  this.SetDevCustomData = function (mac, submac, type, value, callback) {
+  this.SetDevCustomData = function(mac, submac, type, value, callback) {
     var arguments = [mac, submac, type, value];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1167,7 +1135,7 @@ function PluginInterface () {
   };
 
   // 窗帘电机插件控制窗帘开、关、暂停
-  this.getCurtainOpenPercent = function (mac, callback) {
+  this.getCurtainOpenPercent = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1179,32 +1147,30 @@ function PluginInterface () {
   };
 
   // 语音技能接口
-  this.startVoiceMainActivity = function(mac) {
+  (this.startVoiceMainActivity = function(mac) {
     var arguments = [mac];
-    var param = { "arguments": arguments, "callback": null };
+    var param = { arguments: arguments, callback: null };
     if (!gt_ios9()) {
       navigator.gree.startVoiceMainActivity(param);
     } else {
       window.webkit.messageHandlers.startVoiceMainActivity.postMessage(param);
     }
-  },
-  
-  // 电量统计
-  this.getGridConList = function(mac, type, callback) {
-    console.log('22222222222222=========');
+  }),
+    // 电量统计
+    (this.getGridConList = function(mac, type, callback) {
+      console.log('22222222222222=========');
       var arguments = [mac, type];
       var callbackId = getCallBackIdWithCallBack(callback);
-      var param = { "arguments": arguments, "callback": callbackId };
-  
+      var param = { arguments: arguments, callback: callbackId };
+
       window.webkit.messageHandlers.getGridConList.postMessage(param);
-  
-  }
-  
+    });
+
   // 故障查询
-  this.getDevRealTimeFault = function (mac, callback) {
+  this.getDevRealTimeFault = function(mac, callback) {
     var arguments = [mac];
     var callbackId = getCallBackIdWithCallBack(callback);
-    var param = { "arguments": arguments, "callback": callbackId };
+    var param = { arguments: arguments, callback: callbackId };
     if (!gt_ios9()) {
       navigator.gree.getDevRealTimeFault(param);
     } else {
@@ -1213,7 +1179,7 @@ function PluginInterface () {
   };
 
   // 高泳诗+蒸烤双能机___获取菜篮子列表
-  this.getMsg = function (callback) {
+  this.getMsg = function(callback) {
     var arguments = [];
     var callbackId = getCallBackIdWithCallBack(callback);
     var param = { arguments: arguments, callback: callbackId };
@@ -1223,7 +1189,17 @@ function PluginInterface () {
       window.webkit.messageHandlers.getMsg.postMessage(param);
     }
   };
+  // 影子设备项目中，提供回调让App主动传递变更的数据给插件页
+  this.setMqttStatusCallback = function(mac, callback) {
+    var args = [mac];
+    var callbackId = getCallBackIdWithCallBack(callback);
+    var param = { arguments: args, callback: callbackId };
+    if (!gt_ios9()) {
+      navigator.gree.setMqttStatusCallback(param);
+    } else {
+      window.webkit.messageHandlers.setMqttStatusCallback.postMessage(param);
+    }
+  };
 }
-
 
 Navigator.prototype.PluginInterface = new PluginInterface();

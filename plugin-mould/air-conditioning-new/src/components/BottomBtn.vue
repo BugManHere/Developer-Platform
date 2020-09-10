@@ -1,38 +1,60 @@
 <template>
-  <gree-popup v-model="showPopup" position="bottom">
-    <BtnPopup :showPopup="showPopup" :title="'高级'" :btn-list="btnList" />
-  </gree-popup>
+  <!-- 底部按钮 -->
+  <gree-toolbar position="bottom" no-hairline class="bottom-btn">
+    <gree-row>
+      <div class="pow-button" :class="{ off: !Pow - 0 }" @click="changeData({ Pow: !Pow - 0 })">
+        <span class="iconfont iconfont-kaiguan" />
+        <div class="button-boder" />
+        <div class="ripple" v-show="!Pow" />
+      </div>
+      <gree-col
+        v-for="(btn, index) in btnList"
+        :key="index"
+        width="25"
+        :class="{
+          'set-gray': btn.gray,
+          'set-hide': btn.hide,
+          select: btn.icon.type === 'on' && !btn.gray
+        }"
+      >
+        <div class="icon" @click="btn.func(btn.key, btn.gray)">
+          <i class="iconfont" :class="`iconfont-${btn.icon.key}`" />
+        </div>
+        <span v-text="btn.name" />
+      </gree-col>
+    </gree-row>
+  </gree-toolbar>
 </template>
 
 <script>
-import { Popup } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
-import BtnPopup from './index';
+import { Row, Col, ToolBar } from 'gree-ui';
+import { mapState } from 'vuex';
+import { glyphs } from '@assets/iconfont/iconfont.json';
 import LogicDefine from '@logic/define';
 import Customize from '@logic/customize';
-import { glyphs } from '@assets/iconfont/iconfont.json';
 
 export default {
   mixins: [LogicDefine, Customize],
-  components: {
-    BtnPopup,
-    [Popup.name]: Popup
-  },
   data() {
     return {
-      showPopup: false
+      btnIds: ['ModPopup', 'FanPopup', 'BottomSleep', 'FuncPopup']
     };
+  },
+  components: {
+    [Row.name]: Row,
+    [Col.name]: Col,
+    [ToolBar.name]: ToolBar
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      FuncPopup: state => state.dataObject.FuncPopup
+      SwhSlp: state => state.dataObject.SwhSlp
     }),
-    // 按钮列表
     btnList() {
-      const result = this.g_funcDefine_btn.map(btn => {
+      if (!Object.keys(this.g_statusMap).length) return [];
+      const result = this.btnIds.map(id => {
         // 定义key
-        const key = btn.identifier;
+        const key = id;
         // 当前status定义
         const statusDefind = this.g_statusMap[key].define;
         // 取名称
@@ -46,37 +68,16 @@ export default {
         const gray = this.g_noDirectionFuncArr.includes(key);
         // 是否隐藏
         const hide = statusDefind.icon.key === 'disable';
-        // 跳转页面
-        const page = btn.page;
         // 执行的函数
         const func = (identifier, isGray = false) => {
           this.changeStatus(identifier, isGray);
         };
-        return { key, name, icon, gray, hide, page, func };
+        return { key, name, icon, gray, hide, func };
       });
       return result;
     }
   },
-  watch: {
-    FuncPopup(newVal) {
-      if (newVal) {
-        this.showPopup = true;
-      }
-    },
-    showPopup(newVal) {
-      if (!newVal) {
-        this.setDataObject({ FuncPopup: 0 });
-      }
-    }
-  },
   methods: {
-    ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
     changeStatus(identifier, isGray) {
       if (isGray) return;
       const customize = this.g_nextStatusMap[identifier].customize;
@@ -98,21 +99,11 @@ export default {
         default:
           break;
       }
-      // 八度制热需要特殊处理
-      if (identifier === 'StHt') {
-        this.setState(['isStHt', true]);
-      } else {
-        this.setState(['isStHt', false]);
-      }
       const setData = this.g_nextStatusMap[identifier].setData;
       this.changeData(setData);
-    },
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
     }
   }
 };
 </script>
+
+<style></style>

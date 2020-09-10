@@ -205,7 +205,8 @@ export default {
       ],
       selectItem: '',
       selectRadio: 1,
-      selectBody: 1
+      selectBody: 1,
+      disableUpdate: false
     };
   },
   computed: {
@@ -551,6 +552,7 @@ export default {
   },
   created() {
     this.imshowType = this.$route.params.id;
+    this.setPolling(false);
   },
   mounted() {
     hideLoading();
@@ -561,17 +563,21 @@ export default {
     });
     setInterval(() => {
       this.getSlpVal();
-    }, 10000);
+    }, 5000);
+  },
+  destroyed() {
+    this.setPolling(true);
   },
   methods: {
     ...mapMutations({
       setState: 'SET_STATE'
     }),
     ...mapActions({
-      updateDataObject: 'UPDATE_DATAOBJECT'
+      updateDataObject: 'UPDATE_DATAOBJECT',
+      setPolling: 'SET_POLLING'
     }),
     async changeDataObject(obj, hasToast = false) {
-      this.setState({ uilock: true });
+      this.disableUpdate = true;
       const control = obj;
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
@@ -588,6 +594,8 @@ export default {
       }
       const opt = Object.keys(obj);
       const p = Object.values(obj);
+      opt.push('StHt');
+      p.push(0);
       const json = JSON.stringify({
         mac: this.mac,
         t: 'cmd',
@@ -606,11 +614,10 @@ export default {
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
       }
-      this.setState({ uilock: false });
+      this.disableUpdate = false;
     },
     async getSlpVal() {
-      if ((this.functype && this.dataObject.Slp1L1) || this.$store.state.uilock) return; // 场景模式下不重复查询
-
+      if (this.disableUpdate) return;
       // data
       const cols = [
         'SwhSlp',
@@ -646,7 +653,7 @@ export default {
         dataObject[cols[index]] = item;
       });
 
-      if (this.$store.state.uilock) return;
+      if (this.disableUpdate) return;
 
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
@@ -709,7 +716,8 @@ export default {
       this.updatePosition(true);
     },
     updateData(key) {
-      if (!key) return;
+      key;
+      // if (!key) return;
       // this.data = this.modToTem[key];
     },
     changeSlp(key, type) {
@@ -797,6 +805,7 @@ export default {
       });
 
       this.updatePosition();
+      this.disableUpdate = true;
     },
     showTooltip(dataIndex) {
       this.myChart.dispatchAction({

@@ -34,10 +34,10 @@ const router = new Router({
     {
       path: '/Home',
       name: 'Home',
-      component: Home
-      // meta: {
-      //   keepAlive: true
-      // }
+      component: Home,
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/Offline',

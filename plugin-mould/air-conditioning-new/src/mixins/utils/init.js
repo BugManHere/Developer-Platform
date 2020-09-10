@@ -27,6 +27,7 @@ const mixin = {
     /**
      * @description 初始化，并将小卡片传进来的值赋予state
      */
+
     init() {
       const { key } = require('@/../plugin.id.json');
       const { funcDefine, moreOption } = require(`@/../../../output/${key}.json`);
@@ -36,10 +37,13 @@ const mixin = {
       console.log(`mac: ${mac}`);
 
       const valArr = JSON.parse(dataArr);
-      console.log('----------url传值-----------');
-      console.log(dataArr);
 
-      const functype = JSON.parse(getQueryStringByName('functype'));
+      let functype = 0;
+      try {
+        functype = JSON.parse(getQueryStringByName('functype'));
+      } catch (e) {
+        e;
+      }
       console.log(`是否场景模式: ${Boolean(functype)}`);
 
       const hasReportedForRepair = getQueryStringByName('hasReportedForRepair');
