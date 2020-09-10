@@ -64,16 +64,6 @@
             <div class="toggle-inner" :class="{ right: voiceSkill }"></div>
           </label>
         </div>
-        <!-- 自动模式温度可控 -->
-        <div class="optional">
-          <span v-text="'自动模式温度可控'" />
-          <label for="config-input-auto">
-            <input id="config-input-auto" type="checkbox" v-model="autoAbleTem" />
-            <span class="on" :class="{ 'on-hide': !autoAbleTem }">ON</span>
-            <span class="off" :class="{ 'off-hide': autoAbleTem }">OFF</span>
-            <div class="toggle-inner" :class="{ right: autoAbleTem }"></div>
-          </label>
-        </div>
         <!-- 温度间隔 -->
         <div class="optional">
           <span v-text="'温度间隔'" />
@@ -152,7 +142,6 @@ export default {
     return {
       pluginVer: '1.0',
       voiceSkill: false, // 是否有'语音技能'
-      autoAbleTem: false, // 自动模式下是否可设置温度
       temStep: '0.5', // 温度间隔
       fanRange: '7', // 多少档风
       statueJson: [], // 小卡片字段
@@ -169,7 +158,6 @@ export default {
     // 初始化数据，从服务器获取
     this.pluginVer = this.moreOption.pluginVer;
     this.voiceSkill = this.moreOption.voiceSkill;
-    this.autoAbleTem = this.moreOption.autoAbleTem;
     this.temStep = this.moreOption.temStep;
     this.fanRange = this.moreOption.fanRange;
     this.statueJson = this.moreOption.statueJson;
@@ -203,7 +191,6 @@ export default {
       return {
         pluginVer: this.pluginVer,
         voiceSkill: this.voiceSkill,
-        autoAbleTem: this.autoAbleTem,
         temStep: this.temStep,
         fanRange: this.fanRange,
         statueJson: this.statueJson,
