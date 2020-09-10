@@ -29,7 +29,7 @@
               :key="item.id"
               link
               :title="item.name"
-              :footer="item.illustrate"
+              :footer="`“${item.illustrate}”`"
               media-item
               @click.native="gotoDetail(item)"
             >
@@ -68,12 +68,17 @@ export default {
       mac: state => state.mac
     }),
   },
-  created() {
+  async mounted() {
     changeBarColor('#fffffe');
     if (this.$route.query && this.$route.query.keyword) {
       this.value = this.$route.query.keyword;
-      console.log(this.value);
-      this.search(this.$route.query.keyword);
+      await this.search(this.$route.query.keyword);
+      this.$nextTick(() => {
+        const searchInput = document.querySelector('.gree-search-bar input');
+        if (searchInput) {
+          searchInput.value = this.value;
+        }
+      });
     } else {
       this.search('');
     }
@@ -137,6 +142,7 @@ export default {
         .gree-search-bar__action {
           .gree-button--small {
             height: 110px;
+            line-height: 110px;
           }
           .gree-button--primary {
             font-size: 45px;
@@ -162,23 +168,40 @@ export default {
           overflow-y: auto;
            .list {
             margin: 0;
-            .skill-icon {
-              width: 100px;
-              height: 100px;
+            padding: 0px 36px;
+            overflow-y: scroll;
+            ul {
+              &::after, &::before {
+                visibility: hidden;
+              }
             }
             .item-content {
-              padding-top: 30px;
-              padding-bottom: 30px;
-              .item-inner {
-                &::before {
-                  width: 45px;
-                  height: 45px;
-                  background-image: url('../../../../assets/img/skill/voice_input_search.png');
+              padding: 42px 0px 0px 42px;
+              .item-media {
+                align-self: flex-start;
+                .skill-icon {
+                  width: 107px;
+                  height: 107px;
+                  padding: 0;
                 }
+              }
+              .item-inner {
+                margin-left: 72px;
+                // border-bottom: 1px solid #f4f4f4;
                 .item-title {
+                  font-size: 48px;
+                  color: #404657;
                   .item-footer {
-                    margin-top: 30px;
+                    margin: 24px 0px;
+                    font-size: 36px;
+                    color: rgba($color: #404657, $alpha: 0.6);
                   }
+                }
+                &::before {
+                  background-image: url('../../../../assets/img/skill/voice_input_search.png');
+                  width: 40px;
+                  height: 40px;
+                  right: 61px;
                 }
               }
             }

@@ -23,12 +23,13 @@
           </div>
         </div>
       </div>
-      <div class="toolbar">
+      <div class="toolbar" v-show="!isLoadFailed">
         <div class="btn-wrapper">
-          <button class="btn-voice" @click="onDelete"></button>
+          <button class="btn-delete" @click="onDelete"></button>
           <span>删除</span>
         </div>
       </div>
+      <error-overlay :show="isLoadFailed" @reload="() => {this.getMessageList();}"></error-overlay>
     </gree-page>
     <gree-dialog 
       title="提醒"
@@ -43,6 +44,7 @@
 import { mapState } from 'vuex';
 import { Header, Dialog } from 'gree-ui';
 import VoiceMessageList from './voiceMessageList';
+import ErrorOverlay from '../../../ErrorOverlay';
 import { 
   voiceSkillMsgDel,
   voiceSkillMsgList,
@@ -54,6 +56,7 @@ export default {
     [Header.name]: Header,
     [Dialog.name]: Dialog,
     'voice-msg-list': VoiceMessageList,
+    'error-overlay': ErrorOverlay,
   },
   data() {
     return {
@@ -67,9 +70,11 @@ export default {
           handler: () => { this.dialogOption.open = false; }
         }, {
           text: '删除',
-          handler: () => {}
+          handler: () => { this.deleteRecords(); }
         }]
-      }
+      },
+      selectedRecords: [], // 选中需要删除的留言
+      isLoadFailed: false, // 列表是否加载失败
     }
   },
   computed: {
@@ -78,31 +83,46 @@ export default {
     }),
   },
   beforeRouteLeave(to, from, next) {
-    Dialog.closeAll();
-    next();
+    if (this.dialogOption.open) {
+      this.dialogOption.open = false;
+      next(false);
+    } else {
+      next();
+    }
   },
   created() {
-    changeBarColor('#fffffe');  
+    changeBarColor('#fffffe');
     this.getMessageList();
   },
   methods: {
     async getMessageList() {
-      let voiceMsgList = await voiceSkillMsgList(this.mac);
-      console.log(voiceMsgList);
-      if (!voiceMsgList) {
-        this.isEmpty = true;
-        return;
+      try {
+        this.isLoadFailed = false;
+        let voiceMsgList = await voiceSkillMsgList(this.mac);
+        console.log(voiceMsgList);
+        if (!voiceMsgList) {
+          this.isEmpty = true;
+          throw new Error('获取留言列表失败');
+        }
+        if (typeof(voiceMsgList) === 'string') {
+          voiceMsgList = JSON.parse(voiceMsgList);
+        }
+        if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
+          this.isEmpty = true;
+          throw new Error('获取留言列表失败');
+        }
+        this.isEmpty = false;
+        this.unreadList = voiceMsgList.data.filter(x => x.status === 1)
+          .map(x => { x.selected = false; return x;})
+          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
+        this.readList = voiceMsgList.data.filter(x => x.status === 2)
+          .map(x => { x.selected = false; return x;})
+          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
+      } catch (error) {
+        console.log(error);
+        this.isLoadFailed = true;
       }
-      if (typeof(voiceMsgList) === 'string') {
-        voiceMsgList = JSON.parse(voiceMsgList);
-      }
-      if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
-        this.isEmpty = true;
-        return;
-      }
-      this.isEmpty = false;
-      this.unreadList = voiceMsgList.data.filter(x => x.status === 1).map(x => { x.selected = false; return x;});
-      this.readList = voiceMsgList.data.filter(x => x.status === 2).map(x => { x.selected = false; return x;});;
+      
     },
     selectAll() {
       this.unreadList.forEach(x => {
@@ -115,11 +135,15 @@ export default {
     setState(item) {
       item.selected = !item.selected;
     },
-    async deleteRecords(selectedRecords) {
+    async deleteRecords() {
       try {
-        let data = {guidList: selectedRecords};
+        if (!this.selectedRecords || this.selectedRecords.length === 0) {
+          throw new Error('请选择要删除的留言');
+        }
+        let data = {guidList: this.selectedRecords};
         let result = await voiceSkillMsgDel(JSON.stringify(data));
-        console.log('del result', result);
+        this.dialogOption.open = false;
+        console.log('del:', result);
         if (!result) {
           throw new Error('删除失败');
         }
@@ -136,26 +160,17 @@ export default {
      
     },
     onDelete() {
-      const selectedRecords = [];
+      this.selectedRecords = [];
       const selectedUnreadRecords = this.unreadList.filter(x => x.selected === true).map(x => x.guid);
       if (selectedUnreadRecords && selectedUnreadRecords.length) {
-        selectedRecords.push(...selectedUnreadRecords);
+        this.selectedRecords.push(...selectedUnreadRecords);
       }
       const selectedReadRecords = this.readList.filter(x => x.selected === true).map(x => x.guid);
       if (selectedReadRecords && selectedReadRecords.length) {
-        selectedRecords.push(...selectedReadRecords);
+        this.selectedRecords.push(...selectedReadRecords);
       }
-      if (selectedRecords.length > 0) {
+      if (this.selectedRecords.length > 0) {
         this.dialogOption.open = true;
-        // this.deleteRecords(selectedRecords);
-        // Dialog.confirm({
-        //   title: '提醒',
-        //   content: '确定要删除所选的留言吗？',
-        //   confirmText: '删除',
-        //   onConfirm: () => ,
-        //   cancelText: '取消',
-        //   onCancel: () => console.log('[Dialog.confirm] cancel clicked')
-        // });
       }
     }
   }
@@ -244,11 +259,8 @@ export default {
         align-items: center;
         .btn-wrapper {
           text-align: center;
-          .btn-voice {
-            @include iconBtn(181px, '../../../../assets/img/skill/start_record.png');
-          }
-          .btn-done {
-            @include iconBtn(181px, '../../../../assets/img/skill/stop_record.png');
+          .btn-delete {
+            @include iconBtn(181px, '../../../../assets/img/skill/btn_delete.png');
           }
           span {
             display: block;

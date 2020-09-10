@@ -22,7 +22,7 @@
       <transition name="fade">
         <div v-show="isRecording" class="mask"></div>
       </transition> 
-      <div class="toolbar" v-show="!showDialog">
+      <div class="toolbar" v-show="!(isLoadFailed || isShrink)">
         <transition name="fade">
           <div class="voice-indicator" v-show="isRecording">
             <div class="title">
@@ -50,7 +50,7 @@
       </div>
       <gree-dialog v-model="showDialog">
         <div class="text-input-wrapper">
-          <input ref="nameInput" autofocus v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
+          <input ref="nameInput" v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
           <span :class="{'high-light': voiceMsgName}">{{countLabel}}</span>
           <div class="tips" v-show="!isNameValid">
             昵称仅限汉字哟~
@@ -61,6 +61,7 @@
           <button @click="onConfirm" :disabled="(voiceMsgName && isNameValid) ? false: true">确定</button>
         </div>
       </gree-dialog>
+      <error-overlay :show="isLoadFailed" @reload="() => {this.getMessageList();}"></error-overlay>
     </gree-page>
   </gree-view>
 </template>
@@ -68,6 +69,7 @@
 import { Header, Dialog } from 'gree-ui';
 import VoiceMessageList from './voiceMessageList';
 import AudioWave from '../../../AudioWave';
+import ErrorOverlay from '../../../ErrorOverlay';
 import { mapState } from 'vuex';
 import { 
   voiceSkillMsgAudioControl, 
@@ -88,6 +90,7 @@ export default {
     [Dialog.name]: Dialog,
     'voice-msg-list': VoiceMessageList,
     'audio-wave': AudioWave,
+    'error-overlay': ErrorOverlay,
   },
   data() {
     return {
@@ -103,6 +106,8 @@ export default {
       duration: 0,
       timing: 0, // 计时显示
       countdown: 0, // 倒计时显示
+      isLoadFailed: false, // 列表是否加载失败
+      isShrink: false, // 窗口大小是否缩小
     }
   },
   computed: {
@@ -127,30 +132,63 @@ export default {
       }
     }
   },
+  beforeRouteLeave(to, from, next) {
+    // 安卓物理返回键处理
+    if (this.showDialog || this.isRecording) {
+      if (this.showDialog) {
+        this.onCancel();
+      } else {
+        this.cancelRecord();
+      }
+      next(false);
+    } else {
+      next();
+    }
+  },
   created() {
     changeBarColor('#fffffe');
+    const windowHeight = window.outerHeight;
+    const resizeHandler = () => {
+      if (window.outerHeight < windowHeight) {
+        this.isShrink = true;
+      } else {
+        this.isShrink = false;
+      }
+    }
+    window.addEventListener('resize', resizeHandler, false);
+    this.$once('hook:beforeDestroy', () => {
+      window.removeEventListener('resize', resizeHandler, false);
+    });
     this.getMessageList();
   },
   methods: {
     async getMessageList() {
-      showLoading();
-      let voiceMsgList = await voiceSkillMsgList(this.mac);
-      hideLoading();
-      console.log(voiceMsgList);
-      if (!voiceMsgList) {
-        this.isEmpty = true;
-        return;
+      try {
+        this.isLoadFailed = false;
+        showLoading();
+        let voiceMsgList = await voiceSkillMsgList(this.mac);
+        hideLoading();
+        console.log(voiceMsgList);
+        if (!voiceMsgList) {
+          this.isEmpty = true;
+          throw new Error('获取留言列表失败');
+        }
+        if (typeof(voiceMsgList) === 'string') {
+          voiceMsgList = JSON.parse(voiceMsgList);
+        }
+        if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
+          this.isEmpty = true;
+          throw new Error('获取留言列表失败');
+        }
+        this.isEmpty = false;
+        this.unreadList = voiceMsgList.data.filter(x => x.status === 1)
+          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
+        this.readList = voiceMsgList.data.filter(x => x.status === 2)
+          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
+      } catch (error) {
+        console.log(error);
+        this.isLoadFailed = true;
       }
-      if (typeof(voiceMsgList) === 'string') {
-        voiceMsgList = JSON.parse(voiceMsgList);
-      }
-      if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
-        this.isEmpty = true;
-        return;
-      }
-      this.isEmpty = false;
-      this.unreadList = voiceMsgList.data.filter(x => x.status === 1);
-      this.readList = voiceMsgList.data.filter(x => x.status === 2);
     },
     resetData() {
       this.showDialog = false;
@@ -182,7 +220,6 @@ export default {
       this.showDialog = true;
       setTimeout(() => {
         const nameInput = this.$refs.nameInput;
-        console.log(nameInput);
         if (nameInput) {
           nameInput.focus();
         }
@@ -253,14 +290,20 @@ export default {
       month = month >= 10 ? month : `0${month}`;
       let day = date.getDate();
       day = day >= 10 ? day : `0${day}`;
-      return `${year}-${month}-${day}`;
+      let hours = date.getHours();
+      hours = hours >= 10 ? hours : `0${hours}`;
+      let minutes = date.getMinutes();
+      minutes = minutes >= 10 ? minutes : `0${minutes}`;
+      let senconds = date.getSeconds();
+      senconds = senconds >= 10 ? senconds : `0${senconds}`;
+      return `${year}-${month}-${day} ${hours}:${minutes}:${senconds}`;
     },
     async onConfirm() {
       try {
         const name = this.voiceMsgName;
         const duration = this.duration;
         this.resetData();
-        this.unreadList.push({label: name, createdAt: this.getCreatedTime(), duration, status: 1, isUploading: true});
+        this.unreadList.unshift({label: name, createdAt: this.getCreatedTime(), duration, status: 1, isUploading: true});
         this.isEmpty = false;
         let result = await voiceSkillMsgAdd(this.mac, JSON.stringify({label: name, duration: duration}));
         if (!result) {
@@ -382,6 +425,7 @@ export default {
   }
   .page-voice-message {
     .page-content {
+      padding-bottom: 0px;
       padding-bottom: calc(0px + env(safe-area-inset-bottom));
       .gree-header {
         .gree-header-right {

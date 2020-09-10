@@ -65,8 +65,8 @@ export default {
       requestAnimationFrame(this.$_loop.bind(this));
     },
     updateWave(waveHeight) {
-      let wave = waveHeight * 60;
-      console.log(this.lineHeightDiff);
+      let wave = waveHeight * 20;
+      // console.log(this.lineHeightDiff);
       let delta = this.lineHeightDiff * (wave > 1 ? 1 : wave);
       let parts = this.lineCount / 3;
       let index = 0;

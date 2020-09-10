@@ -7,8 +7,8 @@
         <div>
           <span class="header">
             {{item.label}}
-            <span v-if="item.status === 2" class="tag-read">已读</span>
-            <span v-else class="tag-unread">未读</span>
+            <img v-if="item.status === 2" src="../../../../assets/img/skill/readed_tag.png">
+            <img v-else src="../../../../assets/img/skill/unread_tag.png">
           </span>
           <div class="subtitle">{{item.createdAt}}<span>{{parseInt(item.duration / 1000, 10)}}秒</span></div>
         </div>
@@ -84,18 +84,12 @@ export default {
         .header {
           font-size: 46px;
           color:#404657;
-          span {
-            height: 40px;
+          line-height: 1;
+          img {
+            height: 42px;
             width: 74px;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 20px;
-          }
-          .tag-read {
-            background-color: rgba($color: #404357, $alpha: 0.3);
-          }
-          .tag-unread {
-            background-color: rgba($color: #FF0202, $alpha: 0.6);
+            margin-left: 17px;
+            vertical-align: text-top;
           }
         }
         .subtitle {

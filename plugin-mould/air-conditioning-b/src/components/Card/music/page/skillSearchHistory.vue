@@ -151,6 +151,7 @@ export default {
         .gree-search-bar__action {
           .gree-button--small {
             height: 110px;
+            line-height: 110px;
           }
           .gree-button--primary {
             font-size: 45px;
