@@ -370,7 +370,7 @@ export default {
         // 计时
         this.playTimer = setInterval(() => {
           if (this.musicPlaying) {
-            this.SpchPlayPgMs += 1.5;
+            this.SpchPlayPgMs += 1;
             if (this.SpchPlayPgMs >= this.duration && this.musicPlaying) {
               // 清空歌词/播放状态
               this.setMusicData({
@@ -381,7 +381,7 @@ export default {
             }
             this.updateLyric();
           }
-        }, 100);
+        }, 1000);
       }
     },
     // 换歌

@@ -18,8 +18,8 @@ import ControlCard from './control/index';
 
 export default {
   components: {
-    GrownCard,
-    ControlCard
+    [GrownCard.name]: GrownCard,
+    [ControlCard.name]: ControlCard
   },
   computed: {
     ...mapState({

@@ -153,9 +153,11 @@ router.beforeEach((to, from, next) => {
   if (from.name && to.path === '/Loading') {
     router.go(0);
   }
-  // 顶栏颜色操作
-  const color = '#F4F4F4';
-  changeBarColor(color);
+  if (to.name !== 'Home') {
+    // 顶栏颜色操作
+    const color = '#F4F4F4';
+    changeBarColor(color);
+  }
   next();
 });
 

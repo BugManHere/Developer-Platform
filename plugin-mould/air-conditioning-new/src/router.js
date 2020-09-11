@@ -2,20 +2,20 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
-const Home = () => import('@views/Home');
-const Hidden = () => import('@views/Hidden');
-const ErrorWarning = () => import('@views/ErrorWarning');
-const Offline = () => import('@views/Offline');
+const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
+const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidden');
+const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
+const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
 
 // 高级功能倒三角进入
 export const functionPage = {
-  Test: () => import('@views/functionPage/Test'),
-  SweepConst: () => import('@views/functionPage/SweepConst'),
-  Electric: () => import('@views/functionPage/Electric'),
-  Noise: () => import('@views/functionPage/Noise'),
-  AssHt: () => import('@views/functionPage/AssHt'),
-  UDFanPort: () => import('@views/functionPage/UDFanPort'),
-  AreaFan: () => import('@views/functionPage/AreaFan')
+  Test: r => require.ensure([], () => r(require('@views/functionPage/Test'))),
+  SweepConst: r => require.ensure([], () => r(require('@views/functionPage/SweepConst'))),
+  Electric: r => require.ensure([], () => r(require('@views/functionPage/Electric'))),
+  Noise: r => require.ensure([], () => r(require('@views/functionPage/Noise'))),
+  AssHt: r => require.ensure([], () => r(require('@views/functionPage/AssHt'))),
+  UDFanPort: r => require.ensure([], () => r(require('@views/functionPage/UDFanPort'))),
+  AreaFan: r => require.ensure([], () => r(require('@views/functionPage/AreaFan')))
 };
 
 Vue.use(Router);

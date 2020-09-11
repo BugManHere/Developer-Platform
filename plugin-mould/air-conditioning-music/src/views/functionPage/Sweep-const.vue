@@ -222,6 +222,28 @@ export default {
 
 <style lang="scss">
 .page-sweep {
+  .gree-header {
+    display: flex;
+    // align-items: center !important;
+    height: 120px;
+    background-color: transparent;
+    // background-image: none;
+    &-right,
+    &-left {
+      position: absolute;
+      top: 50% !important;
+      transform: translateY(-50%);
+      span {
+        font-size: 46px;
+      }
+    }
+    &-title {
+      margin: 0 120px;
+    }
+    .iconfont {
+      font-size: 58px;
+    }
+  }
   .sweep-body {
     margin-top: 120px;
     position: relative;

@@ -7,7 +7,7 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
-      @touch-cancel.native="cancelSwiperHold(slidesData.key)"
+      @touchcancel.native="cancelSwiperHold(slidesData.key)"
       v-show="!isShowText"
     >
       <!-- :class="{'swiper-no-swiping': noSwiping}" -->

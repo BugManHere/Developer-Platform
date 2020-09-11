@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="card-header" :style="cardHeaderShow ? { height: 0 } : {}"> -->
   <div ref="header-box">
     <div class="card-header" :ref="headerId" :id="headerId">
       <!-- 左边插槽 -->
@@ -19,20 +18,24 @@ import { mapState } from 'vuex';
 
 export default {
   props: {
-    headerId: String
+    headerId: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       cardHeaderShow: false,
+      headerTop: 0,
+      temEditHeight: 0,
       scrollPos: 0,
       scrollTimer: null,
-      scrollTimer2: null,
-      fadeHeader: null
+      scrollTimer2: null
     };
   },
   computed: {
     ...mapState({
-      imshowType: state => state.musicData.imshowType
+      selectKey: state => state.selectKey
     })
   },
   mounted() {
@@ -47,33 +50,34 @@ export default {
       if (this.scrollTimer) return;
       this.scrollTimer = setInterval(() => {
         this.getScroll();
-      }, 20);
+      }, 50);
     });
   },
   // 跳转回来时恢复滚动条
   activated() {
+    this.ceiling();
     if (this.scrollPos) {
       this.$nextTick(() => {
         const dom = document.getElementsByClassName('page-content')[0];
-        dom.scrollTo(0, this.scrollPos);
+        dom && dom.scrollTo(0, this.scrollPos);
       });
     }
   },
+  deactivated() {
+    this.ceiling(false, false);
+    this.clearAllTimer();
+    this.scrollTimer = null;
+  },
   // 离开路由时清除定时器
   beforeRouteLeave(to, from, next) {
-    clearInterval(this.scrollTimer);
-    clearTimeout(this.scrollTimer2);
+    this.clearAllTimer();
     this.scrollTimer = null;
     next();
   },
   watch: {
     // 吸顶效果
     cardHeaderShow(newVal) {
-      if (newVal) {
-        document.getElementById('blank-box').appendChild(this.$refs[this.headerId]);
-      } else {
-        this.$refs['header-box'].appendChild(this.$refs[this.headerId]);
-      }
+      this.ceiling(newVal);
     }
   },
   methods: {
@@ -82,12 +86,28 @@ export default {
       const currentScrollTop = dom.scrollTop;
       currentScrollTop && (this.scrollPos = currentScrollTop);
       const imshowTop = document.getElementsByClassName('tem-edit')[0].offsetHeight;
-      if (currentScrollTop >= imshowTop + 1) {
+      if (currentScrollTop >= imshowTop) {
         this.cardHeaderShow = true;
       } else if (currentScrollTop < imshowTop) {
         this.cardHeaderShow = false;
       }
       this.$forceUpdate();
+    },
+    // 吸顶效果
+    ceiling(isCeiling = this.cardHeaderShow, isCheck = true) {
+      // isCheck: 是否检查当前headerId
+      if (!this.headerId.includes(this.selectKey) && isCheck) return;
+      this.$emit('isCeiling', isCeiling);
+      if (isCeiling) {
+        document.getElementById('blank-box').appendChild(this.$refs[this.headerId]);
+      } else {
+        this.$refs['header-box'].appendChild(this.$refs[this.headerId]);
+      }
+    },
+    // 清除所有定时器
+    clearAllTimer() {
+      clearInterval(this.scrollTimer);
+      clearTimeout(this.scrollTimer2);
     }
   }
 };

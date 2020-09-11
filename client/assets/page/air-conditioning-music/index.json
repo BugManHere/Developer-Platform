@@ -1,0 +1,16 @@
+{
+  "pageConfig": {
+    "SweepUd-const": {
+      "routerName": "SweepConst",
+      "params": {
+        "id": 2
+      }
+    },
+    "SweepLr-const": {
+      "routerName": "SweepConst",
+      "params": {
+        "id": 1
+      }
+    }
+  }
+}

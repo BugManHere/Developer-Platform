@@ -1,7 +1,7 @@
 const state = {
   mac: '', // 设备mac
   skinIndex: 0, // 皮肤编号
-  selectKey: 'GrownCard',
+  selectKey: 'grown-card',
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
   dataObject: {

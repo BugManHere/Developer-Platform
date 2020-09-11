@@ -28,7 +28,6 @@ export default {
       Pow: state => state.dataObject.Pow,
       FuncPopup: state => state.dataObject.FuncPopup
     }),
-    //
     // 按钮列表
     btnList() {
       const result = this.work_buttonDefine.map(btn => {

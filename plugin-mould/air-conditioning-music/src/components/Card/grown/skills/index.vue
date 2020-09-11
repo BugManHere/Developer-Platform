@@ -119,22 +119,23 @@ export default {
     console.log('2');
     try {
       let self = this;
-      let listHeight = this.$refs.skillList.clientHeight;
-      let pageContent = document.querySelector('.page-content');
-      // 赋予初始高度
-      self.$refs.skillList.style.height = `${listHeight + pageContent.scrollTop}px`;
+      setTimeout(() => {
+        let listHeight = this.$refs.skillList.clientHeight;
+        let pageContent = document.querySelector('.page-content');
+        // 赋予初始高度
+        self.$refs.skillList.style.height = `${listHeight + pageContent.scrollTop}px`;
+        // eslint-disable-next-line
+        function scrollHandler(ev) {
+          let scrollTop = this.scrollTop;
+          self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
+        }
+        pageContent.addEventListener('scroll', scrollHandler, false);
+        this.$once('hook:beforeDestroy', () => {
+          pageContent.removeEventListener('scroll', scrollHandler, false);
+        });
 
-      // eslint-disable-next-line
-      function scrollHandler(ev) {
-        let scrollTop = this.scrollTop;
-        self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
-      }
-      pageContent.addEventListener('scroll', scrollHandler, false);
-      this.$once('hook:beforeDestroy', () => {
-        pageContent.removeEventListener('scroll', scrollHandler, false);
-      });
-
-      this.loadSkillList(1);
+        this.loadSkillList(1);
+      }, 0);
     } catch (error) {
       console.log(error);
     }

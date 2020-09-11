@@ -27,18 +27,18 @@ const getters = {
         {
           url: require(`@assets/img/skins/${state.skinIndex}/grown.png`),
           name: '智慧成长',
-          key: 'GrownCard'
+          key: 'grown-card'
         },
         {
           url: require(`@assets/img/skins/${state.skinIndex}/control.png`),
           name: '空调控制',
-          key: 'ControlCard'
-        },
-        {
-          url: require(`@assets/img/skins/${state.skinIndex}/sleep.png`),
-          name: '健康睡眠',
-          key: 'SleepCard'
+          key: 'control-card'
         }
+        // {
+        //   url: require(`@assets/img/skins/${state.skinIndex}/sleep.png`),
+        //   name: '健康睡眠',
+        //   key: 'sleep-card'
+        // }
       ]
     };
   }
