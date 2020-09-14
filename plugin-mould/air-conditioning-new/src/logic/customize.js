@@ -142,17 +142,39 @@ const Customize = {
         LRFan: () => {
           this.changeData({ UDFanPort: 2 });
         },
-        ConstUD: () => {
-          this.$router.push({
-            name: 'Sweep',
-            params: { id: 2 }
-          });
+        ConstUD: currentStatus => {
+          const goSweep = id => {
+            this.$router.push({
+              name: 'Sweep',
+              params: { id }
+            });
+          };
+          if (!['undefined', undefined].includes(currentStatus)) {
+            goSweep(2);
+            return;
+          }
+          const storage = window.storage;
+          const funcData = storage.get('funcData') || {};
+          if (funcData.ConstUD) {
+            this.changeData({ SwUpDn: funcData.ConstUD });
+          } else goSweep(2);
         },
-        ConstLR: () => {
-          this.$router.push({
-            name: 'Sweep',
-            params: { id: 1 }
-          });
+        ConstLR: currentStatus => {
+          const goSweep = id => {
+            this.$router.push({
+              name: 'Sweep',
+              params: { id }
+            });
+          };
+          if (!['undefined', undefined].includes(currentStatus)) {
+            goSweep(1);
+            return;
+          }
+          const storage = window.storage;
+          const funcData = storage.get('funcData') || {};
+          if (funcData.ConstLR) {
+            this.changeData({ SwingLfRig: funcData.ConstLR });
+          } else goSweep(1);
         },
         Elc: () => {
           this.$router.push('Electric');

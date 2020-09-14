@@ -152,6 +152,7 @@ router.post('/done', async function(req, res) {
   // 写入文件
   fs.writeFileSync(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output));
   fs.writeFileSync(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }));
+  fs.writeFileSync(resolve(`../../plugin-mould/air-conditioning-new/plugin.id.json`), JSON.stringify({ key: deviceKey }));
   res.json(output);
 });
 

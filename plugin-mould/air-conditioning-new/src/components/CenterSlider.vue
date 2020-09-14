@@ -18,7 +18,11 @@
         </gree-block>
         <h3 v-if="Mod" class="tem" v-text="circleVal" />
         <h3 v-else class="auto-span" v-text="'自动调温'" />
-        <div v-if="roomTemShow" class="room-tem" v-text="`室温 ${TemSen > 40 ? TemSen - 40 : TemSen}℃`" />
+        <div v-if="roomTemShow" class="room-tem-text">
+          <span v-text="`室温 `" />
+          <span v-if="roomTemShow" class="value" v-text="`${TemSen > 40 ? TemSen - 40 : TemSen}`" />
+          <span v-if="roomTemShow" v-text="'℃'" />
+        </div>
       </article>
     </div>
     <div class="pow-off" v-show="!Pow" :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
@@ -76,7 +80,7 @@ export default {
       max: 30,
       step: 0.1,
       value: this.circleVal,
-      radius: this.svgRadius / 2 + 6,
+      radius: this.svgRadius / 2 + 5,
       width: 2,
       handleSize: '+35',
       keyboardAction: false,
@@ -86,7 +90,7 @@ export default {
       circleShape: 'full',
       handleShape: 'dot',
       start: () => {
-        $('span.rs-block').css('padding', '4px');
+        $('span.rs-block').css('padding', '2.7px');
       },
       stop: () => {
         $('span.rs-block').css('padding', '2px');
@@ -122,7 +126,8 @@ export default {
       deep: true
     },
     SetTem: {
-      handler(newVal) {
+      handler(newVal, oldVal) {
+        if (oldVal === undefined) return;
         this.temChange = true;
         $('#slider').roundSlider({ value: newVal });
       },

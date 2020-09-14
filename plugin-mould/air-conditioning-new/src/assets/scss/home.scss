@@ -7,6 +7,7 @@
     .gree-header {
       display: flex;
       align-items: center;
+      height: 120px;
       // background-color: rgb(241, 246, 247);
       background-color: transparent;
       background-image: none;
@@ -45,7 +46,7 @@
   }
 }
 .icons {
-  top: 1180px;
+  margin-top: 25px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -66,14 +67,16 @@
   }
 }
 .toolbar {
-  height: 231px !important;
+  height: calc(231px + constant(safe-area-inset-bottom) / 3) !important;
+  height: calc(231px + env(safe-area-inset-bottom) / 3) !important;
   background-image: url('../img/bottom_bg.png');
   .toolbar-inner {
     display: flex;
     justify-content: center !important;
-    align-items: center;
+    align-items: flex-start !important;
   }
   .row {
+    padding-top: 50px;
     width: 85%;
     display: flex;
     text-align: center;

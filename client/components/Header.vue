@@ -41,7 +41,7 @@
             <button type="submit" class="btn btn-default">查找</button>
           </form>
           <ul class="nav navbar-nav navbar-right" v-show="$route.name !== 'Account'">
-            <li><a href="#">开发文档</a></li>
+            <li><a @click="goDocument" style="cursor: pointer">文档中心</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
                 >{{ userName }} <span class="caret"></span
@@ -110,6 +110,9 @@ export default {
           });
         });
       }
+    },
+    goDocument() {
+      window.open(`${process.env.VUE_APP_SERVE_URL}:3100`);
     },
     setDevelopType(val) {
       this.setPulicModule({ developType: val });

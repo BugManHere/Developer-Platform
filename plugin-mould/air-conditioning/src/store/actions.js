@@ -18,6 +18,7 @@ import {
 
 let _timer = 0; // 轮询定时器
 let _timer2 = null;
+let _timer3 = null; // 重启轮询定时器
 let setData = {};
 let lastObject = {};
 let sendTime = 0;
@@ -78,13 +79,14 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     }
     commit(SET_STATE, ['watchLock', true]);
     commit(SET_STATE, ['ableSend', false]);
-
+    console.log(json);
     const res = await sendDataToDevice(mac, json, false)
       .then(res => {
         // 发送指令后暂停接收，过3秒后重启轮询
         if (_timer) {
           dispatch(SET_POLLING, false);
-          setTimeout(() => {
+          clearTimeout(_timer3);
+          _timer3 = setTimeout(() => {
             dispatch(SET_POLLING, true);
           }, 3000);
         }
@@ -92,6 +94,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       })
       .catch(err => err);
     lastObject = state.checkObject;
+
     try {
       const result = JSON.parse(res);
       const { r } = result;
@@ -214,6 +217,7 @@ export default {
    * @description 开启/关闭轮询
    */
   async [SET_POLLING]({ state, commit }, boolean) {
+    clearTimeout(_timer3);
     if (boolean) {
       if (_timer === 0) {
         _timer = setInterval(() => {

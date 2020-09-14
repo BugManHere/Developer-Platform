@@ -30,7 +30,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
-      // 温度命令需要一组一起发送
       if (state.devOptions.statueJson2.includes(key)) {
         setOpt.push(key);
         setP.push(Number(setData[key]));

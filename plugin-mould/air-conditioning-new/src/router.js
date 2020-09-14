@@ -123,7 +123,7 @@ router.beforeEach((to, from, next) => {
     router.go(0);
   }
   // 顶栏颜色操作
-  const color = '#F4F9F8';
+  const color = '#F4F4F4';
   changeBarColor(color);
   next();
 });

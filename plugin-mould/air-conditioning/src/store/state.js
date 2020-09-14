@@ -20,6 +20,7 @@ const state = {
     functype: 1, // 0代表正常，1代表集中控制
     CO2: 401,
     SmartSlpModEx: 0,
+    SwhSlp: 1,
     TemSen: 65, // 室温
   },
   checkObject: {},

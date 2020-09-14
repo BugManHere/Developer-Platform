@@ -32,6 +32,7 @@
         color: rgb(112, 187, 242);
       }
       .button-boder {
+        left: 0.9px;
         background: rgb(244, 249, 252);
       }
     }
@@ -39,7 +40,7 @@
       position: absolute;
       min-height: 126px;
       min-width: 126px;
-      left: .8px;
+      left: 0px;
       background: linear-gradient(#2e74dc, #60b7c9);
       border-radius: 50%;
       z-index: 1;

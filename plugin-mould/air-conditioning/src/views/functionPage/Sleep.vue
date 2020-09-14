@@ -520,10 +520,12 @@ export default {
           control.WdSpd = 1;
         }
       }
-      const opt = Object.keys(obj);
-      const p = Object.values(obj);
-      opt.push('StHt');
-      p.push(0);
+      const sendData = {...obj};
+      sendData.StHt = 0;
+      const opt = Object.keys(sendData);
+      const p = Object.values(sendData);
+      // opt.push('StHt');
+      // p.push(0);
       const json = JSON.stringify({ 
         mac: this.mac,
         t: 'cmd',
@@ -531,7 +533,7 @@ export default {
         p
       });
       console.table([opt, p]);
-      this.updateDataObject(obj);
+      this.updateDataObject(sendData);
       if (this.functype) {
         hasToast && showToast(hasToast, 1);
         return;

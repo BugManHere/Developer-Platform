@@ -1,6 +1,6 @@
 <template>
   <gree-view>
-    <gree-page class="page-home">
+    <gree-page class="page-home" bg-color="#F4F4F4">
       <gree-header :left-options="{ showBack: false }" :right-options="{ showMore: false }">
         <span v-text="devname" @click="onTest" />
         <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="goBack" />

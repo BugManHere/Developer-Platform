@@ -1,10 +1,11 @@
 .center-slider {
   .slider-main {
     position: relative;
-    margin-top: 151px;
+    margin-top: 226px;
     #slider {
       .rs-path-color {
         background-color: rgb(232, 241, 244);
+        // background-color: transparent;
       }
       .rs-range-color {
         background-color: #fff;
@@ -14,19 +15,22 @@
           background-color: #f0f0f0;
         }
       }
+      // span {
+      //   &.rs-block {
+      //     padding: 4px;
+      //   }
+      // }
       .rs-handle {
-        padding: 10px;
         border: none;
-        padding: 4px;
+        padding: 7px;
         background-color: #fff;
         &::after {
           border: none;
           background-color: #d4e5e9;
         }
-        .rs-move {
-          background-color: transparent;
-          border: 0 none;
-          padding: 0;
+        &.rs-move {
+          background-color: #fff;
+          padding: 4px;
         }
         .rs-handle-dot {
           background-color: transparent;
@@ -37,8 +41,10 @@
         }
       }
       .rs-border {
+        top: .25px;
         border: none;
         background: linear-gradient(to right, rgb(242, 246, 247) 0%, rgb(229, 237, 238) 100%);
+        // background: transparent;
       }
       &.rs-control .rs-container,
       .rs-handle.rs-focus {
@@ -101,13 +107,17 @@
         text-align: center;
         line-height: 330px;
       }
-      .room-tem {
+      .room-tem-text {
         position: absolute;
         white-space: nowrap;
         left: 50%;
         bottom: 10px;
         transform: translate(-50%, 0);
-        font-size: 42px;
+        font-size: 44px;
+        .value {
+          font-family: 'Roboto-Light';
+          font-size: 44px;
+        }
       }
       .block {
         position: relative;
@@ -241,13 +251,12 @@
       transform: scale(1.05);
     }
 
-    100%,
-    40% {
+    100%{
       transform: scale(1);
     }
 
-    60% {
-      transform: scale(1.05);
-    }
+    // 60% {
+    //   transform: scale(1.02);
+    // }
   }
 }

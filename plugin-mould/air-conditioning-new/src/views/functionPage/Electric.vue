@@ -1,5 +1,5 @@
 <template>
-  <electric-chart-component />
+  <electric-chart-component :scale="10" />
 </template>
 
 <script>

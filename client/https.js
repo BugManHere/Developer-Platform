@@ -28,7 +28,7 @@ axios.interceptors.request.use(
 //返回状态判断(添加响应拦截器)
 axios.interceptors.response.use(
   res => {
-    if (typeof window !== 'undefined' && window.myvm) {
+    if (window && window.myvm) {
       const vm = window.myvm;
       vm.$loading.hide();
     }
@@ -39,7 +39,7 @@ axios.interceptors.response.use(
     return res;
   },
   error => {
-    if (typeof window !== 'undefined' && window.myvm) {
+    if (window && window.myvm) {
       const vm = window.myvm;
       vm.$loading.hide();
       if (error.response && error.response.data) {

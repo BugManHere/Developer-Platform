@@ -1,18 +1,21 @@
 <template>
   <!-- 扫风页 -->
-  <gree-view :bg-color="`#404040`">
+  <gree-view bg-color="#F4F4F4">
     <gree-page class="page-sweep">
-      <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
+      <gree-header>
+        {{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}
+        <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="turnBack" />
+      </gree-header>
       <div class="sweep-main" :class="{ spin: touchId === 1 }">
         <div class="sweep-body">
-          <img src="@assets/img/functionBtn/sweep/bg.png" />
+          <img src="@assets/img/functionBtn/sweep/bg.png" class="bg" />
         </div>
         <div class="ac">
           <img src="@assets/img/functionBtn/sweep/ac.png" />
         </div>
         <div class="blades-body">
           <div class="blade" v-for="(blade, index) in blades" :key="index" :style="`top: ${blade.y}px; left: ${blade.x}px; transform: rotate(${blade.rotate})`">
-            <img :src="blade.img" :style="`height: ${blade.height}`" v-show="imshowArr.includes(`${index + 1}`)" />
+            <img :src="blade.img" :style="{ width: blade.width, height: blade.height }" v-show="imshowArr.includes(`${index + 1}`)" />
           </div>
         </div>
       </div>
@@ -58,6 +61,7 @@ export default {
   },
   data() {
     return {
+      // imshowArr: ['1','2','3','4','5'],
       imshowArr: [],
       canvasWidth: 0,
       canvasHeight: 0,
@@ -87,12 +91,12 @@ export default {
       Pow: state => state.dataObject.Pow,
       selectSwingLfRig: state => {
         const swingLfRig = state.dataObject.SwingLfRig;
-        const swingLfRigMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
+        const swingLfRigMap = [[], [], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swingLfRigMap[swingLfRig];
       },
       selectSwUpDn: state => {
         const swUpDn = state.dataObject.SwUpDn;
-        const swUpDnMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
+        const swUpDnMap = [[], [], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swUpDnMap[swUpDn];
       }
     }),
@@ -101,44 +105,52 @@ export default {
     },
     blades() {
       const trans = val => {
-        return (val * this.canvasWidth) / 375;
+        return (val * window.screen.width) / 414;
       };
-      const bladesHeight = `${trans(72)}px`;
+      const bladesHeight = `${trans(253)}px`;
+      const bladesWidth = `${trans(364)}px`;
+      const baseX = trans(-77.5);
+      const baseY = trans(46.5);
       return [
         {
-          img: require('@assets/img/functionBtn/sweep/sweep_3.png'),
-          x: trans(-3),
-          y: trans(53),
+          img: require('@assets/img/functionBtn/sweep/sweep1.png'),
+          x: baseX,
+          y: baseY,
           height: bladesHeight,
-          rotate: '36deg'
+          width: bladesWidth,
+          rotate: '90deg'
         },
         {
-          img: require('@assets/img/functionBtn/sweep/sweep_3.png'),
-          x: trans(-20),
-          y: trans(87),
+          img: require('@assets/img/functionBtn/sweep/sweep2.png'),
+          x: baseX,
+          y: baseY,
           height: bladesHeight,
-          rotate: '18deg'
+          width: bladesWidth,
+          rotate: '90deg'
         },
         {
-          img: require('@assets/img/functionBtn/sweep/sweep_3.png'),
-          x: trans(-24),
-          y: trans(124),
+          img: require('@assets/img/functionBtn/sweep/sweep3.png'),
+          x: baseX,
+          y: baseY,
           height: bladesHeight,
-          rotate: '0'
+          width: bladesWidth,
+          rotate: '90deg'
         },
         {
-          img: require('@assets/img/functionBtn/sweep/sweep_3.png'),
-          x: trans(-18),
-          y: trans(160),
+          img: require('@assets/img/functionBtn/sweep/sweep4.png'),
+          x: baseX,
+          y: baseY,
           height: bladesHeight,
-          rotate: '-18deg'
+          width: bladesWidth,
+          rotate: '90deg'
         },
         {
-          img: require('@assets/img/functionBtn/sweep/sweep_3.png'),
-          x: trans(0),
-          y: trans(192),
+          img: require('@assets/img/functionBtn/sweep/sweep5.png'),
+          x: baseX,
+          y: baseY,
           height: bladesHeight,
-          rotate: '-36deg'
+          width: bladesWidth,
+          rotate: '90deg'
         }
       ];
     }
@@ -152,6 +164,16 @@ export default {
           Toast.info(`${this.$language('sweep.sweep_powoff_tips')}`);
         }
         this.turnBack();
+      }
+    },
+    SwingLfRig: {
+      handler() {
+        if (this.touchId === 2) this.imshowArr = this.selectSwingLfRig;
+      }
+    },
+    SwUpDn: {
+      handler() {
+        if (this.touchId === 1) this.imshowArr = this.selectSwUpDn;
       }
     }
   },
@@ -181,6 +203,9 @@ export default {
   },
   mounted() {
     hideLoading();
+    if (this.touchId === 1) {
+      this.imshowArr = this.selectSwingLfRig;
+    } else if (this.touchId === 2) this.imshowArr = this.selectSwUpDn;
   },
   methods: {
     ...mapMutations({
@@ -196,9 +221,15 @@ export default {
       });
     },
     sweepLrChangeHandler(val) {
-      this.imshowArr = val;
+      if (val.length === 1) {
+        this.imshowArr = [...val];
+      } else if (!val.length) {
+        return;
+      } else {
+        showToast(this.$language('sweep.sweep_lr_tips'), 0);
+      }
       const val2 = [];
-      val.forEach(item => {
+      this.imshowArr.forEach(item => {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
@@ -218,9 +249,15 @@ export default {
       }
     },
     sweepUdChangeHandler(val) {
-      this.imshowArr = val;
+      if (val.length === 1) {
+        this.imshowArr = [...val];
+      } else if (!val.length) {
+        return;
+      } else {
+        showToast(this.$language('sweep.sweep_ud_tips2'), 0);
+      }
       const val2 = [];
-      val.forEach(item => {
+      this.imshowArr.forEach(item => {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
@@ -243,35 +280,28 @@ export default {
       if (!data) {
         return;
       }
+      const storage = window.storage;
+      const funcData = storage.get('funcData') || {};
       if (typeof data.SwingLfRig !== 'undefined' && this.SwingLfRig !== data.SwingLfRig) {
         this.setState({ ableSend: true });
         this.setDataObject({ ...data, SmartWind: 0 });
         this.sendCtrl({ ...data, SmartWind: 0 });
-        if (data.SwingLfRig === 0) {
-          try {
-            showToast(this.$language('sweep.sweep_lr_turnoff_tips'), 0);
-          } catch (err) {
-            Toast.info(`${this.$language('sweep.sweep_lr_turnoff_tips')}`);
-          }
-        }
+        funcData.ConstLR = data.SwingLfRig;
+        storage.set('funcData', funcData);
       }
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
         this.setState({ ableSend: true });
         this.setDataObject({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
         this.sendCtrl({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
-        if (data.SwUpDn === 0) {
-          showToast(this.$language('sweep.sweep_ud_turnoff_tips'), 0);
-          try {
-            showToast(this.$language('sweep.sweep_ud_turnoff_tips'), 0);
-          } catch (err) {
-            Toast.info(`${this.$language('sweep.sweep_ud_turnoff_tips')}`);
-          }
-        }
+        funcData.ConstUD = data.SwUpDn;
+        storage.set('funcData', funcData);
       }
     },
     setImshow(val) {
-      this.imshowArr = val;
+      if (val.length === 1) {
+        this.imshowArr = [...val];
+      }
     }
   }
 };
@@ -279,17 +309,35 @@ export default {
 
 <style lang="scss">
 .page-sweep {
+  .gree-header {
+    display: flex;
+    align-items: center;
+    height: 120px;
+    .gree-header-right,
+    .gree-header-left {
+      top: 50%;
+      transform: translateY(-50%);
+      span {
+        font-size: 46px;
+      }
+    }
+    .iconfont {
+      font-size: 58px;
+    }
+  }
   .sweep-main {
     position: relative;
     margin-top: 94px;
+    top: 0;
     width: 100%;
     height: 1285px;
     display: flex;
     align-items: center;
     .sweep-body {
-      margin-left: 210px;
-      img {
-        width: 644px;
+      margin-left: 50px;
+      .bg {
+        transform: rotate(90deg);
+        height: 689px;
       }
     }
     .ac {
@@ -300,8 +348,8 @@ export default {
     }
     .blades-body {
       position: absolute;
-      margin-top: 180px;
-      top: 0;
+      // margin-top: 180px;
+      top: 180px;
       left: 280px;
       height: 100%;
       width: 100%;
@@ -318,13 +366,12 @@ export default {
 #sweep-lr {
   margin-top: 153px;
   position: absolute;
+  padding-top: calc(constant(safe-area-inset-bottom) * 1.3) !important;
+  padding-top: calc(env(safe-area-inset-bottom) * 1.3) !important;
   left: 0;
   top: 0;
   * {
     background-color: transparent !important;
   }
-}
-#sweep-lr {
-  top: 10px;
 }
 </style>

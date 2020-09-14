@@ -287,8 +287,12 @@ const LogicDefine = {
       this.g_funcDefine.forEach(func => {
         const id = func.identifier;
         const json = func.json;
-        const status = this.g_statusDirectionMap[id]; // function的指向status
-        const define = func.statusDefine[status];
+        let status = this.g_statusDirectionMap[id]; // function的指向status
+        let define = func.statusDefine[status];
+        if (!define) {
+          status = 'default';
+          define = func.statusDefine[status];
+        }
         const customize = define.customize;
         const moreCommand = define.moreCommand;
         let setData = moreCommand || {};
