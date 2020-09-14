@@ -6,10 +6,10 @@ const focus = {
       const range = window.getSelection(); // 获取光标
       range.selectAllChildren(el); // 选择所有文本
       range.collapseToEnd(); // 将光标移动到文本最后
-    } catch(e) {
+    } catch (e) {
       e;
     }
-  },
-}
+  }
+};
 
 export default focus;

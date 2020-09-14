@@ -1,7 +1,6 @@
 <template>
   <div class="components-header header" style="z-index: 10;">
-    <nav 
-      class="navbar navbar-default" style="margin-bottom: 0">
+    <nav class="navbar navbar-default" style="margin-bottom: 0">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -11,14 +10,14 @@
             <span class="icon-bar"></span>
           </button>
           <!-- <a class="navbar-brand" href="#Home" @click="updataPage('Home')">Plugin自动化开发平台</a> -->
-          <a class="navbar-brand" @click="updataPage('Home')" v-text="webTitle"/>
+          <a class="navbar-brand" @click="updataPage('Home')" v-text="webTitle" />
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav" v-show="$route.name !== 'Account'">
-            <li :class="{active: developType === 0}" @click="setDevelopType(0)">
+            <li :class="{ active: developType === 0 }" @click="setDevelopType(0)">
               <a href="#Home" @click="updataPage('Home')">设备管理</a>
             </li>
-            <li :class="{active: developType === 1}" @click="setDevelopType(1)">
+            <li :class="{ active: developType === 1 }" @click="setDevelopType(1)">
               <a href="#Home" @click="updataPage('Home')">模板定义</a>
             </li>
             <li class="dropdown">
@@ -37,14 +36,16 @@
           </ul>
           <form class="navbar-form navbar-left" v-show="$route.name !== 'Account'">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input type="text" class="form-control" placeholder="Search" />
             </div>
             <button type="submit" class="btn btn-default">查找</button>
           </form>
           <ul class="nav navbar-nav navbar-right" v-show="$route.name !== 'Account'">
-            <li><a href="#">开发文档</a></li>
+            <li><a @click="goDocument" style="cursor: pointer">文档中心</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{userName}} <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                >{{ userName }} <span class="caret"></span
+              ></a>
               <ul class="dropdown-menu">
                 <li><a href="#">基本信息</a></li>
                 <li><a href="#">账号设置</a></li>
@@ -70,7 +71,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   props: {
@@ -79,11 +80,11 @@ export default {
   computed: {
     ...mapState({
       user: state => state.userModule.user,
-      developType: state => state.pulicModule.developType,
+      developType: state => state.pulicModule.developType
     }),
     webTitle() {
-      if (this.$route.name === 'Account') return '格力风驰平台 | 登录'
-      return '格力风驰平台';
+      if (this.$route.name === 'Account') return 'Plugin自动化开发平台 | 登录';
+      return 'Plugin自动化开发平台';
     },
     userName() {
       return this.user.name;
@@ -91,37 +92,40 @@ export default {
   },
   watch: {
     '$route.name'(newVal, oldVal) {
-      (newVal === 'Template' || oldVal === 'Template') && this.setPulicMoule(['developType', 1]);
-      (newVal === 'Device' || oldVal === 'Device') && this.setPulicMoule(['setDevStep', 0]);
+      (newVal === 'Template' || oldVal === 'Template') && this.setPulicModule({ developType: 1 });
+      (newVal === 'Device' || oldVal === 'Device') && this.setPulicModule({ setDevStep: 0 });
     }
   },
   methods: {
     ...mapMutations({
-      setPulicMoule: 'SET_PULIC_MODULE',
+      setPulicModule: 'SET_PULIC_MODULE',
       setAuthenticated: 'SET_AUTHENTICATED',
-      setUser: 'SET_USER',
+      setUser: 'SET_USER'
     }),
     updataPage(routeName) {
       if (this.$route.name !== routeName && this.$route.name !== 'Account') {
         this.$nextTick(() => {
-          this.$router.push({name: routeName}).catch(err => {
+          this.$router.push({ name: routeName }).catch(err => {
             console.log(err);
           });
         });
       }
     },
+    goDocument() {
+      window.open(`${process.env.VUE_APP_SERVE_URL}:3100`);
+    },
     setDevelopType(val) {
-      this.setPulicMoule(['developType', val]);
+      this.setPulicModule({ developType: val });
     },
     signOut() {
       // 清除token
-      localStorage.removeItem("eleToken");
+      localStorage.removeItem('eleToken');
       // 清除vuex store
       this.setAuthenticated(false);
       this.setUser(null);
       // 跳转登陆界面
-      this.$router.go("/Account/Login");
+      this.$router.go('/Account/Login');
     }
-  },
-}
+  }
+};
 </script>

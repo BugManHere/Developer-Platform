@@ -1,41 +1,15 @@
 <template>
   <div class="panel-body">
-    <div
-      class="status"
-      :class="{ unfold: currentStatusId === index }"
-      v-for="(item, index) in currentStatusList"
-      :key="index"
-    >
+    <div class="status" :class="{ unfold: currentStatusId === index }" v-for="(item, index) in currentStatusList" :key="index">
       <div class="edit-optional" :class="{ must: isConstItem(item) }">
-        <div
-          class="edit-header"
-          :class="{selectable: !delStatusType}"
-          @mouseup="unfoldStatus(index)"
-        >
-          <div @mouseup.stop="isUnfold(index)" :class="{'change-color': !editName && currentStatusId === index && !isConstItem(item)}">
-            <input
-              type="text"
-              class="form-control"
-              v-if="editName !== false && currentStatusId === index"
-              v-model="editName"
-              @blur='changeStatusName(item)'
-            />
-            <span v-else v-text="currentFun.statusDefine[item].name"/>
-            <div
-              v-show="!isConstItem(item) && currentStatusId === index"
-              class="icon"
-            >
+        <div class="edit-header" :class="{ selectable: !delStatusType }" @mouseup="unfoldStatus(index)">
+          <div @mouseup.stop="isUnfold(index)" :class="{ 'change-color': !editName && currentStatusId === index && !isConstItem(item) }">
+            <input type="text" class="form-control" v-if="editName !== false && currentStatusId === index" v-model="editName" @blur="changeStatusName(item)" />
+            <span v-else v-text="currentFun.statusDefine[item].name" />
+            <div v-show="!isConstItem(item) && currentStatusId === index" class="icon">
               <span v-show="editName === false" class="icon" />
-              <span
-                v-show="editName"
-                :class="{ 'edit-ok': editName }"
-                @click="changeStatusName(item)"
-              />
-              <span
-                v-show="editName"
-                :class="{ 'edit-remove': editName }"
-                @click="editName = false"
-              />
+              <span v-show="editName" :class="{ 'edit-ok': editName }" @click="changeStatusName(item)" />
+              <span v-show="editName" :class="{ 'edit-remove': editName }" @click="editName = false" />
             </div>
           </div>
         </div>
@@ -50,7 +24,7 @@
         <div class="col-md-12">
           <div class="col-md-6">
             <label for="inputPassword" class="control-label">状态值</label>
-            <input type="text" class="form-control" id="inputText" v-model="currentStatus.value" :disabled="item === 'undefined'"/>
+            <input type="text" class="form-control" id="inputText" v-model="currentStatus.value" :disabled="item === 'undefined'" />
           </div>
           <div class="col-md-6">
             <label for="inputPassword" class="control-label">是否检查互斥</label>
@@ -88,8 +62,8 @@
             </thead>
             <tbody v-if="currentStatus.moreCommand">
               <tr class="active" v-for="(item, key) in currentStatus.moreCommand" :key="key">
-                <td v-text="key"/>
-                <td v-text="item"/>
+                <td v-text="key" />
+                <td v-text="item" />
               </tr>
             </tbody>
             <tbody>
@@ -133,8 +107,8 @@
 </template>
 
 <script>
-import { isPositiveNum, deepCopy, randomKey } from "@/utils";
-import { mapMutations, mapState } from "vuex";
+import { isPositiveNum, deepCopy, randomKey } from '@/utils';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   data() {
@@ -146,21 +120,21 @@ export default {
       useCustomize: false, // 是否使用自定义指令
       customizeType: 0,
       addStatusType: false, // 是否处于添加状态
-      extraCmd: "", // 额外命令字段
-      extraCmdVal: "", // 额外命令值
+      extraCmd: '', // 额外命令字段
+      extraCmdVal: '', // 额外命令值
       editName: false, // 编辑功能名称
-      $_selectStatusList: [], // 输出的状态列表
+      $_selectStatusList: [] // 输出的状态列表
     };
   },
   mounted() {
-   this.init();
+    this.init();
   },
   computed: {
     ...mapState({
       currentFuncId: state => state.tempModule.currentFuncId,
       delStatusType: state => state.pulicModule.delStatusType,
       activeStatusList: state => state.tempModule.activeStatusList,
-      funcDefine: (state, getters) => getters.funcDefine,
+      funcDefine: (state, getters) => getters.funcDefine
     }),
     statusLen() {
       return this.currentStatusList.length;
@@ -183,14 +157,14 @@ export default {
   watch: {
     currentStatusId(newVal) {
       this.editName = false;
-      this.$emit("changeStatus", newVal);
+      this.$emit('changeStatus', newVal);
       this.$nextTick(() => {
         if (isPositiveNum(newVal)) {
           this.useCustomize = Boolean(this.currentStatus.customize);
           this.customizeType = this.currentStatus.customize;
         }
       });
-      this.setTempModule(["currentStatusId", newVal]);
+      this.setTempModule({ currentStatusId: newVal });
     },
     useCustomize(newVal) {
       !newVal && (this.customizeType = false);
@@ -200,29 +174,27 @@ export default {
     },
     delStatusType() {
       this.clearSelect();
-    },
+    }
   },
   methods: {
     ...mapMutations({
-      setTempModule: "SET_TEMP_MODULE",
-      changeTemp: "CHANGE_TEMPLATE",
-      setPulicModule: "SET_PULIC_MODULE",
+      setTempModule: 'SET_TEMP_MODULE',
+      changeTemp: 'CHANGE_TEMPLATE',
+      setPulicModule: 'SET_PULIC_MODULE'
     }),
     init() {
       // 复制funcDefine
       this.$_funcDefine = deepCopy(this.funcDefine);
       // 初始化statusList
       if (isPositiveNum(this.currentFuncId)) {
-        const keys = Object.keys(
-          this.$_funcDefine[this.currentFuncId].statusDefine
-        );
+        const keys = Object.keys(this.$_funcDefine[this.currentFuncId].statusDefine);
         this.currentStatusList = keys;
       } else {
         this.currentStatusList.length = 0;
       }
       // 初始化orderList
       this.$_selectStatusList = this.activeStatusList || this.funcDefine[this.currentFuncId].order.concat();
-      this.setTempModule(["activeStatusList", this.$_selectStatusList.concat()]);
+      this.setTempModule({ activeStatusList: this.$_selectStatusList.concat() });
     },
     isConstItem(item) {
       return ['default', 'undefined'].includes(item);
@@ -236,12 +208,9 @@ export default {
           const delKey = this.currentStatusList[index];
           this.$delete(this.currentStatusList, index);
           this.$delete(this.checkingStatus, index);
-          this.$delete(
-            this.$_funcDefine[this.currentFuncId].statusDefine,
-            delKey
-          );
+          this.$delete(this.$_funcDefine[this.currentFuncId].statusDefine, delKey);
           this.$_selectStatusList.remove(delKey);
-          this.setTempModule(["activeStatusList", this.$_selectStatusList.concat()]);
+          this.setTempModule({ activeStatusList: this.$_selectStatusList.concat() });
           delNum += 1;
         }
       });
@@ -258,7 +227,7 @@ export default {
       this.$_funcDefine[this.currentFuncId].statusDefine[key] = {
         name: `未命名${randomKey(4)}`,
         value: 1,
-        status: "on",
+        status: 'on',
         isCheck: true,
         customize: false
       };
@@ -267,11 +236,7 @@ export default {
     },
     changeStatusName(key) {
       if (!this.editName) return;
-      this.$set(
-        this.$_funcDefine[this.currentFuncId].statusDefine[key],
-        "name",
-        this.editName
-      );
+      this.$set(this.$_funcDefine[this.currentFuncId].statusDefine[key], 'name', this.editName);
       this.editName = false;
     },
     // 展开某个状态
@@ -282,10 +247,7 @@ export default {
     isUnfold(index) {
       if (this.currentStatusId !== index) {
         this.unfoldStatus(index);
-      } else if (
-        !this.editName &&
-        ![0, 1].includes(index)
-      ) {
+      } else if (!this.editName && ![0, 1].includes(index)) {
         this.editName = this.currentStatus.name;
       }
     },
@@ -301,54 +263,31 @@ export default {
     },
     // 新增额外命令
     addCmd() {
-      if (
-        this.extraCmd === "" ||
-        !this.checknumber(this.extraCmdVal) ||
-        typeof this.extraCmd !== "string" ||
-        this.checknumber(this.extraCmd)
-      )
-        return;
+      if (this.extraCmd === '' || !this.checknumber(this.extraCmdVal) || typeof this.extraCmd !== 'string' || this.checknumber(this.extraCmd)) return;
       if (this.currentStatus.moreCommand) {
         this.$set(
-          this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.currentStatusList[this.currentStatusId]
-          ].moreCommand,
+          this.$_funcDefine[this.currentFuncId].statusDefine[this.currentStatusList[this.currentStatusId]].moreCommand,
           this.extraCmd,
           Number(this.extraCmdVal)
         );
       } else {
         const map = {};
         map[this.extraCmd] = Number(this.extraCmdVal);
-        this.$set(
-          this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.currentStatusList[this.currentStatusId]
-          ],
-          "moreCommand",
-          map
-        );
+        this.$set(this.$_funcDefine[this.currentFuncId].statusDefine[this.currentStatusList[this.currentStatusId]], 'moreCommand', map);
       }
-      this.extraCmd = "";
-      this.extraCmdVal = "";
+      this.extraCmd = '';
+      this.extraCmdVal = '';
     },
     // 删除额外命令
     delCmd(key) {
       if (key in this.currentStatus.moreCommand) {
-        this.$delete(
-          this.$_funcDefine[this.currentFuncId].statusDefine[
-            this.currentStatusList[this.currentStatusId]
-          ].moreCommand,
-          key
-        );
+        this.$delete(this.$_funcDefine[this.currentFuncId].statusDefine[this.currentStatusList[this.currentStatusId]].moreCommand, key);
         this.$forceUpdate();
       }
     },
     // 插入自定义函数
-    setCustomize(val='before') {
-      this.$set(
-        this.currentStatus,
-        'customize',
-        val
-      );
+    setCustomize(val = 'before') {
+      this.$set(this.currentStatus, 'customize', val);
     },
     nextStep() {
       const nameMap = {};
@@ -362,17 +301,17 @@ export default {
         Object.keys(funcItem.statusDefine).forEach(statusItem => {
           if (statusItem === 'undefined') return;
           const status = funcItem.statusDefine[statusItem];
-           status.value = Number(status.value);
-           if (status.moreCommand) {
-             Object.keys(status.moreCommand).forEach(comItem => {
-               status.moreCommand[comItem] = Number(status.moreCommand[comItem]);
-             });
-           }
+          status.value = Number(status.value);
+          if (status.moreCommand) {
+            Object.keys(status.moreCommand).forEach(comItem => {
+              status.moreCommand[comItem] = Number(status.moreCommand[comItem]);
+            });
+          }
         });
       });
-      this.setTempModule(['currentStatusList', this.currentStatusList.concat()]);
-      this.changeTemp({funcDefine: this.$_funcDefine});
-      this.setPulicModule(["statusSetStep", 1]);
+      this.setTempModule({ currentStatusList: this.currentStatusList.concat() });
+      this.changeTemp({ funcDefine: this.$_funcDefine });
+      this.setPulicModule({ statusSetStep: 1 });
     },
     checknumber(String) {
       const reg = /^[0-9]+$/;
@@ -380,7 +319,7 @@ export default {
         return true;
       }
       return false;
-    },
+    }
   }
 };
 </script>

@@ -1,33 +1,28 @@
 <template>
   <div class="select-page">
-    <div
-      @click="chooseOne(key)"
-      :class="{hold: key === imgKey}"
-      class="panel"
-      v-for="(item, key) in imgMap"
-      :key="key">
+    <div @click="chooseOne(key)" :class="{ hold: key === imgKey }" class="panel" v-for="(item, key) in imgMap" :key="key">
       <img :src="item" />
     </div>
   </div>
 </template>
 
 <script>
-import { deepCopy } from "@/utils";
-import { mapState, mapMutations } from "vuex";
-import https from "@/https";
+import { deepCopy } from '@/utils';
+import { mapState, mapMutations } from 'vuex';
+import https from '@/https';
 
 export default {
   data() {
     return {
       pageConfig: {},
-      mouldName: "",
+      mouldName: '',
       imgKey: undefined
     };
   },
   computed: {
     ...mapState({
       productTypeList: state => state.pulicModule.productTypeList,
-      funcDefine: (state, getters) => getters.funcDefine,
+      funcDefine: (state, getters) => getters.funcDefine
     }),
     imgMap() {
       const result = {};
@@ -44,10 +39,10 @@ export default {
   mounted() {
     if (!this.productTypeList.length) {
       https
-        .fetchGet("/productType")
+        .fetchGet('/productType')
         .then(data => {
           const productTypeList = data.data.productTypeList;
-          this.setPulicModule(["productTypeList", productTypeList]);
+          this.setPulicModule({ productTypeList });
           this.getImg();
         })
         .catch(err => {
@@ -60,9 +55,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      changeTemp: "CHANGE_TEMPLATE",
-      setDevModule: "SET_DEV_MODULE",
-      setPulicModule: "SET_PULIC_MODULE",
+      changeTemp: 'CHANGE_TEMPLATE',
+      setPulicModule: 'SET_PULIC_MODULE'
     }),
     chooseOne(key) {
       this.imgKey = this.imgKey === key ? undefined : key;
@@ -86,7 +80,7 @@ export default {
         funcDefine[index].page = undefined;
       }
       console.log(funcDefine[index].page);
-      this.changeTemp({funcDefine});
+      this.changeTemp({ funcDefine });
       this.$parent.$parent.insertPageShow = false;
     }
   }

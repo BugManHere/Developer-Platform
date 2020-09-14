@@ -19,6 +19,7 @@ import {
   showToast,
   hideLoading
 } from '@PluginInterface';
+import LogicDefine from '@/logic/define';
 
 export default {
   name: 'AssHt',
@@ -31,6 +32,7 @@ export default {
     [Item.name]: Item,
     [Toast.name]: Toast,
   },
+  mixins: [LogicDefine],
   data() {
     return {
     };
@@ -44,11 +46,11 @@ export default {
     modes() {
       return [
         {
-          value: 0,
+          value: this.g_identifierArr.includes('AssHt(Final)') ? 1 : 0,
           text: '开',
         },
         {
-          value: 1,
+          value: this.g_identifierArr.includes('AssHt(Final)') ? 0 : 1,
           text: '关',
         },
         {
@@ -76,6 +78,7 @@ export default {
   },
   mounted() {
     hideLoading();
+    console.log();
   },
   methods: {
     ...mapMutations({

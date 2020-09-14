@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      isLogin: false,
+      isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
       isScrollTop: true,
@@ -193,10 +193,12 @@ export default {
 </script>
 
 <style lang="scss">
+$mainHeight: calc(100vh - 142px - 120px - 669px - 190px);
 .song-list {
   overflow: scroll;
   $fontSize: 44px;
   width: 100%;
+  min-height: $mainHeight;
   height: 100%;
   // display: flex;
   // justify-content: center;
@@ -207,6 +209,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-height: $mainHeight;
     .logo {
       height: 250px;
       width: 250px;

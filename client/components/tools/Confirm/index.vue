@@ -1,18 +1,15 @@
 <template>
   <div v-if="isShow">
-    <div class="overlay-backdrop"/>
-    <div 
-      class="gr-confirm" 
-      @click="cancel"
-      @mousemove="dragMove"
-      >
-      <div 
+    <div class="overlay-backdrop" />
+    <div class="gr-confirm" @click="cancel" @mousemove="dragMove">
+      <div
         class="row"
         :class="{
           dragging: isDrag,
           drop: isDrop
-        }">
-        <div 
+        }"
+      >
+        <div
           class="confirm-panel"
           :class="{
             shake: !isDrag,
@@ -23,8 +20,9 @@
             left: isNaN(movePos) ? 0 : `${movePos}px`
           }"
           @mousedown="dragStart"
-          @click.stop="commit">
-          <span v-text="contnet"/>
+          @click.stop="commit"
+        >
+          <span v-text="contnet" />
           <div class="right">
             <span />
             <span />
@@ -39,21 +37,21 @@
 <script>
 export default {
   props: {
-    contnet: {
+    content: {
       type: String,
-      default: 'confirm',
+      default: 'confirm'
     },
     onConfirm: {
       type: Function,
       default: function() {
         return {};
-      },
+      }
     },
     onCancel: {
       type: Function,
       default: function() {
         return {};
-      },
+      }
     }
   },
   data() {
@@ -64,8 +62,8 @@ export default {
       isDrag: false, // 是否拖动
       isDrop: false, // 是否拖动后放手
       clientPos: NaN, // 初始点击位置
-      movePos: NaN, // 拖动距离
-    }
+      movePos: NaN // 拖动距离
+    };
   },
   methods: {
     commit() {
@@ -106,8 +104,8 @@ export default {
     dragMove(e) {
       this.movePos = e.clientX - this.clientPos;
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss">
@@ -126,10 +124,11 @@ export default {
     position: relative;
     right: 0;
     width: 100%;
-    display: flex; justify-content: center;
+    display: flex;
+    justify-content: center;
     align-items: center;
     background-color: transparent;
-    animation: halfRight .8s;
+    animation: halfRight 0.8s;
     overflow: hidden;
     .confirm-panel {
       position: relative;
@@ -167,7 +166,7 @@ export default {
           // animation: slowRightHide 1.5s infinite;
           &::before {
             color: Gainsboro;
-            opacity: .6;
+            opacity: 0.6;
             font-family: 'Glyphicons Halflings';
             content: '\e258';
           }
@@ -189,77 +188,149 @@ export default {
     &.dragging {
       height: 64px;
       background-color: #eee;
-      animation: hold .4s linear;
+      animation: hold 0.4s linear;
     }
     &.drop {
       height: 0;
       background-color: transparent;
-      animation: drop .2s linear;
+      animation: drop 0.2s linear;
     }
     .pass {
       transform: translateX(60vw);
-      animation: pass .5s;
+      animation: pass 0.5s;
     }
     .back {
       transform: translateX(-60vw);
-      animation: back .5s !important;
+      animation: back 0.5s !important;
     }
   }
   @keyframes slowRightShow1 {
-    0% {transform: translateX(0%); opacity: 1;}
-    33% {transform: translateX(240%)}
-    66% {transform: translateX(480%)}
-    100% {transform: translateX(720%); opacity: 0;}
+    0% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+    33% {
+      transform: translateX(240%);
+    }
+    66% {
+      transform: translateX(480%);
+    }
+    100% {
+      transform: translateX(720%);
+      opacity: 0;
+    }
   }
 
   @keyframes slowRightShow2 {
-    0% {transform: translateX(0); opacity: 0.7917‬;}
-    79.17% {transform: translateX(570%); opacity: 0;}
-    79.2% {transform: translateX(-150%); opacity: 1;}
-    100% {transform: translateX(0); opacity: 0.7917;}
+    0% {
+      transform: translateX(0);
+      opacity: 0.7917‬;
+    }
+    79.17% {
+      transform: translateX(570%);
+      opacity: 0;
+    }
+    79.2% {
+      transform: translateX(-150%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 0.7917;
+    }
   }
 
   @keyframes slowRightShow3 {
-    0% {transform: translateX(0); opacity: 0.583;}
-    58.33% {transform: translateX(420%); opacity: 0;}
-    58.4% {transform: translateX(-300%); opacity: 1;}
-    100% {transform: translateX(0); opacity: 0.583;}
+    0% {
+      transform: translateX(0);
+      opacity: 0.583;
+    }
+    58.33% {
+      transform: translateX(420%);
+      opacity: 0;
+    }
+    58.4% {
+      transform: translateX(-300%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 0.583;
+    }
   }
 
   @keyframes littleRight {
-    0% {transform: translateX(0);}
-    50% {transform: translateX(0);}
-    55% {transform: translateX(15px);}
-    60% {transform: translateX(0);}
-    70% {transform: translateX(0);}
-    75% {transform: translateX(15px);}
-    80% {transform: translateX(0px);}
-    100% {transform: translateX(0px);}
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(0);
+    }
+    55% {
+      transform: translateX(15px);
+    }
+    60% {
+      transform: translateX(0);
+    }
+    70% {
+      transform: translateX(0);
+    }
+    75% {
+      transform: translateX(15px);
+    }
+    80% {
+      transform: translateX(0px);
+    }
+    100% {
+      transform: translateX(0px);
+    }
   }
 
   @keyframes halfRight {
-    0% {transform: translateX(-60vw);}
-    100% {transform: translateX(0);}
+    0% {
+      transform: translateX(-60vw);
+    }
+    100% {
+      transform: translateX(0);
+    }
   }
 
   @keyframes pass {
-    0% {transform: translateX(0);}
-    100% {transform: translateX(60vw);}
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(60vw);
+    }
   }
 
   @keyframes back {
-    0% {transform: translateX(0);}
-    100% {transform: translateX(-60vw);}
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-60vw);
+    }
   }
 
   @keyframes hold {
-    0% {background-color: transparent}
-    100% {background-color: #eee}
+    0% {
+      background-color: transparent;
+    }
+    100% {
+      background-color: #eee;
+    }
   }
 
   @keyframes drop {
-    0% {background-color: #eee; height: 64px;}
-    100% {background-color: transparent; height: 0px;}
+    0% {
+      background-color: #eee;
+      height: 64px;
+    }
+    100% {
+      background-color: transparent;
+      height: 0px;
+    }
   }
 }
 </style>

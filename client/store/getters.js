@@ -18,11 +18,11 @@ const getters = {
     const result = {};
     getters.funcDefine.forEach(item => {
       const map = {
-        identifier: item.identifier, 
-        name: item.name, 
+        identifier: item.identifier,
+        name: item.name,
         json: item.json,
         _id: item._id,
-        define: item,
+        define: item
       };
       if (result[item.identifier]) {
         result[item.identifier].push(map);
@@ -36,9 +36,9 @@ const getters = {
     const result = {};
     getters.funcDefine.forEach(item => {
       const map = {
-        identifier: item.identifier, 
-        name: item.name, 
-        json: item.json, 
+        identifier: item.identifier,
+        name: item.name,
+        json: item.json,
         _id: item._id,
         define: item
       };
@@ -53,10 +53,10 @@ const getters = {
   productFuncInfoByJson: (state, getters) => {
     const result = {};
     getters.funcDefine.forEach(item => {
-      const map =  {
-        identifier: item.identifier, 
-        name: item.name, 
-        json: item.json, 
+      const map = {
+        identifier: item.identifier,
+        name: item.name,
+        json: item.json,
         _id: item._id,
         define: item
       };
@@ -73,17 +73,17 @@ const getters = {
     const result = [];
     getters.funcDefine.forEach((funcItem, funcIndex) => {
       const statusDefine = funcItem.statusDefine;
-      ['undefined', 'default', ...funcItem.order].forEach(item => {
+      Object.keys(statusDefine).forEach(item => {
         if (statusDefine[item].isCheck) {
           result.push({
             identifier: funcItem.identifier,
             name: `${funcItem.name}（${statusDefine[item].name}）`,
             index: funcIndex,
-            statusName: item,
+            statusName: item
           });
         }
       });
-    }); 
+    });
     return result;
   }
 };

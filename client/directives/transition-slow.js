@@ -1,4 +1,4 @@
-import state from '@/store/module/pulic.js'
+import state from '@/store/module/pulic.js';
 
 const transitionSlow = {
   bind: (el, bingding) => {
@@ -22,10 +22,10 @@ const transitionSlow = {
       el.$_timer = setTimeout(() => {
         el.$_timer = undefined;
         el.$_display = el.style.display;
-        el.style.display = 'none';        
+        el.style.display = 'none';
       }, animationSecond * 1000);
     }
-  },
+  }
 };
 
 export default transitionSlow;

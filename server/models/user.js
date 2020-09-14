@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // 创建Schema
 const UserSchema = new mongoose.Schema({
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   identity: {
     type: Number,
     required: true
-  },
+  }
 });
 
-module.exports = mongoose.model("users", UserSchema);
+module.exports = mongoose.model('users', UserSchema);

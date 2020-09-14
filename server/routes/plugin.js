@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const userDeviceModel = require('../models/userDevice');
-const templateFuncModel = require("../models/template");
+const templateFuncModel = require('../models/template');
 // 登录token
 const keys = require('../config/keys');
 
-router.get('/config', async function(req, res, next) {
+router.get('/config', async function(req, res) {
   const admin = req.query.admin;
   const id = req.query.id;
   const userDevice = await getAdminDevice(admin);
@@ -14,11 +14,13 @@ router.get('/config', async function(req, res, next) {
 
   const productID = device.productID;
   const seriesID = device.seriesID;
-  const template = await templateFuncModel.findOne({productID, seriesID}); // 寻找对应模板
-  
-  const funcDefine = device.funcImport.map(key => {
-    return template.funcDefine.id(key);
-  }).filter(v => v);
+  const template = await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
+
+  const funcDefine = device.funcImport
+    .map(key => {
+      return template.funcDefine.id(key);
+    })
+    .filter(v => v);
 
   const output = {
     excludeMap: {},
@@ -29,8 +31,9 @@ router.get('/config', async function(req, res, next) {
     moreOption: device.moreOption
   };
   const extractLogic = (status, key) => {
-    if (status[key] && status[key].length) { // 如果存在互斥逻辑
-     return status[key]; // 返回互斥
+    if (status[key] && status[key].length) {
+      // 如果存在互斥逻辑
+      return status[key]; // 返回互斥
     }
     return [];
   };
@@ -61,7 +64,7 @@ async function getAdminDevice(admin) {
   const Ciphertext = Signture.digest().toString('base64');
   const res = await userDeviceModel.findOne({ admin: Ciphertext });
   console.log(Ciphertext);
-  return res || {userDeviceList: []};
+  return res || { userDeviceList: [] };
 }
 
 module.exports = router;
