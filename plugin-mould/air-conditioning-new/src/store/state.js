@@ -14,7 +14,6 @@ const state = {
     WdSpd: 5,
     Quiet: 0,
     Tur: 0,
-    Lig: 1,
     TemSen: 23 // 室温
   },
   checkObject: {},
