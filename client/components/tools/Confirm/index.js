@@ -1,4 +1,4 @@
-import Confirm from './index.vue'
+import Confirm from './index.vue';
 
 const CONFIRM = {
   newConfirm: null,
@@ -11,8 +11,8 @@ const CONFIRM = {
       const VueCONFIRM = Vue.extend({
         render(h) {
           let props = map;
-          return h('Confirm', {props});
-        },
+          return h('Confirm', { props });
+        }
       });
       CONFIRM.newConfirm = new VueCONFIRM();
       CONFIRM.vm = CONFIRM.newConfirm.$mount();
@@ -23,9 +23,9 @@ const CONFIRM = {
     Vue.prototype.$confirm = {
       show(map) {
         display(map);
-      },
-    }
+      }
+    };
   }
-}
+};
 
 export default CONFIRM;

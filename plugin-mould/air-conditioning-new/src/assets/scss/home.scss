@@ -1,0 +1,119 @@
+.page-home {
+  background-image: url(../img/bg.png);
+  background-size: 100vw 100vh;
+  background-position: bottom;
+  // background-color: rgb(219, 232, 237);
+  .page-content {
+    .gree-header {
+      display: flex;
+      align-items: center;
+      height: 120px;
+      // background-color: rgb(241, 246, 247);
+      background-color: transparent;
+      background-image: none;
+      .gree-header-right,
+      .gree-header-left {
+        top: 50%;
+        transform: translateY(-50%);
+        span {
+          font-size: 46px;
+        }
+      }
+      .gree-header-title {
+        margin: 0 120px;
+      }
+      .iconfont {
+        font-size: 58px;
+      }
+    }
+    .page-main {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 1047px;
+      max-height: 1047px;
+      background-color: transparent;
+      &.grayscale {
+        // filter: grayscale(100%);
+        pointer-events: none;
+      }
+      .iro__slider {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
+    }
+  }
+}
+.icons {
+  margin-top: 25px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  .col {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: auto;
+    max-width: 80%;
+    .mini-icon {
+      font-size: 56px;
+      width: 56px;
+      margin: 0 37px;
+      text-align: center;
+    }
+  }
+}
+.toolbar {
+  height: 231px !important;
+  bottom: 0 !important;
+  background-image: url('../img/bottom_bg.png');
+  .toolbar-inner {
+    display: flex;
+    justify-content: center !important;
+    align-items: flex-start !important;
+  }
+  .row {
+    padding-top: 50px;
+    width: 85%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    .col {
+      &.on {
+        h3,
+        i {
+          color: #619ce7;
+        }
+      }
+      &.gray {
+        opacity: 0.2;
+      }
+      i {
+        font-size: 74px;
+      }
+      h3 {
+        font-size: 36px;
+      }
+    }
+  }
+}
+@keyframes rippling {
+  0% {
+    min-height: 126px;
+    min-width: 126px;
+    border-color: rgb(151, 204, 245);
+  }
+  100% {
+    min-height: 197px;
+    min-width: 197px;
+    border-color: transparent;
+  }
+}

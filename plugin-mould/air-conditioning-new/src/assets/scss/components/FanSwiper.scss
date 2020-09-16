@@ -1,0 +1,43 @@
+.fan-swiper-box {
+  $fontColor: #404657;
+  $boxHeight: 732px;
+  $titleHeight: 174px;
+  height: $boxHeight;
+  background-color: #fff;
+  width: 100%;
+  padding-bottom: constant(safe-area-inset-bottom) !important; /* 兼容 iOS < 11.2 */
+  padding-bottom: env(safe-area-inset-bottom) !important; /* 兼容 iOS >= 11.2 */
+  .swiper-title {
+    position: relative;
+    height: $titleHeight;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    color: $fontColor;
+    font-size: 54px;
+  }
+  // display: flex;
+  // justify-content: center;
+  .fan-swiper-main {
+    position: relative;
+    height: $boxHeight - $titleHeight;
+    .swiper-slide {
+      width: 100%;
+      text-align: center;
+      opacity: 0.3;
+      .slide-text {
+        font-size: 51px;
+        font-weight: 400;
+        color: $fontColor;
+      }
+      &.swiper-slide-active {
+        opacity: 1;
+        .slide-text {
+          transform: scale(1.2);
+          color: #619ce7 !important;
+        }
+      }
+    }
+  }
+}

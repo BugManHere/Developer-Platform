@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       imshowType: 0
-    }
+    };
   },
 };
 </script>

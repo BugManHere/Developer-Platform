@@ -1,64 +1,60 @@
 <template>
   <div class="eidtor">
-      <!-- 标题 -->
-      <div class="row" style="margin-top: 10px">
-        <div class="json-header">
-          <span v-text="titleContent" />
-        </div>
+    <!-- 标题 -->
+    <div class="row" style="margin-top: 10px">
+      <div class="json-header">
+        <span v-text="titleContent" />
       </div>
-      <!-- 内容-小卡片字段 -->
-      <div class="row">
-        <!-- 预览字段 -->
-        <div 
-          class="preview-json"
-          :style="{height: editorHeight ? `${editorHeight}px` : '72px'}"
-          v-show="onlyView || (isBlur && isInit)">
-          <div @mouseup="changeShow">
-            <!-- 内容 -->
-            <span 
-              v-for="(text, index) in jsonArr"
-              :key="index"
-              class="json-label"
-              v-text="text"/>
-          </div>
-        </div>
-        <!-- 编辑字段 -->
-        <span
-          :id="editKey"
-          class="text-box" 
-          spellcheck="false"
-          v-show="!onlyView && (!isBlur || !isInit)"
-          @mousedown="setEdit(true)"
-          @mouseup="setEdit(false)"
-          @mouseleave="setEdit(false);getFocus()"
-          >
-          <!-- 提示栏 -->
-          <div class="box-tip" contenteditable="false">
-            <transition name="fade">
-              <div class="box-message" v-text="'JSON格式不正确'" v-show="imshowTip"/>
-            </transition>
-            <div class="box-btn btn-copy" title="复制" @click="copyEvent" @blur.prevent/>
-            <div class="box-btn btn-restore" title="还原" @click="restoreEvent"/>
-            <div class="box-btn btn-close" title="关闭" @click="closeEvent"/>
-          </div>
-          <!-- 序号 -->
-          <div class="margin-view-overlays" contenteditable="false">
-            <div v-for="num in indexNum" class="line-numbers" v-text="num" :key="num"/>
-          </div>
+    </div>
+    <!-- 内容-小卡片字段 -->
+    <div class="row">
+      <!-- 预览字段 -->
+      <div class="preview-json" :style="{ height: editorHeight ? `${editorHeight}px` : '72px' }" v-show="onlyView || (isBlur && isInit)">
+        <div @mouseup="changeShow">
           <!-- 内容 -->
-            <span
-              id="editor"
-              class="json-content"
-              contenteditable="true"
-              v-text="statueJson" 
-              v-focus="!isBlur"
-              @blur="onBlur"
-              @keydown.enter.prevent
-              @paste.prevent
-              @keyup="updateEditor()"
-              />
-        </span>
+          <span v-for="(text, index) in jsonArr" :key="index" class="json-label" v-text="text" />
+        </div>
       </div>
+      <!-- 编辑字段 -->
+      <span
+        :id="editKey"
+        class="text-box"
+        spellcheck="false"
+        v-show="!onlyView && (!isBlur || !isInit)"
+        @mousedown="setEdit(true)"
+        @mouseup="setEdit(false)"
+        @mouseleave="
+          setEdit(false);
+          getFocus();
+        "
+      >
+        <!-- 提示栏 -->
+        <div class="box-tip" contenteditable="false">
+          <transition name="fade">
+            <div class="box-message" v-text="'JSON格式不正确'" v-show="imshowTip" />
+          </transition>
+          <div class="box-btn btn-copy" title="复制" @click="copyEvent" @blur.prevent />
+          <div class="box-btn btn-restore" title="还原" @click="restoreEvent" />
+          <div class="box-btn btn-close" title="关闭" @click="closeEvent" />
+        </div>
+        <!-- 序号 -->
+        <div class="margin-view-overlays" contenteditable="false">
+          <div v-for="num in indexNum" class="line-numbers" v-text="num" :key="num" />
+        </div>
+        <!-- 内容 -->
+        <span
+          id="editor"
+          class="json-content"
+          contenteditable="true"
+          v-text="statueJson"
+          v-focus="!isBlur"
+          @blur="onBlur"
+          @keydown.enter.prevent
+          @paste.prevent
+          @keyup="updateEditor()"
+        />
+      </span>
+    </div>
   </div>
 </template>
 
@@ -92,12 +88,12 @@ export default {
       editorHeight: false, // 预览框高度
       isInit: false, // 是否初始化完毕
       indexNum: 1, // 编辑框左边的序号
-      statueJson: ['a','b'], // 编辑框里面的文字
+      statueJson: ['a', 'b'], // 编辑框里面的文字
       imshowTip: false, // 是否显示提示
-      isBlur: true,  // 是否失去焦点
+      isBlur: true, // 是否失去焦点
       isEditing: false, // 是否在复制中
-      initText: "", // 初始文本
-    }
+      initText: '' // 初始文本
+    };
   },
   computed: {
     // 当前编辑框
@@ -116,7 +112,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-    // 获取初始数据
+      // 获取初始数据
       this.statueJson = this.jsonArr;
       // 重定义粘贴事件
       this.addPasteEvent();
@@ -136,15 +132,15 @@ export default {
       // 绑定粘贴事件
       ele.addEventListener('paste', e => {
         if (e.clipboardData) {
-           // 阻止默认行为
+          // 阻止默认行为
           e.preventDefault();
-          const clipboardData = e.clipboardData, 
+          const clipboardData = e.clipboardData,
             // 获取剪贴板的文本
             text = clipboardData.getData('text');
           if (window.getSelection && text !== '' && text !== null) {
             // 创建文本节点
             const textNode = document.createTextNode(text),
-            // 在当前的光标处插入文本节点
+              // 在当前的光标处插入文本节点
               range = window.getSelection().getRangeAt(0);
             // 删除选中文本
             range.deleteContents();
@@ -210,7 +206,7 @@ export default {
           isBlur: true,
           key: this.editKey
         });
-      } catch(e) {
+      } catch (e) {
         // 解析josn失败，弹出提示
         this.imshowTip = true;
       }
@@ -220,16 +216,18 @@ export default {
       this.setEdit(true); // 设置编辑中标志位
       const el = this.editDom;
       //  获取复制文本,去空格
-      let text = el.getElementsByClassName('json-content')[0].innerText.replace(/\s+/g, '')
+      let text = el.getElementsByClassName('json-content')[0].innerText.replace(/\s+/g, '');
       // 等待复制完成
-      this.$copyText(text)
-        .then(() => {
+      this.$copyText(text).then(
+        () => {
           this.$toast.info('复制成功');
           this.setEdit(false); // 取消编辑中标志位
-        }, () => {
+        },
+        () => {
           this.$toast.error('复制失败，请手动复制');
           this.setEdit(false); // 取消编辑中标志位
-        });
+        }
+      );
     },
     // 还原文本
     restoreEvent() {
@@ -267,6 +265,6 @@ export default {
       range.selectAllChildren(el);
       range.collapseToEnd();
     }
-  },
+  }
 };
 </script>

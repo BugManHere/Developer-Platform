@@ -3,7 +3,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const productTypeModel = require('../models/productType');
 const userDeviceModel = require('../models/userDevice');
-const templateFuncModel = require("../models/template");
+const templateFuncModel = require('../models/template');
 const dayjs = require('dayjs');
 const fs = require('fs');
 const path = require('path');
@@ -11,18 +11,18 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 // 权限判断
-const permit = require("../api/permit");
+const permit = require('../api/permit');
 
 const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-router.use(function (req, res, next) {
+router.use(function(req, res, next) {
   // 拿取token 数据 按照自己传递方式写
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
   if (token) {
     // 解码 token (验证 secret 和检查有效期（exp）)
-    jwt.verify(token, keys.secretOrKey, function (err, decoded) {
+    jwt.verify(token, keys.secretOrKey, function(err, decoded) {
       if (err) {
         return res.status(403).send('用户信息过期');
       } else {
@@ -32,25 +32,25 @@ router.use(function (req, res, next) {
       }
     });
   } else {
-    // 没有拿到token 返回错误 
+    // 没有拿到token 返回错误
     return res.status(403).send('用户信息过期');
   }
 });
 
-router.get('/', async function (req, res, next) {
+router.get('/', async function(req, res) {
   const admin = req.query.admin;
   const userDevice = await getAdminDevice(admin);
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/', async function (req, res, next) {
+router.post('/', async function(req, res) {
   const admin = req.body.admin;
   const userDevice = await getAdminDevice(admin);
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/create', async function (req, res, next) {
-  if (!await permit(res, req.body.admin, 2)) {
+router.post('/create', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -70,32 +70,33 @@ router.post('/create', async function (req, res, next) {
     statueJson2: []
   };
   // 默认功能
-  deviceInfo.productName === '立柜式空调' && (deviceInfo.funcImport = [
-    "5e54a3abbf4af11b3c07b747",
-    "5e660a3de2e36024789d8718",
-    "5e54a3abbf4af11b3c07b746",
-    "5e5771a1aad6f324b4089969",
-    "5e5771a1aad6f324b4089968",
-    "5e5771a1aad6f324b4089967",
-    "5e5771a1aad6f324b4089966",
-    "5e66093ee2e36024789d8653",
-    "5e53827abf4af11b3c07b5ca",
-    "5e53827abf4af11b3c07b5c9",
-    "5e53827abf4af11b3c07b5c8",
-    "5e53827abf4af11b3c07b5c7",
-    "5e53827abf4af11b3c07b5c6",
-    "5e53827abf4af11b3c07b5c5",
-    "5e53827abf4af11b3c07b5c4",
-    "5e53827abf4af11b3c07b5c3"
-  ]);
+  deviceInfo.productName === '立柜式空调' &&
+    (deviceInfo.funcImport = [
+      '5e54a3abbf4af11b3c07b747',
+      '5e660a3de2e36024789d8718',
+      '5e54a3abbf4af11b3c07b746',
+      '5e5771a1aad6f324b4089969',
+      '5e5771a1aad6f324b4089968',
+      '5e5771a1aad6f324b4089967',
+      '5e5771a1aad6f324b4089966',
+      '5e66093ee2e36024789d8653',
+      '5e53827abf4af11b3c07b5ca',
+      '5e53827abf4af11b3c07b5c9',
+      '5e53827abf4af11b3c07b5c8',
+      '5e53827abf4af11b3c07b5c7',
+      '5e53827abf4af11b3c07b5c6',
+      '5e53827abf4af11b3c07b5c5',
+      '5e53827abf4af11b3c07b5c4',
+      '5e53827abf4af11b3c07b5c3'
+    ]);
 
   userDeviceList.push(deviceInfo);
   await userDevice.save();
   res.json(userDeviceList);
 });
 
-router.post('/delDevice', async function (req, res, next) {
-  if (!await permit(res, req.body.admin, 2)) {
+router.post('/delDevice', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -108,8 +109,8 @@ router.post('/delDevice', async function (req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/save', async function (req, res, next) {
-  if (!await permit(res, req.body.admin, 2)) {
+router.post('/save', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -119,13 +120,13 @@ router.post('/save', async function (req, res, next) {
   const userDevice = await getAdminDevice(admin);
   const device = await userDevice.userDeviceList.id(id);
   device.funcImport = idList;
-  device.funcImport = Array(...new Set(device.funcImport))
+  device.funcImport = Array(...new Set(device.funcImport));
   await userDevice.save();
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/delFunc', async function (req, res, next) {
-  if (!await permit(res, req.body.admin, 2)) {
+router.post('/delFunc', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -141,8 +142,8 @@ router.post('/delFunc', async function (req, res, next) {
   res.json(userDevice.userDeviceList);
 });
 
-router.post('/done', async function (req, res, next) {
-  if (!await permit(res, req.body.admin, 2)) {
+router.post('/done', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
     res.status(200).send('只有预览权限');
     return;
   }
@@ -151,12 +152,13 @@ router.post('/done', async function (req, res, next) {
   // 写入文件
   fs.writeFileSync(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output));
   fs.writeFileSync(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }));
+  fs.writeFileSync(resolve(`../../plugin-mould/air-conditioning-new/plugin.id.json`), JSON.stringify({ key: deviceKey }));
   res.json(output);
 });
 
-router.get('/download', function (req, res, next) {
+router.get('/download', function(req, res) {
   const deviceKey = req.query.deviceKey;
-  const downloadUrl = resolve(`../../output/${deviceKey}.json`)
+  const downloadUrl = resolve(`../../output/${deviceKey}.json`);
   res.download(downloadUrl);
 });
 
@@ -185,7 +187,7 @@ async function saveAndOutput(input) {
   // 根据功能id寻找功能信息
   const funcDefine = device.funcImport.map(key => {
     return template.funcDefine.id(key);
-  })
+  });
 
   device.moreOption = moreOption; // 将更多配置项存入设备配置中
   userDevice.save(); // 保存
@@ -202,7 +204,8 @@ async function saveAndOutput(input) {
 
   // 提取逻辑
   const extractLogic = (status, key) => {
-    if (status[key] && status[key].length) { // 如果存在互斥逻辑
+    if (status[key] && status[key].length) {
+      // 如果存在互斥逻辑
       return status[key]; // 返回互斥
     }
     return [];
@@ -210,6 +213,7 @@ async function saveAndOutput(input) {
 
   // 遍历功能,提取排斥/隐藏逻辑
   funcDefine.forEach(func => {
+    if (!func) return;
     const id = func.identifier; // 获取id
     // 轮询功能里面的状态，提取互斥
     Object.keys(func.statusDefine).forEach(statusKey => {

@@ -162,6 +162,7 @@ module.exports = {
     'AssHt(Auto)': '辅热',
     'AssHt(Reverse)': '辅热',
     'AssHt(M3)': '辅热',
+    'AssHt(Final)': '辅热',
     cwz: '陈文中',
     TemStep: '温度间隔',
     TemUn: '温度单位',

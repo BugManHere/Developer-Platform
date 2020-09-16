@@ -1,7 +1,7 @@
 <template>
   <div class="gr-toast">
     <div v-fade:show="show" :class="type">
-      <span v-text="text"/>
+      <span v-text="text" />
     </div>
   </div>
 </template>
@@ -11,18 +11,18 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'info',
+      default: 'info'
     },
     text: {
       type: String,
-      default: '',
+      default: ''
     },
     show: {
       type: Boolean,
       default: false
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss">
@@ -46,19 +46,19 @@ export default {
     font-size: 16px;
   }
   .info {
-    background-color:#7FFFAA;
+    background-color: #7fffaa;
     color: forestgreen;
   }
   .warning {
-    background-color:palegreen;
+    background-color: palegreen;
     color: goldenrod;
   }
   .error {
-    background-color:darkkhaki;
+    background-color: darkkhaki;
     color: #f5f5f5;
   }
   .message {
-    background-color:#7FFFAA;
+    background-color: #7fffaa;
     color: forestgreen;
   }
 }

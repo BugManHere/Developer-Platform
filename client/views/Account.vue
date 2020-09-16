@@ -12,14 +12,12 @@ import Login from '@components/Login';
 export default {
   props: ['loginType'],
   components: {
-    Login,
+    Login
     // Register
   },
   data() {
-    return {
-    };
+    return {};
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>

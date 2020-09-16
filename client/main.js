@@ -16,7 +16,7 @@ import transitionSlow from './directives/transition-slow';
 import focus from './directives/focus';
 import './directives/transition-fade';
 
-import VueClipboard from 'vue-clipboard2'
+import VueClipboard from 'vue-clipboard2';
 
 Vue.use(Vuex);
 Vue.use(vToast);
@@ -101,7 +101,8 @@ class storage {
   }
   // 删除操作
   remove(key) {
-    const data = this.source, value = data[key];
+    const data = this.source,
+      value = data[key];
     delete data[key];
     delete data[`${key}__expires__`];
     return value;

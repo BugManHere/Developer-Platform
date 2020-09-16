@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // 创建子文档 funcDefine
 const funcSchema = new mongoose.Schema({
@@ -8,9 +8,9 @@ const funcSchema = new mongoose.Schema({
   order: [String],
   map: {},
   type: String,
-  statusDefine: {},
+  statusDefine: mongoose.Schema.Types.Mixed,
   page: {}
-})
+});
 
 // 创建Schema
 const templateSchema = new mongoose.Schema({
@@ -23,4 +23,4 @@ const templateSchema = new mongoose.Schema({
   funcDefine: [funcSchema]
 });
 
-module.exports = mongoose.model("template", templateSchema);
+module.exports = mongoose.model('template', templateSchema);

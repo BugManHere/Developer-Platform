@@ -1,4 +1,4 @@
-import state from '@/store/module/pulic'
+import state from '@/store/module/pulic';
 
 const transitionFade = {
   bind: (el, bingding) => {
@@ -21,7 +21,7 @@ const transitionFade = {
         el.style.display = 'none';
       }, animationSecond * 1000);
     }
-  },
+  }
 };
 
 export default transitionFade;

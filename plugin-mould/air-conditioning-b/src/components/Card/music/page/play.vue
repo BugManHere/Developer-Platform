@@ -302,6 +302,7 @@ export default {
     },
     songUrl: {
       handler(newVal, oldVal) {
+        console.log(newVal);
         // 获取需要的歌曲数据
         if (newVal && newVal.songId && JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
           // 是否可以播放
