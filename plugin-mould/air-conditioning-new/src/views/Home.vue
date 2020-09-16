@@ -40,7 +40,7 @@ import FuncPopup from '@/components/BtnPopup/func';
 import ModPopup from '@/components/BtnPopup/mod';
 import FanSwiper from '@/components/FanSwiper';
 import CenterSlider from '@/components/CenterSlider';
-import { closePage, editDevice, getCurrentMode, newPage } from '@PluginInterface';
+import { closePage, editDevice, getCurrentMode, newPage, getCCcmd } from '@PluginInterface';
 import LogicWatch from '@logic/watch';
 
 export default {
@@ -141,12 +141,10 @@ export default {
     sceneSave() {
       const remarks = '...';
       const opt = JSON.parse(this.devOptions.statueJson2);
-      console.log(opt);
       const p = opt.map(item => {
         return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
       });
       const json = JSON.stringify({ opt, p, t: 'cmd' });
-      console.log(json);
       getCCcmd(this.mac, json, remarks, JSON.stringify(p));
     },
     // 点击10次进入调试模式

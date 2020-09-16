@@ -345,6 +345,9 @@ export default {
       top: 50%;
       right: 0;
       transform: translateY(-50%);
+      img {
+        height: 996px;
+      }
     }
     .blades-body {
       position: absolute;

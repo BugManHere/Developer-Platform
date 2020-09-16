@@ -17,7 +17,7 @@ const state = {
     has05: 1,
     has01: 0,
     ElcEn: 1, // 电量统计
-    functype: 1, // 0代表正常，1代表集中控制
+    functype: 0, // 0代表正常，1代表集中控制
     CO2: 401,
     SmartSlpModEx: 0,
     SwhSlp: 1,

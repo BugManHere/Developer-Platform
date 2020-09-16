@@ -19,6 +19,9 @@
           font-size: 46px;
         }
       }
+      .gree-header-title {
+        margin: 0 120px;
+      }
       .iconfont {
         font-size: 58px;
       }
@@ -67,8 +70,8 @@
   }
 }
 .toolbar {
-  height: calc(231px + constant(safe-area-inset-bottom) / 3) !important;
-  height: calc(231px + env(safe-area-inset-bottom) / 3) !important;
+  height: 231px !important;
+  bottom: 0 !important;
   background-image: url('../img/bottom_bg.png');
   .toolbar-inner {
     display: flex;

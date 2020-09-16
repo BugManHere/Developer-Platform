@@ -55,6 +55,7 @@ export default {
       const result = this.btnIds.map(id => {
         // 定义key
         const key = id;
+        if (!this.g_statusMap[key]) return { icon: {} };
         // 当前status定义
         const statusDefind = this.g_statusMap[key].define;
         // 取名称
