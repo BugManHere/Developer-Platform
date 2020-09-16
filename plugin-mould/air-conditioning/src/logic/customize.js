@@ -142,9 +142,8 @@ const Customize = {
      */
     initFunc() {
       return {
-        SmartSleep: () => {
-          console.log(
-          );
+        AppTimer: () => {
+          this.dataObject.functype && (this.g_funcDefineMap.AppTimer.type = 'inertia');
         }
       };
     },

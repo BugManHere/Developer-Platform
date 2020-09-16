@@ -45,7 +45,7 @@ module.exports = {
     notify_fault_name_F1: '室内环境感温包开、短路',
     notify_fault_name_F2: '室内蒸发器感温包开、短路',
     notify_fault_name_F3: '室外冷凝器管温感温包开、短路',
-    notify_fault_name_F4: '室外冷凝器感温包开、短路',
+    notify_fault_name_F4: '室外冷凝器温感温包开、短路',
     notify_fault_name_F5: '室外排气感温包开、短路',
     notify_fault_name_F6: '过负荷限/降频',
     notify_fault_name_F8: '电流过大降频',

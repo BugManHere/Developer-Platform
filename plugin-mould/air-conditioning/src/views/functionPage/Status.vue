@@ -55,9 +55,7 @@ export default {
     [Item.name]: Item
   },
   data() {
-    return {
-      LoopModList: ['全新风', '混合风', '循环风']
-    };
+    return {};
   },
   computed: {
     ...mapState({
@@ -88,8 +86,8 @@ export default {
       return list[this.WdSpd - 1];
     },
     LoopModStatus() {
-      const list = ['全新风', '混合风', '循环风'];
-      return list[this.LoopMod - 1];
+      const list = ['全新风', '循环风'];
+      return list[this.LoopMod];
     },
     // 室外环境温度
     OutEnvTemStatus() {
@@ -125,7 +123,7 @@ export default {
     // 回风CO2浓度 区间取值
     AirCO2Status() {
       const district = [1000, 2000, 999999];
-      const districtValue = ['底', '中', '高'];
+      const districtValue = ['低', '中', '高'];
       const index = district.findIndex(value => {
         return value >= this.AirCO2;
       });
@@ -136,7 +134,7 @@ export default {
      * @description 设置正常状态判断
      */    
     getSieveStateStatus() {
-      return function (index) {
+      return index => {
         const value = this.SieveState >> index;
         if (value % 2 === 1) {
           return '更换/清洗';
@@ -147,10 +145,12 @@ export default {
   },
 
   watch: {
-    Pow(newVal) {
-      if (!newVal) this.colse('设备已被关闭');
+    Pow: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal === 0) this.colse('设备已被关闭');
+      }
     },
-
     ErrCode1(newVal) {
       if (newVal) this.colse('设备出现故障');
     },
@@ -162,9 +162,11 @@ export default {
     JFerr(newVal) {
       if (newVal) this.colse('设备出现故障');
     },
-
-    isOffline(newVal) {
-      if (newVal === -1) this.colse('设备离线');
+    isOffline: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal === -1) this.colse('设备离线');
+      }
     }
   },
 
