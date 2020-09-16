@@ -213,6 +213,7 @@ async function saveAndOutput(input) {
 
   // 遍历功能,提取排斥/隐藏逻辑
   funcDefine.forEach(func => {
+    if (!func) return;
     const id = func.identifier; // 获取id
     // 轮询功能里面的状态，提取互斥
     Object.keys(func.statusDefine).forEach(statusKey => {
