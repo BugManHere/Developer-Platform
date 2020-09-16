@@ -10,7 +10,7 @@ const plugins = [
 
 // 生产模式使用 transform-remove-console 插件
 if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_MODE !== 'debug') {
-  plugins.push('transform-remove-console');
+  // plugins.push('transform-remove-console');
 }
 
 module.exports = {

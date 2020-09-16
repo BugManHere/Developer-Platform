@@ -23,14 +23,14 @@ const LogicDefine = {
     this.g_moreOption = moreOption; // 更多配置项
     this.g_funcDefine = funcDefine; // 功能定义
     // String转为Number
-    funcDefine.forEach((func, index) => {
+    funcDefine.forEach((module, index) => {
       const statusDefine = {};
-      Object.keys(func.statusDefine).forEach(status => {
-        statusDefine[status] = func.statusDefine[status];
-        statusDefine[status].value = Number(statusDefine[status].value);
-        if (func.statusDefine[status].moreCommand) {
-          Object.keys(func.statusDefine[status].moreCommand).forEach(json => {
-            statusDefine[status].moreCommand[json] = Number(statusDefine[status].moreCommand[json]);
+      Object.keys(module.statusDefine).forEach(statusName => {
+        statusDefine[statusName] = module.statusDefine[statusName];
+        statusDefine[statusName].value = Number(statusDefine[statusName].value);
+        if (module.statusDefine[statusName].moreCommand) {
+          Object.keys(module.statusDefine[statusName].moreCommand).forEach(json => {
+            statusDefine[statusName].moreCommand[json] = Number(statusDefine[statusName].moreCommand[json]);
           });
         }
       });
@@ -54,8 +54,8 @@ const LogicDefine = {
   },
   computed: {
     g_funcDefine_btn() {
-      return this.g_funcDefine.filter(item => {
-        return item.type === 'active';
+      return this.g_funcDefine.filter(module => {
+        return module.type === 'active';
       });
     },
     /**
@@ -63,18 +63,18 @@ const LogicDefine = {
      * @return Array [identifier]
      */
     g_identifierArr() {
-      const result = this.g_funcDefine.map(item => item.identifier);
+      const result = this.g_funcDefine.map(module => module.identifier);
       return result;
     },
     /**
      * @description g_funcDefine的对象版本
-     * @return Object {identifier: func}
+     * @return Object {identifier: module}
      */
     g_funcDefineMap() {
       const result = {};
-      this.g_funcDefine.forEach(item => {
-        const id = item.identifier;
-        result[id] = item;
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        result[id] = module;
       });
       return result;
     },
@@ -96,11 +96,11 @@ const LogicDefine = {
      * @description 根据identifier与value获取当前status
      * @return Object {identifier: {value: status}}
      */
-    g_valToStatus() {
+    g_valToStatusMap() {
       const result = {};
-      this.g_funcDefine.forEach(funcItem => {
-        const id = funcItem.identifier;
-        result[id] = this.g_getStatus(funcItem, true);
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        result[id] = this.g_getStatusName(module, true);
       });
       return result;
     },
@@ -110,9 +110,9 @@ const LogicDefine = {
      */
     g_valToRealStatus() {
       const result = {};
-      this.g_funcDefine.forEach(funcItem => {
-        const id = funcItem.identifier;
-        result[id] = this.g_getStatus(funcItem, false);
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        result[id] = this.g_getStatusName(module, false);
       });
       return result;
     },
@@ -122,16 +122,20 @@ const LogicDefine = {
      */
     g_statusMap() {
       const result = {};
-      this.g_funcDefine.forEach(item => {
-        const id = item.identifier;
-        const json = item.json;
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        const json = module.json;
         const currentVal = this.g_inputMap[json];
-        const status = this.g_valToStatus[id][currentVal];
+        let status = this.g_valToStatusMap[id][currentVal];
+        let define = module.statusDefine[status];
+        if (!define) {
+          status = 'default';
+          define = module.statusDefine[status];
+        }
         const state = `${id}_${status}`;
-        const define = item.statusDefine[status];
         const realStatus = this.g_valToRealStatus[id][currentVal];
         const realState = `${id}_${realStatus}`;
-        const realDefine = item.statusDefine[realStatus];
+        const realDefine = module.statusDefine[realStatus];
         result[id] = {
           status,
           state,
@@ -150,10 +154,10 @@ const LogicDefine = {
 
     g_stateToId() {
       const result = {};
-      this.g_funcDefine.forEach(funcItem => {
-        Object.keys(funcItem.statusDefine).forEach(statusItem => {
-          const state = `${funcItem.identifier}_${statusItem}`;
-          result[state] = funcItem.identifier;
+      this.g_funcDefine.forEach(module => {
+        Object.keys(module.statusDefine).forEach(statusItem => {
+          const state = `${module.identifier}_${statusItem}`;
+          result[state] = module.identifier;
         });
       });
       return result;
@@ -164,10 +168,10 @@ const LogicDefine = {
      */
     g_defaultStatusMap() {
       const result = {};
-      this.g_funcDefine.forEach(item => {
-        const id = item.identifier;
-        const json = item.json;
-        const defaultStatus = item.statusDefine.default;
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        const json = module.json;
+        const defaultStatus = module.statusDefine.default;
         const moreCommand = define.moreCommand;
         let setData = moreCommand || {};
         setData[json] = defaultStatus.value;
@@ -207,9 +211,9 @@ const LogicDefine = {
         return result;
       };
       // 遍历功能，提取status关系
-      this.g_funcDefine.forEach(func => {
-        const id = func.identifier;
-        const map = func.map; // 指向关系
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        const map = module.map; // 指向关系
         let status = this.g_statusMap[id].status; // function的当前status
         const statusArr = []; // status顺序数组形式
         const checkStatusArr = []; // 已检查的状态
@@ -284,14 +288,14 @@ const LogicDefine = {
      */
     g_nextStatusMap() {
       const result = {};
-      this.g_funcDefine.forEach(func => {
-        const id = func.identifier;
-        const json = func.json;
+      this.g_funcDefine.forEach(module => {
+        const id = module.identifier;
+        const json = module.json;
         let status = this.g_statusDirectionMap[id]; // function的指向status
-        let define = func.statusDefine[status];
+        let define = module.statusDefine[status];
         if (!define) {
           status = 'default';
-          define = func.statusDefine[status];
+          define = module.statusDefine[status];
         }
         const customize = define.customize;
         const moreCommand = define.moreCommand;
@@ -310,11 +314,11 @@ const LogicDefine = {
     // 所有功能的JSON字段
     g_jsonArr() {
       const arr = [];
-      this.g_funcDefine.forEach(item => {
-        Object.keys(item.statusDefine).forEach(statusItem => {
-          statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || arr.includes(item.json) || arr.push(item.json);
-          if (item.statusDefine[statusItem].moreCommand) {
-            Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
+      this.g_funcDefine.forEach(module => {
+        Object.keys(module.statusDefine).forEach(statusItem => {
+          statusItem === 'undefined' || module.statusDefine[statusItem].customize === 'replace' || arr.includes(module.json) || arr.push(module.json);
+          if (module.statusDefine[statusItem].moreCommand) {
+            Object.keys(module.statusDefine[statusItem].moreCommand).forEach(moreJson => {
               arr.includes(moreJson) || arr.push(moreJson);
             });
           }
@@ -329,11 +333,11 @@ const LogicDefine = {
     }),
     g_init() {
       const result = {};
-      this.g_funcDefine.forEach(item => {
-        const key = item.json;
+      this.g_funcDefine.forEach(module => {
+        const key = module.json;
         const keyToVal = {};
         if (!(key in { ...this.g_inputMap, ...keyToVal })) {
-          const defaultVal = item.statusDefine.default.value;
+          const defaultVal = module.statusDefine.default.value;
           result[key] = defaultVal - 0;
           keyToVal[key] = defaultVal;
         }
@@ -367,14 +371,14 @@ const LogicDefine = {
     },
     /**
      * @description 获取function的status
-     * @input funcItem: 功能， isHide： 是否考虑被隐藏的state
+     * @input module: 功能， isHide： 是否考虑被隐藏的state
      * @return Object {value: status}
      */
-    g_getStatus(funcItem, isHide = false) {
+    g_getStatusName(module, isHide = false) {
       const result = {};
       const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
-      const key = funcItem.identifier;
-      const statusKeys = Object.keys(funcItem.statusDefine);
+      const key = module.identifier;
+      const statusKeys = Object.keys(module.statusDefine);
       // result[key] = {};
       statusKeys.forEach(statusName => {
         if (statusName === 'undefined') return;
@@ -383,12 +387,12 @@ const LogicDefine = {
           // 被隐藏的state不参与计算
           return;
         }
-        const val = funcItem.statusDefine[statusName].value;
+        const val = module.statusDefine[statusName].value;
         const beforeStatus = result[val];
         // 是否存在同源状态（JSON取值相等）
         if (beforeStatus) {
-          const commandBefore = funcItem.statusDefine[beforeStatus].moreCommand;
-          const commandCurrent = funcItem.statusDefine[statusName].moreCommand;
+          const commandBefore = module.statusDefine[beforeStatus].moreCommand;
+          const commandCurrent = module.statusDefine[statusName].moreCommand;
           const currentType = this.g_mapRelation(commandCurrent, this.g_inputMap);
           // 同源状态是否有moreCommand
           if (commandBefore) {

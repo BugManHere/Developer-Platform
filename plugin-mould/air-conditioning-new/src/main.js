@@ -20,7 +20,6 @@ import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage'; // 对i18n的封装
 import axios from 'axios';
-
 import { SET_STATE } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
@@ -52,7 +51,7 @@ const i18n = new VueI18n({
 Vue.config.productionTip = false;
 
 const dev = process.env.NODE_ENV === 'development';
-// const test = process.env.VUE_APP_MODE === 'test';
+
 async function createVue() {
   const vm = new Vue({
     // el: '#app',
@@ -107,10 +106,10 @@ async function createVue() {
 }
 
 /* 启用页面调试器 */
-if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+// if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
   const VConsole = require('vconsole/dist/vconsole.min.js');
   new VConsole();
-}
+// }
 
 dev && createVue();
 
@@ -161,4 +160,9 @@ window.onResume = function onResume(msg) {
 // 根据加载页面改变状态栏颜色
 window.init = function init() {
   createVue();
+};
+
+window.setDataCallBack = function setDataCallBack(data) {
+  console.log('------mqtt----data------------');
+  console.log(data);
 };

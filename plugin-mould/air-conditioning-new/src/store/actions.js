@@ -1,4 +1,4 @@
-import { sendDataToDevice, getInfo, updateStates, finishLoad } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
 import {
   GET_DEVICE_INFO,
   GET_ALL_STATES,
@@ -154,6 +154,9 @@ export default {
   async [GET_ALL_STATES]({ state, commit, dispatch }) {
     await getStatusOfDev({ state, commit });
     finishLoad();
+    console.log('------------setMqttStatusCallback-------------');
+    console.log(state.mac);
+    navigator.PluginInterface.setMqttStatusCallback(state.mac, window.setDataCallBack);
     dispatch(SET_POLLING, true);
   },
 
