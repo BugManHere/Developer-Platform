@@ -37,38 +37,50 @@
           @dragover.prevent
           draggable="true"
         >
-          <td v-for="(item, key) in content" :key="key" :id="funcOptions.types[key]">
+          <!-- 根据类型显示内容 -->
+          <td v-for="(item, colIndex) in content" :key="colIndex" :id="funcOptions.keys[colIndex]">
             <!-- 文本 -->
-            <p v-if="!Array.isArray(item)" v-show="index !== editItem[0] || key !== editItem[1]" @click="showInput(index, key, item)" v-text="item" />
+            <p
+              v-if="funcOptions.types[colIndex] === 'edit'"
+              v-show="index !== editItem[0] || colIndex !== editItem[1]"
+              @click="labelEvent(index, colIndex, item, 'edit')"
+              v-text="item"
+              id="edit"
+            />
             <!-- 点击文本后出现输入框 -->
-            <p v-if="!Array.isArray(item)" v-show="index === editItem[0] && key === editItem[1]">
+            <p v-if="funcOptions.types[colIndex] === 'edit'" v-show="index === editItem[0] && colIndex === editItem[1]" id="edit">
               <input
                 @blur="setValue"
                 @keydown.tab="nextInput"
                 @keyup.esc="initInput"
                 @keyup.enter="setValue"
-                :id="`input-${index}-${key}`"
-                :key="`${index}-${key}`"
+                :id="`input-${index}-${colIndex}`"
+                :key="`${index}-${colIndex}`"
                 spellcheck="false"
               />
             </p>
+            <!-- 选项 -->
+            <div v-else-if="funcOptions.types[colIndex] === 'option'" id="option">
+              <p v-if="Object.keys(item.options).length <= 1" v-text="item.options[item.value]" />
+              <select v-else class="select-medium form-control" v-model="item.value" @change="labelEvent(index, colIndex, item, 'option')">
+                <option v-for="(optionValue, optionKey) in item.options" :key="optionKey" :value="optionKey" v-text="optionValue" />
+              </select>
+            </div>
             <!-- 状态简要 -->
-            <span v-else class="definitions">
+            <span v-else-if="funcOptions.types[colIndex] === 'brief'" class="definitions" id="brief">
               <span v-for="(val, statusIndex) in item" :key="statusIndex" @click="goThatStatus(realIndex[index], statusIndex)" v-text="val" />
             </span>
-          </td>
-          <!-- 右边的按键 -->
-          <td v-if="funcOptions.content && funcDefine" id="btn">
-            <p>
-              <span
-                @click="insertPage(realIndex[index])"
-                v-text="'插入页面'"
-                v-show="tableOptions.operate.includes('insert')"
-                v-if="funcDefine[realIndex[index]] && !funcDefine[realIndex[index]].page"
+            <!-- 按钮 -->
+            <p v-else-if="funcOptions.types[colIndex] === 'btn'" id="btn">
+              <i
+                v-for="(icon, iconIndex) in item"
+                class="iconfont"
+                :key="iconIndex"
+                :style="icon.value && funcDefine[realIndex[index]][icon.value] && 'color: #469dff'"
+                :class="`iconfont-${icon.key}`"
+                :title="icon.value && funcDefine[realIndex[index]][icon.value] ? icon.onDescript : icon.descript"
+                @click="operateEvent(icon.key, index)"
               />
-              <span @click="insertPage(realIndex[index])" v-text="'更改页面'" v-show="tableOptions.operate.includes('insert')" v-else style="color: SkyBlue" />
-              <span @click="editStatus(realIndex[index])" v-text="'定义'" v-show="tableOptions.operate.includes('define')" />
-              <span @click="$_delFun(index)" v-text="'删除'" v-show="tableOptions.operate.includes('delete') && content && content[1] !== 'Pow'" />
             </p>
           </td>
         </tr>
@@ -115,13 +127,11 @@ export default {
       animationSecond: state => state.pulicModule.animationSecond,
       developType: state => state.pulicModule.developType, // 0：产品开发 1：模板开发
       userDeviceList: state => state.devModule.userDeviceList,
-      tempID: state => state.tempModule.tempID,
+      deviceKey: state => state.devModule.deviceKey,
       currentFuncId: state => state.tempModule.currentFuncId,
       currentStatusId: state => state.tempModule.currentStatusId,
-      deviceKey: state => state.devModule.deviceKey,
       statusSetStep: state => state.pulicModule.statusSetStep,
       delStatusType: state => state.pulicModule.delStatusType,
-      productFuncInfoById: (state, getters) => getters.productFuncInfoById,
       funcDefine: (state, getters) => getters.funcDefine,
       funcImport: (state, getters) => getters.funcImport
     }),
@@ -135,7 +145,7 @@ export default {
       this.funcDefine.forEach((item, index) => {
         if (this.developType === 0) {
           result.push(index);
-        } else if (this.developType === 1 && this.tableOptions.type.includes(item.type)) {
+        } else if (this.developType === 1 && this.tableOptions.type.some(check => item.type.includes(check))) {
           result.push(index);
         }
       });
@@ -161,17 +171,42 @@ export default {
         if (this.imshowFunc.length) {
           content = this.imshowFunc.map(func => {
             if (!func) return undefined;
-            const res = this.tableOptions.keyList.map(item => {
-              if (item === 'type') return { active: '显性功能-按钮', inertia: '隐性功能' }[func[item]];
-              return func[item];
-            });
-            res.push([]);
-            Object.keys(func.statusDefine).forEach(status => {
-              if (status === 'undefined') return;
-              const target = func.statusDefine[status];
-              let text = `${target.name}：${target.value}`;
-              text += target.moreCommand ? '+' : '';
-              res[res.length - 1].push(text);
+            const res = this.tableOptions.titleList.map(title => {
+              let result = '';
+              switch (title.type) {
+                case 'edit':
+                  if (title.model && title.options) {
+                    result = title.options[func[title.model]];
+                  } else {
+                    result = func[title.key];
+                  }
+                  break;
+                case 'option':
+                  result = {
+                    value: func[title.model],
+                    type: title.type,
+                    options: title.options,
+                    model: title.model
+                  };
+                  break;
+                case 'btn':
+                  result = title.icons;
+                  break;
+                case 'brief':
+                  result = Object.keys(func.statusDefine)
+                    .filter(status => status !== 'undefined')
+                    .map(status => {
+                      if (status === 'undefined') return;
+                      const target = func.statusDefine[status];
+                      let text = `${target.name}：${target.value}`;
+                      text += target.moreCommand ? '+' : '';
+                      return text;
+                    });
+                  break;
+                default:
+                  break;
+              }
+              return result;
             });
             return res;
           });
@@ -181,9 +216,10 @@ export default {
       }
       return {
         caption: this.tableOptions.caption,
-        title: [...this.tableOptions.titleList, '状态简要', '操作'],
         content,
-        types: [...this.tableOptions.keyList, 'brief']
+        title: this.tableOptions.titleList.map(title => title.name),
+        keys: this.tableOptions.titleList.map(title => title.key),
+        types: this.tableOptions.titleList.map(title => title.type)
       };
     },
     // 【插入页面】页面设置
@@ -291,6 +327,26 @@ export default {
         this.$refs.panel.$refs['statusDef'].currentStatusIndex = statusId; // 显示指定状态
       });
     },
+    labelEvent(index, index2, item, type) {
+      // 模板定义
+      const funcDefine = deepCopy(this.funcDefine); // 深复制
+      const currentFunc = funcDefine[this.realIndex[index]]; // 选中的funciton
+      switch (type) {
+        case 'edit':
+          this.showInput(index, index2, item);
+          break;
+        case 'option':
+          if (this.developType === 1) {
+            currentFunc[item.model] = item.value; // 赋值
+            this.changeTemp({ funcDefine }); // 更新到state
+          } else {
+            console.log(this.devModule);
+          }
+          break;
+        default:
+          break;
+      }
+    },
     // 显示指定位置的输入框
     showInput(index, index2, value) {
       if (this.developType === 0) return; // 设备管理页面不可进入
@@ -364,6 +420,23 @@ export default {
         this.timer = null;
       }, this.animationSecond * 1000);
       return true;
+    },
+    // 点击右侧图标
+    operateEvent(key, index) {
+      const realIndex = this.realIndex[index];
+      switch (key) {
+        case 'more':
+          this.editStatus(realIndex);
+          break;
+        case 'page':
+          this.insertPage(realIndex);
+          break;
+        case 'disable':
+          this.$_delFun(index);
+          break;
+        default:
+          break;
+      }
     },
     dragItem(index) {
       this.dragFromIndex = index;

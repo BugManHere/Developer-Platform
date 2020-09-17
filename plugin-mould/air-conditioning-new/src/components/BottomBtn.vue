@@ -37,7 +37,7 @@ export default {
   mixins: [LogicDefine, Customize],
   data() {
     return {
-      btnIds: ['ModPopup', 'FanPopup', 'BottomSleep', 'FuncPopup']
+      popupsKey: 'homeButton',
     };
   },
   components: {
@@ -50,11 +50,16 @@ export default {
       Pow: state => state.dataObject.Pow,
       SwhSlp: state => state.dataObject.SwhSlp
     }),
+    popupModules() {
+      return this.g_funcDefine.filter(module => {
+        return module.type === `active-${this.popupsKey}`;
+      });
+    },
     btnList() {
       if (!Object.keys(this.g_statusMap).length) return [];
-      const result = this.btnIds.map(id => {
+      const result = this.popupModules.map(module => {
         // 定义key
-        const key = id;
+        const key = module.identifier;
         if (!this.g_statusMap[key])
           return {
             icon: {},

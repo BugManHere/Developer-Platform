@@ -134,7 +134,7 @@ export default {
       switch (this.setTempStep) {
         case 0:
           return {
-            title: '显性功能-按钮',
+            title: '显性功能',
             rightBtnList: [
               {
                 name: '添加',

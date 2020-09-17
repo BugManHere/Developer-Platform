@@ -132,7 +132,8 @@ export default {
       const searchMap = this.searchMap; // 深负责，方便后续操作
       const mapKeys = Object.keys(searchMap); // 取得上面数据的key
       mapKeys.map((key, index) => {
-        const filteTypeArr = searchMap[key].filter(item => this.selectType.includes(item.define.type)); // 挑选出对应的功能
+        if (!this.selectType.length) return [];
+        const filteTypeArr = searchMap[key].filter(item => this.selectType.some(check => item.define.type.includes(check))); // 挑选出对应的功能
         // const filteRepeatArr = filteTypeArr.filter(item => !this.selectFuncID.includes(item._id));
         filteTypeArr.forEach(item => {
           result.push({

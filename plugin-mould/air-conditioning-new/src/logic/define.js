@@ -55,7 +55,7 @@ const LogicDefine = {
   computed: {
     g_funcDefine_btn() {
       return this.g_funcDefine.filter(module => {
-        return module.type === 'active';
+        return module.type === 'active-button';
       });
     },
     /**
