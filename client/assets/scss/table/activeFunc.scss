@@ -54,11 +54,22 @@
         }
       }
      #btn {
-        min-width: 150px !important;
+        min-width: 50px !important;
         p {
-          span {
-            padding-left: 2px;
+          cursor: auto;
+          i {
+            font-size: 20px;
+            margin-left: 16px;
+            cursor: pointer;
           }
+        }
+      }
+      #option {
+        p {
+          cursor: auto;
+        }
+        select {
+          cursor: pointer;
         }
       }
       &:hover {
@@ -80,9 +91,6 @@
           left: 0;
           z-index: 2;
           transform: translateY(-50%);
-        }
-        &#btn {
-          cursor: auto;
         }
       }
     }
