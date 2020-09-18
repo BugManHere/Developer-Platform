@@ -17,7 +17,7 @@
             <i class="iconfont" :class="{ [`iconfont-${btn.icon.key}`]: true, select: btn.icon.type === 'on' && !btn.gray }" />
           </div>
           <!-- 名称 -->
-          <span :class="{ triangle: btn.page }" v-text="btn.name" @click="goPage(btn.page, btn.hide)" />
+          <span :class="{ triangle: btn.page }" v-text="btn.name" @click="goPage(btn.page, btn.gray)" />
         </gree-col>
       </gree-row>
     </div>

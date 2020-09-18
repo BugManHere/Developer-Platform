@@ -37,7 +37,7 @@ export default {
   mixins: [LogicDefine, Customize],
   data() {
     return {
-      popupsKey: 'homeButton',
+      popupsKey: 'homeButton'
     };
   },
   components: {
@@ -51,9 +51,7 @@ export default {
       SwhSlp: state => state.dataObject.SwhSlp
     }),
     popupModules() {
-      return this.g_funcDefine.filter(module => {
-        return module.type === `active-${this.popupsKey}`;
-      });
+      return this.g_funcDefine_active.filter(module => module.type === `active-${this.popupsKey}`);
     },
     btnList() {
       if (!Object.keys(this.g_statusMap).length) return [];

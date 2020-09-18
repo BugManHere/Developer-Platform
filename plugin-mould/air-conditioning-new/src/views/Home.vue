@@ -40,7 +40,7 @@ import FuncPopup from '@/components/BtnPopup/func';
 import ModPopup from '@/components/BtnPopup/mod';
 import FanSwiper from '@/components/FanSwiper';
 import CenterSlider from '@/components/CenterSlider';
-import { closePage, editDevice, getCurrentMode, newPage, getCCcmd } from '@PluginInterface';
+import { closePage, editDevice, getCurrentMode, getCCcmd } from '@PluginInterface';
 import LogicWatch from '@logic/watch';
 
 export default {
@@ -82,7 +82,7 @@ export default {
       return result;
     },
     miniIconList() {
-      if (!this.g_funcDefine_btn) return [];
+      if (!this.g_funcDefine_active.filter(module => module.type === 'active-button').length) return [];
       const result = this.g_funcDefine.map(func => {
         const id = func.identifier;
         const statusName = this.g_statusMap[id].status;
@@ -149,17 +149,17 @@ export default {
     },
     // 点击10次进入调试模式
     onTest() {
-      const testUrl = () => {
-        const isIos = Boolean(navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/));
-        const statueJson2 = JSON.parse(this.statueJson2);
-        let data = '%5B';
-        statueJson2.forEach(json => {
-          data += `${this.dataObject[json] || 0},`;
-        });
-        data = data.replace(/.$/, '%5D');
-        const url = `http://192.168.31.94:8081/?mac=${this.mac}&data=${data}&functype=0#/Home`;
-        isIos ? (window.location.href = url) : newPage(url);
-      };
+      // const testUrl = () => {
+      //   const isIos = Boolean(navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/));
+      //   const statueJson2 = JSON.parse(this.statueJson2);
+      //   let data = '%5B';
+      //   statueJson2.forEach(json => {
+      //     data += `${this.dataObject[json] || 0},`;
+      //   });
+      //   data = data.replace(/.$/, '%5D');
+      //   const url = `http://192.168.31.94:8081/?mac=${this.mac}&data=${data}&functype=0#/Home`;
+      //   isIos ? (window.location.href = url) : newPage(url);
+      // };
       getCurrentMode().then(res => {
         if (res === '0' || res === 0) {
           this.onTestFlag += 1;
@@ -167,7 +167,8 @@ export default {
           // this.onTestFlag === 10 && this.$router.push('Test');
           if (this.onTestFlag === 10) {
             this.onTestFlag = 0;
-            testUrl();
+            this.$router.push('Test');
+            // testUrl();
           }
         }
       });

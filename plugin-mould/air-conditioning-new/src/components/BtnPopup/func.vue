@@ -28,32 +28,35 @@ export default {
       Pow: state => state.dataObject.Pow,
       FuncPopup: state => state.dataObject.FuncPopup
     }),
+    //
     // 按钮列表
     btnList() {
-      const result = this.g_funcDefine_btn.map(btn => {
-        // 定义key
-        const key = btn.identifier;
-        // 当前status定义
-        const statusDefind = this.g_statusMap[key].define;
-        // 取名称
-        const defaultNameKey = `btn.${key}`;
-        const statusName = statusDefind.name;
-        const stateName = `${defaultNameKey}_${statusName}`;
-        const name = stateName === this.$language(stateName) ? this.$language(defaultNameKey) : this.$language(stateName);
-        // 图标
-        const icon = glyphs.some(item => item.font_class === statusDefind.icon.key) ? statusDefind.icon : { key: 'undefined', type: 'off' };
-        // 是否置灰
-        const gray = this.g_noDirectionFuncArr.includes(key);
-        // 是否隐藏
-        const hide = statusDefind.icon.key === 'disable';
-        // 跳转页面
-        const page = btn.page;
-        // 执行的函数
-        const func = (identifier, isGray = false) => {
-          this.changeStatus(identifier, isGray);
-        };
-        return { key, name, icon, gray, hide, page, func };
-      });
+      const result = this.g_funcDefine_active
+        .filter(module => module.type === 'active-button')
+        .map(btn => {
+          // 定义key
+          const key = btn.identifier;
+          // 当前status定义
+          const statusDefind = this.g_statusMap[key].define;
+          // 取名称
+          const defaultNameKey = `btn.${key}`;
+          const statusName = statusDefind.name;
+          const stateName = `${defaultNameKey}_${statusName}`;
+          const name = stateName === this.$language(stateName) ? this.$language(defaultNameKey) : this.$language(stateName);
+          // 图标
+          const icon = glyphs.some(item => item.font_class === statusDefind.icon.key) ? statusDefind.icon : { key: 'undefined', type: 'off' };
+          // 是否置灰
+          const gray = this.g_noDirectionFuncArr.includes(key);
+          // 是否隐藏
+          const hide = statusDefind.icon.key === 'disable';
+          // 跳转页面
+          const page = btn.page;
+          // 执行的函数
+          const func = (identifier, isGray = false) => {
+            this.changeStatus(identifier, isGray);
+          };
+          return { key, name, icon, gray, hide, page, func };
+        });
       return result;
     }
   },

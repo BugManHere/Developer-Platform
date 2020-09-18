@@ -39,7 +39,13 @@ export default {
             options: {
               'active-button': '高级按钮',
               'active-homeButton': '主页按钮',
-              inertia: '隐性功能'
+              inertia: '隐性功能',
+              'inertia-tem': '温度设定',
+              'inertia-temMin': '温度下限',
+              'inertia-temMax': '温度上限',
+              'inertia-imshowSlot1': '显示插槽1',
+              'inertia-imshowSlot2': '显示插槽2',
+              'inertia-Mod': '模式设定'
             }
           },
           {

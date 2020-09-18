@@ -16,6 +16,7 @@
     border-bottom: 1px #ddd solid;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
   .status-input {
     $btnHeight: 40px;
@@ -207,6 +208,15 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    .library-title {
+      i {
+        font-size: 16px;
+        margin-right: 6px;
+        cursor: pointer;
+      }
+      display: flex;
+      align-items: center;
+    }
     .order-chart,
     .library-body {
       position: relative;

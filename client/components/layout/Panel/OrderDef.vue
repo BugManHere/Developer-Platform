@@ -120,7 +120,16 @@
     <!-- 图标库 -->
     <div class="iconfont-library" v-if="btnIconSelectType || miniIconSelectType">
       <caption>
-        <span v-text="btnIconSelectType ? '选择按钮图标' : '选择状态图标'" />
+        <span class="library-title">
+          <i
+            class="iconfont iconfont-fanhui"
+            @click="
+              btnIconSelectType = false;
+              miniIconSelectType = false;
+            "
+          />
+          <span v-text="btnIconSelectType ? '选择按钮图标' : '选择状态图标'" />
+        </span>
       </caption>
       <!-- 图标 -->
       <div class="library-body">

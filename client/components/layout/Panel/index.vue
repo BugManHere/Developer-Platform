@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import StatusDef from './StatusDef';
 import OrderDef from './OrderDef';
 import SelectLabel from './SelectLabel';
 import SelectPage from './SelectPage';
@@ -51,7 +50,6 @@ import QuoteFunc from './QuoteFunc';
 
 export default {
   components: {
-    StatusDef,
     OrderDef,
     SelectLabel,
     SelectPage,
