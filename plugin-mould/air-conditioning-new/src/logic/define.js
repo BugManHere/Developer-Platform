@@ -53,10 +53,19 @@ const LogicDefine = {
     this.g_outputMap = this.g_init();
   },
   computed: {
-    g_funcDefine_btn() {
-      return this.g_funcDefine.filter(module => {
-        return module.type === 'active-button';
-      });
+    /**
+     * @description 筛选出显性功能
+     * @return Array [module]
+     */
+    g_funcDefine_active() {
+      return this.g_funcDefine.filter(module => module.type.includes('active'));
+    },
+    /**
+     * @description 筛选出隐性功能
+     * @return Array [module]
+     */
+    g_funcDefine_inertia() {
+      return this.g_funcDefine.filter(module => module.type.includes('inertia'));
     },
     /**
      * @description g_funcDefine的identifier

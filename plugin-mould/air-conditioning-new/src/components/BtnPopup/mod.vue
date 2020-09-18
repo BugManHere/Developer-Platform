@@ -34,11 +34,16 @@ export default {
     }),
     // 模式的定义
     modDefine() {
-      return this.g_funcDefineMap[this.modKey];
+      return this.g_funcDefine_inertia.find(module => module.type === `inertia-${this.modKey}`);
+    },
+    // 模式的定义
+    modId() {
+      if (this.modDefine) return this.modDefine.identifier;
+      return 'Mod';
     },
     // 按钮列表
     btnList() {
-      const modKey = this.modKey;
+      const modKey = this.modId;
       const result = this.modStatusList.map(modStatus => {
         // status定义
         const statusDefine = this.modDefine.statusDefine[modStatus];
@@ -84,9 +89,11 @@ export default {
     g_statusLoop: {
       handler(newVal) {
         const startStatus = 'default';
-        const modLoop = newVal[this.modKey];
+        if (!this.modDefine) return;
+        const id = this.modId;
+        const modLoop = newVal[id];
         if (modLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[this.modKey]));
+          const result = JSON.parse(JSON.stringify(newVal[id]));
           const length = result.length;
           let i = 0;
           while (result[0] !== startStatus && i < length) {
@@ -101,7 +108,7 @@ export default {
     },
     g_statusMap: {
       handler(newVal) {
-        const statusMap = newVal[this.modKey];
+        const statusMap = newVal[this.modId];
         if (statusMap && this.currentStatus !== statusMap.status) {
           this.lastStatus = this.currentStatus;
           this.currentStatus = statusMap.status;
@@ -179,8 +186,8 @@ export default {
       };
       setTimeout(() => {
         this.$nextTick(() => {
-          cache(!isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
-          cache(!isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
+          cache(isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
+          cache(isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
         });
       }, 0);
     }

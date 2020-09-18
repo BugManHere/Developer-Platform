@@ -106,10 +106,10 @@ async function createVue() {
 }
 
 /* 启用页面调试器 */
-// if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
   const VConsole = require('vconsole/dist/vconsole.min.js');
   new VConsole();
-// }
+}
 
 dev && createVue();
 

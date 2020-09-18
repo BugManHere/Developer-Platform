@@ -14,14 +14,14 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav" v-show="$route.name !== 'Account'">
-            <li :class="{ active: developType === 0 }" @click="setDevelopType(0)">
-              <a href="#Home" @click="updataPage('Home')">设备管理</a>
+            <li :class="{ active: developType === 0 }" @mouseup="setDevelopType(0)">
+              <a role="button" @click="updataPage('Home')">设备管理</a>
             </li>
-            <li :class="{ active: developType === 1 }" @click="setDevelopType(1)">
-              <a href="#Home" @click="updataPage('Home')">模板定义</a>
+            <li :class="{ active: developType === 1 }" @mouseup="setDevelopType(1)">
+              <a role="button" @click="updataPage('Home')">模板定义</a>
             </li>
             <li class="dropdown">
-              <a href="#Home" role="button" aria-haspopup="true" aria-expanded="false">运营中心（暂未开放）</a>
+              <a role="button" aria-haspopup="true" aria-expanded="false">运营中心（暂未开放）</a>
               <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">运营中心 <span class="caret"></span></a> -->
               <!-- <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
@@ -104,10 +104,8 @@ export default {
     }),
     updataPage(routeName) {
       if (this.$route.name !== routeName && this.$route.name !== 'Account') {
-        this.$nextTick(() => {
-          this.$router.push({ name: routeName }).catch(err => {
-            console.log(err);
-          });
+        this.$router.push({ name: routeName }).catch(err => {
+          console.log(err);
         });
       }
     },

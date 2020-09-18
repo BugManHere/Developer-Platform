@@ -13,8 +13,7 @@ const state = {
     SetTem: 25,
     WdSpd: 5,
     Quiet: 0,
-    Tur: 0,
-    TemSen: 23 // 室温
+    Tur: 0
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

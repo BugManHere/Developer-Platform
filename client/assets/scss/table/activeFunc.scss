@@ -65,11 +65,15 @@
         }
       }
       #option {
+        display: flex;
+        justify-content: center;
+        text
         p {
           cursor: auto;
         }
         select {
           cursor: pointer;
+          width: auto;
         }
       }
       &:hover {
