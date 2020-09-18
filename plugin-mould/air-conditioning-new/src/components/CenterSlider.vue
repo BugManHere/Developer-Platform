@@ -1,7 +1,7 @@
 <template>
   <div class="center-slider">
     <div v-show="Pow" class="slider-main">
-      <div id="slider" :style="`opacity: ${Mod ? 1 : 0.01}`" />
+      <div id="slider" :style="`opacity: ${temSetJson ? 1 : 0.01}`" />
       <div class="layer" :style="{ width: lottieRadius / 1.5 + 'px', height: lottieRadius / 1.5 + 'px' }">
         <div class="rotate -one"></div>
         <div class="rotate -two"></div>
@@ -105,7 +105,6 @@ export default {
         .filter(module => module.type === 'inertia-imshowSlot2')
         .filter(module => this.g_hideStateArr.some(state => state.includes(module.identifier)));
       // 存在多个的情况时，只取第一个，其他不处理
-      console.log(modules);
       if (modules.length) {
         const json = modules[0].json;
         const value = this.g_inputMap[json];
