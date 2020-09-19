@@ -41,17 +41,31 @@ export default {
       isLoadFailed: false
     };
   },
-  async created() {
-    if (this.$route.query && this.$route.query.keyword) {
-      this.keyword = this.$route.query.keyword;
-      await this.search(this.$route.query.keyword);
+  beforeRouteEnter (to, from, next) {
+    console.log(from);
+    if (from.name === 'SkillDetail') {
+      next(vm => {
+        vm.init(from);
+      });
+    } else if (from.name === 'SkillSearchIndex') {
+      next(vm => {
+        vm.init(vm.$route);
+      });
     } else {
-      this.search('');
+      next();
     }
   },
   methods: {
+    init(route) {
+      if (route.query && route.query.keyword) {
+        this.keyword = route.query.keyword;
+        this.search(this.keyword);
+      } else {
+        this.search('');
+      }
+    },
     gotoDetail(item) {
-      this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.iosIcon}`);
+      this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.iosIcon}&keyword=${this.keyword}`);
     },
     onReload() {
       console.log('onReload');

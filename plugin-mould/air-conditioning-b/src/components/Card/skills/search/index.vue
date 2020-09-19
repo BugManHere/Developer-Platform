@@ -146,6 +146,8 @@ export default {
       text-align: center;
       font-size: 42px;
       color: #404657;
+      padding-top: 85px;
+      padding-bottom: 85px;
     }
     
     .gree-dialog-actions {
@@ -158,7 +160,7 @@ export default {
           color:#00aeff;
         }
         &:active {
-          background-color: rgba($color: #999, $alpha: 0.3);
+          background-color: rgba($color: #999, $alpha: 0.2);
         }
       }
     }

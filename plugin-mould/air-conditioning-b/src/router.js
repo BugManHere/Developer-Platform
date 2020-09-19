@@ -185,6 +185,7 @@ const router = new Router({
       redirect: '/SkillSearch/Index',
       children: [{
         path: 'Index',
+        name: 'SkillSearchIndex',
         component: SkillSearchIndex
       }, {
         path: 'Result',

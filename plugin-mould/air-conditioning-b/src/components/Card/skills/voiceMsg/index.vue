@@ -118,7 +118,7 @@ export default {
   watch: {
     voiceMsgName(val) {
       this.isNameValid = true;
-      console.log('val', val);
+      // console.log('val', val);
       const name = val && val.trim();
       if (name) {
         let isValid = /^[\u4e00-\u9fa5\s]*$/gi.test(name);
