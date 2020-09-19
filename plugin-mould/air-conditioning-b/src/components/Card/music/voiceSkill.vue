@@ -34,38 +34,38 @@
         ref="skillList"
         class="main" 
         :class="{'loading': isLoading}">
-          <div style="height: 100%;">
-            <gree-list
-            v-show="!isLoadFailed">
-              <gree-list-item
-                v-for="item in skillItems"
-                :key="item.id"
-                link
-                :title="item.name"
-                :footer="item.illustrate | format"
-                no-hairlines
-                media-item
-                @click.native="gotoDetail(item)"
-              >
-                <img :src="item.icon" slot="media" class="skill-icon"/>
-              </gree-list-item>
-              <div class="load-more-item">
-                <a v-show="hasNextPage && !isLoading" href="javascript:void 0;" @click="loadMore">加载更多</a>
-                <span v-show="hasNextPage && isLoading">加载中...</span>
-                <span v-show="!hasNextPage && !isLoading">没有更多内容了</span>
-              </div>
-            </gree-list>
-          </div>
-          <div 
-            class="error-msg-block" 
-            v-show="isLoadFailed"
-            @click="reload"
-          >
-            <div class="content">
-              <span>加载失败了!</span>
-              <span>重新加载</span>
+        <div style="height: 100%;">
+          <gree-list
+          v-show="!isLoadFailed">
+            <gree-list-item
+              v-for="item in skillItems"
+              :key="item.id"
+              link
+              :title="item.name"
+              :footer="item.illustrate | format"
+              no-hairlines
+              media-item
+              @click.native="gotoDetail(item)"
+            >
+              <img :src="item.icon" slot="media" class="skill-icon"/>
+            </gree-list-item>
+            <div class="load-more-item">
+              <a v-show="hasNextPage && !isLoading" href="javascript:void 0;" @click="loadMore">加载更多</a>
+              <span v-show="hasNextPage && isLoading">加载中...</span>
+              <span v-show="!hasNextPage && !isLoading">没有更多内容了</span>
             </div>
+          </gree-list>
+        </div>
+        <div 
+          class="error-msg-block" 
+          v-show="isLoadFailed"
+          @click="reload"
+        >
+          <div class="content">
+            <span>加载失败了!</span>
+            <span>重新加载</span>
           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -75,6 +75,7 @@
 import { mapState } from 'vuex';
 import { Icon, Sidebar, SidebarItem, List, Item, } from 'gree-ui'; 
 import { showToast, voiceACgetSkillList } from '../../../../public/static/lib/PluginInterface.promise';
+
 export default {
   components: {
     [Icon.name]: Icon,
@@ -82,6 +83,11 @@ export default {
     [SidebarItem.name]: SidebarItem,
     [List.name]: List,
     [Item.name]: Item,
+  },
+  filters: {
+    format(str) {
+      return `“${str}”`;
+    }
   },
   data() {
     return {
@@ -97,26 +103,26 @@ export default {
         }
       ],
       sidebarItems: [{
-          index: 0,
-          name: '生活'
-        }, {
-          index: 1,
-          name: '娱乐'
-        }, {
-          index: 2,
-          name: '教育'
-        }
+        index: 0,
+        name: '生活'
+      }, {
+        index: 1,
+        name: '娱乐'
+      }, {
+        index: 2,
+        name: '教育'
+      }
       ],
       skillItems: [],
       isFinished: false,
       isLoading: true,
       isLoadFailed: false,
-      initListHeight: 0, //初始技能列表的高度
+      initListHeight: 0, // 初始技能列表的高度
       pageNum: 1,
       pageSize: 5,
       hasNextPage: false,
       currentRequestId: 0, // 当前请求ID
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -135,9 +141,9 @@ export default {
       let listHeight = this.$refs.skillList.clientHeight;
       this.initListHeight = listHeight;
       let pageContent = document.querySelector('.page-content');
-
+      // eslint-disable-next-line
       function scrollHandler(ev) {
-        console.log(this.scrollTop);
+        // console.log(this.scrollTop);
         let scrollTop = this.scrollTop;
         self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
       }
@@ -148,14 +154,8 @@ export default {
       });
 
       this.loadSkillList(1);
-     
     } catch (error) {
       console.log(error);
-    }
-  },
-  filters: {
-    format(str) {
-      return `“${str}”`;
     }
   },
   methods: {
@@ -166,8 +166,9 @@ export default {
         await this.getSkillList(index, queryArgs);
       }
     },
-    async getSkillList(index, args) {
+    async getSkillList(index, params) {
       try {
+        let args = params;
         this.pageNum = args.pageNum;
         args.getPic = true;
         args.pageSize = this.pageSize;
@@ -223,7 +224,7 @@ export default {
       let index = this.activeDomainIndex;
       let domain = this.sidebarItems.find(x => x.index === index);
       if (domain) {
-        let queryArgs = {domain: domain.name, pageNum: pageNum};
+        let queryArgs = {domain: domain.name, pageNum};
         this.getSkillList(index, queryArgs);
       }
     },
@@ -231,10 +232,10 @@ export default {
       this.$router.push(`/SkillDetail/${item.id}?name=${item.name}&icon=${item.icon}`);
     },
     gotoSearch() {
-      this.$router.push('/SkillSearchHistory');
+      this.$router.push('/SkillSearch');
     },
     async loadMore() {
-      if(!this.hasNextPage) {
+      if (!this.hasNextPage) {
         return;
       }
       console.log('load more');
@@ -254,7 +255,6 @@ export default {
           showToast('该功能暂未开放！', 0);
           break;
       }
-      
     }
   }
 };

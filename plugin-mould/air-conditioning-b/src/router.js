@@ -48,15 +48,15 @@ const MusicDetail = r =>
 const MusicPlay = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/play.vue')));
 const SkillDetail = r =>
-  require.ensure([], () => r(require('./../src/components/Card/music/page/skillDetail.vue')));
-const SkillSearch = r => 
-  require.ensure([], () => r(require('./../src/components/Card/music/page/skillSearch.vue')));
-const SkillSearchHistory = r => 
-  require.ensure([], () => r(require('./../src/components/Card/music/page/skillSearchHistory.vue')));
-const VoiceMessage = r =>
-  require.ensure([], () => r(require('./../src/components/Card/music/page/voiceMessage.vue')));
-const EditVoiceMessage = r =>
-  require.ensure([], () => r(require('./../src/components/Card/music/page/editVoiceMessage.vue')));
+  require.ensure([], () => r(require('./../src/components/Card/skills/detail.vue')));
+const SkillSearchIndex = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/search/index.vue')));
+const SkillSearchResult = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/search/result.vue')));
+const VoiceMessageIndex = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/index.vue')));
+const VoiceMessageEdit = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/edit.vue')));
 Vue.use(Router);
 
 const router = new Router({
@@ -177,23 +177,37 @@ const router = new Router({
     {
       path: '/SkillSearch',
       name: 'SkillSearch',
-      component: SkillSearch
-    },
-    {
-      path: '/SkillSearchHistory',
-      name: 'SkillSearchHistory',
-      component: SkillSearchHistory
+      component: {
+        render(h) {
+          return h('router-view');
+        }
+      },
+      redirect: '/SkillSearch/Index',
+      children: [{
+        path: 'Index',
+        component: SkillSearchIndex
+      }, {
+        path: 'Result',
+        component: SkillSearchResult
+      }]
     },
     {
       path: '/VoiceMessage',
       name: 'VoiceMessage',
-      component: VoiceMessage
+      component: {
+        render(h) {
+          return h('router-view');
+        }
+      },
+      redirect: '/VoiceMessage/Index',
+      children: [{
+        path: 'Index',
+        component: VoiceMessageIndex
+      }, {
+        path: 'Edit',
+        component: VoiceMessageEdit
+      }]
     },
-    {
-      path: '/EditVoiceMessage',
-      name: 'EditVoiceMessage',
-      component: EditVoiceMessage
-    }
   ]
 });
 // 路由守卫

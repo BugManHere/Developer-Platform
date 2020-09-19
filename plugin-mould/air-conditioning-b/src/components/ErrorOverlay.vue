@@ -1,10 +1,12 @@
 <template>
-  <div v-show="show" class="error-overlay" @click="$emit('reload')">
-    <div class="content">
-      <span>加载失败了!</span>
-      <span>重新加载</span>
+  <transition name="fade">
+    <div v-show="show" class="error-overlay" @click="$emit('reload')">
+      <div class="content">
+        <span>加载失败了!</span>
+        <span>重新加载</span>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -15,10 +17,16 @@ export default {
       default: false,
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 .error-overlay {
   position: absolute;
   top: 0;

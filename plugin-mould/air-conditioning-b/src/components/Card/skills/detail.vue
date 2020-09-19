@@ -3,7 +3,7 @@
     <gree-page class="page-skill-detail no-navbar">
       <!-- 标题 -->
       <div class="page-header">
-        <gree-header theme='transparent'>
+        <gree-header theme="transparent">
           <button 
             slot="right"
             v-show="hasSettings"
@@ -13,7 +13,7 @@
         </gree-header>
         <div class="icon-wrapper">
           <img :src="icon" class="icon" />
-          <span>{{name}}</span>
+          <span>{{ name }}</span>
         </div>
       </div>
       <!-- 内容 -->
@@ -22,26 +22,26 @@
           <p class="title">您可以这么说</p>
           <ul :class="{'loading': isLoading}">
             <li v-for="(item, index) in illustrate" :key="index">
-              <span>{{item}}</span>
+              <span>{{ item }}</span>
             </li>
           </ul>
         </div>
         <div class="panel">
           <p class="title">技能介绍</p>
-          <p class="text" :class="{'loading': isLoading}">{{introduce}}</p>
+          <p class="text" :class="{'loading': isLoading}">{{ introduce }}</p>
         </div>
         <div class="panel">
           <p class="title">使用说明</p>
-          <p class="text" :class="{'loading': isLoading}">{{direction_use}}</p>
+          <p class="text" :class="{'loading': isLoading}">{{ direction_use }}</p>
         </div>
       </div>
-      <footer>此技能由<img src="../../../../assets/img/skill/gree_logo.png"/>提供</footer>
+      <footer>此技能由<img src="../../../assets/img/skill/gree_logo.png"/>提供</footer>
     </gree-page>
   </gree-view>
 </template>
 <script>
 import { Header } from 'gree-ui';
-import { voiceACgetSkillInfo, changeBarColor } from '../../../../../public/static/lib/PluginInterface.promise';
+import { voiceACgetSkillInfo, changeBarColor } from '../../../../public/static/lib/PluginInterface.promise';
 
 const SKILLS_WITH_SETTINGS = [{
   name: '语音留言',
@@ -51,7 +51,7 @@ export default {
   components: {
     [Header.name]: Header,
   },
-  props: ['id'],
+  props: ['id'], // eslint-disable-line
   data() {
     return {
       illustrate: [],
@@ -60,9 +60,9 @@ export default {
       name: '',
       hasSettings: false,
       icon: '',
-      isLoading: true, //是否加载数据中
+      isLoading: true, // 是否加载数据中
       path: '/', // 跳转具体设置页的路径，如语音留言则跳转/VoiceMessage
-    }
+    };
   },
   created() {
     changeBarColor('#301021');
@@ -100,7 +100,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 <style lang="scss">
 @keyframes skeleton-blink {
@@ -113,7 +113,7 @@ export default {
   .page-header {
     position: relative;
     height: 560px;
-    background-image: url('../../../../assets/img/skill/header_bg.png');
+    background-image: url('../../../assets/img/skill/header_bg.png');
     background-size: 100% 100%;
     .btn {
       border: 1px solid rgba($color: #fff, $alpha: 0.5);

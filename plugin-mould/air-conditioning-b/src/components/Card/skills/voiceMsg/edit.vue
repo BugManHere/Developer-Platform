@@ -1,9 +1,9 @@
 <template>
-   <gree-view bg-color="#ffffff">
+  <gree-view bg-color="#ffffff">
     <gree-page class="page-edit-voice-message">
       <gree-header style="background-color: #fff;">
         语音留言簿
-       <a slot="right" @click="selectAll" v-show="!isEmpty">全选</a>
+        <a slot="right" @click="selectAll" v-show="!isEmpty">全选</a>
       </gree-header>
       <div class="page-main">
         <div v-if="isEmpty" class="placeholder">
@@ -12,14 +12,18 @@
         <div v-else>
           <voice-msg-list :message-list="unreadList">
             <template slot-scope="slotProps">
-               <button @click="setState(slotProps.item)" :class="slotProps.item.selected ? 'btn-checked': 'btn-unchecked'"></button>
+              <button @click="setState(slotProps.item)" :class="slotProps.item.selected ? 'btn-checked': 'btn-unchecked'"></button>
             </template>
           </voice-msg-list>
           <div class="panel" v-show="readList && readList.length">
             <div class="title">
               已读留言保留7天，过期自动删除
             </div>
-            <voice-msg-list :message-list="readList"></voice-msg-list>
+            <voice-msg-list :message-list="readList">
+              <template slot-scope="slotProps">
+                <button @click="setState(slotProps.item)" :class="slotProps.item.selected ? 'btn-checked': 'btn-unchecked'"></button>
+              </template>
+            </voice-msg-list>
           </div>
         </div>
       </div>
@@ -29,7 +33,7 @@
           <span>删除</span>
         </div>
       </div>
-      <error-overlay :show="isLoadFailed" @reload="() => {this.getMessageList();}"></error-overlay>
+      <error-overlay :show="isLoadFailed" @reload="onReload"></error-overlay>
     </gree-page>
     <gree-dialog 
       title="提醒"
@@ -43,7 +47,7 @@
 <script>
 import { mapState } from 'vuex';
 import { Header, Dialog } from 'gree-ui';
-import VoiceMessageList from './voiceMessageList';
+import VoiceMessageList from './list';
 import ErrorOverlay from '../../../ErrorOverlay';
 import { 
   voiceSkillMsgDel,
@@ -51,6 +55,7 @@ import {
   changeBarColor, 
   showToast 
 } from '../../../../../public/static/lib/PluginInterface.promise';
+
 export default {
   components: {
     [Header.name]: Header,
@@ -75,7 +80,7 @@ export default {
       },
       selectedRecords: [], // 选中需要删除的留言
       isLoadFailed: false, // 列表是否加载失败
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -104,7 +109,7 @@ export default {
           this.isEmpty = true;
           throw new Error('获取留言列表失败');
         }
-        if (typeof(voiceMsgList) === 'string') {
+        if (typeof (voiceMsgList) === 'string') {
           voiceMsgList = JSON.parse(voiceMsgList);
         }
         if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
@@ -113,51 +118,52 @@ export default {
         }
         this.isEmpty = false;
         this.unreadList = voiceMsgList.data.filter(x => x.status === 1)
-          .map(x => { x.selected = false; return x;})
+          .map(x => { this.$set(x, 'selected', false); return x; })
           .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
         this.readList = voiceMsgList.data.filter(x => x.status === 2)
-          .map(x => { x.selected = false; return x;})
+          .map(x => { this.$set(x, 'selected', false); return x; })
           .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
       } catch (error) {
         console.log(error);
         this.isLoadFailed = true;
       }
-      
+    },
+    onReload() {
+      this.getMessageList();
     },
     selectAll() {
       this.unreadList.forEach(x => {
-        x.selected = true;
+        x.selected = true; // eslint-disable-line
       });
       this.readList.forEach(x => {
-        x.selected = true;
+        x.selected = true; // eslint-disable-line
       });
     },
     setState(item) {
-      item.selected = !item.selected;
+      item.selected = !item.selected; // eslint-disable-line
     },
     async deleteRecords() {
       try {
         if (!this.selectedRecords || this.selectedRecords.length === 0) {
           throw new Error('请选择要删除的留言');
         }
+        this.dialogOption.open = false;
         let data = {guidList: this.selectedRecords};
         let result = await voiceSkillMsgDel(JSON.stringify(data));
-        this.dialogOption.open = false;
         console.log('del:', result);
         if (!result) {
           throw new Error('删除失败');
         }
-        if (typeof(result) === 'string') {
+        if (typeof (result) === 'string') {
           result = JSON.parse(result);
         }
-        if (!result.code || result.code != 200) {
+        if (!result.code || Number(result.code) !== 200) {
           throw new Error('删除失败');
         }
         this.getMessageList(); // 刷新语音留言列表  
       } catch (error) {
         showToast(error.message, 0);
       }
-     
     },
     onDelete() {
       this.selectedRecords = [];
@@ -174,7 +180,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
  .gree-dialog {

@@ -3,8 +3,6 @@
  * @desc 原生与WebView通讯接口promise封装
  */
 
-import { resolve, reject } from "core-js/fn/promise";
-
 /**
  * Toast提示
  * @param {string} msg
@@ -1468,7 +1466,7 @@ export const voiceACgetSkillList = (requestId, mac, data) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.voiceACgetSkillList(mac, data, (...params) => {
-        console.log('获取技能列表：', ...params);
+        // console.log('获取技能列表：', ...params);
         resolve([requestId, ...params]);
       });
     } catch (error) {
@@ -1534,7 +1532,7 @@ export const voiceSkillMsgAudioControl = (mac, cmd) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.voiceSkillMsgAudioControl(mac, cmd, (...params) => {
-        console.log('audio:', ...params);
+        // console.log('audio:', ...params);
         resolve(...params);
       });
     } catch (error) {

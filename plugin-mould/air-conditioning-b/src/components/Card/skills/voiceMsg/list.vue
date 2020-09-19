@@ -6,13 +6,13 @@
       <div class="content">
         <div>
           <span class="header">
-            {{item.label}}
+            {{ item.label }}
             <img v-if="item.status === 2" src="../../../../assets/img/skill/readed_tag.png">
             <img v-else src="../../../../assets/img/skill/unread_tag.png">
           </span>
-          <div class="subtitle">{{item.createdAt}}<span>{{parseInt(item.duration / 1000, 10)}}秒</span></div>
+          <div class="subtitle">{{ item.createdAt }}<span>{{ parseInt(item.duration / 1000, 10) }}秒</span></div>
         </div>
-        <slot v-bind:item="item">
+        <slot :item="item">
           <button class="btn-play" v-show="!item.isUploading" @click="playVoiceMsg(item)"></button>
           <img src="../../../../assets/img/skill/loading.png" class="icon-loading" v-show="item.isUploading">
         </slot>
@@ -23,11 +23,14 @@
 
 <script>
 import { showToast, voiceSkillMsgPlay } from '../../../../../public/static/lib/PluginInterface.promise';
+
 export default {
   props: {
     messageList: {
       type: Array,
-      default: []
+      default: () => {
+        return [];
+      }
     },
     isEditable: {
       type: Boolean,
@@ -52,7 +55,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

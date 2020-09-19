@@ -1,9 +1,9 @@
 <template>
-   <gree-view bg-color="#ffffff">
+  <gree-view bg-color="#ffffff">
     <gree-page class="page-voice-message">
       <gree-header style="background-color: #fff;">
         语音留言簿
-       <a slot="right" @click="edit" v-show="!isEmpty">编辑</a>
+        <a slot="right" @click="gotoEdit" v-show="!isEmpty">编辑</a>
       </gree-header>
       <div class="page-main">
         <div v-if="isEmpty" class="placeholder">
@@ -27,8 +27,8 @@
           <div class="voice-indicator" v-show="isRecording">
             <div class="title">
               <div class="time-label">
-                <span v-show="countdown > 0">{{countdown}}秒后将结束录音</span>
-                <span>{{timing}}s</span>
+                <span v-show="countdown > 0">{{ countdown }}秒后将结束录音</span>
+                <span>{{ timing }}s</span>
               </div>
               <button class="btn-close" @click="cancelRecord"></button>
             </div>
@@ -51,7 +51,7 @@
       <gree-dialog v-model="showDialog">
         <div class="text-input-wrapper">
           <input ref="nameInput" v-model="voiceMsgName" maxlength="10" type="text" placeholder="请输入留言人姓名或昵称">
-          <span :class="{'high-light': voiceMsgName}">{{countLabel}}</span>
+          <span :class="{'high-light': voiceMsgName}">{{ countLabel }}</span>
           <div class="tips" v-show="!isNameValid">
             昵称仅限汉字哟~
           </div>
@@ -61,16 +61,16 @@
           <button @click="onConfirm" :disabled="(voiceMsgName && isNameValid) ? false: true">确定</button>
         </div>
       </gree-dialog>
-      <error-overlay :show="isLoadFailed" @reload="() => {this.getMessageList();}"></error-overlay>
+      <error-overlay :show="isLoadFailed" @reload="onReload"></error-overlay>
     </gree-page>
   </gree-view>
 </template>
 <script>
+import { mapState } from 'vuex';
 import { Header, Dialog } from 'gree-ui';
-import VoiceMessageList from './voiceMessageList';
+import VoiceMessageList from './list';
 import AudioWave from '../../../AudioWave';
 import ErrorOverlay from '../../../ErrorOverlay';
-import { mapState } from 'vuex';
 import { 
   voiceSkillMsgAudioControl, 
   voiceSkillMsgList,
@@ -108,7 +108,7 @@ export default {
       countdown: 0, // 倒计时显示
       isLoadFailed: false, // 列表是否加载失败
       isShrink: false, // 窗口大小是否缩小
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -122,7 +122,7 @@ export default {
       const name = val && val.trim();
       if (name) {
         let isValid = /^[\u4e00-\u9fa5\s]*$/gi.test(name);
-        if(!isValid) {
+        if (!isValid) {
           this.isNameValid = false;
         }
         this.countLabel = `${name.length}/10`;
@@ -154,7 +154,7 @@ export default {
       } else {
         this.isShrink = false;
       }
-    }
+    };
     window.addEventListener('resize', resizeHandler, false);
     this.$once('hook:beforeDestroy', () => {
       window.removeEventListener('resize', resizeHandler, false);
@@ -173,7 +173,7 @@ export default {
           this.isEmpty = true;
           throw new Error('获取留言列表失败');
         }
-        if (typeof(voiceMsgList) === 'string') {
+        if (typeof (voiceMsgList) === 'string') {
           voiceMsgList = JSON.parse(voiceMsgList);
         }
         if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
@@ -190,13 +190,16 @@ export default {
         this.isLoadFailed = true;
       }
     },
+    onReload() {
+      this.getMessageList();
+    },
     resetData() {
       this.showDialog = false;
       this.voiceMsgName = '';
       this.countLabel = '0/10';
     },
-    edit() {
-      this.$router.push('/EditVoiceMessage');
+    gotoEdit() {
+      this.$router.push('/VoiceMessage/Edit');
     },
     clearInterval() {
       if (gTimerForGetAudioStatus) {
@@ -212,7 +215,7 @@ export default {
       console.log('finishRecord');
       this.isRecording = false;
       this.clearInterval();
-      this.duration = Date.now() - this.startTime; //录音时长
+      this.duration = Date.now() - this.startTime; // 录音时长
       if (this.duration <= 1000) {
         showToast('录音时间过短！', 0);
         return;
@@ -240,7 +243,7 @@ export default {
         let result = await voiceSkillMsgAudioControl(this.mac, 'getStatus');
         console.log('ret:', result);
         if (result) {
-          if (typeof(result) === 'string') {
+          if (typeof (result) === 'string') {
             result = JSON.parse(result);
           }
         }
@@ -260,14 +263,11 @@ export default {
           }
         }, 1000);
         gTimerForGetAudioStatus = setInterval(() => {
-          // this.$refs.audioWave.updateWave(Math.random()); // add for test
-          voiceSkillMsgAudioControl(this.mac, 'getStatus').then((data) => {
-            console.log(data);
-            data = JSON.parse(data);
-            this.$refs.audioWave.updateWave(data.wave);
+          voiceSkillMsgAudioControl(this.mac, 'getStatus').then(data => {
+            const result = JSON.parse(data);
+            this.$refs.audioWave.updateWave(result.wave);
           });  
         }, 100);
-        
       } catch (error) {
         console.log(error);
         this.isRecording = false;
@@ -305,14 +305,14 @@ export default {
         this.resetData();
         this.unreadList.unshift({label: name, createdAt: this.getCreatedTime(), duration, status: 1, isUploading: true});
         this.isEmpty = false;
-        let result = await voiceSkillMsgAdd(this.mac, JSON.stringify({label: name, duration: duration}));
+        let result = await voiceSkillMsgAdd(this.mac, JSON.stringify({label: name, duration}));
         if (!result) {
           throw new Error('保存失败');
         }
-        if (typeof(result) === 'string') {
+        if (typeof (result) === 'string') {
           result = JSON.parse(result);
         }
-        if (!result.code || result.code != 200) {
+        if (!result.code || Number(result.code) !== 200) {
           throw new Error('保存失败');
         }
       } catch (error) {
@@ -321,7 +321,7 @@ export default {
       this.getMessageList(); // 刷新留言列表
     },
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .fade-enter-active, .fade-leave-active {

@@ -14,7 +14,7 @@ export default {
       lineCount: 46, // 线的总条数
       lineInitHeight: 0, // 线条的初始高度,
       rem: 0, // 1rem的值
-    }
+    };
   },
   mounted() {
     const rem = parseFloat(document.documentElement.style.fontSize, 10);
@@ -39,22 +39,22 @@ export default {
     gradient.addColorStop(0.85, '#64c0ff');
     gradient.addColorStop(1, 'rgba(100, 192, 255, 0.2)');
     this.ctx.fillStyle = gradient;
-    this.init(rem);
+    this.init();
   },
   methods: {
-    init(rem) {
+    init() {
       const lineWidth = 5 / 108 * this.rem;
       let startX = 0;
       let startY = (this.height - this.lineInitHeight) / 2;
       const distance = 14 / 108 * this.rem; // 线条之间的间距
-      for (let i = 0; i < this.lineCount; i++) {
+      for (let i = 0; i < this.lineCount; i += 1) {
         this.lines.push({x: startX, y: startY, width: lineWidth, height: this.lineInitHeight});
         this.ctx.fillRect(startX, startY, lineWidth, this.lineInitHeight);
         startX = i * (distance + lineWidth);
       }
     },
     $_draw() {
-      for (let i = 0; i < this.lines.length; i++) {
+      for (let i = 0; i < this.lines.length; i += 1) {
         const line = this.lines[i];
         this.ctx.fillRect(line.x, line.y, line.width, line.height);
       }
@@ -71,11 +71,11 @@ export default {
       let parts = this.lineCount / 3;
       let index = 0;
       const updatedLines = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i += 1) {
         let lines = this.lines.slice(index, index + parts);
         lines.forEach(line => {
-          line.height = this.lineInitHeight + (delta * Math.random() * (i === 1 ?  1 : 0.5));
-          line.y = (this.height - line.height) / 2;
+          line.height = this.lineInitHeight + (delta * Math.random() * (i === 1 ? 1 : 0.5)); // eslint-disable-line
+          line.y = (this.height - line.height) / 2; // eslint-disable-line
         });
         updatedLines.push(...lines);
         index += parts;
@@ -86,5 +86,5 @@ export default {
       this.$_loop();
     }
   }
-}
+};
 </script>
