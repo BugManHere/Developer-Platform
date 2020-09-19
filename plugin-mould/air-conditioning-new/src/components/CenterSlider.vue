@@ -17,7 +17,7 @@
             <span v-text="fanName" />
           </div>
         </gree-block>
-        <gree-block v-else style="margin-bottom: 5px">
+        <gree-block v-else>
           <span v-if="modName.length" v-text="modName" />
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>

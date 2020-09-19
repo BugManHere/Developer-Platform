@@ -157,12 +157,6 @@ window.onResume = function onResume(msg) {
     });
 };
 
-// 根据加载页面改变状态栏颜色
 window.init = function init() {
   createVue();
-};
-
-window.setDataCallBack = function setDataCallBack(data) {
-  console.log('------mqtt----data------------');
-  console.log(data);
 };
