@@ -1,14 +1,17 @@
 .dialog {
+  $maxHeight: 393px;
   position: absolute;
-  width: 887px;
+  width: 980px;
   top: 215px;
   z-index: 3;
   .panel-body {
+    position: relative;
     display: flex;
     background-color: #fff;
+    height: 100%;
     .table-left {
       min-width: 200px;
-      max-height: 393px;
+      max-height: $maxHeight;
       background-color: #f3f3f3;
       overflow-y: scroll;
       .list-group {
@@ -22,15 +25,15 @@
         ::after {
           position: absolute;
           right: 20px;
-          font-family: "Glyphicons Halflings";
-          content: "\E258";
+          font-family: 'Glyphicons Halflings';
+          content: '\E258';
         }
       }
     }
     .table-right {
       background-color: #f3f3f3;
       width: 100%;
-      max-height: 393px;
+      max-height: $maxHeight;
       display: flex;
       justify-content: flex-start;
       overflow-y: scroll;
@@ -77,6 +80,9 @@
     }
   }
   .next-table {
+    display: flex;
+    align-items: center;
+    height: auto;
     width: 100%;
     .form-horizontal {
       display: flex;
@@ -85,9 +91,8 @@
       .form-group {
         display: flex;
         align-items: center;
-        margin-left: 10%;
         margin-right: 10%;
-        width: 50%;
+        width: 60%;
         .col-sm-2 {
           display: flex;
           justify-content: flex-end;
@@ -97,22 +102,15 @@
           font-size: 14px;
           padding-top: 0;
           padding-right: 9px;
-          color: #86898E;
+          color: #86898e;
         }
-        &:nth-child(3), &:nth-child(4) {
-          .col-sm-2 {
-            &::before {
-              content: '*';
-              position: relative;
-              font-family: SimSun;
-              right: 4px;
-              color: #FF3333;
-            }
-          }
-        }
-        &:nth-child(5) {
-          .col-sm-10 {
-            margin-bottom: 8px;
+        .main {
+          &::before {
+            content: '*';
+            position: relative;
+            font-family: SimSun;
+            right: 4px;
+            color: #ff3333;
           }
         }
         .col-sm-10 {
@@ -123,11 +121,16 @@
           span {
             margin-left: 10px;
           }
-          img {
-            width: 64px;
-          }
         }
       }
+    }
+  }
+  .plugin-effect {
+    position: relative;
+    right: -20px;
+    img {
+      max-height: $maxHeight;
+      margin: 10px;
     }
   }
 }

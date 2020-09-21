@@ -10,11 +10,13 @@
         </h3>
       </div>
       <div class="panel-body">
+        <!-- 选择产品 -->
         <div class="table-left" v-show="currentStatus === 0">
           <div class="list-group">
             <a class="list-group-item" v-for="(item, index) in productTypeList" :key="index" @click="selectProduct(item._id)" v-text="item.name" />
           </div>
         </div>
+        <!-- 选择品类 -->
         <div class="table-right" v-show="currentStatus === 0">
           <div class="row" v-if="selectProductInfo && selectProductInfo.seriesList">
             <div
@@ -31,13 +33,17 @@
             </div>
           </div>
         </div>
+        <!-- 预览效果 -->
+        <div class="plugin-effect img-box" v-if="currentStatus === 1">
+          <img :src="selectModelName" />
+        </div>
+        <!-- 输入信息 -->
         <div class="next-table" v-if="currentStatus === 1">
           <form class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-2 control-label">品类</label>
-              <div class="col-sm-10">
-                <img :src="require(`@public/img/product/${selectDeviceInfo.img}`)" />
-                <span class="form-control-static" v-text="selectDeviceInfo.devName" />
+              <div class="col-sm-10 ">
+                <span class="form-control-static" v-text="selectDeviceInfo.name" />
               </div>
             </div>
             <div class="form-group">
@@ -47,15 +53,23 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label">产品名称</label>
+              <label for="inputPassword" class="col-sm-2 control-label main">产品名称</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="inputText" placeholder="请输入产品名称，如贝塔柜机" @change="setDeviceName" />
               </div>
             </div>
             <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label">产品型号</label>
+              <label for="inputPassword" class="col-sm-2 control-label main">产品id</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputText" placeholder="请输入产品型号，如11005" @change="setProductModel" />
+                <input type="text" class="form-control" id="inputText" placeholder="请输入产品id，如11005" @change="setProductModel" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword" class="col-sm-2 control-label">选择模板</label>
+              <div class="col-sm-10">
+                <select class="select-medium form-control" v-model="mouldKey">
+                  <option v-for="(optionValue, optionKey) in selectProductInfo.plugin" :key="optionKey" :value="optionKey" v-text="optionValue.name" />
+                </select>
               </div>
             </div>
             <div class="form-group">
@@ -101,8 +115,10 @@ export default {
         brand: '格力',
         deviceName: '',
         productModel: '',
-        protocol: 'WiFi'
-      }
+        protocol: 'WiFi',
+        modelPath: ''
+      },
+      mouldKey: 'default'
     };
   },
   computed: {
@@ -121,6 +137,15 @@ export default {
     selectDeviceInfo() {
       if (!this.productTypeList.length && this.selectProductInfo) return {};
       return this.selectProductInfo.seriesList.find(item => item._id === this.deviceInfo.seriesID);
+    },
+    // 当前模板
+    selectModel() {
+      if (!this.productTypeList.length) return {};
+      return this.selectProductInfo.plugin[this.mouldKey];
+    },
+    // 当前模板图片
+    selectModelName() {
+      return require(`@public/img/model/${this.deviceInfo.modelPath}.png`);
     }
   },
   watch: {
@@ -128,6 +153,10 @@ export default {
       // 获取到产品品类列表时赋予初值
       this.deviceInfo.productID = newVal[0]._id;
       this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;
+      this.deviceInfo.modelPath = this.selectModel.path;
+    },
+    mouldKey() {
+      this.deviceInfo.modelPath = this.selectModel.path;
     }
   },
   methods: {

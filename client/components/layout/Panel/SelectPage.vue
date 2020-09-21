@@ -1,6 +1,6 @@
 <template>
   <div class="select-page">
-    <div @click="chooseOne(key)" :class="{ hold: key === imgKey }" class="panel" v-for="(item, key) in imgMap" :key="key">
+    <div @click="chooseOne(key)" :class="{ hold: key === imgKey }" class="img-box" v-for="(item, key) in imgMap" :key="key">
       <img :src="item" />
     </div>
   </div>

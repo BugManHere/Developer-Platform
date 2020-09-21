@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const productTypeModel = require('../models/productType');
 const userDeviceModel = require('../models/userDevice');
 const templateFuncModel = require('../models/template');
 const dayjs = require('dayjs');
@@ -147,13 +146,12 @@ router.post('/done', async function(req, res) {
     res.status(200).send('只有预览权限');
     return;
   }
-  const { output, deviceKey, plugin } = await saveAndOutput(req.body); // 获取输出/设备id/模板目录地址
+  const { output, deviceKey, modelPath } = await saveAndOutput(req.body); // 获取输出/设备id/模板目录地址
 
   // 写入文件
   fs.writeFileSync(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output));
-  fs.writeFileSync(resolve(`../../plugin-mould/${plugin}/plugin.id.json`), JSON.stringify({ key: deviceKey }));
-  fs.writeFileSync(resolve(`../../plugin-mould/air-conditioning-new/plugin.id.json`), JSON.stringify({ key: deviceKey }));
-  res.json(output);
+  fs.writeFileSync(resolve(`../../plugin-mould/${modelPath}/plugin.id.json`), JSON.stringify({ key: deviceKey }));
+  res.json(modelPath);
 });
 
 router.get('/download', function(req, res) {
@@ -179,10 +177,8 @@ async function saveAndOutput(input) {
   const userDevice = await getAdminDevice(admin); // 获取用户下的设备信息
   const device = await userDevice.userDeviceList.id(deviceKey); // 找到对应的设备
 
-  const productID = device.productID; // 获取产品id
-  const seriesID = device.seriesID; // 获取分类id
+  const { productID, seriesID, modelPath } = device; // 获取产品id、分类id、模板目录地址
   const template = await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
-  const { plugin } = await productTypeModel.findById(productID); // 模板目录地址
 
   // 根据功能id寻找功能信息
   const funcDefine = device.funcImport.map(key => {
@@ -231,7 +227,7 @@ async function saveAndOutput(input) {
     });
   });
 
-  return { output, deviceKey, plugin };
+  return { output, deviceKey, modelPath };
 }
 
 module.exports = router;

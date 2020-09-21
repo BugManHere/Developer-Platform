@@ -156,8 +156,12 @@ export default {
   // 设备配置完毕
   async [SET_DEV_DONE]({ state, getters }) {
     const newWin = window.open('', 'pluginPage');
-    // const secondWin = window.open('', 'secondPage');
     let status = true;
+    const pathMap = {
+      'air-conditioning': '8081',
+      'air-conditioning-new': '8082'
+    };
+    let modelPath = '';
     // 前端先检验：如果权限不足，则不请求接口
     if (state.userModule.user.identity <= 2) {
       const res = await https.fetchPost('/userDevice/done', {
@@ -167,13 +171,11 @@ export default {
         moreOption: JSON.stringify(state.devModule.moreOption)
       });
       status = res.status === 200;
+      modelPath = res.data;
     }
     window.myvm.$toast.info('请在新窗口预览效果');
-    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:8081/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
-    // const secondTargetUrl = `${process.env.VUE_APP_SERVE_URL}:8082/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
-    // window.open(targetUrl, 'pluginPage', '', true);
+    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${pathMap[modelPath]}/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
     newWin.location.href = targetUrl;
-    // secondWin.location.href = secondTargetUrl;
     return status;
   },
   // 下载配置

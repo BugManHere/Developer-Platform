@@ -197,6 +197,12 @@ const Customize = {
       return {
         Demo: () => {
           console.log('run Demo init');
+        },
+        // 如果是场景模式，删除预约图标
+        AppTimer: () => {
+          if (this.dataObject.functype === 1) {
+            this.g_funcDefineMap.AppTimer.type = 'inertia';
+          }
         }
       };
     }

@@ -12,7 +12,8 @@ export const showToast = (msg, type) => {
   try {
     return navigator.PluginInterface.showToast(msg, type);
   } catch (e) {
-    console.error(e);
+    console.log(`%c调用showToast接口打印：${msg}`, 'color: blue')
+    // console.error(e);
   }
 };
 
