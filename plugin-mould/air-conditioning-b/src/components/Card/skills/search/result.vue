@@ -41,7 +41,7 @@ export default {
       isLoadFailed: false
     };
   },
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     console.log(from);
     if (from.name === 'SkillDetail') {
       next(vm => {
@@ -126,7 +126,6 @@ export default {
   /deep/ .list {
     margin: 0;
     padding: 0px 36px;
-    overflow-y: scroll;
     ul {
       &::after, &::before {
         visibility: hidden;
