@@ -22,6 +22,7 @@ const state = {
     SmartSlpModEx: 0,
     FreshAirConditionState: 0,
     Humi: 0,
+    LoopMod: 0,
     ErrCode1: 0,
     ErrCode2: 0,
     JFerr: 0,

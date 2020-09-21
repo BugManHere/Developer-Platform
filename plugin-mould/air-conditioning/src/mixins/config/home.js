@@ -30,7 +30,7 @@ const homeConfig = {
         }
       ];
       // 如果有高级功能，显示出来
-      this.g_funcDefine_btn.length && result.push({
+      this.g_funcDefine_btn.some(module => !this.g_hideFuncArr.includes(module.identifier)) && result.push({
         url: require('../../assets/img/function.png'),
         name: '功能',
         key: 'Func'

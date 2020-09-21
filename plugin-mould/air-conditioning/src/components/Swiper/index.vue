@@ -7,6 +7,7 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
+      @touchcancel.native="cancelSwiperHold(slidesData.key)"
       @touchstart.native="swiperShowDisable"
       v-show="!isShowText"
     >
@@ -200,6 +201,11 @@ export default {
         this.currentIndex = NaN;
         this.emitIndex();
       });
+    },
+    // 特殊奇葩操作，滑到一版手机息屏。 需要设置值，再清除
+    cancelSwiperHold(key) {
+      this.setSwiperHold(key);
+      this.clearSwiperHold(key);
     },
     emitIndex() {
       this.$nextTick(() => {

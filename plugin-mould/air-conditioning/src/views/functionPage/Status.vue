@@ -5,13 +5,13 @@
       <div class="status">
         <h3 class="headline" style="border-top: 1px solid #D6D6D6">机组运行状态</h3>
         <gree-list>
-          <gree-list-item title="运行模式" :text="ModStatus" media-item />
-          <gree-list-item title="风挡状态" :text="WdSpdStatus" media-item />
-          <gree-list-item title="循环模式" :text="LoopModStatus" media-item />
-          <gree-list-item title="室外环境温度" :text="OutEnvTemStatus" media-item />
-          <gree-list-item title="室内回风温度" :text="InAirTemStatus" media-item />
-          <gree-list-item title="室内回风湿度" :text="InAirHumiStatus" media-item />
-          <gree-list-item title="送风温度" :text="WdSupTemStatus" media-item />
+          <gree-list-item title="运行模式" :text="!isGoBackFlag ? ModStatus : '---'" media-item />
+          <gree-list-item title="风挡状态" :text="!isGoBackFlag ? WdSpdStatus: '---'" media-item />
+          <gree-list-item title="循环模式" :text="!isGoBackFlag ? LoopModStatus: '---'" media-item />
+          <gree-list-item title="室外环境温度" :text="!isGoBackFlag ? OutEnvTemStatus: '---'" media-item />
+          <gree-list-item title="室内回风温度" :text="!isGoBackFlag ? InAirTemStatus: '---'" media-item />
+          <gree-list-item title="室内回风湿度" :text="!isGoBackFlag ? InAirHumiStatus: '---'" media-item />
+          <gree-list-item title="送风温度" :text="!isGoBackFlag ? WdSupTemStatus: '---'" media-item />
         <!-- <gree-list-item
           title="实时耗电量"
           :text="ActualElecStatus"
@@ -22,16 +22,16 @@
 
         <h3 class="headline">空气品质状态</h3>
         <gree-list>
-          <gree-list-item title="送风PM2.5浓度" :text="WdSupPMStatus" media-item />
-          <gree-list-item title="回风CO2浓度" :text="AirCO2Status" media-item />
+          <gree-list-item title="送风PM2.5浓度" :text="!isGoBackFlag ? WdSupPMStatus : '---'" media-item />
+          <gree-list-item title="回风CO2浓度" :text=" !isGoBackFlag ? AirCO2Status: '---'" media-item />
         </gree-list>
 
         <h3 class="headline">滤网状态</h3>
         <gree-list>
-          <gree-list-item title="新风粗效滤网" :text="getSieveStateStatus(1)" media-item />
-          <gree-list-item title="回风粗效滤网" :text="getSieveStateStatus(2)" media-item />
-          <gree-list-item title="高效滤网" :text="getSieveStateStatus(0)" media-item />
-          <gree-list-item title="换热芯体" :text="getSieveStateStatus(3)" media-item />
+          <gree-list-item title="新风粗效滤网" :text="!isGoBackFlag ? getSieveStateStatus(1) : '---'" media-item />
+          <gree-list-item title="回风粗效滤网" :text="!isGoBackFlag ? getSieveStateStatus(2): '---'" media-item />
+          <gree-list-item title="高效滤网" :text="!isGoBackFlag ? getSieveStateStatus(0): '---'" media-item />
+          <gree-list-item title="换热芯体" :text="!isGoBackFlag ? getSieveStateStatus(3): '---'" media-item />
         </gree-list>
 
         <h3 class="status-bottom">到底啦~</h3>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { Header, Toast, List, Item } from 'gree-ui';
+import { Header, Toast, List, Item, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, closePage } from '@PluginInterface';
 
@@ -55,7 +55,10 @@ export default {
     [Item.name]: Item
   },
   data() {
-    return {};
+    return {
+      isGoBackFlag: false,
+      toastMsg: '设备异常'
+    };
   },
   computed: {
     ...mapState({
@@ -148,24 +151,52 @@ export default {
     Pow: {
       immediate: true,
       handler(newVal) {
-        if (newVal === 0) this.colse('设备已被关闭');
+        if (newVal === 0) this.colse('关机');
       }
     },
-    ErrCode1(newVal) {
-      if (newVal) this.colse('设备出现故障');
+    ErrCode1: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) this.colse('故障');
+      }
     },
 
-    ErrCode2(newVal) {
-      if (newVal) this.colse('设备出现故障');
+    ErrCode2: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) this.colse('故障');
+      }
     },
 
-    JFerr(newVal) {
-      if (newVal) this.colse('设备出现故障');
+    JFerr: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) this.colse('故障');
+      }
     },
+
     isOffline: {
       immediate: true,
       handler(newVal) {
-        if (newVal === -1) this.colse('设备离线');
+        if (newVal === -1) this.colse('离线');
+      }
+    },
+
+    isGoBackFlag: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          Dialog.alert({
+            title: '提示',
+            content: this.toastMsg,
+            confirmText: '确定',
+            onConfirm: () => this.clickBack()
+          });
+          setTimeout(() => {
+            Dialog.closeAll();
+            this.clickBack();
+          }, 3000);
+        }
       }
     }
   },
@@ -187,20 +218,20 @@ export default {
     clickBack() {
       closePage();
     }, 
-
     /**
      * @description 退出当前页面
      */    
     colse(type) {
-      try {
-        showToast(`${type}，自动退出状态查询。`, 1);
-      } catch (e) {
-        Toast({
-          content: `${type}，自动退出状态查询。`,
-          position: 'bottom'
-        });
-      }
-      closePage();
+      this.toastMsg = `设备${type}，将退出状态查询功能。 <br/>  请确认设备状态后重试。`;
+      this.isGoBackFlag = true;
+      // try {
+      //   showToast(this.toastMsg, 1);
+      // } catch (e) {
+      //   Toast({
+      //     content: this.toastMsg,
+      //     position: 'bottom'
+      //   });
+      // }
     }
   }
 };
@@ -236,5 +267,10 @@ export default {
     height: 79px;
     line-height: 79px;
   }
+}
+</style>
+<style lang="scss">
+.gree-dialog-body{
+  text-align: center !important;
 }
 </style>
