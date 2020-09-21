@@ -6,45 +6,26 @@
         {{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}
         <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="turnBack" />
       </gree-header>
-      <div class="sweep-main" :class="{ spin: touchId === 1 }">
-        <div class="sweep-body">
-          <img src="@assets/img/functionBtn/sweep/bg.png" class="bg" />
-        </div>
-        <div class="ac">
-          <img src="@assets/img/functionBtn/sweep/ac.png" />
-        </div>
-        <div class="blades-body">
-          <div class="blade" v-for="(blade, index) in blades" :key="index" :style="`top: ${blade.y}px; left: ${blade.x}px; transform: rotate(${blade.rotate})`">
-            <img :src="blade.img" :style="{ width: blade.width, height: blade.height }" v-show="imshowArr.includes(`${index + 1}`)" />
-          </div>
-        </div>
+      <div class="sweep-body">
+        <gree-sweep-select
+          :canvas-id="canvasId1"
+          :canvas-width="width1"
+          :canvas-height="height1"
+          :origin="origin1"
+          :select-default="selectDefault"
+          @change="sweepLrChangeHandler"
+          v-if="touchId === 1"
+        ></gree-sweep-select>
+        <gree-sweep-select
+          :canvas-id="canvasId2"
+          :canvas-width="width2"
+          :canvas-height="height2"
+          :origin="origin2"
+          :select-default="selectDefault"
+          @change="sweepUdChangeHandler"
+          v-if="touchId === 2"
+        ></gree-sweep-select>
       </div>
-      <gree-sweep-select
-        canvas-id="sweep-lr"
-        :canvas-width="canvasWidth"
-        :canvas-height="canvasHeight"
-        :origin="originLr"
-        :select-default="selectSwingLfRig"
-        :color-secter="{ bgColor: 'transparent', borderColor: 'transparent' }"
-        @change="sweepLrChangeHandler"
-        @move="setImshow"
-        v-if="touchId === 1"
-      ></gree-sweep-select>
-      <gree-sweep-select
-        canvas-id="sweep-ud"
-        :canvas-width="canvasWidth"
-        :canvas-height="canvasHeight"
-        :origin="originUd"
-        :select-default="selectSwUpDn"
-        :color-secter="{ bgColor: 'transparent', borderColor: 'transparent' }"
-        @change="sweepUdChangeHandler"
-        @move="setImshow"
-        v-else-if="touchId === 2"
-      ></gree-sweep-select>
-      <!-- <div class="point-text">
-        <p>{{ $language('sweep.Stage_tips') }}</p>
-        <p v-html="$language('sweep.sweep_txt2')"></p>
-      </div> -->
     </gree-page>
   </gree-view>
 </template>
@@ -61,25 +42,31 @@ export default {
   },
   data() {
     return {
-      // imshowArr: ['1','2','3','4','5'],
-      imshowArr: [],
-      canvasWidth: 0,
-      canvasHeight: 0,
-      originLr: {
-        x: 0, // 扇形原点x坐标
-        y: 0, // 扇形原点y坐标
-        r: 100, // 半径
-        startdeg: 135, // 起始度数0～360
-        opendeg: 18, // 扇形开合度数
-        count: 5 // 扇形数量
+      canvasId1: 'sector1',
+      arr1: [],
+      width1: Math.floor(window['lib'].flexible.rem / 0.1),
+      height1: Math.floor(window['lib'].flexible.rem / 0.15561),
+      origin1: {
+        x: Math.floor(window['lib'].flexible.rem / 0.2),
+        y: 0,
+        r: Math.floor(window['lib'].flexible.rem / 0.15561),
+        startdeg: 135,
+        opendeg: 18,
+        count: 5
       },
-      originUd: {
-        x: 0, // 扇形原点x坐标
-        y: 0, // 扇形原点y坐标
-        r: 100, // 半径
-        startdeg: 225, // 起始度数0～360
-        opendeg: 18, // 扇形开合度数
-        count: 5 // 扇形数量
+      selectDefault: ['3'],
+
+      canvasId2: 'sector2',
+      arr2: [],
+      width2: Math.floor(window['lib'].flexible.rem / 0.15517),
+      height2: Math.floor(window['lib'].flexible.rem / 0.09199),
+      origin2: {
+        x: Math.floor(window['lib'].flexible.rem / 0.15517),
+        y: Math.floor(window['lib'].flexible.rem / 0.18),
+        r: Math.floor(window['lib'].flexible.rem / 0.15517),
+        startdeg: 226,
+        opendeg: 18,
+        count: 5
       },
       touchId: 1 // 1：左右扫风 2：上下扫风
     };
@@ -102,57 +89,6 @@ export default {
     }),
     routeName() {
       return this.$route.name;
-    },
-    blades() {
-      const trans = val => {
-        return (val * window.screen.width) / 414;
-      };
-      const bladesHeight = `${trans(253)}px`;
-      const bladesWidth = `${trans(364)}px`;
-      const baseX = trans(-77.5);
-      const baseY = trans(46.5);
-      return [
-        {
-          img: require('@assets/img/functionBtn/sweep/sweep1.png'),
-          x: baseX,
-          y: baseY,
-          height: bladesHeight,
-          width: bladesWidth,
-          rotate: '90deg'
-        },
-        {
-          img: require('@assets/img/functionBtn/sweep/sweep2.png'),
-          x: baseX,
-          y: baseY,
-          height: bladesHeight,
-          width: bladesWidth,
-          rotate: '90deg'
-        },
-        {
-          img: require('@assets/img/functionBtn/sweep/sweep3.png'),
-          x: baseX,
-          y: baseY,
-          height: bladesHeight,
-          width: bladesWidth,
-          rotate: '90deg'
-        },
-        {
-          img: require('@assets/img/functionBtn/sweep/sweep4.png'),
-          x: baseX,
-          y: baseY,
-          height: bladesHeight,
-          width: bladesWidth,
-          rotate: '90deg'
-        },
-        {
-          img: require('@assets/img/functionBtn/sweep/sweep5.png'),
-          x: baseX,
-          y: baseY,
-          height: bladesHeight,
-          width: bladesWidth,
-          rotate: '90deg'
-        }
-      ];
     }
   },
   watch: {
@@ -165,47 +101,20 @@ export default {
         }
         this.turnBack();
       }
-    },
-    SwingLfRig: {
-      handler() {
-        if (this.touchId === 2) this.imshowArr = this.selectSwingLfRig;
-      }
-    },
-    SwUpDn: {
-      handler() {
-        if (this.touchId === 1) this.imshowArr = this.selectSwUpDn;
-      }
     }
   },
   created() {
     this.touchId = this.$route.params.id;
     const docWidth = window.screen.width;
     const docHeight = window.screen.height;
-    const rem = docWidth / 10;
     this.canvasWidth = docWidth;
     this.canvasHeight = docHeight;
-
     if (this.touchId === 1) {
-      this.originLr.r = 6 * rem;
-      this.originLr.x = this.canvasWidth / 2;
-      this.originLr.y = 3.5 * rem;
-    }
-    if (this.touchId === 2) {
-      this.originUd.r = 6 * rem;
-      this.originUd.x = 8 * rem;
-      this.originUd.y = 6.5 * rem;
-    } else {
-      this.touchId = 1;
-      this.originUd.r = 6 * rem;
-      this.originUd.x = 8 * rem;
-      this.originUd.y = 6.5 * rem;
-    }
+      this.selectDefault = this.selectSwingLfRig;
+    } else if (this.touchId === 2) this.selectDefault = this.selectSwUpDn;
   },
   mounted() {
     hideLoading();
-    if (this.touchId === 1) {
-      this.imshowArr = this.selectSwingLfRig;
-    } else if (this.touchId === 2) this.imshowArr = this.selectSwUpDn;
   },
   methods: {
     ...mapMutations({
@@ -221,25 +130,18 @@ export default {
       });
     },
     sweepLrChangeHandler(val) {
-      if (val.length === 1) {
-        this.imshowArr = [...val];
-      } else if (!val.length) {
-        return;
-      } else {
-        showToast(this.$language('sweep.sweep_lr_tips'), 0);
-      }
       const val2 = [];
-      this.imshowArr.forEach(item => {
+      val.forEach(item => {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
-        if (val2.length === 0) {
-          this._setSweep({ SwingLfRig: 0 });
-        } else if (val2.length === 1) {
+        if (val2.length === 1) {
           this._setSweep({ SwingLfRig: Number(val2[0]) + 1, SmartWind: 0 });
-        } else if (val2.length === 5) {
-          this._setSweep({ SwingLfRig: 1, SmartWind: 0 });
         } else {
+          // 刷新扇叶
+          this.selectDefault = this.selectSwingLfRig;
+          this.touchId = 0;
+          this.$nextTick(() => (this.touchId = 1));
           try {
             showToast(this.$language('sweep.sweep_lr_tips'), 0);
           } catch (err) {
@@ -249,25 +151,18 @@ export default {
       }
     },
     sweepUdChangeHandler(val) {
-      if (val.length === 1) {
-        this.imshowArr = [...val];
-      } else if (!val.length) {
-        return;
-      } else {
-        showToast(this.$language('sweep.sweep_ud_tips2'), 0);
-      }
       const val2 = [];
-      this.imshowArr.forEach(item => {
+      val.forEach(item => {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
-        if (val2.length === 0) {
-          this._setSweep({ SwUpDn: 0 });
-        } else if (val2.length === 1) {
+        if (val2.length === 1) {
           this._setSweep({ SwUpDn: Number(val2[0]) + 1, SmartWind: 0 });
-        } else if (val2.length === 5) {
-          this._setSweep({ SwUpDn: 1, SmartWind: 0 });
         } else {
+          // 刷新扇叶
+          this.selectDefault = this.selectSwUpDn;
+          this.touchId = 0;
+          this.$nextTick(() => (this.touchId = 2));
           try {
             showToast(this.$language('sweep.sweep_ud_tips2'), 0);
           } catch (err) {
@@ -297,11 +192,6 @@ export default {
         funcData.ConstUD = data.SwUpDn;
         storage.set('funcData', funcData);
       }
-    },
-    setImshow(val) {
-      if (val.length === 1) {
-        this.imshowArr = [...val];
-      }
     }
   }
 };
@@ -325,56 +215,134 @@ export default {
       font-size: 58px;
     }
   }
-  .sweep-main {
-    position: relative;
-    margin-top: 94px;
-    top: 0;
-    width: 100%;
-    height: 1285px;
+  .sweep-body {
+    height: 80%;
     display: flex;
     align-items: center;
-    .sweep-body {
-      margin-left: 50px;
-      .bg {
-        transform: rotate(90deg);
-        height: 689px;
-      }
+  }
+  .sweep-select-horizontal {
+    margin: 0 auto;
+    width: 1080px;
+    height: 686px;
+    background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+
+    canvas {
+      opacity: 0;
     }
-    .ac {
+
+    .selected {
       position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      img {
-        height: 996px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center;
+      pointer-events: none;
+
+      &-1 {
+        top: 14px;
+        left: 40px;
+        width: 484px;
+        height: 611px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal_1.png');
+        background-size: 96%;
       }
-    }
-    .blades-body {
-      position: absolute;
-      // margin-top: 180px;
-      top: 180px;
-      left: 280px;
-      height: 100%;
-      width: 100%;
-      .blade {
-        position: absolute;
+
+      &-2 {
+        top: 32px;
+        left: 217px;
+        width: 310px;
+        height: 648px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal_2.png');
       }
-    }
-    &.spin {
-      transform: rotate(270deg);
+
+      &-3 {
+        top: 35px;
+        left: 421px;
+        width: 219px;
+        height: 653px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal_3.png');
+      }
+
+      &-4 {
+        top: 38px;
+        left: 540px;
+        width: 306px;
+        height: 641px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal_4.png');
+      }
+
+      &-5 {
+        top: 32px;
+        left: 554px;
+        width: 476px;
+        height: 579px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_horizontal_5.png');
+      }
     }
   }
-}
-#sweep-ud,
-#sweep-lr {
-  margin-top: 153px;
-  position: absolute;
-  padding-top: calc(constant(safe-area-inset-bottom) * 1.3) !important;
-  padding-top: calc(env(safe-area-inset-bottom) * 1.3) !important;
-  left: 0;
-  top: 0;
-  * {
-    background-color: transparent !important;
+
+  .sweep-select-vertical {
+    margin: 0 auto;
+    width: 696px;
+    height: 1174px;
+    background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+
+    canvas {
+      opacity: 0;
+    }
+
+    .selected {
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      background-position: center;
+      pointer-events: none;
+
+      &-1 {
+        top: 93px;
+        left: 78px;
+        width: 579px;
+        height: 465px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical_1.png');
+      }
+
+      &-2 {
+        top: 263px;
+        left: 10px;
+        width: 634px;
+        height: 311px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical_2.png');
+      }
+
+      &-3 {
+        top: 473px;
+        left: 0;
+        width: 632px;
+        height: 217px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical_3.png');
+      }
+
+      &-4 {
+        top: 592px;
+        left: 10px;
+        width: 625px;
+        height: 305px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical_4.png');
+      }
+
+      &-5 {
+        top: 608px;
+        left: 78px;
+        width: 576px;
+        height: 473px;
+        background-image: url('../../assets/img/functionBtn/sweep/sweep_vertical_5.png');
+      }
+    }
   }
 }
 </style>
