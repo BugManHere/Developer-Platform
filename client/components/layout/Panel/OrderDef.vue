@@ -348,7 +348,6 @@ export default {
       this.highlightStatus(newVal);
       // 获取状态指向
       this.currentDrection = this.funcCopy.map[this.currentStatusKey];
-      console.log('-----------updateCmd----------');
       // 获取额外命令
       this.updateCmd();
       // 获取图标状态
@@ -481,8 +480,6 @@ export default {
         oldKeys: []
       };
       const moreCommand = this.funcCopy.statusDefine[this.currentStatusKey].moreCommand;
-      console.log('----------------------this.currentStatusKey');
-      console.log(this.currentStatusKey);
       if (moreCommand) {
         Object.keys(moreCommand).forEach(key => {
           this.cmdMap.keys.push(key);

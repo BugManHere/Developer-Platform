@@ -297,6 +297,5 @@ export default {
       console.error(e);
     }
     return dataObject;
-
   }
 };
