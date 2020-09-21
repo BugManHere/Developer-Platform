@@ -14,24 +14,29 @@ export default {
       lineCount: 46, // 线的总条数
       lineInitHeight: 0, // 线条的初始高度,
       rem: 0, // 1rem的值
+      ratio: 1, // 绘制比例
     };
   },
   mounted() {
     const rem = parseFloat(document.documentElement.style.fontSize, 10);
     this.rem = rem;
+    this.ctx = this.$refs.waveCanvas.getContext('2d');
+    this.ratio = this.$_getPixelRatio(this.ctx);
+    console.log(`ratio: ${this.ratio}`);
     const width = 862 / 108 * rem;
     const height = 166 / 108 * rem;
-    this.$refs.waveCanvas.width = width;
-    this.$refs.waveCanvas.height = height;
-    this.width = width;
-    this.height = height;
-    const minLineHeight = 36 / 108 * rem;
+    this.$refs.waveCanvas.style.width = `${width}px`;
+    this.$refs.waveCanvas.style.height = `${height}px`;
+    this.$refs.waveCanvas.width = width * this.ratio;
+    this.$refs.waveCanvas.height = height * this.ratio;
+    this.width = width * this.ratio;
+    this.height = height * this.ratio;
+    const minLineHeight = 36 / 108 * rem * this.ratio;
     this.lineInitHeight = minLineHeight;
-    const maxLineHeight = height;
+    const maxLineHeight = this.height;
     // console.log('min:', minLineHeight, 'max:', maxLineHeight);
-    this.lineHeightDiff = maxLineHeight - minLineHeight;
-    this.ctx = this.$refs.waveCanvas.getContext('2d');
-    const gradient = this.ctx.createLinearGradient(0, 0, width, 0);
+    this.lineHeightDiff = maxLineHeight - minLineHeight;  
+    const gradient = this.ctx.createLinearGradient(0, 0, this.width, 0);
     gradient.addColorStop(0, 'rgba(156, 78, 186, 0.2)');
     gradient.addColorStop(0.18, '#9c4eba');
     gradient.addColorStop(0.3, '#af82fc');
@@ -53,10 +58,19 @@ export default {
         startX = i * (distance + lineWidth);
       }
     },
+    $_getPixelRatio(context) {
+      const backingStore = context.backingStorePixelRatio ||
+      context.webkitBackingStorePixelRatio ||
+      context.mozBackingStorePixelRatio ||
+      context.msBackingStorePixelRatio ||
+      context.oBackingStorePixelRatio ||
+      context.backingStorePixelRatio || 1;
+      return (window.devicePixelRatio || 1) / backingStore;
+    },
     $_draw() {
       for (let i = 0; i < this.lines.length; i += 1) {
         const line = this.lines[i];
-        this.ctx.fillRect(line.x, line.y, line.width, line.height);
+        this.ctx.fillRect(line.x * this.ratio, line.y, line.width * this.ratio, line.height);
       }
     },
     $_loop() {
