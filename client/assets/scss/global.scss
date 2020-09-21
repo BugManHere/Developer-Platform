@@ -31,6 +31,17 @@
   z-index: 2;
 }
 
+.img-box {
+  height: 450px;
+  width: 250px;
+  margin: 20px 10px;
+  background-color: #CCCCCC;
+  border: 1px #CCCCCC solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @keyframes fadeShow {
   from {opacity: 0; transform: translateY(-100%);}
   to {opacity: 1;}

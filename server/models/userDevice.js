@@ -22,6 +22,7 @@ const listSchema = new mongoose.Schema({
   createTime: String,
   editTime: String,
   imgPath: String,
+  modelPath: String,
   moreOption: optionSchema,
   funcImport: [String]
 });

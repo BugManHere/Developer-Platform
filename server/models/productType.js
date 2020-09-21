@@ -10,7 +10,7 @@ const infoSchema = new mongoose.Schema({
 const productTypeSchema = new mongoose.Schema({
   name: String,
   seriesList: [infoSchema],
-  plugin: String
+  plugin: {}
 });
 
 module.exports = mongoose.model('product-type', productTypeSchema);
