@@ -1,39 +1,6 @@
 /* eslint-disable */ 
 !(function(){
-  const MockSkillData = [
-    {
-      id: 1,
-      name: '天气',
-      illustrate: '今天天气怎么样',
-      illustrates: [
-        '今天天气怎么样',
-        '今天适合穿什么衣服'
-      ],
-      icon: require('../../src/assets/img/skill/icon_weather.png'),
-      iosIcon: require('../../src/assets/img/skill/icon_weather.png'),
-      introduce: '可以查询当天和未来七天内的天气预报',
-      direction_use: '可以查询天气、冷热、气象、湿度、空气质量、紫外线等\r\n可以查询活动、查询服装等'
-    },
-    {
-      id: 2,
-      name: '语音留言',
-      illustrate: '收听留言',
-      illustrates: [
-        '收听留言',
-        '我要听妈妈的留言'
-      ],
-      icon: require('../../src/assets/img/skill/icon_voicemsg.png'),
-      iosIcon: require('../../src/assets/img/skill/icon_voicemsg.png'),
-      introduce: '通过APP发送留言，空调随时收听，快和家人一起体验吧！',
-      direction_use: '通过格力+APP给家里的空调留言，空调可随时获取并播报留言'
-    }
-  ];
-
-  const MockSkillInfos = JSON.parse(JSON.stringify(MockSkillData)).map(x => {
-    x.illustrate = x.illustrates;
-    return x;
-  });
-
+  const MockSkillList = require('./skills.json');
   const MockVoiceMsgList = [
     {
       label: '妈妈',
@@ -99,11 +66,15 @@
       console.log('hideLoading......');
     },
     voiceACgetSkillSearch(mac, keyword, callback) {
+      const allSkillList = [];
+      MockSkillList.forEach(x => {
+        allSkillList.push(...x.data);
+      });
       if (keyword) {
-        const result = MockSkillData.filter(x => x.name.indexOf(keyword) !== -1);
-        setMockApiCallbackResult(callback, {data: result}, '');
+        const result = allSkillList.filter(x => x.name.indexOf(keyword) !== -1);
+        setMockApiCallbackResult(callback, {data: result});
       } else {
-        setMockApiCallbackResult(callback, {data: MockSkillData}, '');
+        setMockApiCallbackResult(callback, {data: allSkillList});
       }
     },
     voiceACgetSkillSearchJudge(mac, callback) {
@@ -116,8 +87,13 @@
       setMockApiCallbackResult(callback, {code: 200, msg: '删除成功'}, {code: 400, msg: '删除失败'});
     },
     voiceACgetSkillInfo(id, callback) {
-      const skillInfo = MockSkillInfos.find(x => x.id === id);
-      setMockApiCallbackResult(callback, skillInfo, '');
+      let skillInfo = '';
+      const skill = MockSkillList.find(x => x.data.find(y => y.id === id));
+      if (skill) {
+        const result = skill.data.find(x => x.id === id);
+        skillInfo = result.detail;
+      }
+      setMockApiCallbackResult(callback, skillInfo);
     },
     voiceSkillMsgAudioControl(mac, cmd, callback) {
       let result = {status: gIsRecording ? 'recording' : 'stop'};
@@ -188,9 +164,11 @@
       }
     },
     voiceACgetSkillList(mac, data, callback) {
-      // 由于测试数据不足，这里仅简单的返回技能列表
-      let result = MockSkillData.slice(0);
-      setMockApiCallbackResult(callback, {data:  result, total: result.length});
+      const query = JSON.parse(data);
+      const domainData = MockSkillList.find(x => x.domain === query.domain);
+      const startIndex = (query.pageNum - 1) * query.pageSize;
+      const result = domainData.data.slice(startIndex, startIndex + query.pageSize);
+      setMockApiCallbackResult(callback, {data:  result, total: domainData.total});
     }
   };
 })();
