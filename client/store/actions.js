@@ -17,6 +17,7 @@ import {
   DOWNLOAD_CONFIG // 下载配置
 } from './types';
 import https from '@/https';
+import mouldConfig from '@plugin/mould-config.json';
 
 export default {
   // 获取产品类别列表
@@ -157,10 +158,6 @@ export default {
   async [SET_DEV_DONE]({ state, getters }) {
     const newWin = window.open('', 'pluginPage');
     let status = true;
-    const pathMap = {
-      'air-conditioning': '8081',
-      'air-conditioning-new': '8082'
-    };
     let modelPath = '';
     // 前端先检验：如果权限不足，则不请求接口
     if (state.userModule.user.identity <= 2) {
@@ -173,8 +170,9 @@ export default {
       status = res.status === 200;
       modelPath = res.data;
     }
+    const port = mouldConfig[modelPath];
     window.myvm.$toast.info('请在新窗口预览效果');
-    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${pathMap[modelPath]}/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
+    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
     newWin.location.href = targetUrl;
     return status;
   },

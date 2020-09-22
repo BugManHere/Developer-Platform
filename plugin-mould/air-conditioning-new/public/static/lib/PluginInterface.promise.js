@@ -67,19 +67,12 @@ export const getCurtainOpenPercent = mac => {
  * 影子设备项目中，提供回调让App主动传递变更的数据给插件页
  * @param {string} mac
  */
-export const setMqttStatusCallback = mac => {
-  return new Promise((resolve, reject) => {
-    try {
-      navigator.PluginInterface.setMqttStatusCallback(
-        mac,
-        (...params) => {
-          resolve(...params);
-        }
-      );
-    } catch (err) {
-      reject(err);
-    }
-  });
+export const setMqttStatusCallback = (mac, callBack) => {
+  try {
+    navigator.PluginInterface.setMqttStatusCallback( mac, callBack );
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 /**

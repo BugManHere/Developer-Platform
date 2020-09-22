@@ -143,9 +143,9 @@ export default {
           this.touchId = 0;
           this.$nextTick(() => (this.touchId = 1));
           try {
-            showToast(this.$language('sweep.sweep_lr_tips'), 0);
+            val2.length && showToast(this.$language('sweep.sweep_lr_tips'), 0);
           } catch (err) {
-            Toast.info(`${this.$language('sweep.sweep_lr_tips')}`);
+            val2.length && Toast.info(`${this.$language('sweep.sweep_lr_tips')}`);
           }
         }
       }
@@ -164,9 +164,9 @@ export default {
           this.touchId = 0;
           this.$nextTick(() => (this.touchId = 2));
           try {
-            showToast(this.$language('sweep.sweep_ud_tips2'), 0);
+            val2.length && showToast(this.$language('sweep.sweep_ud_tips2'), 0);
           } catch (err) {
-            Toast.info(`${this.$language('sweep.sweep_ud_tips2')}`);
+            val2.length && Toast.info(`${this.$language('sweep.sweep_ud_tips2')}`);
           }
         }
       }

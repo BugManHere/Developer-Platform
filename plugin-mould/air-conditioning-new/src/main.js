@@ -56,7 +56,6 @@ async function createVue() {
   const vm = new Vue({
     // el: '#app',
     mixins: [dev ? debugMixin : initMixin],
-    // mixins: [initMixin],
     render: h => h(App),
     router,
     store,
@@ -97,7 +96,6 @@ async function createVue() {
       vm.$store.commit(SET_STATE, { mac: oldId });
     }
   } else {
-    vm.init();
     window.storage = new Storage();
   }
   // 挂载到#app上

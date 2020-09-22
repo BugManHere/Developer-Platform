@@ -22,6 +22,7 @@ export default {
   computed: {
     ...mapState({
       productTypeList: state => state.pulicModule.productTypeList,
+      productType: (state, getters) => getters.productType,
       funcDefine: (state, getters) => getters.funcDefine
     }),
     imgMap() {
@@ -63,11 +64,12 @@ export default {
       this.$forceUpdate();
     },
     getImg() {
-      const mouldName = this.productTypeList[0].plugin;
-      if (mouldName) {
-        const { pageConfig } = require(`@assets/page/${mouldName}/index.json`);
+      const plugin = this.productType.plugin;
+      if (plugin) {
+        const { pageConfig } = require(`@assets/page/${plugin['1.0'].path}/index.json`);
+        console.log(pageConfig);
         this.pageConfig = pageConfig;
-        this.mouldName = mouldName;
+        this.mouldName = plugin['1.0'].path;
       }
     },
     settingDone() {

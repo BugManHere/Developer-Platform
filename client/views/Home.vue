@@ -35,7 +35,8 @@
                 <span v-text="item.deviceName" />
                 <span>创建时间：{{ item.createTime }}</span>
               </div>
-              <span v-text="'删除设备'" v-show="developType === 0" @click.stop="delDevice(item.id1)" />
+              <i class="iconfont iconfont-disable" v-show="developType === 0" @click.stop="delDevice(item.id1)" title="删除设备" />
+              <i class="iconfont iconfont-preview" v-show="developType === 0" @click.stop="showPlugin(index)" title="预览效果" />
             </div>
             <div class="message-bottom">
               <div v-for="(val, key) in item.productImshow" :key="key">
@@ -55,6 +56,7 @@
 <script>
 import Dialog from '@components/Dialog';
 import { mapState, mapActions } from 'vuex';
+import mouldConfig from '@plugin/mould-config.json';
 
 export default {
   name: 'home',
@@ -83,6 +85,7 @@ export default {
             imgPath: item.imgPath,
             deviceName: item.deviceName,
             createTime: item.createTime,
+            modelPath: item.modelPath,
             id1: item._id,
             productImshow: this.productImshow(item)
           };
@@ -182,6 +185,14 @@ export default {
           this.delDev(id);
         }
       });
+    },
+    // 预览插件效果
+    showPlugin(index) {
+      console.log(this.deviceInfoList[index]);
+      const { modelPath, id1: devKey } = this.deviceInfoList[index];
+      const port = mouldConfig[modelPath];
+      const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${devKey}&admin=${this.admin}`;
+      window.open(targetUrl, 'pluginPage');
     }
   }
 };
