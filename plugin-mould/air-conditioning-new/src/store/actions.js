@@ -138,6 +138,7 @@ export default {
    */
   [types.PARSE_DATA_BY_COLS](context, payload) {
     const dataObject = {};
+    if (!payload) return dataObject;
     try {
       const cols = statueJson2;
       const res = JSON.parse(payload);
@@ -221,7 +222,7 @@ export default {
   /**
    * @description 发送控制指令
    */
-  async [types.SEND_CTRL]({ state, commit }, DataObject) {
+  async [types.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
@@ -239,7 +240,7 @@ export default {
     if (p.length === 0) {
       _timer2 || commit(types.SET_STATE, { watchLock: true, ableSend: false });
     } else {
-      sendControl({ state, commit }, dataMap);
+      sendControl({ state, commit, dispatch }, dataMap);
     }
   },
 

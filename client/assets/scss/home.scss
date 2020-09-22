@@ -67,12 +67,12 @@
                 }
               }
             }
-            > span {
-              color: #91C5FF;
-              font-size: 14px;
+            > .iconfont {
+              color: #404657;
+              font-size: 22px;
               height: 16px;
               align-self: flex-start;
-              margin-top: 22px;
+              margin: 22px 0 0 10px;
               z-index: 1;
               &:hover {
                 color: #49ABFF;

@@ -69,7 +69,11 @@ export const getCurtainOpenPercent = mac => {
  * @param {string} mac
  */
 export const setMqttStatusCallback = (mac, callBack) => {
-  navigator.PluginInterface.setMqttStatusCallback( mac, callBack );
+  try {
+    navigator.PluginInterface.setMqttStatusCallback( mac, callBack );
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 /**

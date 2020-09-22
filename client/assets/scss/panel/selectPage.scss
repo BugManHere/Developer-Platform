@@ -5,13 +5,16 @@
   max-height: 510px;
   margin: 5px;
   overflow-y: scroll;
-  img {
-    height: 400px;
-  }
-  &.hold {
-    background-color: CadetBlue;
-  }
-  &:hover {
-    border: 1px CadetBlue solid;
+  .img-box {
+    &:hover {
+      border: 1px CadetBlue solid;
+    }
+    img {
+      height: 400px;
+    }
+    &.hold {
+      background-color: CadetBlue;
+    }
+
   }
 }

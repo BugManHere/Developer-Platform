@@ -24,7 +24,7 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function (require, expor
       },
       // 影子设备项目中，提供回调让App主动传递变更的数据给插件页
       setMqttStatusCallback: function (mac, callback) {
-          exec(callback, null, 'PluginInterface', 'setMqttStatusCallback', [mac]);
+        exec(callback, null, 'PluginInterface', 'setMqttStatusCallback', [mac]);
       },
       // 发送json数据给设备
       sendDataToDevice: function (mac, json, isFollowSysVibration, callback) {

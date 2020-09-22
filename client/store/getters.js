@@ -3,6 +3,10 @@ const getters = {
     if (!state.tempModule.templates.length || !state.tempModule.productID || !state.tempModule.seriesID) return {};
     return state.tempModule.templates.filter(item => item.productID === state.tempModule.productID).find(item => item.seriesID === state.tempModule.seriesID);
   },
+  productType: state => {
+    if (!state.pulicModule.productTypeList.length || !state.tempModule.productID) return {};
+    return state.pulicModule.productTypeList.find(item => item._id === state.tempModule.productID);
+  },
   funcDefine: (state, getters) => {
     return getters.productInfo.funcDefine;
   },
