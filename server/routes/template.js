@@ -34,27 +34,27 @@ router.get('/', function(req, res) {
   templateFuncModel.find().then(params => {
     // 生成icon
     // params.forEach(async template => {
-    //   const funcDefineCopy = JSON.parse(JSON.stringify(template.funcDefine))
+    //   const funcDefineCopy = JSON.parse(JSON.stringify(template.funcDefine));
     //   funcDefineCopy.forEach(func => {
-    //     for (const status in func.statusDefine) {
-    //       if (['undefined', 'default'].includes(status)) {
-    //         func.statusDefine[status].icon = {
-    //           key: func.identifier,
-    //           type: 'off'
-    //         };
-    //         func.statusDefine[status].miniIcon = {
-    //           key: 'undefined'
-    //         };
-    //       } else {
-    //         func.statusDefine[status].icon = {
-    //           key: func.identifier,
-    //           type: 'on'
-    //         };
-    //         func.statusDefine[status].miniIcon = {
-    //           key: func.identifier
-    //         };
-    //       }
-    //     }
+    //     // for (const status in func.statusDefine) {
+    //     //   if (['undefined', 'default'].includes(status)) {
+    //     //     func.statusDefine[status].icon = {
+    //     //       key: func.identifier,
+    //     //       type: 'off'
+    //     //     };
+    //     //     func.statusDefine[status].miniIcon = {
+    //     //       key: 'undefined'
+    //     //     };
+    //     //   } else {
+    //     //     func.statusDefine[status].icon = {
+    //     //       key: func.identifier,
+    //     //       type: 'on'
+    //     //     };
+    //     //     func.statusDefine[status].miniIcon = {
+    //     //       key: func.identifier
+    //     //     };
+    //     //   }
+    //     // }
     //   });
     //   template.funcDefine = funcDefineCopy;
     //   await template.save();

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="card-table">
-      <div @click="setDialogType(true)">
+      <div @click="setDialogType(true)" v-show="developType === 0">
         <div class="main">
           <div class="body">
             <svg
@@ -20,7 +20,7 @@
                 p-id="7109"
               ></path>
             </svg>
-            <span v-show="developType === 0">添加新产品</span>
+            <span v-show="developType === 0">新增设备</span>
             <span v-show="developType === 1">添加模板</span>
           </div>
         </div>
@@ -188,7 +188,6 @@ export default {
     },
     // 预览插件效果
     showPlugin(index) {
-      console.log(this.deviceInfoList[index]);
       const { modelPath, id1: devKey } = this.deviceInfoList[index];
       const port = mouldConfig[modelPath];
       const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${devKey}&admin=${this.admin}`;
