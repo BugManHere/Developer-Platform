@@ -9,16 +9,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <!-- <a class="navbar-brand" href="#Home" @click="updataPage('Home')">Plugin自动化开发平台</a> -->
-          <a class="navbar-brand" @click="updataPage('Home')" v-text="webTitle" />
+          <a class="navbar-brand" v-text="webTitle" />
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if="true">
           <ul class="nav navbar-nav" v-show="$route.name !== 'Account'">
-            <li :class="{ active: developType === 0 }" @mouseup="setDevelopType(0)">
-              <a role="button" @click="updataPage('Home')">设备管理</a>
+            <li :class="{ active: developType === 0 }" @click="setDevelopType(0)">
+              <a role="button" v-text="'设备管理'" />
             </li>
-            <li :class="{ active: developType === 1 }" @mouseup="setDevelopType(1)">
-              <a role="button" @click="updataPage('Home')">模板定义</a>
+            <li :class="{ active: developType === 1 }" @click="setDevelopType(1)">
+              <a role="button" v-text="'模板定义'" />
             </li>
             <li class="dropdown">
               <a role="button" aria-haspopup="true" aria-expanded="false">运营中心（暂未开放）</a>
@@ -102,18 +101,18 @@ export default {
       setAuthenticated: 'SET_AUTHENTICATED',
       setUser: 'SET_USER'
     }),
-    updataPage(routeName) {
-      if (this.$route.name !== routeName && this.$route.name !== 'Account') {
-        this.$router.push({ name: routeName }).catch(err => {
-          console.log(err);
-        });
-      }
-    },
     goDocument() {
       window.open(`${process.env.VUE_APP_SERVE_URL}:3100`);
     },
     setDevelopType(val) {
-      this.setPulicModule({ developType: val });
+      if (!['Account', 'Home'].includes(this.$route.name)) {
+        this.$router.push({ name: 'Home' }).catch(err => {
+          console.log(err);
+        });
+      }
+      this.$nextTick(() => {
+        this.setPulicModule({ developType: val });
+      });
     },
     signOut() {
       // 清除token

@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
-const userDeviceModel = require('../models/userDevice');
-const templateFuncModel = require('../models/template');
 const dayjs = require('dayjs');
 const fs = require('fs');
 const path = require('path');
@@ -11,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 // 权限判断
 const permit = require('../api/permit');
+import { getOutput, getAdminDevice } from '../api/index';
 
 const resolve = dir => {
   return path.join(__dirname, dir);
@@ -146,7 +144,10 @@ router.post('/done', async function(req, res) {
     res.status(200).send('只有预览权限');
     return;
   }
-  const { output, deviceKey, modelPath } = await saveAndOutput(req.body); // 获取输出/设备id/模板目录地址
+
+  const deviceInfo = await saveMoreOption(req.body); // 保存更多配置
+
+  const { output, deviceKey, modelPath } = await getOutput(req.body, deviceInfo); // 获取输出/设备id/模板目录地址
 
   // 写入文件
   fs.writeFileSync(resolve(`../../output/${deviceKey}.json`), JSON.stringify(output));
@@ -160,74 +161,15 @@ router.get('/download', function(req, res) {
   res.download(downloadUrl);
 });
 
-// 获取用户下的设备信息
-async function getAdminDevice(admin) {
-  let Signture = crypto.createHmac('sha1', keys.secretOrKey);
-  Signture.update(admin);
-  const Ciphertext = Signture.digest().toString('base64');
-  const res = await userDeviceModel.findOne({ admin: Ciphertext });
-  return res || { userDeviceList: [] };
-}
-
-// 保存并输出对象
-async function saveAndOutput(input) {
-  const admin = input.admin; // 用户
-  const deviceKey = input.deviceKey; // 设备key
+// 保存更多配置
+async function saveMoreOption(input) {
+  const { admin, deviceKey } = input; // 用户,设备key
   const moreOption = JSON.parse(input.moreOption); // 更多配置项
   const userDevice = await getAdminDevice(admin); // 获取用户下的设备信息
   const device = await userDevice.userDeviceList.id(deviceKey); // 找到对应的设备
-
-  const { productID, seriesID, modelPath } = device; // 获取产品id、分类id、模板目录地址
-  const template = await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
-
-  // 根据功能id寻找功能信息
-  const funcDefine = device.funcImport.map(key => {
-    return template.funcDefine.id(key);
-  });
-
   device.moreOption = moreOption; // 将更多配置项存入设备配置中
   userDevice.save(); // 保存
-
-  // 输出的对象
-  const output = {
-    excludeMap: {}, // 排斥逻辑
-    hideMap: {}, // 隐藏逻辑
-    productModel: device.productModel, // mid
-    deviceName: device.deviceName, // 系列名
-    funcDefine, // 功能定义
-    moreOption // 更多配置项
-  };
-
-  // 提取逻辑
-  const extractLogic = (status, key) => {
-    if (status[key] && status[key].length) {
-      // 如果存在互斥逻辑
-      return status[key]; // 返回互斥
-    }
-    return [];
-  };
-
-  // 遍历功能,提取排斥/隐藏逻辑
-  funcDefine.forEach(func => {
-    if (!func) return;
-    const id = func.identifier; // 获取id
-    // 轮询功能里面的状态，提取互斥
-    Object.keys(func.statusDefine).forEach(statusKey => {
-      // if (statusKey === 'undefined' || !func.statusDefine[statusKey].isCheck) return; // 排除1.'其他'状态；2.不检查互斥的状态
-      if (!func.statusDefine[statusKey].isCheck) return; // 排除不检查互斥的状态
-      const stateKey = `${id}_${statusKey}`; // 获取状态的key值
-      const arr1 = extractLogic(func.statusDefine[statusKey], 'excludeArr'); // 提取互斥
-      const arr2 = extractLogic(func.statusDefine[statusKey], 'hideArr'); // 提取互斥
-      if (arr1.length) {
-        output.excludeMap[stateKey] = arr1; // 记录互斥关系
-      } // 如果空，不操作
-      if (arr2.length) {
-        output.hideMap[stateKey] = arr2; // 记录互斥关系
-      } // 如果空，不操作
-    });
-  });
-
-  return { output, deviceKey, modelPath };
+  return device;
 }
 
 module.exports = router;
