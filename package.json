@@ -8,8 +8,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "go": "concurrently \"yarn start\" \"yarn serve\"",
-    "local": "concurrently \"yarn start --mode localserve\" \"yarn serve\"",
-    "test": "concurrently \"yarn start --mode localserve\" \"yarn serve:const\"",
+    "local": "concurrently \"yarn start --mode localserve\" \"yarn serve:const\"",
+    "test": "concurrently \"yarn start --mode localserve\" \"yarn serve\"",
     "serve:const": "babel-node server/app.js --presets babel-preset-env",
     "start": "vue-cli-service serve"
   },
