@@ -21,15 +21,12 @@
           <span v-if="modName.length" v-text="modName" />
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>
-        <!--  -->
+        <!-- 显示插槽2 -->
         <h3 v-if="imshowSlot2" class="auto-span" v-text="imshowSlot2" />
         <h3 v-else class="tem" v-text="circleVal" />
         <!-- 显示插槽1 -->
         <div v-if="imshowSlot1" class="room-tem-text">
           <span v-text="imshowSlot1" />
-          <!-- <span v-text="`室温 `" />
-          <span v-if="roomTemShow" class="value" v-text="`${TemSen > 40 ? TemSen - 40 : TemSen}`" />
-          <span v-if="roomTemShow" v-text="'℃'" /> -->
         </div>
       </article>
     </div>
