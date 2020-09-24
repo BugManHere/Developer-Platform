@@ -6,6 +6,27 @@
   "description": "空调插件图标（平台用）",
   "glyphs": [
     {
+      "icon_id": "3512024",
+      "name": "效果图",
+      "font_class": "preview",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "8554293",
+      "name": "详情",
+      "font_class": "more",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "554388",
+      "name": "页面",
+      "font_class": "page",
+      "unicode": "e6ea",
+      "unicode_decimal": 59114
+    },
+    {
       "icon_id": "4933166",
       "name": "删除",
       "font_class": "disable",
