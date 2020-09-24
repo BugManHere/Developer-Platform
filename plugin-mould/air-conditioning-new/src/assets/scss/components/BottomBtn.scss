@@ -37,9 +37,10 @@
     }
   }
   .pow-button {
+    $buttonHeight: 132px;
     position: relative;
-    min-height: 126px;
-    min-width: 126px;
+    min-height: $buttonHeight;
+    min-width: $buttonHeight;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -68,8 +69,8 @@
     }
     .button-boder {
       position: absolute;
-      min-height: 126px;
-      min-width: 126px;
+      min-height: $buttonHeight;
+      min-width: $buttonHeight;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
@@ -82,11 +83,11 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      min-height: 126px;
-      min-width: 126px;
+      min-height: $buttonHeight;
+      min-width: $buttonHeight;
       background-color: transparent;
       border-radius: 50%;
-      border: 1.5px solid;
+      border: 1px solid;
       border-color: rgb(244, 249, 252);
       animation: rippling 1.2s ease infinite;
     }

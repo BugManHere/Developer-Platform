@@ -6,7 +6,7 @@ const LogicDefine = {
   data() {
     return {
       g_moreOption: {}, // 更多配置项
-      g_outputMap: {}, // 更多配置项
+      g_outputMap: {}, // 输出的数据
       g_funcDefine: [], // 功能定义
       g_excludeMap: {}, // 排斥关系
       g_hideMap: {}, // 隐藏关系

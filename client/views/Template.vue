@@ -139,10 +139,6 @@ export default {
               {
                 name: '添加',
                 method: this.$_addTempFunc
-              },
-              {
-                name: '引入',
-                method: this.$_quote
               }
             ],
             component: 'ActiveTable'
@@ -153,10 +149,6 @@ export default {
             rightBtnList: [
               {
                 name: '添加',
-                method: this.$_addTempFunc
-              },
-              {
-                name: '引入',
                 method: this.$_addTempFunc
               }
             ],
@@ -354,9 +346,6 @@ export default {
       }
       console.log(insertMap);
       this.addTempFunc(insertMap);
-    },
-    $_quote() {
-      this.quoteShow = this.setTempStep ? 'inertia' : 'active';
     },
     setStep(val = -1) {
       this.setPulicModule({ setTempStep: this.setTempStep + val });
