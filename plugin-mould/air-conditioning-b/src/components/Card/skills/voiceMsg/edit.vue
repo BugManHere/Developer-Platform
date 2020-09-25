@@ -114,7 +114,7 @@ export default {
         }
         if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
           this.isEmpty = true;
-          throw new Error('获取留言列表失败');
+          return;
         }
         this.isEmpty = false;
         this.unreadList = voiceMsgList.data.filter(x => x.status === 1)

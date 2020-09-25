@@ -10,12 +10,12 @@
           <img src="../../../../assets/img/skill/voice_message_bg.png">
         </div>
         <div v-else>
-          <voice-msg-list :message-list="unreadList"></voice-msg-list>
+          <voice-msg-list :message-list="unreadList" @play-msg="playVoiceMsg"></voice-msg-list>
           <div class="panel" v-show="readList && readList.length">
             <div class="title">
               已读留言保留7天，过期自动删除
             </div>
-            <voice-msg-list :message-list="readList"></voice-msg-list>
+            <voice-msg-list :message-list="readList" @play-msg="playVoiceMsg"></voice-msg-list>
           </div>
         </div>
       </div>
@@ -75,6 +75,7 @@ import {
   voiceSkillMsgAudioControl, 
   voiceSkillMsgList,
   voiceSkillMsgAdd,
+  voiceSkillMsgPlay,
   changeBarColor, 
   showToast,
   showLoading,
@@ -83,6 +84,7 @@ import {
 
 let gTimerForGetAudioStatus = null; // 定时器获取录音状态
 let gTimerForTiming = null; // 定时器用于计时显示
+let gTimerForUpdateMsgList = null; // 定时器用于轮询语音留言列表
 
 export default {
   components: {
@@ -97,7 +99,9 @@ export default {
       readList: [], // 已读语音留言列表
       unreadList: [], // 未读语音留言列表
       isEmpty: true, // 语音留言是否为空
-      isRecording: false, // 是否正在留言
+      isRecording: false, // 是否正在录制留言
+      isPlaying: false, // 是否正在播放留言
+      isUploading: false, // 是否正在上传留言
       voiceMsgName: '', // 留言人姓名或昵称
       countLabel: '0/10', // 留言姓名计数
       showDialog: false, // 是否显示留言命名框
@@ -107,7 +111,7 @@ export default {
       timing: 0, // 计时显示
       countdown: 0, // 倒计时显示
       isLoadFailed: false, // 列表是否加载失败
-      isShrink: false, // 窗口大小是否缩小
+      isShrink: false, // 手机键盘弹出时，页面窗口会缩小，语音留言按钮使用的是绝对定位，会被顶到键盘上，故增加该变量判断窗口大小是否缩小，窗口缩小时隐藏留言按钮，恢复时显示按钮
     };
   },
   computed: {
@@ -158,8 +162,16 @@ export default {
     window.addEventListener('resize', resizeHandler, false);
     this.$once('hook:beforeDestroy', () => {
       window.removeEventListener('resize', resizeHandler, false);
+      if (gTimerForUpdateMsgList) {
+        clearInterval(gTimerForUpdateMsgList);
+        gTimerForUpdateMsgList = null;
+      }
     });
     this.getMessageList();
+    // 8秒轮询刷新列表
+    gTimerForUpdateMsgList = setInterval(() => {
+      this.updateMessageList();
+    }, 8 * 1000);
   },
   methods: {
     async getMessageList() {
@@ -182,14 +194,49 @@ export default {
           return;
         }
         this.isEmpty = false;
-        this.unreadList = voiceMsgList.data.filter(x => x.status === 1)
-          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
-        this.readList = voiceMsgList.data.filter(x => x.status === 2)
-          .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime());
+        this.setMessageList(voiceMsgList);
       } catch (error) {
         console.log(error);
         this.isLoadFailed = true;
       }
+    },
+    async updateMessageList() {
+      // 页面加载失败、正在录制留言、正在播放留言以及上传留言时不更新列表
+      if (this.isLoadFailed || this.isRecording || this.isPlaying || this.isUploading) {
+        return; 
+      }
+      let voiceMsgList = await voiceSkillMsgList(this.mac);
+      if (!voiceMsgList) {
+        return;
+      }
+      if (typeof (voiceMsgList) === 'string') {
+        voiceMsgList = JSON.parse(voiceMsgList);
+      }
+      if (!voiceMsgList.data || voiceMsgList.data.length === 0) {
+        this.isEmpty = true;
+        return;
+      }
+      this.isEmpty = false;
+      console.log('轮询---刷新列表');
+      this.setMessageList(voiceMsgList);
+    },
+    setMessageList(voiceMsgList) {
+      /* eslint-disable */
+      this.unreadList = voiceMsgList.data.filter(x => x.status === 1)
+        .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime())
+        .map(x => {
+          x.isUploading = false;
+          x.isPlaying = false;
+          return x;
+        });
+      this.readList = voiceMsgList.data.filter(x => x.status === 2)
+        .sort((x, y) => new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime())
+        .map(x => {
+          x.isUploading = false;
+          x.isPlaying = false;
+          return x;
+        });
+      /* eslint-enable */
     },
     onReload() {
       this.getMessageList();
@@ -235,6 +282,10 @@ export default {
         const voiceMsgCount = this.unreadList.length + this.readList.length;
         if (voiceMsgCount === 5) {
           showToast('留言数量已达上限，请先删除历史留言!', 0);
+          return;
+        }
+        if (this.isPlaying) {
+          showToast('留言播放中，请稍后！', 0);
           return;
         }
         this.timing = 0;
@@ -301,6 +352,7 @@ export default {
     },
     async onConfirm() {
       try {
+        this.isUploading = true;
         const name = this.voiceMsgName;
         const duration = this.duration;
         this.resetData();
@@ -319,8 +371,62 @@ export default {
       } catch (error) {
         showToast(error.message, 0);
       }
+      this.isUploading = false;
       this.getMessageList(); // 刷新留言列表
     },
+    resetPlayState() {
+      // 重置语音留言列表，清除获取播放状态的定时器，重置isPlaying
+      this.unreadList.forEach(x => x.isPlaying = false); // eslint-disable-line
+      this.readList.forEach(x => x.isPlaying = false); // eslint-disable-line
+      this.clearInterval();
+      this.isPlaying = false;
+    },
+    setPlayStateByGuid(guid) {
+      /* eslint-disable */
+      this.unreadList.forEach(x => {
+        if (x.guid === guid) {
+          x.isPlaying = true;
+        }
+      });
+      this.readList.forEach(x => {
+        if (x.guid === guid) {
+          x.isPlaying = true;
+        }
+      });
+      /* eslint-enable */
+    },
+    async playVoiceMsg(guid) {
+      try {
+        console.log(guid);
+        this.resetPlayState();
+        let result = await voiceSkillMsgPlay(guid);
+        // console.log('play result', result);
+        if (!result) {
+          throw new Error('播放留言失败');
+        }
+        result = JSON.parse(result);
+        if (!result.code || Number(result.code) !== 200) {
+          throw new Error('播放留言失败');
+        }
+        gTimerForGetAudioStatus = setInterval(() => {
+          voiceSkillMsgAudioControl(this.mac, 'getStatus').then(data => {
+            const result = JSON.parse(data);
+            console.log(result);
+            if (result.status === 'playing') {
+              this.isPlaying = true;
+            } else {
+              // 状态不为playing（停止播放）时，重置状态
+              this.resetPlayState();
+            }
+          });  
+        }, 100);
+        this.setPlayStateByGuid(guid);
+      } catch (error) {
+        console.log(error);
+        this.resetPlayState();
+        showToast('留言播放失败！', 0);
+      }
+    }
   }
 };
 </script>

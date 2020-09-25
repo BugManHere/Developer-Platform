@@ -13,7 +13,8 @@
           <div class="subtitle">{{ item.createdAt }}<span>{{ parseInt(item.duration / 1000, 10) }}秒</span></div>
         </div>
         <slot :item="item">
-          <button class="btn-play" v-show="!item.isUploading" @click="playVoiceMsg(item)"></button>
+          <button class="btn-play" v-show="!item.isUploading && !item.isPlaying" @click="playVoiceMsg(item)"></button>
+          <img src="../../../../assets/img/music/drawable.png" class="icon-playing" v-show="item.isPlaying">
           <img src="../../../../assets/img/skill/loading.png" class="icon-loading" v-show="item.isUploading">
         </slot>
       </div>
@@ -22,8 +23,6 @@
 </template>
 
 <script>
-import { showToast, voiceSkillMsgPlay } from '../../../../../public/static/lib/PluginInterface.promise';
-
 export default {
   props: {
     messageList: {
@@ -38,21 +37,8 @@ export default {
     }
   },
   methods: {
-    async playVoiceMsg(item) {
-      try {
-        console.log(item.guid);
-        let result = await voiceSkillMsgPlay(item.guid);
-        console.log('play result', result);
-        if (!result) {
-          throw new Error('获取链接失败');
-        }
-        result = JSON.parse(result);
-        if (!result.url) {
-          throw new Error('获取链接失败');
-        }
-      } catch (error) {
-        showToast('留言播放失败！', 0);
-      }
+    playVoiceMsg(item) {
+      this.$emit('play-msg', item.guid);
     }
   }
 };
@@ -65,6 +51,23 @@ export default {
     }
     to {
       transform: rotate(360deg);
+    }
+  }
+  @keyframes playing {
+    0% {
+      transform: scaleY(0.25);
+    }
+    25% {
+      transform: scaleY(0.65);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    75% {
+      transform: scaleY(0.65);
+    }
+    100% {
+      transform: scaleY(0.25);
     }
   }
   .list {
@@ -122,6 +125,13 @@ export default {
           width: 69px;
           height: 69px;
           animation: rotate 1s linear infinite;
+        }
+        .icon-playing {
+          position: relative;
+          height: 69px;
+          width: 56px;
+          transform-origin: bottom;
+          animation: playing 1.5s 0s linear infinite;
         }
       }
     }

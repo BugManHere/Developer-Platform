@@ -25,6 +25,8 @@
     }
   ];
   let gIsRecording = false;
+  let gIsPlaying = false;
+  let gTimer = null;
 
   function setMockApiCallbackResult(callback, success, fail) {
     setTimeout(() => {
@@ -108,6 +110,8 @@
           {
             if (gIsRecording) {
               result = {status: 'recording', wave: Math.random()};
+            } else if (gIsPlaying) {
+              result = {status: 'playing'};
             }
           }
           break;
@@ -169,6 +173,18 @@
       const startIndex = (query.pageNum - 1) * query.pageSize;
       const result = domainData.data.slice(startIndex, startIndex + query.pageSize);
       setMockApiCallbackResult(callback, {data:  result, total: domainData.total});
+    },
+    voiceSkillMsgPlay(data, callback) {
+      gIsPlaying = true;
+      if (gTimer) {
+        clearTimeout(gTimer);
+        gTimer = null;
+      }
+      setTimeout(() => {
+        gIsPlaying = false;
+        gTimer = null;
+      }, Math.random() * 6000);
+      callback(JSON.stringify({code: 200, url: './mock_vioce_msg.mp3'}));
     }
   };
 })();
