@@ -239,11 +239,13 @@ export default {
     const opt = [];
     const p = [];
     const dataMap = {};
+    const Json2 = JSON.parse(state.devOptions.statueJson2);
     keys.forEach(key => {
       // 组装指令，根据业务更改，温度值需要整套发送
       if (
-        DataObject[key] !== state.checkObject[key] ||
-        ['SetTem', 'Add0.1', 'Add0.5'].includes(key)
+        (DataObject[key] !== state.checkObject[key] ||
+        ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) &&
+        Json2.includes(key)
       ) {
         const val = isNaN(DataObject[key]) ? 0 : DataObject[key];
         opt.push(key);
