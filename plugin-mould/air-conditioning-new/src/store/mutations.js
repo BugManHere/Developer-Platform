@@ -8,9 +8,6 @@ export default {
     state.deviceInfo = deviceInfo;
     return true;
   },
-  [type.SET_REPAIR](state, hasReportedForRepair) {
-    state.hasReportedForRepair = hasReportedForRepair;
-  },
   [type.SET_DATA_OBJECT](state, obj) {
     const map = {};
     Object.keys(obj).forEach(key => {
@@ -26,8 +23,5 @@ export default {
     Object.keys(obj).forEach(key => {
       state[key] = obj[key];
     });
-  },
-  [type.SET_CHART_DATA](state, obj) {
-    state.chartData = { ...state.chartData, ...obj };
   }
 };

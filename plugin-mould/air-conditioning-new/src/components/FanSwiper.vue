@@ -30,10 +30,6 @@ export default {
       title: '风速',
       showPopup: false,
       showSwiper: false,
-      translate: 0,
-      observer: true,
-      observeParents: true,
-      observeSlideChildren: true,
       isTouch: false,
       swiperOption: {
         direction: 'vertical',
@@ -41,8 +37,6 @@ export default {
         roundLengths: true,
         slidesPerView: 5
       },
-      freeMode: true,
-      freeModeSticky: true,
       fanStatusList: [], // 风档的顺序
       currentStatus: '' // 当前状态
     };
