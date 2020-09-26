@@ -199,26 +199,13 @@ export default {
 
 <style lang="scss">
 .page-sweep {
-  .gree-header {
-    display: flex;
-    align-items: center;
-    height: 120px;
-    .gree-header-right,
-    .gree-header-left {
-      top: 50%;
-      transform: translateY(-50%);
-      span {
-        font-size: 46px;
-      }
-    }
-    .iconfont {
-      font-size: 58px;
-    }
-  }
   .sweep-body {
     height: 80%;
     display: flex;
     align-items: center;
+  }
+  canvas {
+    opacity: 0 !important;
   }
   .sweep-select-horizontal {
     margin: 0 auto;
@@ -228,10 +215,6 @@ export default {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-
-    canvas {
-      opacity: 0;
-    }
 
     .selected {
       position: absolute;
@@ -291,10 +274,6 @@ export default {
     background-repeat: no-repeat;
     background-size: 100%;
     background-position: center;
-
-    canvas {
-      opacity: 0;
-    }
 
     .selected {
       position: absolute;

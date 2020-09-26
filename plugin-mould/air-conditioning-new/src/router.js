@@ -10,6 +10,7 @@ const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarni
 const Test = r => require.ensure([], () => r(require('./views/functionPage/Test')));
 const SweepConst = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
 const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
+const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise')));
 
 Vue.use(Router);
 
@@ -53,6 +54,11 @@ const router = new Router({
       path: '/Electric',
       name: 'Electric',
       component: Electric
+    },
+    {
+      path: '/Noise',
+      name: 'Noise',
+      component: Noise
     }
   ]
 });

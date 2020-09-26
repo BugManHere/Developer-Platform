@@ -11,7 +11,7 @@ export const getAdminDevice = async admin => {
   const Ciphertext = Signture.digest().toString('base64');
   const res = await userDeviceModel.findOne({ admin: Ciphertext });
   return res || { userDeviceList: [] };
-}
+};
 
 export const getOutput = async (input, device = undefined) => {
   const { admin, deviceKey, id } = input;
@@ -40,7 +40,6 @@ export const getOutput = async (input, device = undefined) => {
   funcDefine.forEach((Model, index) => {
     if (Model.page) {
       funcDefine[index].page = Model.page.find(item => item.module === modelPath);
-      console.log(funcDefine[index].page);
     }
   });
 
@@ -84,4 +83,4 @@ export const getOutput = async (input, device = undefined) => {
   });
 
   return { output, deviceKey: key, modelPath };
-}
+};

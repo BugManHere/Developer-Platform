@@ -8,11 +8,11 @@
 import { Popup } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import BtnPopup from './index';
-import LogicDefine from '@logic/define';
+import WorkLogin from '@logic/work';
 import Customize from '@logic/customize';
 
 export default {
-  mixins: [LogicDefine, Customize],
+  mixins: [WorkLogin, Customize],
   components: {
     BtnPopup,
     [Popup.name]: Popup
@@ -27,31 +27,25 @@ export default {
   },
   computed: {
     ...mapState({
-      modKey: state => state.modKey,
       dataObject: state => state.dataObject,
       value: state => state.dataObject.Mod,
       ModPopup: state => state.dataObject.ModPopup
     }),
-    // 模式的定义
-    modDefine() {
-      return this.g_funcDefine_inertia.find(module => module.type === `inertia-${this.modKey}`);
-    },
-    // 模式的定义
+    // 模式的id
     modId() {
-      if (this.modDefine) return this.modDefine.identifier;
+      if (this.work_modDefine) return this.work_modDefine.identifier;
       return 'Mod';
     },
     // 按钮列表
     btnList() {
-      const modKey = this.modId;
       const result = this.modStatusList.map(modStatus => {
         // status定义
-        const statusDefine = this.modDefine.statusDefine[modStatus];
+        const statusDefine = this.work_modDefine.statusDefine[modStatus];
         // 定义key
         const key = modStatus;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${modKey}_${statusName}`;
+        const stateName = `${this.modId}_${statusName}`;
         const name = this.$language(`mod.${stateName}`);
         // 图标
         const icon = {
@@ -89,7 +83,7 @@ export default {
     g_statusLoop: {
       handler(newVal) {
         const startStatus = 'default';
-        if (!this.modDefine) return;
+        if (!this.work_modDefine) return;
         const id = this.modId;
         const modLoop = newVal[id];
         if (modLoop) {
@@ -135,7 +129,7 @@ export default {
     },
     changeStatus(status, isGray) {
       if (isGray) return;
-      const funcDefine = this.modDefine;
+      const funcDefine = this.work_modDefine;
       const statusDefine = funcDefine.statusDefine[status];
       const identifier = funcDefine.identifier;
       const currentStatus = this.currentStatus;

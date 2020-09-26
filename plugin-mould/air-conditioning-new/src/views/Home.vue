@@ -67,7 +67,7 @@ export default {
     ...mapState({
       statueJson2: state => state.devOptions.statueJson2,
       dataObject: state => state.dataObject,
-      fanKey: state => state.fanKey,
+      work_fanKey: state => state.work_fanKey,
       Mod: state => state.dataObject.Mod,
       WdSpd: state => state.dataObject.WdSpd,
       SetTem: state => state.dataObject.SetTem,

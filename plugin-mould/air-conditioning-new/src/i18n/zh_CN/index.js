@@ -97,8 +97,7 @@ module.exports = {
     'Quiet(Btn)': '静音',
     Blo: '干燥',
     Humi: '加湿',
-    ParameterQuery: '参数查询',
-    x: '再热除湿'
+    ParameterQuery: '参数查询'
   },
   sweep: {
     speedTitle: '扫风',
@@ -111,14 +110,8 @@ module.exports = {
     Stage_tips: '提示:',
     sweep_txt2: '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。'
   },
-  humidify: {
-    title: '加湿设置',
-    continuation: '连续加湿',
-    Intelligent: '智能加湿',
-    fortyPercent: '加湿40%',
-    fiftyPercent: '加湿50%',
-    sixtyPercent: '加湿60%',
-    seventyPercent: '加湿70%',
-    humidify_powoff_tips: '空调已被关闭，自动退出加湿设置。'
+  noise: {
+    title: '室内噪音',
+    text: '请设置噪声大小'
   }
 };

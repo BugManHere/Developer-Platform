@@ -30,16 +30,11 @@
 import { Row, Col, ToolBar } from 'gree-ui';
 import { mapState } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
-import LogicDefine from '@logic/define';
 import Customize from '@logic/customize';
+import WorkLogin from '@logic/work';
 
 export default {
-  mixins: [LogicDefine, Customize],
-  data() {
-    return {
-      popupsKey: 'homeButton'
-    };
-  },
+  mixins: [WorkLogin, Customize],
   components: {
     [Row.name]: Row,
     [Col.name]: Col,
@@ -50,12 +45,9 @@ export default {
       Pow: state => state.dataObject.Pow,
       SwhSlp: state => state.dataObject.SwhSlp
     }),
-    popupModules() {
-      return this.g_funcDefine_active.filter(module => module.type === `active-${this.popupsKey}`);
-    },
     btnList() {
       if (!Object.keys(this.g_statusMap).length) return [];
-      const result = this.popupModules.map(module => {
+      const result = this.work_popupDefine.map(module => {
         // 定义key
         const key = module.identifier;
         if (!this.g_statusMap[key])
