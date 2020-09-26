@@ -4,8 +4,8 @@ const state = {
   ModHeat: 4, // 制热模式
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
-  fanKey: 'Fan',
-  modKey: 'Mod',
+  work_fanKey: 'Fan',
+  work_modKey: 'Mod',
   dataObject: {
     functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,

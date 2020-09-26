@@ -16,10 +16,10 @@ import { Popup } from 'gree-ui';
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import LogicDefine from '@logic/define';
+import WorkLogin from '@logic/work';
 
 export default {
-  mixins: [LogicDefine],
+  mixins: [WorkLogin],
   components: {
     [Popup.name]: Popup,
     Swiper,
@@ -49,29 +49,28 @@ export default {
   },
   computed: {
     ...mapState({
-      FanPopup: state => state.dataObject.FanPopup,
-      fanKey: state => state.fanKey
+      FanPopup: state => state.dataObject.FanPopup
     }),
+    // 风速的id
+    fanId() {
+      if (this.work_fanDefine) return this.work_fanDefine.identifier;
+      return 'Fan';
+    },
     swiper() {
       return this.$refs.fanSwiper.$swiper;
     },
     disableSwiper() {
-      return this.g_hideStateArr.includes('FanPopup_status_1');
-    },
-    // 风档定义
-    fanDefine() {
-      return this.g_funcDefineMap[this.fanKey];
+      return this.g_hideStateArr.some(state => state.includes('FanPopup'));
     },
     fanData() {
-      const fanKey = this.fanKey;
       const result = this.fanStatusList.map((fanStatus, value) => {
         // status定义
-        const statusDefine = this.fanDefine.statusDefine[fanStatus];
+        const statusDefine = this.work_fanDefine.statusDefine[fanStatus];
         // 定义key
         const key = fanStatus;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${fanKey}_${statusName}`;
+        const stateName = `${this.fanId}_${statusName}`;
         const text = this.$language(`fan.${stateName}`);
         return { text, key, value };
       });
@@ -104,9 +103,9 @@ export default {
     g_statusLoop: {
       handler(newVal) {
         const startStatus = 'default';
-        const fanLoop = newVal[this.fanKey];
+        const fanLoop = newVal[this.fanId];
         if (fanLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[this.fanKey]));
+          const result = JSON.parse(JSON.stringify(newVal[this.fanId]));
           const length = result.length;
           let i = 0;
           while (result[0] !== startStatus && i < length) {
@@ -121,7 +120,7 @@ export default {
     },
     g_statusMap: {
       handler(newVal) {
-        const statusMap = newVal[this.fanKey];
+        const statusMap = newVal[this.fanId];
         if (statusMap) this.currentStatus = statusMap.status;
         this.updateIndex();
       },
@@ -154,7 +153,7 @@ export default {
     setFan() {
       if (!this.isTouch) return;
       const status = this.fanData[this.swiper.activeIndex].key;
-      const funcDefine = this.fanDefine;
+      const funcDefine = this.work_fanDefine;
       const statusDefine = funcDefine.statusDefine[status];
       const identifier = funcDefine.identifier;
       const currentStatus = this.currentStatus;

@@ -97,7 +97,6 @@ router.post('/save', async function(req, res) {
   }
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
-  console.log(funcDefine.map);
 
   // funcDefine.forEach(funcItem => {
   //   const map = {
