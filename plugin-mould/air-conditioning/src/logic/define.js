@@ -38,9 +38,7 @@ const LogicDefine = {
   },
   computed: {
     g_funcDefine_btn() {
-      return this.g_funcDefine.filter(item => {
-        return item.type === 'active';
-      });
+      return this.g_funcDefine.filter(module => module.type.includes('active'));
     },
     /**
      * @description g_funcDefine的identifier

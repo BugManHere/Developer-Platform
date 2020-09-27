@@ -1,0 +1,98 @@
+.bottom-btn {
+  height: 231px !important;
+  bottom: 0 !important;
+  background-image: url('../img/bottom_bg.png');
+  .toolbar-inner {
+    display: flex;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    .row {
+      padding-top: 50px;
+      width: 85%;
+      display: flex;
+      text-align: center;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+      .col {
+        &.on {
+          h3,
+          i {
+            color: #619ce7;
+          }
+        }
+        &.gray {
+          opacity: 0.2;
+        }
+        i {
+          font-size: 74px;
+        }
+        h3 {
+          font-size: 36px;
+        }
+      }
+    }
+    .iconfont {
+      font-size: 58px;
+    }
+  }
+  .pow-button {
+    $buttonHeight: 132px;
+    position: relative;
+    min-height: $buttonHeight;
+    min-width: $buttonHeight;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgb(139, 210, 236), rgb(99, 164, 248));
+    opacity: 0.5;
+    border: 0.5px solid #398acb;
+    border-radius: 50%;
+    z-index: 2;
+    // padding: 1px;
+    margin: 1px;
+    span {
+      font-size: 60px;
+      color: #fff;
+      z-index: inherit;
+    }
+    &.off {
+      border: 0.5px solid transparent;
+      padding: 1px;
+      margin: 0;
+      span {
+        color: rgb(112, 187, 242);
+      }
+      .button-boder {
+        background: rgb(244, 249, 252);
+      }
+    }
+    .button-boder {
+      position: absolute;
+      min-height: $buttonHeight;
+      min-width: $buttonHeight;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(#2e74dc, #60b7c9);
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .ripple {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      min-height: $buttonHeight;
+      min-width: $buttonHeight;
+      background-color: transparent;
+      border-radius: 50%;
+      border: 1px solid;
+      border-color: rgb(244, 249, 252);
+      animation: rippling 1.2s ease infinite;
+    }
+  }
+  .select {
+    color: #619ce7;
+  }
+}

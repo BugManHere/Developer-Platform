@@ -139,6 +139,11 @@ const Customize = {
      */
     initFunc() {
       return {
+        SmartSleep: () => {
+          if (this.dataObject.functype) {
+            this.updateDataObject({ SwhSlp: 0, SlpMod: 0 });
+          }
+        }
       };
     },
   },

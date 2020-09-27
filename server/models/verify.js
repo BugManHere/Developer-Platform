@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // 创建Schema
 const VerifySchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ const VerifySchema = new mongoose.Schema({
   register: {
     code: String,
     time: String
-  },
+  }
 });
 
-module.exports = verify = mongoose.model("verify", VerifySchema);
+module.exports = mongoose.model('verify', VerifySchema);

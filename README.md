@@ -1,6 +1,6 @@
 # Gree Developer Platform
 
-### 测试账号uitest.gree.com.cn 密码qwe!23
+### 测试账号uitest@gree.com.cn 密码qwe!23
 
 ## Project setup
 ```
@@ -22,9 +22,14 @@ yarn serve
 yarn go
 ```
 
-### 启动服务器与客户端（本地模式，需要本地有数据库文件，需要拷贝数据库的可以找我）
+### 启动服务器与客户端（本地模式，需要本地有数据库文件，需要拷贝数据库的可以联系我）
 ```
 yarn local
+```
+
+### 启动服务器与客户端（调试模式，服务端会热更新，不便于使用）
+```
+yarn test
 ```
 
 ### Compiles and minifies for production

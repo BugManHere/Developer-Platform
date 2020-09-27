@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import { View, Page, Lazyload } from 'gree-ui';
 
-import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { closePage, getInfo, finishLoad } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
 import router from './router';
 import store from './store';
@@ -24,7 +24,7 @@ axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接�
 
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
-
+finishLoad();
 // 安装插件
 Vue.use(Vuex);
 Vue.use(VueI18n);
@@ -196,6 +196,7 @@ window.onResume = function onResume(msg) {
       err;
     });
 };
+createVue();
 
 // 根据加载页面改变状态栏颜色
 window.init = function init() {

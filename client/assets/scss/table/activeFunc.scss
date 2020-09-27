@@ -4,26 +4,27 @@
     margin: 0 auto;
     border: 1px #d6dee6 solid;
     .develop {
-      > :nth-child(1),
-      > :nth-child(2),
-      > :nth-child(3) {
+      #name,
+      #identifier,
+      #json {
         max-width: 100px !important;
         min-width: 100px !important;
-        >:first-child {
+        > :first-child {
           &:hover {
             color: #469dff;
             &::after {
               position: relative;
               top: 2px;
               right: -1px;
-              font-family: "Glyphicons Halflings";
+              font-family: 'Glyphicons Halflings';
               font-size: 12px;
-              content: "\270f";
+              content: '\270f';
             }
           }
         }
       }
-      td,th {
+      td,
+      th {
         p {
           cursor: pointer;
         }
@@ -38,6 +39,9 @@
       }
     }
     tr {
+      #brief {
+        max-width: 300px !important;
+      }
       > :first-child {
         text-align: left;
       }
@@ -49,12 +53,27 @@
           cursor: pointer;
         }
       }
-      > :nth-child(5) {
-        min-width: 150px !important;
+     #btn {
+        min-width: 50px !important;
         p {
-          span {
-            padding-left: 2px;
+          cursor: auto;
+          i {
+            font-size: 20px;
+            margin-left: 16px;
+            cursor: pointer;
           }
+        }
+      }
+      #option {
+        display: flex;
+        justify-content: center;
+        text
+        p {
+          cursor: auto;
+        }
+        select {
+          cursor: pointer;
+          width: auto;
         }
       }
       &:hover {
@@ -76,9 +95,6 @@
           left: 0;
           z-index: 2;
           transform: translateY(-50%);
-        }
-        &:last-child {
-          cursor: auto;
         }
       }
     }

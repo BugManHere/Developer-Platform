@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="card-table">
-      <div @click="setDialogType(true)">
+      <div @click="setDialogType(true)" v-show="developType === 0">
         <div class="main">
           <div class="body">
             <svg
@@ -20,57 +20,46 @@
                 p-id="7109"
               ></path>
             </svg>
-            <span v-show="developType === 0">添加新产品</span>
+            <span v-show="developType === 0">新增设备</span>
             <span v-show="developType === 1">添加模板</span>
           </div>
         </div>
       </div>
       <!-- 设备列表 -->
-      <div
-        v-for="(item, index) in deviceInfoList"
-        :key="index"
-        @click="goProductPage(item.id1, item.id2)"
-      >
+      <div v-for="(item, index) in deviceInfoList" :key="index" @click="goProductPage(item.id1, item.id2)">
         <div class="main">
           <div class="body">
             <div class="message-top">
-              <img :src="require(`@public/img/product/${item.imgPath}`)">
+              <img :src="require(`@public/img/product/${item.imgPath}`)" />
               <div>
-                <span v-text="item.deviceName"/>
-                <span>创建时间：{{item.createTime}}</span>
+                <span v-text="item.deviceName" />
+                <span>创建时间：{{ item.createTime }}</span>
               </div>
-              <span v-text="'删除设备'" v-show="developType === 0" @click.stop="delDevice(item.id1)"/>
+              <i class="iconfont iconfont-disable" v-show="developType === 0" @click.stop="delDevice(item.id1)" title="删除设备" />
+              <i class="iconfont iconfont-preview" v-show="developType === 0" @click.stop="showPlugin(index)" title="预览效果" />
             </div>
             <div class="message-bottom">
-              <div
-                v-for="(val, key) in item.productImshow"
-                :key="key"
-              >
-                <span v-text="key"/>
-                <span v-text="val"/>
+              <div v-for="(val, key) in item.productImshow" :key="key">
+                <span v-text="key" />
+                <span v-text="val" />
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="overlay-backdrop"
-      v-show="isShowDialog"
-    />
-    <Dialog
-      @hideDialog="setDialogType"
-      v-fade:show="isShowDialog"
-    />
+    <div class="overlay-backdrop" v-show="isShowDialog" />
+    <Dialog @hideDialog="setDialogType" v-fade:show="isShowDialog" />
   </div>
 </template>
 
 <script>
-import Dialog from "@components/Dialog";
-import { mapState, mapMutations, mapActions } from "vuex";
+import Dialog from '@components/Dialog';
+import { mapState, mapActions } from 'vuex';
+import mouldConfig from '@plugin/mould-config.json';
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
     Dialog
   },
@@ -86,25 +75,27 @@ export default {
       productTypeList: state => state.pulicModule.productTypeList,
       userDeviceList: state => state.devModule.userDeviceList,
       templates: state => state.tempModule.templates,
-      funcDefine: (state, getters) => getters.funcDefine,
+      funcDefine: (state, getters) => getters.funcDefine
     }),
     deviceInfoList() {
       let result = [];
       if (this.developType === 0) {
-         result = this.userDeviceList.map(item => {
-           return {
-             imgPath: item.imgPath,
-             deviceName: item.deviceName,
-             createTime: item.createTime,
-             id1: item._id,
-             productImshow: this.productImshow(item)
-            };
-         });
+        result = this.userDeviceList.map(item => {
+          return {
+            imgPath: item.imgPath,
+            deviceName: item.deviceName,
+            createTime: item.createTime,
+            modelPath: item.modelPath,
+            id1: item._id,
+            productImshow: this.productImshow(item)
+          };
+        });
       } else if (this.developType === 1) {
         result = this.templates.map(item => {
           if (!this.productTypeList.length) return {};
-          const info = this.productTypeList.find(productItem => productItem._id === item.productID)
-          .seriesList.find(deviceItem => deviceItem._id === item.seriesID);
+          const info = this.productTypeList
+            .find(productItem => productItem._id === item.productID)
+            .seriesList.find(deviceItem => deviceItem._id === item.seriesID);
           return {
             imgPath: info.img,
             deviceName: info.name,
@@ -112,8 +103,8 @@ export default {
             id1: item.productID,
             id2: item.seriesID,
             productImshow: this.productImshow(item)
-          }
-        })
+          };
+        });
       }
       return result;
     }
@@ -134,17 +125,11 @@ export default {
     this.getUserDeviceList(); // 获取用户设备列表
   },
   methods: {
-    ...mapMutations({
-      setDevModule: "SET_DEV_MODULE",
-      setFuncModule: "SET_TEMP_MODULE",
-      setTempModule: "SET_TEMP_MODULE",
-      setPulicModule: "SET_PULIC_MODULE",
-    }),
     ...mapActions({
-      delDev: "DEL_DEV",
-      getProductTypeList: "GET_PRODUCT_TYPE_LIST", // 获取产品类别列表
-      getUserDeviceList: "GET_USERDEVICE_LIST", // 获取用户设备列表
-      getTemplates: "GET_TEMPLATES", // 获取用户设备列表
+      delDev: 'DEL_DEV',
+      getProductTypeList: 'GET_PRODUCT_TYPE_LIST', // 获取产品类别列表
+      getUserDeviceList: 'GET_USERDEVICE_LIST', // 获取用户设备列表
+      getTemplates: 'GET_TEMPLATES' // 获取用户设备列表
     }),
     setDialogType(val) {
       this.isShowDialog = val;
@@ -180,15 +165,15 @@ export default {
           产品品类: item.productName,
           产品型号: item.productModel,
           通信协议: item.protocol
-        }
+        };
       } else if (this.developType === 1) {
         result = {
-          修改时间: item.editTime.split(' ').reduce((a ,b) => `${b} ${a}`), // 日期倒过来显示比较好看
+          修改时间: item.editTime.split(' ').reduce((a, b) => `${b} ${a}`), // 日期倒过来显示比较好看
           // 修改人: item.editUser,
           修改人: item.editUser,
           引用次数: item.useTime,
           功能数量: item.funcDefine.length
-        }
+        };
       }
       return result;
     },
@@ -198,9 +183,15 @@ export default {
         contnet: '确认删除',
         onConfirm: () => {
           this.delDev(id);
-        },
+        }
       });
-
+    },
+    // 预览插件效果
+    showPlugin(index) {
+      const { modelPath, id1: devKey } = this.deviceInfoList[index];
+      const port = mouldConfig[modelPath];
+      const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${devKey}&admin=${this.admin}`;
+      window.open(targetUrl, 'pluginPage');
     }
   }
 };

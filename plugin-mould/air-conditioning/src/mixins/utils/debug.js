@@ -11,7 +11,6 @@ const mixin = {
   computed: {
     ...mapState({ 
       dataObject: state => state.dataObject,
-      checkObject: state => state.checkObject,
     })
   },
   mounted() {

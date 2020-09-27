@@ -2,42 +2,70 @@ const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
 const templateFuncModel = require('../models/template');
+
 // 登录token
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 require('../mongoose.js');
 // 权限判断
-const permit = require("../api/permit");
+const permit = require('../api/permit');
 
 router.use(function(req, res, next) {
   // 拿取token 数据 按照自己传递方式写
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-  if (token) {      
-      // 解码 token (验证 secret 和检查有效期（exp）)
-      jwt.verify(token, keys.secretOrKey, function(err, decoded) {      
-            if (err) {
-              return res.status(403).send('用户信息过期');
-            } else {
-              // 如果验证通过，在req中写入解密结果
-              req.decoded = decoded;  
-              next(); //继续下一步路由
-        }
-      });
+  if (token) {
+    // 解码 token (验证 secret 和检查有效期（exp）)
+    jwt.verify(token, keys.secretOrKey, function(err, decoded) {
+      if (err) {
+        return res.status(403).send('用户信息过期');
+      } else {
+        // 如果验证通过，在req中写入解密结果
+        req.decoded = decoded;
+        next(); //继续下一步路由
+      }
+    });
   } else {
-    // 没有拿到token 返回错误 
+    // 没有拿到token 返回错误
     return res.status(403).send('用户信息过期');
   }
 });
 
 router.get('/', function(req, res) {
   templateFuncModel.find().then(params => {
+    // 生成icon
+    // params.forEach(async template => {
+    //   const funcDefineCopy = JSON.parse(JSON.stringify(template.funcDefine));
+    //   funcDefineCopy.forEach(func => {
+    //     // for (const status in func.statusDefine) {
+    //     //   if (['undefined', 'default'].includes(status)) {
+    //     //     func.statusDefine[status].icon = {
+    //     //       key: func.identifier,
+    //     //       type: 'off'
+    //     //     };
+    //     //     func.statusDefine[status].miniIcon = {
+    //     //       key: 'undefined'
+    //     //     };
+    //     //   } else {
+    //     //     func.statusDefine[status].icon = {
+    //     //       key: func.identifier,
+    //     //       type: 'on'
+    //     //     };
+    //     //     func.statusDefine[status].miniIcon = {
+    //     //       key: func.identifier
+    //     //     };
+    //     //   }
+    //     // }
+    //   });
+    //   template.funcDefine = funcDefineCopy;
+    //   await template.save();
+    // });
     res.json(params);
   });
 });
 
 // 创建模板
 router.post('/create', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -63,12 +91,28 @@ router.post('/create', async function(req, res) {
 
 // 模板保存功能
 router.post('/save', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }
   const productInfo = await getProductInfo(req.body.tempID);
   const funcDefine = JSON.parse(req.body.funcDefine);
+
+  // funcDefine.forEach(funcItem => {
+  //   const map = {
+  //     default: String(funcItem.order[0]),
+  //     undefined: 'default'
+  //   };
+  //   console.log(funcItem.order);
+  //   funcItem.order.forEach((statusName, index) => {
+  //     map[statusName] = funcItem.order[index + 1] || 'default';
+  //   });
+  //   Object.keys(funcItem.statusDefine).forEach(statusName => {
+  //     map[statusName] || (map[statusName] =  'default');
+  //   });
+  //   funcItem.map = map;
+  // });
+
   productInfo.funcDefine = funcDefine;
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
@@ -76,7 +120,7 @@ router.post('/save', async function(req, res) {
 
 // 模板编辑功能
 router.post('/editFunc', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -84,20 +128,16 @@ router.post('/editFunc', async function(req, res) {
   const subFuncDefine = JSON.parse(req.body.subFuncDefine);
   const subFuncDefineCopy = productInfo.funcDefine.id(subFuncDefine._id);
   // 赋值
-  subFuncDefineCopy.order = subFuncDefine.order;
-  subFuncDefineCopy.name = subFuncDefine.name;
-  subFuncDefineCopy.identifier = subFuncDefine.identifier;
-  subFuncDefineCopy.json = subFuncDefine.json;
-  subFuncDefineCopy.type = subFuncDefine.type;
-  subFuncDefineCopy.page = subFuncDefine.page;
-  subFuncDefineCopy.statusDefine = subFuncDefine.statusDefine;
+  Object.keys(subFuncDefine).forEach(key => {
+    subFuncDefineCopy[key] = subFuncDefine[key];
+  });
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
 });
 
 // 模板添加新功能
 router.post('/addFunc', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -110,7 +150,7 @@ router.post('/addFunc', async function(req, res) {
 
 // 模板删除功能
 router.post('/delFunc', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }
@@ -123,7 +163,7 @@ router.post('/delFunc', async function(req, res) {
 
 // 模板配置完毕
 router.post('/done', async function(req, res) {
-  if (!await permit(res, req.body.admin, 1)) {
+  if (!(await permit(res, req.body.admin, 1))) {
     res.status(401).send('没有此权限');
     return;
   }

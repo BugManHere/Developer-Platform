@@ -55,7 +55,8 @@ export default {
         {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
       ];
       // 如果开启智眠，则不能开启强劲档
-      (this.g_identifierArr.includes('SmartSleep') && this.SwhSlp) || result.splice(6, 0, {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'});
+      const len = result.length;
+      (this.g_identifierArr.includes('SmartSleep') && this.SwhSlp) || result.splice(len - 1, 0, {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'});
       return result;
     },
     imshowList() {

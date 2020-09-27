@@ -1,9 +1,9 @@
 <template>
   <div class="quote-func">
-      <!-- 搜索栏 -->
-     <div class="input-group search-input">
-       <!-- 搜索框 -->
-      <input type="text" class="form-control" placeholder="Search">
+    <!-- 搜索栏 -->
+    <div class="input-group search-input">
+      <!-- 搜索框 -->
+      <input type="text" class="form-control" placeholder="Search" />
       <!-- 搜索按钮 -->
       <span class="input-group-btn">
         <button class="btn btn-default" type="button" />
@@ -13,11 +13,22 @@
     <div class="quote-body">
       <!-- 筛选条件 -->
       <div class="select-filter">
-        <caption>筛选条件</caption>
         <caption>
-          <span @click="showfilterList=!showfilterList" v-text="filterList[filterBy].name"/>
+          筛选条件
+        </caption>
+        <caption>
+          <span @click="showfilterList = !showfilterList" v-text="filterList[filterBy].name" />
           <div v-show="showfilterList">
-            <div v-for="(item, key) in filterList" :key="key" :class="{'filter-list': key !== filterBy}" @click="filterBy=key;showfilterList=!showfilterList" v-text="item.name"/>
+            <div
+              v-for="(item, key) in filterList"
+              :key="key"
+              :class="{ 'filter-list': key !== filterBy }"
+              @click="
+                filterBy = key;
+                showfilterList = !showfilterList;
+              "
+              v-text="item.name"
+            />
           </div>
         </caption>
       </div>
@@ -25,27 +36,32 @@
       <div class="select-list">
         <!--标题  -->
         <div class="select-title">
-          <div class="title-list" v-for="(titleItem, key) in filterList" :style="{order: key === filterBy ? -1 : 1}" :key="key">
+          <div class="title-list" v-for="(titleItem, key) in filterList" :style="{ order: key === filterBy ? -1 : 1 }" :key="key">
             {{ titleItem.name }}
           </div>
         </div>
         <!-- 主要内容 -->
         <div class="list-content">
           <!-- 根据筛选条件的首字母排序 -->
-            <div class="frame" v-for="(indexArr, letter) in filterContentList.sortMap" :key="letter">
-              <!-- 首字母 -->
-                <div class="letter" v-text="letter" v-slow="!hideLetter.includes(letter)"/>
-                <!-- 显示内容 -->
-                    <div class="content" v-slow="!hideLetter.includes(letter)" :key="letter + 0">
-                      <!-- 根据sortMap定义的顺序显示 -->
-                      <!-- <transition-group name="slow" @after-enter="log"> -->
-                          <div class="list-col" v-for="funcIndex in indexArr" :key="funcIndex" @click="selectFunc(funcIndex)" v-slow="!hideContent.includes(funcIndex)">
-                              <!-- 筛选条件优先排列 -->
-                              <div v-for="(titleItem, key) in filterList" :style="{order: key === filterBy ? -1 : 1}" :key="`${indexArr}_${key}`" v-text="indexTofunc[funcIndex][key]"/>
-                          </div>
-                      <!-- </transition-group> -->
-                    </div>
+          <div class="frame" v-for="(indexArr, letter) in filterContentList.sortMap" :key="letter">
+            <!-- 首字母 -->
+            <div class="letter" v-text="letter" v-slow="!hideLetter.includes(letter)" />
+            <!-- 显示内容 -->
+            <div class="content" v-slow="!hideLetter.includes(letter)" :key="letter + 0">
+              <!-- 根据sortMap定义的顺序显示 -->
+              <!-- <transition-group name="slow" @after-enter="log"> -->
+              <div class="list-col" v-for="funcIndex in indexArr" :key="funcIndex" @click="selectFunc(funcIndex)" v-slow="!hideContent.includes(funcIndex)">
+                <!-- 筛选条件优先排列 -->
+                <div
+                  v-for="(titleItem, key) in filterList"
+                  :style="{ order: key === filterBy ? -1 : 1 }"
+                  :key="`${indexArr}_${key}`"
+                  v-text="indexTofunc[funcIndex][key]"
+                />
+              </div>
+              <!-- </transition-group> -->
             </div>
+          </div>
         </div>
       </div>
       <!-- 已选择的功能 -->
@@ -53,7 +69,7 @@
         <!--标题  -->
         <div class="chosen-title" v-text="'已选功能'" />
         <!--标题  -->
-        <div class="chosen-title" >
+        <div class="chosen-title">
           <span>功能名称</span>
           <span>字段名</span>
           <span>标识符</span>
@@ -61,9 +77,9 @@
         <!-- 主要内容 -->
         <div class="chosen-body">
           <div class="chosen-content" v-for="(item, index) in selectFuncList" :key="index">
-            <span v-text="item.name"/>
-            <span v-text="item.json"/>
-            <span v-text="item.identifier"/>
+            <span v-text="item.name" />
+            <span v-text="item.json" />
+            <span v-text="item.identifier" />
           </div>
         </div>
       </div>
@@ -74,31 +90,32 @@
 <script>
 import pinyin from 'js-pinyin';
 import https from '@/https';
-import { deepCopy } from '@/utils'
-import { mapState, mapMutations } from "vuex";
+import { deepCopy } from '@/utils';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   data() {
     return {
       showfilterList: false, // 是否点开筛选条件
-      filterList: { // 筛选条件列表
+      filterList: {
+        // 筛选条件列表
         identifier: {
           name: '标识符', // 显示用
-          mapName: 'productFuncInfoById', //搜索用
+          mapName: 'productFuncInfoById' //搜索用
         },
         name: {
           name: '功能名称',
-          mapName: 'productFuncInfoByName',
+          mapName: 'productFuncInfoByName'
         },
         json: {
           name: '字段名',
-          mapName: 'productInfoByJson',
+          mapName: 'productInfoByJson'
         }
       },
       filterBy: 'name', // 筛选条件
       selectType: '',
       selectFuncList: []
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -107,7 +124,7 @@ export default {
       funcImport: (state, getters) => getters.funcImport,
       productFuncInfoById: (state, getters) => getters.productFuncInfoById,
       productFuncInfoByName: (state, getters) => getters.productFuncInfoByName,
-      productFuncInfoByJson: (state, getters) => getters.productFuncInfoByJson,
+      productFuncInfoByJson: (state, getters) => getters.productFuncInfoByJson
     }),
     // 筛选内容列表
     filterContentList() {
@@ -115,7 +132,8 @@ export default {
       const searchMap = this.searchMap; // 深负责，方便后续操作
       const mapKeys = Object.keys(searchMap); // 取得上面数据的key
       mapKeys.map((key, index) => {
-        const filteTypeArr = searchMap[key].filter(item => this.selectType.includes(item.define.type)); // 挑选出对应的功能
+        if (!this.selectType.length) return [];
+        const filteTypeArr = searchMap[key].filter(item => this.selectType.some(check => item.define.type.includes(check))); // 挑选出对应的功能
         // const filteRepeatArr = filteTypeArr.filter(item => !this.selectFuncID.includes(item._id));
         filteTypeArr.forEach(item => {
           result.push({
@@ -124,7 +142,7 @@ export default {
             identifier: item.identifier,
             _id: item._id,
             index
-          })
+          });
         });
       });
       return this.sortByFisrtLetter(result); // 给结果排序
@@ -139,7 +157,7 @@ export default {
     // 已选择的功能的id
     selectFuncID() {
       return this.selectFuncList.map(item => {
-        return item._id
+        return item._id;
       });
     },
     // 隐藏已选择的功能
@@ -157,7 +175,7 @@ export default {
         this.filterContentList.sortMap[letter].forEach(index => {
           !this.hideContent.includes(index) && (hide = false);
         });
-        hide && (result.push(letter));
+        hide && result.push(letter);
       });
       return result;
     },
@@ -179,8 +197,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDevModule: "SET_DEV_MODULE",
-      setTempModule: "SET_TEMP_MODULE"
+      setDevModule: 'SET_DEV_MODULE'
     }),
     // 根据首字母排序，输入值为[{name, josn, identifier}]，输出{result: 结果, sortArr: 排序数组}
     sortByFisrtLetter(arr) {
@@ -194,7 +211,7 @@ export default {
         const letter = pinyin.getCamelChars(value)[0].toLowerCase(); // 转换成小写英文
         let type = 2;
         if (value[0].charCodeAt() >= 97 && value[0].charCodeAt() <= 122) {
-          type = 0
+          type = 0;
         } else if (value[0].charCodeAt() >= 65 && value[0].charCodeAt() <= 90) {
           type = 1;
         }
@@ -233,9 +250,9 @@ export default {
     },
     // 点击完成
     async importDone() {
-      const res = await https.fetchPost('/userDevice/save', {idList: JSON.stringify(this.selectFuncID), id: this.deviceKey ,admin: this.admin});
-      this.setDevModule(['userDeviceList', res.data]);
-    },
-  },
+      const res = await https.fetchPost('/userDevice/save', { idList: JSON.stringify(this.selectFuncID), id: this.deviceKey, admin: this.admin });
+      this.setDevModule({ userDeviceList: res.data });
+    }
+  }
 };
 </script>

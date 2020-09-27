@@ -83,7 +83,6 @@ import { Header, Toast, Switch, List, Item, RadioList } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import {
   showToast,
-  showLoading,
   hideLoading,
   sendDataToDevice,
 } from '@PluginInterface';
@@ -149,6 +148,7 @@ export default {
       selectItem: '',
       selectRadio: 1,
       selectBody: 1,
+      disableUpdate: false
     };
   },
   computed: {
@@ -449,9 +449,6 @@ export default {
       handler(newVal) {
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
-        if (newVal === 3) {
-          // this.getSlpVal();
-        }
       },
       immediate: true
     },
@@ -483,6 +480,7 @@ export default {
   },
   created() {
     this.imshowType = this.$route.params.id;
+    this.setPolling(false);
   },
   mounted() {
     hideLoading();
@@ -491,6 +489,12 @@ export default {
     this.$nextTick(() => {
       this.updateLocal(this.dataObject);
     });
+    setInterval(() => {
+      this.getSlpVal();
+    }, 5000);
+  },
+  destroyed() {
+    this.setPolling(true);
   },
   methods: {
     ...mapMutations({
@@ -498,9 +502,10 @@ export default {
     }),
     ...mapActions({
       updateDataObject: 'UPDATE_DATAOBJECT',
+      setPolling: 'SET_POLLING'
     }),
     async changeDataObject(obj, hasToast = false) {
-      this.setState(['uilock', true]);
+      this.disableUpdate = true;
       const control = obj;
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
@@ -515,8 +520,12 @@ export default {
           control.WdSpd = 1;
         }
       }
-      const opt = Object.keys(obj);
-      const p = Object.values(obj);
+      const sendData = {...obj};
+      sendData.StHt = 0;
+      const opt = Object.keys(sendData);
+      const p = Object.values(sendData);
+      // opt.push('StHt');
+      // p.push(0);
       const json = JSON.stringify({ 
         mac: this.mac,
         t: 'cmd',
@@ -524,22 +533,21 @@ export default {
         p
       });
       console.table([opt, p]);
-      this.updateDataObject(obj);
+      this.updateDataObject(sendData);
       if (this.functype) {
         hasToast && showToast(hasToast, 1);
         return;
       }
-      console.log(json);
+      // console.log(json);
       const res = await sendDataToDevice(this.mac, json, false);
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
       }
-      this.setState(['uilock', false]);
+      this.disableUpdate = false;
     },
     async getSlpVal() {
-      if ((this.functype && this.dataObject.Slp1L1) || this.$store.state.uilock) return; // 场景模式下不重复查询
-
+      if (this.disableUpdate) return;
       // data
       const cols = ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
       const statueJson = JSON.stringify({
@@ -547,7 +555,6 @@ export default {
         t: 'status',
         cols
       });
-      showLoading();
       const res = await sendDataToDevice(this.mac, statueJson, false);
       const _res = JSON.parse(res);
       const dataObject = {};
@@ -555,9 +562,7 @@ export default {
         dataObject[cols[index]] = item;
       });
 
-      hideLoading();
-
-      if (this.$store.state.uilock) return;
+      if (this.disableUpdate) return;
 
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
@@ -622,8 +627,9 @@ export default {
       this.updatePosition(true);
     },
     updateData(key) {
-      if (!key) return;
-      this.data = this.modToTem[key];
+      key;
+      // if (!key) return;
+      // this.data = this.modToTem[key];
     },
     changeSlp(key, type) {
       if (type === 'on') {
@@ -708,6 +714,7 @@ export default {
       });
 
       this.updatePosition();
+      this.disableUpdate = true;
     },
     showTooltip(dataIndex) {
       this.myChart.dispatchAction({

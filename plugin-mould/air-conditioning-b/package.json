@@ -14,7 +14,7 @@
     "axios": "^0.19.2",
     "dayjs": "^1.8.15",
     "echarts": "4.0.4",
-    "gree-ui": "http://10.2.11.226/iot-4/web/gree-ui.git",
+    "gree-ui": "F:\\WebCode\\commit\\gree-ui",
     "vconsole": "^3.3.0",
     "vue": "^2.5.17",
     "vue-awesome-swiper": "^3.1.3",

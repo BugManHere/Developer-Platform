@@ -1,27 +1,53 @@
 .select-page {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  max-height: 510px;
-  margin: 5px;
-  overflow-y: scroll;
-  .panel {
-    height: 450px;
-    width: 250px;
-    margin: 20px 10px;
-    background-color: #CCCCCC;
-    border: 1px #CCCCCC solid;
+  $baseColor: #f5f5f5;
+  $pageHeight: 530px;
+  $titleHeight: 40px;
+  max-height: $pageHeight;
+  overflow: hidden;
+  margin-bottom: 15px;
+  .select-page-title {
+    width: 100%;
+    height: $titleHeight;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      height: 400px;
+    justify-content: flex-start;
+    background-color: $baseColor;
+    border-bottom: #ddd 1px solid;
+    .select-page-label {
+      min-width: 120px;
+      height: 100%;
+      font-size: 16px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 15px;
+      border-bottom: 1px transparent solid;
+      cursor: pointer;
+      &.select {
+        border-bottom: 1px CadetBlue solid;
+        background-color: $baseColor !important;
+        color: #404657;
+      }
+      &:hover {
+        background-color: #eaeaea;
+      }
     }
-    &.hold {
-      background-color: CadetBlue;
-    }
-    &:hover {
-      border: 1px CadetBlue solid;
+  }
+  .select-page-body {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    max-height: $pageHeight - $titleHeight;
+    .img-box {
+      &:hover {
+        border: 1px CadetBlue solid;
+      }
+      img {
+        height: 400px;
+      }
+      &.hold {
+        background-color: CadetBlue;
+      }
     }
   }
 }

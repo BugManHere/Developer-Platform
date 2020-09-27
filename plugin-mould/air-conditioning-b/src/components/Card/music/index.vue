@@ -21,10 +21,6 @@ export default {
     songList,
     voiceSkill,
   },
-  data() {
-    return {
-    };
-  },
   computed: {
     ...mapState({
       imshowType: state => state.musicData.imshowType,
@@ -47,7 +43,7 @@ export default {
     }),
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'ws://172.28.4.201:9999';
+      const wsuri = 'ws://192.168.31.94:9999';
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -81,6 +77,13 @@ export default {
           data.payload.data.groups.forEach(group => {
             groupsUnfold.push(...group.categories);
           });
+          console.log(
+            groupsUnfold
+          );
+          groupsUnfold.unshift({
+            categoryId: '1110',
+            categoryName: '儿童'
+          })
           this.setMusicData({ groupsUnfold });
           this.setMusicData({ groups: data.payload.data.groups });
           break;

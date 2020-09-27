@@ -1,4 +1,4 @@
-import Loading from './Loading.vue'
+import Loading from './Loading.vue';
 
 const LOADING = {
   newLoading: null,
@@ -15,8 +15,8 @@ const LOADING = {
       const VueLoading = Vue.extend({
         render(h) {
           return h('Loading');
-        },
-      })
+        }
+      });
       LOADING.newLoading = new VueLoading();
       LOADING.vm = LOADING.newLoading.$mount();
       LOADING.el = LOADING.vm.$el;
@@ -37,8 +37,8 @@ const LOADING = {
       hide() {
         hidden();
       }
-    }
+    };
   }
-}
+};
 
 export default LOADING;

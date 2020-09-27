@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// 创建孙子文档 
+// 创建孙子文档
 const optionSchema = new mongoose.Schema({
   pluginVer: String,
   voiceSkill: Boolean,
   autoAbleTem: Boolean,
   temStep: String,
   statueJson: [String],
-  statueJson2: [String],
-})
+  statueJson2: [String]
+});
 
 // 创建子文档 userDeviceList
 const listSchema = new mongoose.Schema({
@@ -22,14 +22,15 @@ const listSchema = new mongoose.Schema({
   createTime: String,
   editTime: String,
   imgPath: String,
+  modelPath: String,
   moreOption: optionSchema,
-  funcImport: [String],
-})
+  funcImport: [String]
+});
 
 // 创建Schema
 const userDeviceSchema = new mongoose.Schema({
   admin: String,
-  userDeviceList: [listSchema],
+  userDeviceList: [listSchema]
 });
 
-module.exports = mongoose.model("user-device", userDeviceSchema);
+module.exports = mongoose.model('user-device', userDeviceSchema);
