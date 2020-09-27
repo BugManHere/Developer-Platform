@@ -145,6 +145,10 @@ if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
   new VConsole();
 }
 
+if (dev) {
+  require('../api/mock/index.js');
+}
+
 dev ? createVue() : '';
 
 /* ********************************* Native Func ********************************* */
