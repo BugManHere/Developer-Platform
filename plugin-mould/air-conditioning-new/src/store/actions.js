@@ -3,7 +3,7 @@ import * as types from './types';
 
 import { getQueryStringByName, isMqtt } from '../utils/index';
 
-let _timer = 0; // 轮询定时器
+let _timer = null; // 轮询定时器
 let _timer2 = null; // 延时发送指令定时器
 let _timer3 = null; // 重启轮询定时器
 let _firstCallback = true; // 是否第一次查询设备状态
@@ -207,7 +207,7 @@ export default {
   async [types.SET_POLLING]({ dispatch }, boolean) {
     clearTimeout(_timer3);
     if (boolean) {
-      if (_timer === 0) {
+      if (!_timer) {
         _timer = setInterval(() => {
           dispatch(types.GET_DEVICE_DATA);
           dispatch(types.GET_DEVICE_INFO);
@@ -215,7 +215,7 @@ export default {
       }
     } else {
       clearInterval(_timer);
-      _timer = 0;
+      _timer = null;
     }
   },
 

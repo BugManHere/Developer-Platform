@@ -17,7 +17,7 @@ const LogicPort = {
     work_modDefine() {
       return this.g_funcDefine_inertia.find(module => module.type === `inertia-${this.work_modKey}`);
     },
-    // 风速的id
+    // 模式的id
     work_modIdentifier() {
       return this.work_modDefine && this.work_modDefine.identifier;
     },
@@ -97,6 +97,10 @@ const LogicPort = {
         .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
       if (modules.length) return this.g_inputMap[modules[0].json];
       return 30; // 默认温度最大值
+    },
+    // 温度间隔
+    work_temStep() {
+      return this.g_moreOption.temStep;
     }
   }
 };

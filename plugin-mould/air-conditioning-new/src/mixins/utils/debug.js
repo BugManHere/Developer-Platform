@@ -15,7 +15,7 @@ const mixin = {
   methods: {
     ...mapMutations({
       setCheckObject: SET_CHECK_OBJECT,
-      setDataObject: SET_DATA_OBJECT,
+      setDataObject: SET_DATA_OBJECT
     })
   }
 };

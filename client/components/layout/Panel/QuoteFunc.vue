@@ -191,9 +191,11 @@ export default {
   },
   mounted() {
     this.selectType = this.$parent.$parent.quoteShow;
-    this.selectFuncList = this.funcImport.map(id => {
-      return this.filterContentList.result.find(item => item._id === id);
-    });
+    this.selectFuncList = this.funcImport
+      .map(id => {
+        return this.filterContentList.result.find(item => item._id === id);
+      })
+      .filter(v => v);
   },
   methods: {
     ...mapMutations({

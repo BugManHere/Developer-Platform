@@ -20,6 +20,9 @@
     },
     "Electric": {
       "routerName": "Electric"
+    },
+    "NoiseSet": {
+      "routerName": "Noise"
     }
   }
 }
