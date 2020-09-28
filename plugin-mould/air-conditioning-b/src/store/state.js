@@ -45,6 +45,7 @@ const state = {
     yearChart: null // 每年
   },
   musicData: {
+    imshowType: 0, // 0点播 1技能
     // 分组、分类
     groups: [], // 分组
     groupsUnfold: [], // 分组的展开
