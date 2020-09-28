@@ -12,6 +12,7 @@ module.exports = {
     smart: '智能',
     timing: '定时',
     CO2: '二氧化碳浓度',
+    save: '保存',
     Electric: '电量查询'
   },
   slot1: {
@@ -97,7 +98,8 @@ module.exports = {
     'Quiet(Btn)': '静音',
     Blo: '干燥',
     Humi: '加湿',
-    ParameterQuery: '参数查询'
+    ParameterQuery: '参数查询',
+    NoiseSet: '室内噪声'
   },
   sweep: {
     speedTitle: '扫风',

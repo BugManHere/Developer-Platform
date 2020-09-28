@@ -11,6 +11,18 @@
       "params": {
         "id": 1
       }
+    },
+    "AssHt": {
+      "routerName": "AssHt"
+    },
+    "UDFanPort": {
+      "routerName": "UDFanPort"
+    },
+    "Electric": {
+      "routerName": "Electric"
+    },
+    "NoiseSet": {
+      "routerName": "Noise"
     }
   }
 }

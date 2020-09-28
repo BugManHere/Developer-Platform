@@ -1,11 +1,7 @@
 const state = {
   mac: '', // 设备mac
-  isScene: 0, // 是否是场景模式
-  ModHeat: 4, // 制热模式
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
-  work_fanKey: 'Fan',
-  work_modKey: 'Mod',
   dataObject: {
     functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,

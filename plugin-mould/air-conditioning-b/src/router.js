@@ -47,7 +47,16 @@ const MusicDetail = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/detail.vue')));
 const MusicPlay = r =>
   require.ensure([], () => r(require('./../src/components/Card/music/page/play.vue')));
-
+const SkillDetail = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/detail.vue')));
+const SkillSearchIndex = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/search/index.vue')));
+const SkillSearchResult = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/search/result.vue')));
+const VoiceMessageIndex = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/index.vue')));
+const VoiceMessageEdit = r =>
+  require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/edit.vue')));
 Vue.use(Router);
 
 const router = new Router({
@@ -158,6 +167,47 @@ const router = new Router({
       meta: {
         keepAlive: true
       },
+    },
+    {
+      path: '/SkillDetail/:id',
+      name: 'SkillDetail',
+      props: true,
+      component: SkillDetail
+    },
+    {
+      path: '/SkillSearch',
+      name: 'SkillSearch',
+      component: {
+        render(h) {
+          return h('router-view');
+        }
+      },
+      redirect: '/SkillSearch/Index',
+      children: [{
+        path: 'Index',
+        name: 'SkillSearchIndex',
+        component: SkillSearchIndex
+      }, {
+        path: 'Result',
+        component: SkillSearchResult
+      }]
+    },
+    {
+      path: '/VoiceMessage',
+      name: 'VoiceMessage',
+      component: {
+        render(h) {
+          return h('router-view');
+        }
+      },
+      redirect: '/VoiceMessage/Index',
+      children: [{
+        path: 'Index',
+        component: VoiceMessageIndex
+      }, {
+        path: 'Edit',
+        component: VoiceMessageEdit
+      }]
     },
   ]
 });

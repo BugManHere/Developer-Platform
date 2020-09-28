@@ -21,13 +21,9 @@ export default {
     songList,
     voiceSkill,
   },
-  data() {
-    return {
-      imshowType: 0, // 0：点播, 1：技能
-    };
-  },
   computed: {
     ...mapState({
+      imshowType: state => state.musicData.imshowType,
       playMap: state => state.musicData.playMap,
       listSongsMap: state => state.musicData.listSongsMap,
       songInfosMap: state => state.musicData.songInfosMap,

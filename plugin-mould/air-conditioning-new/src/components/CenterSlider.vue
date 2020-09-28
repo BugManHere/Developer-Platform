@@ -115,11 +115,11 @@ export default {
     g_statusMap: {
       handler(newVal) {
         if (!newVal) return;
-        const fanStateName = this.getStateNameByKey(this.work_fanKey);
+        const fanStateName = this.getStateNameByKey(this.work_fanIdentifier);
         if (fanStateName) {
           this.fanName = this.$language(`fan.${fanStateName}`);
         }
-        const modStateName = this.work_modDefine ? this.getStateNameByKey(this.work_modDefine.identifier) : '';
+        const modStateName = this.work_modDefine ? this.getStateNameByKey(this.work_modIdentifier) : '';
         if (modStateName) {
           this.modName = this.$language(`mod.${modStateName}`);
         }
@@ -178,13 +178,13 @@ export default {
     temSetMethod(value) {
       value === this.work_temSetVal || this.changeData({ [this.work_temSetJson]: value });
     },
-    getStateNameByKey(key) {
-      const map = this.g_statusMap[key];
+    getStateNameByKey(id) {
+      const map = this.g_statusMap[id];
       if (map) {
         const status = map.status;
-        const define = this.g_funcDefineMap[key];
+        const define = this.g_funcDefineMap[id];
         const statusName = define.statusDefine[status].name;
-        const stateName = `${key}_${statusName}`;
+        const stateName = `${id}_${statusName}`;
         return stateName;
       }
       return false;

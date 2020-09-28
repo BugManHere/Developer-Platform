@@ -66,6 +66,9 @@ const Customize = {
         },
         FuncPopup: () => {
           this.setDataObject({ FuncPopup: 1 });
+        },
+        NoiseSet: () => {
+          console.log();
         }
       };
     },

@@ -145,15 +145,26 @@ export default {
     },
     // 当前模板图片
     selectModelName() {
-      return require(`@public/img/model/${this.deviceInfo.modelPath}.png`);
+      console.log(this.deviceInfo.modelPath);
+      try {
+        return require(`@public/img/model/${this.deviceInfo.modelPath}.png`);
+      } catch (e) {
+        return '';
+      }
     }
   },
   watch: {
-    productTypeList(newVal) {
-      // 获取到产品品类列表时赋予初值
-      this.deviceInfo.productID = newVal[0]._id;
-      this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;
-      this.deviceInfo.modelPath = this.selectModel.path;
+    productTypeList: {
+      handler(newVal) {
+        if (newVal && newVal[0]) {
+          // 获取到产品品类列表时赋予初值
+          this.deviceInfo.productID = newVal[0]._id;
+          this.deviceInfo.seriesID = newVal[0].seriesList[0]._id;
+          this.deviceInfo.modelPath = this.selectModel.path;
+        }
+      },
+      immediate: true,
+      deep: true
     },
     mouldKey() {
       this.deviceInfo.modelPath = this.selectModel.path;

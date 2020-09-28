@@ -31,11 +31,6 @@ export default {
       value: state => state.dataObject.Mod,
       ModPopup: state => state.dataObject.ModPopup
     }),
-    // 模式的id
-    modId() {
-      if (this.work_modDefine) return this.work_modDefine.identifier;
-      return 'Mod';
-    },
     // 按钮列表
     btnList() {
       const result = this.modStatusList.map(modStatus => {
@@ -45,7 +40,7 @@ export default {
         const key = modStatus;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${this.modId}_${statusName}`;
+        const stateName = `${this.work_modIdentifier}_${statusName}`;
         const name = this.$language(`mod.${stateName}`);
         // 图标
         const icon = {
@@ -84,7 +79,7 @@ export default {
       handler(newVal) {
         const startStatus = 'default';
         if (!this.work_modDefine) return;
-        const id = this.modId;
+        const id = this.work_modIdentifier;
         const modLoop = newVal[id];
         if (modLoop) {
           const result = JSON.parse(JSON.stringify(newVal[id]));
@@ -102,7 +97,7 @@ export default {
     },
     g_statusMap: {
       handler(newVal) {
-        const statusMap = newVal[this.modId];
+        const statusMap = newVal[this.work_modIdentifier];
         if (statusMap && this.currentStatus !== statusMap.status) {
           this.lastStatus = this.currentStatus;
           this.currentStatus = statusMap.status;

@@ -11,6 +11,8 @@ const Test = r => require.ensure([], () => r(require('./views/functionPage/Test'
 const SweepConst = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
 const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
 const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise')));
+const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
+const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
 
 Vue.use(Router);
 
@@ -59,6 +61,16 @@ const router = new Router({
       path: '/Noise',
       name: 'Noise',
       component: Noise
+    },
+    {
+      path: '/AssHt',
+      name: 'AssHt',
+      component: AssHt
+    },
+    {
+      path: '/UDFanPort',
+      name: 'UDFanPort',
+      component: UDFanPort
     }
   ]
 });

@@ -45,7 +45,8 @@ export default {
               'inertia-temMax': '温度上限',
               'inertia-imshowSlot1': '显示插槽1',
               'inertia-imshowSlot2': '显示插槽2',
-              'inertia-Mod': '模式设定'
+              'inertia-mod': '模式设定',
+              'inertia-fan': '风速设定'
             }
           },
           {

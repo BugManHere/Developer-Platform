@@ -30,10 +30,6 @@ export default {
       title: '风速',
       showPopup: false,
       showSwiper: false,
-      translate: 0,
-      observer: true,
-      observeParents: true,
-      observeSlideChildren: true,
       isTouch: false,
       swiperOption: {
         direction: 'vertical',
@@ -41,8 +37,6 @@ export default {
         roundLengths: true,
         slidesPerView: 5
       },
-      freeMode: true,
-      freeModeSticky: true,
       fanStatusList: [], // 风档的顺序
       currentStatus: '' // 当前状态
     };
@@ -51,11 +45,6 @@ export default {
     ...mapState({
       FanPopup: state => state.dataObject.FanPopup
     }),
-    // 风速的id
-    fanId() {
-      if (this.work_fanDefine) return this.work_fanDefine.identifier;
-      return 'Fan';
-    },
     swiper() {
       return this.$refs.fanSwiper.$swiper;
     },
@@ -70,7 +59,7 @@ export default {
         const key = fanStatus;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${this.fanId}_${statusName}`;
+        const stateName = `${this.work_fanIdentifier}_${statusName}`;
         const text = this.$language(`fan.${stateName}`);
         return { text, key, value };
       });
@@ -103,9 +92,9 @@ export default {
     g_statusLoop: {
       handler(newVal) {
         const startStatus = 'default';
-        const fanLoop = newVal[this.fanId];
+        const fanLoop = newVal[this.work_fanIdentifier];
         if (fanLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[this.fanId]));
+          const result = JSON.parse(JSON.stringify(newVal[this.work_fanIdentifier]));
           const length = result.length;
           let i = 0;
           while (result[0] !== startStatus && i < length) {
@@ -120,7 +109,7 @@ export default {
     },
     g_statusMap: {
       handler(newVal) {
-        const statusMap = newVal[this.fanId];
+        const statusMap = newVal[this.work_fanIdentifier];
         if (statusMap) this.currentStatus = statusMap.status;
         this.updateIndex();
       },
