@@ -70,6 +70,9 @@ export default {
       }
     }
   },
+  destroyed() {
+    this.setDataObject({ FuncPopup: 0 });
+  },
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',

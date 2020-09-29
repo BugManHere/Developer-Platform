@@ -2,12 +2,13 @@
   <gree-view bg-color="#404040">
     <gree-page class="page-sleep">
       <gree-header>
-        <span v-text="$language('btn.SmartSleep')"/>
-        <a 
+        <span v-text="$language('btn.SmartSleep')" />
+        <a
           class="save"
-          slot="right" 
+          slot="right"
           v-if="SwhSlp && SlpMod === 3"
-          @click="saveSlp">
+          @click="saveSlp"
+        >
           保存
         </a>
       </gree-header>
@@ -35,25 +36,49 @@
             v-if="imshowType === 2"
           >
             <template slot-scope="{ option }">
-              <div class="custom-title" v-if="!isNaN(option.value)">{{ option.text }}</div>
+              <div class="custom-title" v-if="!isNaN(option.value)">
+                {{ option.text }}
+              </div>
               <div class="custom-brief" v-else>
-                <span v-for="(text, index) in ['偏寒体质', '平和体质', '偏热体质']" :key="index" v-text="text" @click="clickBody(index)" :class="{select: selectBody === index}"/>
+                <span
+                  v-for="(text, index) in ['偏寒体质', '平和体质', '偏热体质']"
+                  :key="index"
+                  v-text="text"
+                  @click="clickBody(index)"
+                  :class="{ select: selectBody === index }"
+                />
               </div>
             </template>
           </gree-radio-list>
           <!-- 按钮组 -->
           <div v-if="imshowType === 1" class="body-big-btn">
-            <div v-for="(btn, key) in bigBtnOptions" :key="key" class="big-btn-item" @click="selectStyle(btn.key, btn.type)" :class="{select: selectItem === btn.key}">
-              <span v-text="btn.name"/>
+            <div
+              v-for="(btn, key) in bigBtnOptions"
+              :key="key"
+              class="big-btn-item"
+              @click="selectStyle(btn.key, btn.type)"
+              :class="{ select: selectItem === btn.key }"
+            >
+              <span v-text="btn.name" />
             </div>
           </div>
         </div>
         <!-- 图表 -->
-        <div v-show="showEchart" class="body-chart" id="echart" ref="mychart" :style="{height: `${clientHeight * .55}px`}"/>
+        <div
+          v-show="showEchart"
+          class="body-chart"
+          id="echart"
+          ref="mychart"
+          :style="{ height: `${clientHeight * 0.55}px` }"
+        />
         <!-- 列表 -->
         <div v-if="imshowType === 1" class="body-bottom">
           <gree-list>
-            <gree-list-item title="防直吹" style="font-size: 18px" footer="防止风直接吹人">
+            <gree-list-item
+              title="防直吹"
+              style="font-size: 18px"
+              footer="防止风直接吹人"
+            >
               <gree-switch
                 :disabled="Mod !== 1"
                 slot="after"
@@ -62,7 +87,11 @@
                 @change="blowBtn(blowActive)"
               ></gree-switch>
             </gree-list-item>
-            <gree-list-item title="自动灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
+            <gree-list-item
+              title="自动灯光"
+              style="font-size: 18px"
+              footer="夜间自动关闭灯光"
+            >
               <gree-switch
                 slot="after"
                 class="blue"
@@ -81,11 +110,7 @@
 import echarts from 'echarts';
 import { Header, Toast, Switch, List, Item, RadioList } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
-import {
-  showToast,
-  hideLoading,
-  sendDataToDevice,
-} from '@PluginInterface';
+import { showToast, hideLoading, sendDataToDevice } from '@PluginInterface';
 
 export default {
   name: 'Sleep',
@@ -95,7 +120,7 @@ export default {
     [Toast.name]: Toast,
     [List.name]: List,
     [Item.name]: Item,
-    [RadioList.name]: RadioList,
+    [RadioList.name]: RadioList
   },
   data() {
     return {
@@ -105,7 +130,16 @@ export default {
       ligActive: true,
       symbolSize: 20,
       position: [],
-      data: [[1, 26], [2, 27], [3, 28], [4, 28], [5, 28], [6, 28], [7, 26], [8, 26]],
+      data: [
+        [1, 26],
+        [2, 27],
+        [3, 28],
+        [4, 28],
+        [5, 28],
+        [6, 28],
+        [7, 26],
+        [8, 26]
+      ],
       temToVal: {
         16: [160, 0],
         17: [170, 0],
@@ -121,34 +155,357 @@ export default {
         27: [14, 1],
         28: [24, 1],
         29: [34, 1],
-        30: [44, 1],
+        30: [44, 1]
       },
       modToTem: {
-        expert: [[1, 26], [2, 27], [3, 28], [4, 28], [5, 28], [6, 28], [7, 26], [8, 26]],
-        nap: [[1, 26], [2, 26], [3, 26], [4, 26], [5, 26], [6, 26], [7, 26], [8, 26]],
-        tradition: [[1, 26], [2, 27], [3, 27], [4, 27], [5, 27], [6, 27], [7, 27], [8, 27]],
-        diy: [[1, 25], [2, 26], [3, 27], [4, 27], [5, 27], [6, 27], [7, 27], [8, 26]]
+        expert: [
+          [1, 26],
+          [2, 27],
+          [3, 28],
+          [4, 28],
+          [5, 28],
+          [6, 28],
+          [7, 26],
+          [8, 26]
+        ],
+        nap: [
+          [1, 26],
+          [2, 26],
+          [3, 26],
+          [4, 26],
+          [5, 26],
+          [6, 26],
+          [7, 26],
+          [8, 26]
+        ],
+        tradition: [
+          [1, 26],
+          [2, 27],
+          [3, 27],
+          [4, 27],
+          [5, 27],
+          [6, 27],
+          [7, 27],
+          [8, 27]
+        ],
+        diy: [
+          [1, 25],
+          [2, 26],
+          [3, 27],
+          [4, 27],
+          [5, 27],
+          [6, 27],
+          [7, 27],
+          [8, 26]
+        ]
       },
-      slpModExJson: ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx',
-        'StSlp1C', 'StSlp1CInc', 'StSlp1CSp', 'StSlp1H', 'StSlp1HInc', 'StSlp1HSp',
-        'StSlp2C', 'StSlp2CInc', 'StSlp2CSp', 'StSlp2H', 'StSlp2HInc', 'StSlp2HSp',
-        'StSlp3C', 'StSlp3CInc', 'StSlp3CSp', 'StSlp3H', 'StSlp3HInc', 'StSlp3HSp',
-        'StSlp4C', 'StSlp4CInc', 'StSlp4CSp', 'StSlp4H', 'StSlp4HInc', 'StSlp4HSp'],
+      slpModExJson: [
+        'SwhSlp',
+        'SlpMod',
+        'SmartSlpMod',
+        'SmartSlpModEx',
+        'StSlp1C',
+        'StSlp1CInc',
+        'StSlp1CSp',
+        'StSlp1H',
+        'StSlp1HInc',
+        'StSlp1HSp',
+        'StSlp2C',
+        'StSlp2CInc',
+        'StSlp2CSp',
+        'StSlp2H',
+        'StSlp2HInc',
+        'StSlp2HSp',
+        'StSlp3C',
+        'StSlp3CInc',
+        'StSlp3CSp',
+        'StSlp3H',
+        'StSlp3HInc',
+        'StSlp3HSp',
+        'StSlp4C',
+        'StSlp4CInc',
+        'StSlp4CSp',
+        'StSlp4H',
+        'StSlp4HInc',
+        'StSlp4HSp'
+      ],
       slpModExVal: [
-        [1, 2, 4, 1, 1, 131, 1, 1, 131, 1, 120, 0, 6, 120, 0, 6, 300, 8, 6, 300, 8, 6, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 2, 1, 133, 1, 1, 133, 1, 120, 0, 6, 120, 0, 6, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 3, 1, 136, 1, 1, 136, 1, 120, 0, 6, 120, 0, 6, 300, 3, 6, 300, 3, 6, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 4, 1, 133, 1, 1, 133, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 5, 1, 138, 1, 1, 138, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-        [1, 2, 4, 7, 60, 130, 1, 60, 130, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
-        [1, 2, 4, 8, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
-        [1, 2, 4, 9, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1]
+        [
+          1,
+          2,
+          4,
+          1,
+          1,
+          131,
+          1,
+          1,
+          131,
+          1,
+          120,
+          0,
+          6,
+          120,
+          0,
+          6,
+          300,
+          8,
+          6,
+          300,
+          8,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          2,
+          1,
+          133,
+          1,
+          1,
+          133,
+          1,
+          120,
+          0,
+          6,
+          120,
+          0,
+          6,
+          300,
+          5,
+          6,
+          300,
+          5,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          3,
+          1,
+          136,
+          1,
+          1,
+          136,
+          1,
+          120,
+          0,
+          6,
+          120,
+          0,
+          6,
+          300,
+          3,
+          6,
+          300,
+          3,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          4,
+          1,
+          133,
+          1,
+          1,
+          133,
+          1,
+          240,
+          10,
+          6,
+          240,
+          10,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          5,
+          1,
+          138,
+          1,
+          1,
+          138,
+          1,
+          240,
+          10,
+          6,
+          240,
+          10,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          6,
+          1,
+          143,
+          1,
+          1,
+          143,
+          1,
+          240,
+          5,
+          6,
+          240,
+          5,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          4,
+          7,
+          60,
+          130,
+          1,
+          60,
+          130,
+          1,
+          180,
+          0,
+          6,
+          180,
+          0,
+          6,
+          240,
+          5,
+          6,
+          240,
+          5,
+          6,
+          300,
+          10,
+          6,
+          300,
+          10,
+          6
+        ],
+        [
+          1,
+          2,
+          4,
+          8,
+          60,
+          133,
+          1,
+          60,
+          133,
+          1,
+          180,
+          0,
+          6,
+          180,
+          0,
+          6,
+          240,
+          5,
+          6,
+          240,
+          5,
+          6,
+          300,
+          10,
+          6,
+          300,
+          10,
+          6
+        ],
+        [
+          1,
+          2,
+          4,
+          9,
+          60,
+          133,
+          1,
+          60,
+          133,
+          1,
+          180,
+          0,
+          6,
+          180,
+          0,
+          6,
+          240,
+          5,
+          6,
+          240,
+          5,
+          6,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
       ],
       selectItem: '',
       selectRadio: 1,
       selectBody: 1,
-      disableUpdate: false
+      disableUpdate: false,
+      getSlpTimer: false // 轮询标记
     };
   },
   computed: {
@@ -181,7 +538,7 @@ export default {
     },
     currentAge() {
       if ([1, 4].includes(this.SlpMod)) return 4;
-      if (this.SmartSlpModEx === 0) return 1; 
+      if (this.SmartSlpModEx === 0) return 1;
       if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
       return Math.ceil(this.SmartSlpModEx / 3) - 1;
     },
@@ -214,13 +571,15 @@ export default {
         {
           value: 3,
           text: 'DIY模式'
-        },
+        }
       ];
-      this.selectRadio === 3 || this.SlpMod === 2 && result.splice(this.selectRadio + 1, 0, {
-        value: NaN,
-        text: 'test',
-        disabled: true
-      });
+      this.selectRadio === 3 ||
+        (this.SlpMod === 2 &&
+          result.splice(this.selectRadio + 1, 0, {
+            value: NaN,
+            text: 'test',
+            disabled: true
+          }));
       return result;
     },
     opt() {
@@ -235,13 +594,13 @@ export default {
           },
           formatter: params => {
             return `${params.data[1]}℃`;
-          },
+          }
         },
         grid: {
-          top: 40 * this.clientHeight / 736,
-          bottom: 120 * this.clientHeight / 736,
-          left: 30 * this.clientHeight / 736,
-          right: 30 * this.clientHeight / 736,
+          top: (40 * this.clientHeight) / 736,
+          bottom: (120 * this.clientHeight) / 736,
+          left: (30 * this.clientHeight) / 736,
+          right: (30 * this.clientHeight) / 736,
           containLabel: false,
           width: 'auto',
           height: 'auto',
@@ -254,38 +613,48 @@ export default {
             y2: 1,
             colorStops: [
               {
-                offset: 0, color: 'rgb(88, 190, 255)'
-              }, 
-              {
-                offset: 0.153, color: 'rgb(83, 183, 252)'
-              }, 
-              {
-                offset: 0.1531, color: 'rgb(117, 197, 252)'
-              }, 
-              {
-                offset: 0.1565, color: 'rgb(117, 197, 252)'
-              }, 
-              {
-                offset: 0.1566, color: 'rgb(102, 191, 250)'
-              }, 
-              {
-                offset: 0.58, color: 'rgb(73, 161, 237)'
-              }, 
-              {
-                offset: 0.5815, color: 'rgb(83, 166, 239)'
-              }, 
-              {
-                offset: 0.582, color: 'rgb(83, 166, 239)'
-              }, 
-              {
-                offset: 0.583, color: 'rgb(52, 148, 235)'
-              }, 
-              {
-                offset: 1, color: 'rgb(2, 95, 210)'
+                offset: 0,
+                color: 'rgb(88, 190, 255)'
               },
+              {
+                offset: 0.153,
+                color: 'rgb(83, 183, 252)'
+              },
+              {
+                offset: 0.1531,
+                color: 'rgb(117, 197, 252)'
+              },
+              {
+                offset: 0.1565,
+                color: 'rgb(117, 197, 252)'
+              },
+              {
+                offset: 0.1566,
+                color: 'rgb(102, 191, 250)'
+              },
+              {
+                offset: 0.58,
+                color: 'rgb(73, 161, 237)'
+              },
+              {
+                offset: 0.5815,
+                color: 'rgb(83, 166, 239)'
+              },
+              {
+                offset: 0.582,
+                color: 'rgb(83, 166, 239)'
+              },
+              {
+                offset: 0.583,
+                color: 'rgb(52, 148, 235)'
+              },
+              {
+                offset: 1,
+                color: 'rgb(2, 95, 210)'
+              }
             ],
             global: false
-          },
+          }
         },
         xAxis: {
           name: '（小时后）',
@@ -293,7 +662,7 @@ export default {
           nameGap: 28,
           nameTextStyle: {
             color: 'rgb(188, 188, 188)',
-            fontSize: 14 * this.clientHeight / 736,
+            fontSize: (14 * this.clientHeight) / 736
           },
           min: 0.5,
           max: 8.5,
@@ -314,16 +683,16 @@ export default {
               type: 'dashed',
               color: 'white',
               opacity: 0.6
-            },
-          },
+            }
+          }
         },
         yAxis: {
           name: '（摄氏度）',
           nameGap: 5,
           nameTextStyle: {
             color: 'rgb(188, 188, 188)',
-            fontSize: 14 * this.clientHeight / 736,
-            padding: [0, 0, 0, 20 * this.clientHeight / 736]
+            fontSize: (14 * this.clientHeight) / 736,
+            padding: [0, 0, 0, (20 * this.clientHeight) / 736]
           },
           min: 15.5,
           max: 30.5,
@@ -352,7 +721,7 @@ export default {
             type: 'line',
             smooth: false,
             symbol: 'circle',
-            symbolSize: 8 * this.clientHeight / 736,
+            symbolSize: (8 * this.clientHeight) / 736,
             data: this.data,
             clip: true,
             itemStyle: {
@@ -366,12 +735,12 @@ export default {
               shadowBlur: 5,
               shadowOffsetY: 8,
               color: 'rgb(226, 237, 245)',
-              width: 1,
-            },
+              width: 1
+            }
           }
         ],
         textStyle: {
-          fontSize: `${11 * this.clientHeight / 736}`,
+          fontSize: `${(11 * this.clientHeight) / 736}`,
           color: 'rgb(188, 188, 188)',
           fontFamily: 'Helvetica Neue'
         }
@@ -400,7 +769,7 @@ export default {
           name: 'DIY模式',
           key: 'diy',
           type: currentMod === 3 ? 'on' : 'off'
-        },
+        }
       ];
       return result;
     }
@@ -408,7 +777,9 @@ export default {
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
         try {
           showToast('空调已被关闭，自动退出睡眠设置。', 1);
         } catch (e) {
@@ -439,7 +810,9 @@ export default {
             break;
         }
         this.$nextTick(() => {
-          this.updateData(['expert', 'tradition', 'expert', 'diy', 'nap'][newVal]);
+          this.updateData(
+            ['expert', 'tradition', 'expert', 'diy', 'nap'][newVal]
+          );
           this.updateEchart();
         });
       },
@@ -476,7 +849,7 @@ export default {
         this.blowActive = Boolean(newVal) && this.Mod === 1;
       },
       immediate: true
-    },
+    }
   },
   created() {
     this.imshowType = this.$route.params.id;
@@ -484,13 +857,13 @@ export default {
   },
   mounted() {
     hideLoading();
-    this.getSlpVal();
+    this.getSlpVal(); // 轮询
     this.updateEchart();
     this.$nextTick(() => {
       this.updateLocal(this.dataObject);
     });
     setInterval(() => {
-      this.getSlpVal();
+      this.getSlpVal(); // 轮询
     }, 5000);
   },
   destroyed() {
@@ -498,7 +871,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setState: 'SET_STATE',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       updateDataObject: 'UPDATE_DATAOBJECT',
@@ -506,11 +879,12 @@ export default {
     }),
     async changeDataObject(obj, hasToast = false) {
       this.disableUpdate = true;
+      this.getSlpTimer = false;
       const control = obj;
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
           control.AntiDirectBlow = 1;
-          control.SwUpDn = 0;
+          // control.SwUpDn = 0;
           control.Tur = 0;
           control.Quiet = 2;
           control.WdSpd = 1;
@@ -520,13 +894,13 @@ export default {
           control.WdSpd = 1;
         }
       }
-      const sendData = {...obj};
+      const sendData = { ...obj };
       sendData.StHt = 0;
       const opt = Object.keys(sendData);
       const p = Object.values(sendData);
       // opt.push('StHt');
       // p.push(0);
-      const json = JSON.stringify({ 
+      const json = JSON.stringify({
         mac: this.mac,
         t: 'cmd',
         opt,
@@ -548,8 +922,30 @@ export default {
     },
     async getSlpVal() {
       if (this.disableUpdate) return;
+      this.getSlpTimer = true;
       // data
-      const cols = ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx', 'Slp1L1', 'Slp1H1', 'Slp1L2', 'Slp1H2', 'Slp1L3', 'Slp1H3', 'Slp1L4', 'Slp1H4', 'Slp1L5', 'Slp1H5', 'Slp1L6', 'Slp1H6', 'Slp1L7', 'Slp1H7', 'Slp1L8', 'Slp1H8']; 
+      const cols = [
+        'SwhSlp',
+        'SlpMod',
+        'SmartSlpMod',
+        'SmartSlpModEx',
+        'Slp1L1',
+        'Slp1H1',
+        'Slp1L2',
+        'Slp1H2',
+        'Slp1L3',
+        'Slp1H3',
+        'Slp1L4',
+        'Slp1H4',
+        'Slp1L5',
+        'Slp1H5',
+        'Slp1L6',
+        'Slp1H6',
+        'Slp1L7',
+        'Slp1H7',
+        'Slp1L8',
+        'Slp1H8'
+      ];
       const statueJson = JSON.stringify({
         mac: this.mac,
         t: 'status',
@@ -562,7 +958,7 @@ export default {
         dataObject[cols[index]] = item;
       });
 
-      if (this.disableUpdate) return;
+      if (this.disableUpdate || !this.getSlpTimer) return;
 
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
@@ -582,9 +978,7 @@ export default {
       this.updateEchart();
     },
     updateEchart() {
-      this.myChart.setOption(
-        this.opt
-      );
+      this.myChart.setOption(this.opt);
 
       const option = {
         graphic: echarts.util.map(this.data, (item, dataIndex) => {
@@ -594,7 +988,7 @@ export default {
             shape: {
               cx: 0,
               cy: 0,
-              r: 25 * this.clientHeight / 736
+              r: (25 * this.clientHeight) / 736
             },
             invisible: true,
             draggable: this.currentMod === 3,
@@ -605,7 +999,7 @@ export default {
           };
         })
       };
-      
+
       option.graphic.push({
         type: 'text',
         right: 'center',
@@ -613,17 +1007,17 @@ export default {
         style: {
           text: '舒 适 区',
           y: this.clientHeight * 0.18,
-          font: `${30 * this.clientHeight / 736}px Microsoft YaHei`,
-          fill: 'rgb(123, 204, 248)',
-        },
+          font: `${(30 * this.clientHeight) / 736}px Microsoft YaHei`,
+          fill: 'rgb(123, 204, 248)'
+        }
       });
 
       this.myChart.setOption(option);
-    
+
       window.addEventListener('resize', this.updatePosition);
 
       this.myChart.on('dataZoom', this.updatePosition);
-    
+
       this.updatePosition(true);
     },
     updateData(key) {
@@ -635,7 +1029,7 @@ export default {
       if (type === 'on') {
         this.changeDataObject({
           SwhSlp: 0,
-          SlpMod: 0,  
+          SlpMod: 0
         });
         return;
       }
@@ -644,19 +1038,19 @@ export default {
         case 'expert':
           this.changeDataObject({
             SwhSlp: 1,
-            SlpMod: 2,
+            SlpMod: 2
           });
           break;
         case 'nap':
           this.changeDataObject({
             SwhSlp: 1,
-            SlpMod: 4,
+            SlpMod: 4
           });
           break;
         case 'tradition':
           this.changeDataObject({
             SwhSlp: 1,
-            SlpMod: 1,
+            SlpMod: 1
           });
           break;
         case 'diy':
@@ -690,27 +1084,32 @@ export default {
 
       this.$set(this.data[dataIndex], 1, data);
 
-      this.position[dataIndex] = this.myChart.convertToPixel('grid', this.data[dataIndex]);
+      this.position[dataIndex] = this.myChart.convertToPixel(
+        'grid',
+        this.data[dataIndex]
+      );
 
       this.myChart.setOption({
-        series: [{
-          id: 'a',
-          type: 'line',
-          smooth: false,
-          symbol: 'circle',
-          symbolSize: 8 * this.clientHeight / 736,
-          data: this.data,
-          backgroundColor: 'red',
-          itemStyle: {
-            color: '#fff',
-            borderColor: '#fff',
-            borderWidth: 1.2
-          },
-          lineStyle: {
-            color: 'rgb(226, 237, 245)',
-            width: 1,
-          },
-        }]
+        series: [
+          {
+            id: 'a',
+            type: 'line',
+            smooth: false,
+            symbol: 'circle',
+            symbolSize: (8 * this.clientHeight) / 736,
+            data: this.data,
+            backgroundColor: 'red',
+            itemStyle: {
+              color: '#fff',
+              borderColor: '#fff',
+              borderWidth: 1.2
+            },
+            lineStyle: {
+              color: 'rgb(226, 237, 245)',
+              width: 1
+            }
+          }
+        ]
       });
 
       this.updatePosition();
@@ -720,7 +1119,7 @@ export default {
       this.myChart.dispatchAction({
         type: 'showTip',
         seriesIndex: 0,
-        dataIndex,
+        dataIndex
       });
     },
     hideTooltip() {
@@ -731,7 +1130,7 @@ export default {
     saveSlp() {
       const setData = {
         SwhSlp: 1,
-        SlpMod: 3,
+        SlpMod: 3
       };
       this.temArr.forEach((item, index) => {
         const keyL = `Slp1L${index + 1}`;
@@ -747,7 +1146,7 @@ export default {
         this.changeDataObject({
           SwhSlp: 0,
           SlpMod: 0,
-          SmartSlpMod: 0,
+          SmartSlpMod: 0
         });
       } else {
         this.selectItem = key;
@@ -756,21 +1155,21 @@ export default {
             this.changeDataObject({
               SwhSlp: 1,
               SlpMod: 2,
-              SmartSlpMod: 1,
+              SmartSlpMod: 1
             });
             break;
           case 'cool':
             this.changeDataObject({
               SwhSlp: 1,
               SlpMod: 2,
-              SmartSlpMod: 2,
+              SmartSlpMod: 2
             });
             break;
           case 'heat':
             this.changeDataObject({
               SwhSlp: 1,
               SlpMod: 2,
-              SmartSlpMod: 3,
+              SmartSlpMod: 3
             });
             break;
           case 'diy':
@@ -787,13 +1186,13 @@ export default {
           this.changeDataObject({
             SwhSlp: 1,
             SlpMod: 1,
-            SmartSlpMod: 0,
+            SmartSlpMod: 0
           });
         } else {
           this.changeDataObject({
             SwhSlp: 0,
             SlpMod: 0,
-            SmartSlpMod: 0,
+            SmartSlpMod: 0
           });
           this.selectItem = '';
         }
@@ -807,7 +1206,7 @@ export default {
         } else {
           this.changeDataObject({
             SwhSlp: 0,
-            SlpMod: 0,
+            SlpMod: 0
           });
         }
       }
@@ -819,7 +1218,7 @@ export default {
     },
     ligBtn(type) {
       this.changeDataObject({
-        Lig: type - 0,
+        Lig: type - 0
       });
     },
     clickRadio(e) {
@@ -840,27 +1239,27 @@ export default {
       let setData = {
         SwhSlp: 1,
         SlpMod: 3,
-        SmartSlpMod: 0,
+        SmartSlpMod: 0
       };
       if (!this.$store.state.dataObject.Slp1L1) {
         setData = {
           ...setData,
-          Slp1L1: 250, 
+          Slp1L1: 250,
           Slp1H1: 0,
-          Slp1L2: 4, 
-          Slp1H2: 1, 
-          Slp1L3: 14, 
-          Slp1H3: 1, 
-          Slp1L4: 14, 
-          Slp1H4: 1, 
-          Slp1L5: 14, 
-          Slp1H5: 1, 
-          Slp1L6: 14, 
-          Slp1H6: 1, 
-          Slp1L7: 14, 
-          Slp1H7: 1, 
-          Slp1L8: 4, 
-          Slp1H8: 1,
+          Slp1L2: 4,
+          Slp1H2: 1,
+          Slp1L3: 14,
+          Slp1H3: 1,
+          Slp1L4: 14,
+          Slp1H4: 1,
+          Slp1L5: 14,
+          Slp1H5: 1,
+          Slp1L6: 14,
+          Slp1H6: 1,
+          Slp1L7: 14,
+          Slp1H7: 1,
+          Slp1L8: 4,
+          Slp1H8: 1
         };
       }
       this.changeDataObject(setData);
