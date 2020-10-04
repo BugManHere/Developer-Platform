@@ -884,7 +884,7 @@ export default {
       if (!this.SwhSlp) {
         if (obj.SwhSlp && this.Mod === 1) {
           control.AntiDirectBlow = 1;
-          // control.SwUpDn = 0;
+          control.SwUpDn = 0;
           control.Tur = 0;
           control.Quiet = 2;
           control.WdSpd = 1;
