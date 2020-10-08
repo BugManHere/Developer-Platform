@@ -196,6 +196,10 @@ export default {
       this.timer = setTimeout(() => {
         $('#slider').roundSlider(this.sliderValueMap);
         this.sliderValueMap = {};
+        // 关闭更新标志位
+        this.$nextTick(() => {
+          this.temChange = false;
+        });
       }, 20);
     }
   }
