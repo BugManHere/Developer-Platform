@@ -22,7 +22,8 @@ import { SET_STATE } from './store/types';
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 
 axios.defaults.timeout = 5000; // 响应时间
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
+axios.defaults.headers.post['Content-Type'] =
+  'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
 
 // 安装插件
 Vue.use(Vuex);
@@ -56,9 +57,9 @@ async function createVue() {
     i18n
   });
   window.myvm = vm;
-  
+
   console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
-  
+
   // 如果是开发模式，加载服务器/缓存配置
   if (dev) {
     window.storage = new Storage();
@@ -72,7 +73,8 @@ async function createVue() {
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
-          id, admin
+          id,
+          admin
         }
       });
       // 清空缓存配置
@@ -86,7 +88,7 @@ async function createVue() {
       // 更新mac
       vm.$store.commit(SET_STATE, ['mac', oldId]);
     }
-    
+
     vm.$router.push('/Home');
   } else {
     vm.init();
@@ -106,7 +108,8 @@ class Storage {
   }
   // 初始化
   initRun() {
-    this.source[store.state.mac] || window.localStorage.setItem(store.state.mac, '{}');
+    this.source[store.state.mac] ||
+      window.localStorage.setItem(store.state.mac, '{}');
   }
   // 设置数据
   set(key, value, mac = store.state.mac) {
@@ -154,7 +157,9 @@ window.backButton = function backButton() {
   if (name === 'Error' || name === 'Home' || name === 'Offline') {
     closePage();
   } else if (name === 'Voice' || name === 'Sweep' || name === 'Air') {
-    router.push({ name: 'Home' }).catch(err => { err; });
+    router.push({ name: 'Home' }).catch(err => {
+      err;
+    });
   } else {
     router.back(-1);
   }
@@ -194,4 +199,3 @@ window.onResume = function onResume(msg) {
 window.init = function init() {
   createVue();
 };
-
