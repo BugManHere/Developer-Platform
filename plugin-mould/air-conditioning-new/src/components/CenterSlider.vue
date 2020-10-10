@@ -40,10 +40,10 @@
 <script>
 import { Block } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import WorkLogin from '@logic/work';
+import WorkLogic from '@logic/work';
 
 export default {
-  mixins: [WorkLogin],
+  mixins: [WorkLogic],
   components: {
     [Block.name]: Block
   },

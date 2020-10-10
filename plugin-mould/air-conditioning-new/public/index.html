@@ -5,10 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="format-detection" content="telephone=no,address=no,email=no" />
-    <meta
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
-      name="viewport"
-    />
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>iotfe</title>
     <% if (NODE_ENV === 'testing') { %>
@@ -19,13 +16,13 @@
         var ver = result && result[1] && result[1].substr(0, 2);
         return parseInt(ver) >= 8;
       }
-      var script = document.createElement("script");
+      var script = document.createElement('script');
       if (trigger()) {
         // script.src = "http://iotfe.gree.com/ios/cordova.js";
-        script.src = "<%= BASE_URL %>static/plugin/ios/cordova.js"; // 本地调试
+        script.src = '<%= BASE_URL %>static/plugin/ios/cordova.js'; // 本地调试
       } else {
         // script.src = "http://iotfe.gree.com/cordova.js";
-        script.src = "<%= BASE_URL %>static/plugin/cordova.js"; // 本地调试;
+        script.src = '<%= BASE_URL %>static/plugin/cordova.js'; // 本地调试;
       }
       document.head.appendChild(script);
     </script>
@@ -142,8 +139,7 @@
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. 
-        Please enable it to continue.</strong>
+      <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

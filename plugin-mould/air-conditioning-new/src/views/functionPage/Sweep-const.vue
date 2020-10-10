@@ -24,7 +24,14 @@
           :select-default="selectDefault"
           @change="sweepUdChangeHandler"
           v-if="touchId === 2"
-        ></gree-sweep-select>
+        >
+        </gree-sweep-select>
+        <div class="sweep-body-img-horizontal" v-if="touchId === 1">
+          <img src="../../assets/img/functionBtn/sweep/ac_horizontal.png" />
+        </div>
+        <div class="sweep-body-img-vertical" v-if="touchId === 2">
+          <img src="../../assets/img/functionBtn/sweep/ac_vertical.png" />
+        </div>
       </div>
     </gree-page>
   </gree-view>
@@ -100,6 +107,22 @@ export default {
           Toast.info(`${this.$language('sweep.sweep_powoff_tips')}`);
         }
         this.turnBack();
+      }
+    },
+    selectSwUpDn(newVal) {
+      const touchId = this.$route.params.id;
+      if (touchId === 2) {
+        this.selectDefault = newVal;
+        this.touchId = 0;
+        this.$nextTick(() => (this.touchId = touchId));
+      }
+    },
+    selectSwingLfRig(newVal) {
+      const touchId = this.$route.params.id;
+      if (touchId === 1) {
+        this.selectDefault = newVal;
+        this.touchId = 0;
+        this.$nextTick(() => (this.touchId = touchId));
       }
     }
   },
@@ -200,11 +223,38 @@ export default {
 <style lang="scss">
 .page-sweep {
   .sweep-body {
+    margin-top: 120px;
+    position: relative;
     height: 80%;
     display: flex;
     align-items: center;
+    &-img-vertical {
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      img {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 996px;
+      }
+    }
+    &-img-horizontal {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      img {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 280px;
+        width: 750px;
+      }
+    }
   }
   canvas {
+    position: relative;
     opacity: 0 !important;
   }
   .sweep-select-horizontal {
@@ -267,6 +317,8 @@ export default {
   }
 
   .sweep-select-vertical {
+    position: relative;
+    left: -100px;
     margin: 0 auto;
     width: 696px;
     height: 1174px;

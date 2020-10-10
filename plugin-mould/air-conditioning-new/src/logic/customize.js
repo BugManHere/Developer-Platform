@@ -1,4 +1,5 @@
-import { timerListDevice } from '@PluginInterface';
+import Vue from 'vue';
+import { timerListDevice, showToast } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
@@ -67,9 +68,31 @@ const Customize = {
         FuncPopup: () => {
           this.setDataObject({ FuncPopup: 1 });
         },
-        NoiseSet: () => {
-          console.log();
-        }
+        BottomSleep: currentStatus => {
+          switch (currentStatus) {
+            case 'status_1':
+              showToast('睡眠已关闭', 0);
+              break;
+            case 'default':
+              showToast('睡眠已开启', 0);
+              break;
+            default:
+              break;
+          }
+        },
+        'BottomSleep(ordinary)': currentStatus => {
+          switch (currentStatus) {
+            case 'status_1':
+              showToast('睡眠已关闭', 0);
+              break;
+            case 'default':
+              showToast('睡眠已开启', 0);
+              break;
+            default:
+              break;
+          }
+        },
+        NoiseSet: () => {}
       };
     },
     /**
@@ -85,6 +108,11 @@ const Customize = {
           if (this.dataObject.functype === 1) {
             this.g_funcDefineMap.AppTimer.type = 'inertia';
           }
+        },
+        // 噪声二级页面方法
+        NoiseSet: () => {
+          // const NoiseConfig = require('@views/functionPage/Noise.js');
+          // this.$set(this, 'NoiseConfig', NoiseConfig);
         }
       };
     }
@@ -111,6 +139,7 @@ const Customize = {
       try {
         this.customize[key](currentStatus, afterStatus);
       } catch (e) {
+        console.log(e);
         console.log(`%c 找不到${key}的自定义函数`, 'color: blue');
       }
     }

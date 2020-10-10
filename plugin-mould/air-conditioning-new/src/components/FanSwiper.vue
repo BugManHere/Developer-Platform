@@ -2,7 +2,7 @@
   <gree-popup v-model="showPopup" position="bottom">
     <div class="fan-swiper-box" v-if="showSwiper">
       <div v-text="title" class="swiper-title" />
-      <swiper ref="fanSwiper" :options="swiperOption" class="fan-swiper-main" @slideChange="setFan" @touchMove="isTouch = true" @touchEnd="clearTouch">
+      <swiper ref="fanSwiper" :options="swiperOption" class="fan-swiper-main" @slideChange="setFan" @touchMove="moveTouch" @touchEnd="clearTouch">
         <swiper-slide v-for="(fan, index) in fanData" :key="index">
           <div v-text="fan.text" class="slide-text" />
         </swiper-slide>
@@ -16,10 +16,10 @@ import { Popup } from 'gree-ui';
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import WorkLogin from '@logic/work';
+import WorkLogic from '@logic/work';
 
 export default {
-  mixins: [WorkLogin],
+  mixins: [WorkLogic],
   components: {
     [Popup.name]: Popup,
     Swiper,
@@ -35,7 +35,9 @@ export default {
         direction: 'vertical',
         centeredSlides: true,
         roundLengths: true,
-        slidesPerView: 5
+        slidesPerView: 5,
+        touchRatio: 0.5,
+        observer: true
       },
       fanStatusList: [], // 风档的顺序
       currentStatus: '' // 当前状态
@@ -47,6 +49,9 @@ export default {
     }),
     swiper() {
       return this.$refs.fanSwiper.$swiper;
+    },
+    slideStep() {
+      return this.swiper && 1 / (this.swiper.slides.length - 1);
     },
     disableSwiper() {
       return this.g_hideStateArr.some(state => state.includes('FanPopup'));
@@ -137,6 +142,7 @@ export default {
       if (this.showSwiper && this.swiper) {
         const index = this.fanData.findIndex(fan => fan.key === this.currentStatus);
         this.swiper.slideTo(index, 500);
+        this.imshowSelect(-1);
       }
     },
     setFan() {
@@ -170,9 +176,33 @@ export default {
       setData[json] = value;
       this.changeData(setData);
     },
+    // 亮起当前滑动项
+    imshowSelect(index) {
+      this.swiper.slides.forEach((slide, slideIndex) => {
+        let className = this.swiper.slides[slideIndex].className;
+        if (slideIndex === index) {
+          className = className.replace(' slide-select', '');
+          className += ' slide-select';
+        } else {
+          className = className.replace(' slide-select', '');
+        }
+        this.swiper.slides[slideIndex].className = className;
+      });
+    },
     clearTouch() {
       this.$nextTick(() => {
         this.isTouch = false;
+      });
+    },
+    moveTouch() {
+      this.$nextTick(() => {
+        const progress = this.swiper.progress;
+        const len = this.swiper.slides.length - 1;
+        let index = Math.round(progress / this.slideStep);
+        index > len && (index = len);
+        index < 0 && (index = 0);
+        this.imshowSelect(index);
+        this.isTouch = true;
       });
     }
   }

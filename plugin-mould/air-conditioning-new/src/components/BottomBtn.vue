@@ -31,10 +31,10 @@ import { Row, Col, ToolBar } from 'gree-ui';
 import { mapState } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
 import Customize from '@logic/customize';
-import WorkLogin from '@logic/work';
+import WorkLogic from '@logic/work';
 
 export default {
-  mixins: [WorkLogin, Customize],
+  mixins: [WorkLogic, Customize],
   components: {
     [Row.name]: Row,
     [Col.name]: Col,

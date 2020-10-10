@@ -1,5 +1,5 @@
 <template>
-  <gree-view bg-color="#404040">
+  <gree-view bg-color="#F4F4F4">
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.AssHt') }}</gree-header>
       <gree-radio-list :options="modes" icon-size="md" :value="AssHt" @change="setAssHt"></gree-radio-list>

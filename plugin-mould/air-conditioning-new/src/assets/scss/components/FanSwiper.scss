@@ -32,9 +32,16 @@
         color: $fontColor;
       }
       &.swiper-slide-active {
-        opacity: 1;
+        transform: scale(1.2) !important;
+        opacity: 1 !important;
         .slide-text {
-          transform: scale(1.2);
+          color: #619ce7 !important;
+        }
+      }
+      &.slide-select {
+        transform: scale(1.1);
+        opacity: 0.75;
+        .slide-text {
           color: #619ce7 !important;
         }
       }

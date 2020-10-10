@@ -1,4 +1,5 @@
 module.exports = {
+  name: '空调',
   home: {
     power: '开关',
     powerOn: '已开机',
@@ -69,6 +70,7 @@ module.exports = {
     ModPopup: '模式',
     FanPopup: '风速',
     BottomSleep: '睡眠',
+    'BottomSleep(ordinary)': '睡眠',
     FuncPopup: '高级',
     TemStep: '温度间隔',
     TemUn: '温度单位',
@@ -115,5 +117,11 @@ module.exports = {
   noise: {
     title: '室内噪音',
     text: '请设置噪声大小'
+  },
+  offline: {
+    txt: '断开连接 ...',
+    tip:
+      '1. 设备是否连接上电源？<br> 2. 设备是否关闭了WiFi功能？按空调遥控器上的<br>&nbsp;&nbsp;“WiFi”按键打开。<br> 3. 拔掉电源插头再插上试试看。<br> 4.  路由器名称和密码是否有变动？若有变动则需要<br>&nbsp;&nbsp;&nbsp;&nbsp;<span id="btn">重新添加设备</span>。',
+    bottom: '如排查以上原因后仍未恢复连接，您可尝试重置WiFi。'
   }
 };
