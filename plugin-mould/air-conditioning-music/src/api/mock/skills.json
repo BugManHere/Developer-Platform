@@ -1,0 +1,465 @@
+[
+  {
+    "domain": "娱乐",
+    "data": [
+      {
+        "id": 75,
+        "name": "儿童故事",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/kids_stories.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/kids_stories.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/kids_stories.png",
+        "illustrate": "我想听小猪佩奇的故事",
+        "detail": {
+          "name": "儿童故事",
+          "introduce": "我口袋里有超多故事哟，一起去另一个世界探险吧。",
+          "illustrate": [
+            "我想听小猪佩奇的故事",
+            "给我讲个故事吧"
+          ],
+          "direction_use": "格林童话、睡前故事、神话故事、寓言故事等多种故事资源。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/kids_stories.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/kids_stories.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/kids_stories.png"
+        }
+      },
+      {
+        "id": 74,
+        "name": "儿歌",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/child_rhyme.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/child_rhyme.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/child_rhyme.png",
+        "illustrate": "我想听儿歌",
+        "detail": {
+          "name": "儿歌",
+          "introduce": "轻快的音符和旋律伴你度过春夏秋冬。",
+          "illustrate": [
+            "我想听儿歌",
+            "播放儿歌"
+          ],
+          "direction_use": "优质儿歌资源。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/child_rhyme.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/child_rhyme.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/child_rhyme.png"
+        }
+      },
+      {
+        "id": 76,
+        "name": "音乐",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/kugou.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/kugou.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/kugou.png",
+        "illustrate": "放首刘德华的冰雨",
+        "detail": {
+          "name": "音乐",
+          "introduce": "好听的音乐我都有，我们一起来享受一场听觉盛宴吧。",
+          "illustrate": [
+            "放首刘德华的冰雨",
+            "我想听周杰伦的歌"
+          ],
+          "direction_use": "热门歌曲、新歌排行等。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/kugou.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/kugou.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/kugou.png"
+        }
+      },
+      {
+        "id": 78,
+        "name": "电台",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/fm.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/fm.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/fm.png",
+        "illustrate": "我要听国学",
+        "detail": {
+          "name": "电台",
+          "introduce": "搜索或播放关于广播电台的信息。",
+          "illustrate": [
+            "我要听国学",
+            "讲个童话故事"
+          ],
+          "direction_use": "支持播放儿童故事、国学故事。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/fm.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/fm.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/fm.png"
+        }
+      },
+      {
+        "id": 66,
+        "name": "声音百科",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/sound_an.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/sound_an.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/sound_an.png",
+        "illustrate": "我想听下雨的声音",
+        "detail": {
+          "name": "声音百科",
+          "introduce": "声音百科，感受声之魔力",
+          "illustrate": [
+            "我想听下雨的声音",
+            "播放小猫的叫声"
+          ],
+          "direction_use": "支持几百种声音查询，睡眠音频陪你度过失眠的夜晚",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/sound_an.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/sound_an.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/sound_an.png"
+        }
+      }
+    ],
+    "total": 5
+  },
+  {
+    "domain": "教育",
+    "data": [
+      {
+        "id": 16,
+        "name": "古诗",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/ancient_poetry.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/ancient_poetry.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/ancient_poetry.png",
+        "illustrate": "静夜思的作者是谁",
+        "detail": {
+          "name": "古诗",
+          "introduce": "唐诗宋词等古诗属性。",
+          "illustrate": [
+            "静夜思的作者是谁",
+            "好雨知时节是出自哪首诗",
+            "关于荷花的诗"
+          ],
+          "direction_use": "可以查询古诗全文，古诗作者，古诗标题以及古诗含义。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/ancient_poetry.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/ancient_poetry.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/ancient_poetry.png"
+        }
+      },
+      {
+        "id": 17,
+        "name": "成语",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/idiom.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/idiom.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/idiom.png",
+        "illustrate": "叶公好龙是什么意思",
+        "detail": {
+          "name": "成语",
+          "introduce": "想知道更多成语知识快来问我吧。",
+          "illustrate": [
+            "叶公好龙是什么意思",
+            "负荆请罪出自哪里",
+            "山盟海誓的近义词"
+          ],
+          "direction_use": "支持查询成语的含义、成语背后的故事、成语造句、成语的出处，同义词和反义词等。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/idiom.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/idiom.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/idiom.png"
+        }
+      },
+      {
+        "id": 18,
+        "name": "问答世界之最",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/world_greatest.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/world_greatest.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/world_greatest.png",
+        "illustrate": "世界上最高的山",
+        "detail": {
+          "name": "问答世界之最",
+          "introduce": "帮您科普世界之最，了解更多知识。",
+          "illustrate": [
+            "世界上最高的山",
+            "中国最长的河流"
+          ],
+          "direction_use": "回答带有世界之最属性的问题。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/world_greatest.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/world_greatest.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/world_greatest.png"
+        }
+      },
+      {
+        "id": 19,
+        "name": "百科",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/baike.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/baike.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/baike.png",
+        "illustrate": "氨基酸是什么",
+        "detail": {
+          "name": "百科",
+          "introduce": "搜索百科。",
+          "illustrate": [
+            "氨基酸是什么",
+            "林肯是谁"
+          ],
+          "direction_use": "专有名词的含义查询。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/baike.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/baike.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/baike.png"
+        }
+      },
+      {
+        "id": 70,
+        "name": "人物问答",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/character_planet.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/character_planet.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/character_planet.png",
+        "illustrate": "鲁迅的父亲是谁",
+        "detail": {
+          "name": "人物问答",
+          "introduce": "人物百科全书",
+          "illustrate": [
+            "鲁迅的父亲是谁",
+            "孔子是哪个朝代的人"
+          ],
+          "direction_use": "可查询各大人物的相关知识",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/character_planet.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/character_planet.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/character_planet.png"
+        }
+      },
+      {
+        "id": 71,
+        "name": "十万个为什么",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/thousand_whys.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/thousand_whys.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/thousand_whys.png",
+        "illustrate": "月亮为什么会发光",
+        "detail": {
+          "name": "十万个为什么",
+          "introduce": "你问我答，满足你的好奇心",
+          "illustrate": [
+            "月亮为什么会发光",
+            "水为什么会结冰"
+          ],
+          "direction_use": "十万个为什么，让我来告诉你吧",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/thousand_whys.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/thousand_whys.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/thousand_whys.png"
+        }
+      },
+      {
+        "id": 72,
+        "name": "万物起源",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/origin_all.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/origin_all.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/origin_all.png",
+        "illustrate": "电灯是谁发明的",
+        "detail": {
+          "name": "万物起源",
+          "introduce": "天地之始，万物之源",
+          "illustrate": [
+            "电灯是谁发明的",
+            "计算机是谁发明的"
+          ],
+          "direction_use": "可查询各类发明、物品的起源",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/origin_all.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/origin_all.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/origin_all.png"
+        }
+      }
+    ],
+    "total": 7
+  },
+  {
+    "domain": "生活",
+    "data": [
+      {
+        "id": 1,
+        "name": "天气",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/weather.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/weather.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/weather.png",
+        "illustrate": "今天天气怎么样",
+        "detail": {
+          "name": "天气",
+          "introduce": "可以查询当天和未来七天内的天气预报。",
+          "illustrate": [
+            "今天天气怎么样",
+            "明天适合穿什么衣服"
+          ],
+          "direction_use": "可以查询天气、冷热、气象、湿度、空气质量、紫外线等，还可以查询活动、查询服装等。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/weather.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/weather.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/weather.png"
+        }
+      },
+      {
+        "id": 4,
+        "name": "翻译",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/translate.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/translate.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/translate.png",
+        "illustrate": "苹果用英语怎么说",
+        "detail": {
+          "name": "翻译",
+          "introduce": "你的翻译小帮手。",
+          "illustrate": [
+            "苹果用英语怎么说",
+            "今天天气怎么样用英语怎么说"
+          ],
+          "direction_use": "中文与英文之间的单词、句子互译。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/translate.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/translate.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/translate.png"
+        }
+      },
+      {
+        "id": 6,
+        "name": "时间节日",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/time_nodes.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/time_nodes.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/time_nodes.png",
+        "illustrate": "今天几号了",
+        "detail": {
+          "name": "时间节日",
+          "introduce": "与时间相关的信息我都可以告诉你哦。",
+          "illustrate": [
+            "今天几号了",
+            "父亲节还有几天",
+            "中秋节有什么习俗"
+          ],
+          "direction_use": "可以查时间，日期，星期，节日，放假安排以及节气名俗等。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/time_nodes.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/time_nodes.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/time_nodes.png"
+        }
+      },
+      {
+        "id": 7,
+        "name": "地理信息查询",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/geographic_query.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/geographic_query.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/geographic_query.png",
+        "illustrate": "黄山在哪里",
+        "detail": {
+          "name": "地理信息查询",
+          "introduce": "我可以为您查询山脉、海洋、省会、省长、大学、景点等。",
+          "illustrate": [
+            "黄山在哪里",
+            "中国最大的海洋是什么",
+            "广东的省会"
+          ],
+          "direction_use": "查地形，查询省会、查询各省的省长、查询大学的属性、查询景点相关的信息。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/geographic_query.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/geographic_query.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/geographic_query.png",
+          "picture": "https://nlu.gree.com/app/skill/picture/back.png"
+        }
+      },
+      {
+        "id": 8,
+        "name": "科学查询",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/scientific_inquiry.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/scientific_inquiry.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/scientific_inquiry.png",
+        "illustrate": "一加一等于几",
+        "detail": {
+          "name": "科学查询",
+          "introduce": "单位不知道怎么换算，想用计算器，那就唤醒我吧，我来帮助您",
+          "illustrate": [
+            "一加一等于几",
+            "光年是什么单位"
+          ],
+          "direction_use": "支持单位转换，计算器以及单位查询。",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/scientific_inquiry.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/scientific_inquiry.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/scientific_inquiry.png"
+        }
+      },
+      {
+        "id": 63,
+        "name": "食物问答",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/dining_hall.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/dining_hall.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/dining_hall.png",
+        "illustrate": "一个苹果的热量是多少",
+        "detail": {
+          "name": "食物问答",
+          "introduce": "健康生活，从我做起",
+          "illustrate": [
+            "一个苹果的热量是多少",
+            "鸡蛋有什么营养"
+          ],
+          "direction_use": "可查询食物热量、营养、减肥禁忌等健康知识",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/dining_hall.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/dining_hall.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/dining_hall.png"
+        }
+      },
+      {
+        "id": 64,
+        "name": "闹钟",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/alarm.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/alarm.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/alarm.png",
+        "illustrate": "明早七点叫我起床",
+        "detail": {
+          "name": "闹钟",
+          "introduce": "小懒猪，该起床了",
+          "illustrate": [
+            "明早七点叫我起床",
+            "帮我定一个明天上午七点的闹钟"
+          ],
+          "direction_use": "可提供闹铃服务，定点铃响",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/alarm.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/alarm.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/alarm.png"
+        }
+      },
+      {
+        "id": 65,
+        "name": "汽车问答",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/car.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/car.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/car.png",
+        "illustrate": "福克斯操控怎么样",
+        "detail": {
+          "name": "汽车问答",
+          "introduce": "汽车之家",
+          "illustrate": [
+            "福克斯操控怎么样",
+            "朗逸加什么型号的汽油"
+          ],
+          "direction_use": "可查询大部分汽车相关知识",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/car.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/car.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/car.png"
+        }
+      },
+      {
+        "id": 67,
+        "name": "提醒",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/remind.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/remind.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/remind.png",
+        "illustrate": "下午五点提醒我写作业",
+        "detail": {
+          "name": "提醒",
+          "introduce": "语音便签，准确提醒",
+          "illustrate": [
+            "下午五点提醒我写作业",
+            "明早八点提醒我喝牛奶"
+          ],
+          "direction_use": "可定点播报提醒事项，按时准确的提醒",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/remind.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/remind.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/remind.png"
+        }
+      },
+      {
+        "id": 73,
+        "name": "植物问答",
+        "icon": "https://nlu.gree.com/app/skill/icon/ios/list/botany.png",
+        "androidIcon": "https://nlu.gree.com/app/skill/icon/android/list/botany.png",
+        "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/list/botany.png",
+        "illustrate": "荔枝什么季节成熟",
+        "detail": {
+          "name": "植物问答",
+          "introduce": "植物记",
+          "illustrate": [
+            "荔枝什么季节成熟",
+            "玫瑰的花期有多长"
+          ],
+          "direction_use": "查询各类植物相关知识",
+          "icon": "https://nlu.gree.com/app/skill/icon/ios/list/botany.png",
+          "androidIcon": "https://nlu.gree.com/app/skill/icon/android/info/botany.png",
+          "iosIcon": "https://nlu.gree.com/app/skill/icon/ios/info/botany.png"
+        }
+      }
+    ],
+    "total": 10
+  }
+]

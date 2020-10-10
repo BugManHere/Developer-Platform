@@ -9,11 +9,11 @@ import { Popup } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
 import BtnPopup from './index';
-import WorkLogin from '@logic/work';
+import WorkLogic from '@logic/work';
 import Customize from '@logic/customize';
 
 export default {
-  mixins: [WorkLogin, Customize],
+  mixins: [WorkLogic, Customize],
   components: {
     BtnPopup,
     [Popup.name]: Popup

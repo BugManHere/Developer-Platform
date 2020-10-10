@@ -42,6 +42,8 @@ import FanSwiper from '@/components/FanSwiper';
 import CenterSlider from '@/components/CenterSlider';
 import { closePage, editDevice, getCurrentMode, getCCcmd } from '@PluginInterface';
 import LogicWatch from '@logic/watch';
+// const { funcDefine_active } = require('@/stateMachine/computed');
+// const { funcDefine } = require('@/stateMachine/base');
 
 export default {
   mixins: [LogicWatch],
@@ -85,6 +87,7 @@ export default {
       if (!this.g_funcDefine_active.filter(module => module.type === 'active-button').length) return [];
       const result = this.g_funcDefine.map(func => {
         const id = func.identifier;
+        if (!this.g_statusMap[id]) return {};
         const statusName = this.g_statusMap[id].status;
         const miniIcon = func.statusDefine[statusName].miniIcon;
         return miniIcon;
@@ -96,6 +99,7 @@ export default {
     this.$nextTick(() => {
       this.setCheckObject(this.dataObject);
     });
+    setInterval(() => {}, 1000);
   },
   methods: {
     ...mapMutations({

@@ -10,7 +10,7 @@ const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarni
 const Test = r => require.ensure([], () => r(require('./views/functionPage/Test')));
 const SweepConst = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
 const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
-const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise')));
+const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise.vue')));
 const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
 const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
 

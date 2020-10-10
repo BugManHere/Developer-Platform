@@ -23,7 +23,8 @@
       .rs-block {
         background-color: transparent;
       }
-      .rs-handle {        border: none;
+      .rs-handle {
+        border: none;
         padding: 7px;
         background-color: #fff;
         &::after {
@@ -43,7 +44,7 @@
         }
       }
       .rs-border {
-        top: .25px;
+        top: 0.25px;
         border: none;
         background: linear-gradient(to right, rgb(242, 246, 247) 0%, rgb(229, 237, 238) 100%);
         // background: transparent;
@@ -203,7 +204,7 @@
     }
   }
   .pow-off {
-    margin-top: 78px;
+    margin-top: 226px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -256,7 +257,7 @@
       transform: scale(1.05);
     }
 
-    100%{
+    100% {
       transform: scale(1);
     }
 
