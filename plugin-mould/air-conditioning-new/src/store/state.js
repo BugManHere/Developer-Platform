@@ -18,7 +18,7 @@ const state = {
     fullstatueJson: '', // config.xml里对应的查询字段
     deviceState: 2, // 设备在线状态，-1离线，2在线
     lang: 'zh_CN', // 语言
-    name: 'RGB盒子'
+    name: 'default'
   },
   devOptions: {
     mid: '',

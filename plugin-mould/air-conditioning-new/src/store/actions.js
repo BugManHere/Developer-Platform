@@ -248,7 +248,7 @@ export default {
    * @description 更新本地数据
    */
   [types.UPDATE_DATAOBJECT]({ commit, state }, dataObject) {
-    if (!state.ableSend && dataObject) {
+    if (!state.dataObject.functype && !state.ableSend && dataObject) {
       commit(types.SET_DATA_OBJECT, dataObject);
       commit(types.SET_CHECK_OBJECT, dataObject);
     }

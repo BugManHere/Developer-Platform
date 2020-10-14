@@ -41,7 +41,7 @@ const LogicPort = {
     work_imshowSlot1() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === 'inertia-imshowSlot1')
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 存在多个的情况时，只取第一个，其他不处理
       if (modules.length) {
         const json = modules[0].json;
@@ -56,7 +56,7 @@ const LogicPort = {
     work_imshowSlot2() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === 'inertia-imshowSlot2')
-        .filter(module => this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 存在多个的情况时，只取第一个，其他不处理
       if (modules.length) {
         const json = modules[0].json;
@@ -71,8 +71,10 @@ const LogicPort = {
     work_temSetJson() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
+      console.log(this.g_funcDefine_inertia.filter(module => module.type === `inertia-${this.work_temKey}`));
+      console.log(this.g_hideStateArr);
       if (modules.length) return modules[0].json;
       return undefined; // 默认字段
     },
@@ -85,7 +87,7 @@ const LogicPort = {
     work_temMinVal() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temMinKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
       if (modules.length) return this.g_inputMap[modules[0].json];
       return 16; // 默认温度最小值
@@ -94,7 +96,7 @@ const LogicPort = {
     work_temMaxVal() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temMaxKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       if (modules.length) return this.g_inputMap[modules[0].json];
       return 30; // 默认温度最大值
     },
