@@ -73,8 +73,6 @@ const LogicPort = {
         .filter(module => module.type === `inertia-${this.work_temKey}`)
         .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
-      console.log(this.g_funcDefine_inertia.filter(module => module.type === `inertia-${this.work_temKey}`));
-      console.log(this.g_hideStateArr);
       if (modules.length) return modules[0].json;
       return undefined; // 默认字段
     },
