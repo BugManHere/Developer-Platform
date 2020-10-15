@@ -175,8 +175,9 @@ export default {
       };
       setTimeout(() => {
         this.$nextTick(() => {
-          cache(isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
-          cache(isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
+          // 此处作了特殊处理，应该去掉感叹号
+          cache(!isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
+          cache(!isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
         });
       }, 0);
     }
