@@ -7,6 +7,7 @@ const state = {
   ableSend: false, // 是否允许发送命令
   loading: false,
   isStHt: false,
+  cloudTimer: false,
   dataObject: {
     Pow: 1,
     Mod: 3,

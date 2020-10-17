@@ -2,7 +2,8 @@ import {
   sendDataToDevice,
   getInfo,
   updateStates,
-  finishLoad
+  finishLoad,
+  getCloudTimerByMac
 } from '@PluginInterface'; // 主体接口
 import {
   GET_DEVICE_INFO,
@@ -115,6 +116,19 @@ function sendControl({ state, commit, dispatch }, dataMap) {
   }, 350);
 }
 
+// 查询云定时
+async function getCloudTimer({ state, commit }) {
+  const res = await getCloudTimerByMac(state.mac);
+  const { timerTasks } = JSON.parse(res);
+  let result = false;
+  if (timerTasks.length) {
+    result = timerTasks.some(task => {
+      return task.timer.status;
+    });
+  }
+  commit(SET_STATE, ['cloudTimer', result]);
+}
+
 /**
  * @description 获取设备在线状态
  */
@@ -153,6 +167,9 @@ function getStatusOfDev({ state, commit, dispatch }) {
         DataObject.AssHt = 1;
       }
 
+      // 云定时
+      DataObject.AppTimer = DataObject.AppTimer || state.cloudTimer;
+
       if (!state.dataObject.functype && !state.uilock) {
         // 非场景时提交数据
         commit(SET_CHECK_OBJECT, DataObject);
@@ -185,6 +202,7 @@ export default {
    * @description 获取设备信息，并开始轮询设备状态
    */
   async [GET_DEVICE_INFO]({ dispatch, commit, state }) {
+    getCloudTimer({ state, commit });
     const _res = await getInfo(state.mac)
       .then(res => {
         return res;
@@ -223,6 +241,7 @@ export default {
       if (_timer === 0) {
         _timer = setInterval(() => {
           getDeviceInfo({ state, commit });
+          getCloudTimer({ state, commit });
           getStatusOfDev({ state, commit });
         }, 5000);
       }
