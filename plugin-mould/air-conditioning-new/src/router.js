@@ -2,17 +2,21 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
-const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
-const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
-const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'ErrorWarning');
+const Home = () => import('@views/Home');
+const Hidden = () => import('@views/Hidden');
+const ErrorWarning = () => import('@views/ErrorWarning');
+const Offline = () => import('@views/Offline');
 
 // 高级功能倒三角进入
-const Test = r => require.ensure([], () => r(require('./views/functionPage/Test')));
-const SweepConst = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
-const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
-const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise.vue')));
-const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
-const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
+export const functionPage = {
+  Test: () => import('@views/functionPage/Test'),
+  SweepConst: () => import('@views/functionPage/SweepConst'),
+  Electric: () => import('@views/functionPage/Electric'),
+  Noise: () => import('@views/functionPage/Noise'),
+  AssHt: () => import('@views/functionPage/AssHt'),
+  UDFanPort: () => import('@views/functionPage/UDFanPort'),
+  AreaFan: () => import('@views/functionPage/AreaFan')
+};
 
 Vue.use(Router);
 
@@ -27,7 +31,10 @@ const router = new Router({
     {
       path: '/Home',
       name: 'Home',
-      component: Home,
+      components: {
+        default: Home,
+        hidden: Hidden
+      },
       meta: {
         keepAlive: true
       }
@@ -38,6 +45,11 @@ const router = new Router({
       component: Offline
     },
     {
+      path: '/Hidden',
+      name: 'Hidden',
+      component: Hidden
+    },
+    {
       path: '/ErrorWarning',
       name: 'ErrorWarning',
       component: ErrorWarning
@@ -45,32 +57,39 @@ const router = new Router({
     {
       path: '/Test',
       name: 'Test',
-      component: Test
+      component: functionPage.Test
     },
     {
       path: '/SweepConst',
       name: 'SweepConst',
-      component: SweepConst
+      component: functionPage.SweepConst
     },
     {
       path: '/Electric',
       name: 'Electric',
-      component: Electric
+      component: functionPage.Electric
     },
     {
       path: '/Noise',
       name: 'Noise',
-      component: Noise
+      components: {
+        default: functionPage.Noise
+      }
     },
     {
       path: '/AssHt',
       name: 'AssHt',
-      component: AssHt
+      component: functionPage.AssHt
     },
     {
       path: '/UDFanPort',
       name: 'UDFanPort',
-      component: UDFanPort
+      component: functionPage.UDFanPort
+    },
+    {
+      path: '/AreaFan',
+      name: 'AreaFan',
+      component: functionPage.AreaFan
     }
   ]
 });

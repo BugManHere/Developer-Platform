@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import { timerListDevice, showToast } from '@PluginInterface';
+import { getCloudTimerByMac, showToast } from '@PluginInterface';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 const Customize = {
@@ -17,9 +16,9 @@ const Customize = {
       return {
         AppTimer: () => {
           try {
-            timerListDevice(this.mac);
+            getCloudTimerByMac(this.mac);
           } catch (e) {
-            console.log('%c running timerListDevice()', 'color: blue');
+            console.log('%c running getCloudTimerByMac()', 'color: blue');
           }
         },
         ConstUD: currentStatus => {
@@ -92,7 +91,26 @@ const Customize = {
               break;
           }
         },
-        NoiseSet: () => {}
+        NoiseSet: async () => {
+          // 加载对应页面
+          this.setState({ hiddenComponent: 'Noise' });
+          // 获取对应组件内容
+          const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
+          // 获取需要执行的方法
+          const defaultFunction = await hiddenComponent.getFunc();
+          // 执行二级页面内部方法
+          defaultFunction();
+        },
+        EnvAreaSt: async () => {
+          // 加载对应页面
+          this.setState({ hiddenComponent: 'AreaFan' });
+          // 获取对应组件内容
+          const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
+          // 获取需要执行的方法
+          const defaultFunction = await hiddenComponent.getFunc();
+          // 执行二级页面内部方法
+          defaultFunction();
+        }
       };
     },
     /**
@@ -110,10 +128,7 @@ const Customize = {
           }
         },
         // 噪声二级页面方法
-        NoiseSet: () => {
-          // const NoiseConfig = require('@views/functionPage/Noise.js');
-          // this.$set(this, 'NoiseConfig', NoiseConfig);
-        }
+        NoiseSet: () => {}
       };
     }
   },

@@ -13,14 +13,14 @@ const Electric = r => require.ensure([], () => r(require('./views/functionPage/E
 const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise.vue')));
 const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
 const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
-const MusicCollect = r => require.ensure([], () => r(require('./../src/components/Card/music/page/collect.vue')));
-const MusicDetail = r => require.ensure([], () => r(require('./../src/components/Card/music/page/detail.vue')));
-const MusicPlay = r => require.ensure([], () => r(require('./../src/components/Card/music/page/play.vue')));
-const SkillDetail = r => require.ensure([], () => r(require('./../src/components/Card/skills/detail.vue')));
-const SkillSearchIndex = r => require.ensure([], () => r(require('./../src/components/Card/skills/search/index.vue')));
-const SkillSearchResult = r => require.ensure([], () => r(require('./../src/components/Card/skills/search/result.vue')));
-const VoiceMessageIndex = r => require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/index.vue')));
-const VoiceMessageEdit = r => require.ensure([], () => r(require('./../src/components/Card/skills/voiceMsg/edit.vue')));
+const MusicCollect = r => require.ensure([], () => r(require('@components/card/grown/music/page/Collect.vue')));
+const MusicDetail = r => require.ensure([], () => r(require('@components/card/grown/music/page/Detail.vue')));
+const MusicPlay = r => require.ensure([], () => r(require('@components/card/grown/music/page/Play.vue')));
+const SkillDetail = r => require.ensure([], () => r(require('@components/card/grown/skills/Detail.vue')));
+const SkillSearchIndex = r => require.ensure([], () => r(require('@components/card/grown/skills/search/index.vue')));
+const SkillSearchResult = r => require.ensure([], () => r(require('@components/card/grown/skills/search/Result.vue')));
+const VoiceMessageIndex = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/index.vue')));
+const VoiceMessageEdit = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/Edit.vue')));
 
 Vue.use(Router);
 

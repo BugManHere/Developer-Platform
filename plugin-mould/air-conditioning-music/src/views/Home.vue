@@ -1,5 +1,9 @@
 <template>
-  <gree-view bg-color="#f4f4f4" class="home-view">
+  <gree-view
+    bg-color="#f4f4f4"
+    class="home-view"
+    :style="{ 'background-size': `${bgWidth}px ${bgHeight}px`, 'background-color': skinConfig.color, 'background-image': `url(${skinConfig.homeBg})` }"
+  >
     <!-- 头部 -->
     <div class="page-header">
       <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
@@ -11,8 +15,9 @@
         </a>
       </gree-header>
     </div>
-    <!-- 卡片标题 -->
-    <cardHeader v-show="cardHeaderShow" />
+    <!-- 卡片标题，预留的吸顶位置 -->
+    <div id="blank-box" style="width: auto; height:auto" />
+    <!-- <CardHeader v-show="cardHeaderShow" /> -->
     <gree-page no-navbar class="page-home">
       <!-- 主要内容 -->
       <div class="page-main">
@@ -22,17 +27,12 @@
           <div v-text="SetTem" class="tem-value" />
           <gree-icon name="add" size="xl" />
         </div>
-        <cardHeader :style="cardHeaderShow ? { height: 0 } : {}" />
-        <musicCard />
+        <!-- 卡片 -->
+        <GrownCard />
       </div>
     </gree-page>
     <!-- 尾部 -->
-    <div class="page-footer">
-      <div class="item" v-for="(item, index) in functionList" :key="index">
-        <img :src="item.url" @click="footerFunction(item.key)" />
-        <span>{{ item.name }}</span>
-      </div>
-    </div>
+    <BottomButton />
   </gree-view>
 </template>
 
@@ -48,10 +48,9 @@ import {
   // getMsg
 } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
-import homeConfig from '@/mixins/config/home.js';
 import LogicDefine from '@/logic/define';
-import cardHeader from '@/components/Card/cardHeader';
-import musicCard from '@/components/Card/index';
+import BottomButton from '@/components/BottomButton';
+import GrownCard from '@/components/card/index';
 
 export default {
   components: {
@@ -62,10 +61,10 @@ export default {
     [NoticeBar.name]: NoticeBar,
     [Dialog.name]: Dialog,
     [Icon.name]: Icon,
-    musicCard,
-    cardHeader
+    GrownCard,
+    BottomButton
   },
-  mixins: [homeConfig, LogicDefine],
+  mixins: [LogicDefine],
   data() {
     return {
       onTestFlag: 0,
@@ -74,14 +73,13 @@ export default {
       currentCO2Level: 0,
       currentCO2Img: 0,
       warnningText: false,
-      cardHeaderShow: false,
-      scrollPos: 0,
-      scrollTimer: null,
-      scrollTimer2: null
+      bgWidth: 0,
+      bgHeight: 0
     };
   },
   computed: {
     ...mapState({
+      skinConfig: (state, getters) => getters.skinConfig,
       dataObject: state => state.dataObject,
       devOptions: state => state.devOptions,
       devname: state => state.deviceInfo.name,
@@ -96,28 +94,15 @@ export default {
       Air: state => state.dataObject.Air,
       CO2: state => state.dataObject.CO2,
       CO2Level: state => state.dataObject.CO2Level
-    }),
-    // 左上角小图标
-    miniIcon() {
-      const result = [];
-      // 从所有功能里面搜索
-      this.g_funcDefine.forEach(item => {
-        const id = item.identifier;
-        // 不处于隐藏状态则显示图标
-        if (this.g_hideFuncArr.includes(id)) return;
-        const statusName = this.g_statusMap[id].define.name;
-        const map = {};
-        const imgName = `${item.name}_${statusName}`;
-        // 如果有图片就显示图片，没有图片就显示文字
-        try {
-          map.img = require(`@/assets/img/functionBtn/mini/${imgName}.png`);
-        } catch (err) {
-          err;
-        }
-        map.img && result.push(map);
-      });
-      return result;
-    }
+    })
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.setCheckObject(this.dataObject);
+    });
+    // 背景自适应
+    this.bgWidth = document.body.clientWidth;
+    this.bgHeight = this.bgWidth / 0.5625;
   },
   watch: {
     colorChange: {
@@ -129,40 +114,7 @@ export default {
       immediate: true
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.setCheckObject(this.dataObject);
-    });
-    const dom = document.getElementsByClassName('page-content')[0];
-    dom.addEventListener('scroll', this.getScroll);
-    dom.addEventListener('touchmove', () => {
-      clearTimeout(this.scrollTimer2);
-      this.scrollTimer2 = setTimeout(() => {
-        clearInterval(this.scrollTimer);
-        this.scrollTimer = null;
-      }, 1500);
-      if (this.scrollTimer) return;
-      this.scrollTimer = setInterval(() => {
-        this.getScroll();
-      }, 20);
-    });
-  },
-  // 跳转回来时恢复滚动条
-  activated() {
-    if (this.scrollPos) {
-      this.$nextTick(() => {
-        const dom = document.getElementsByClassName('page-content')[0];
-        dom.scrollTo(0, this.scrollPos);
-      });
-    }
-  },
-  // 离开路由时清除定时器
-  beforeRouteLeave(to, from, next) {
-    clearInterval(this.scrollTimer);
-    clearTimeout(this.scrollTimer2);
-    this.scrollTimer = null;
-    next();
-  },
+
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
@@ -206,13 +158,6 @@ export default {
       console.log(json);
       getCCcmd(this.mac, json, remarks, JSON.stringify(p));
     },
-    // 显示CO2弹框
-    showCO2() {
-      this.currentCO2 = this.CO2;
-      this.currentCO2Level = this.CO2Level;
-      this.currentCO2Img = this.co2Img;
-      this.dialogOpen = true;
-    },
     // 点击10次进入调试模式
     onTest() {
       getCurrentMode().then(res => {
@@ -225,18 +170,6 @@ export default {
             });
         }
       });
-    },
-    getScroll() {
-      const dom = document.getElementsByClassName('page-content')[0];
-      const currentScrollTop = dom.scrollTop;
-      currentScrollTop && (this.scrollPos = currentScrollTop);
-      const imshowTop = document.getElementsByClassName('tem-edit')[0].offsetHeight;
-      if (currentScrollTop >= imshowTop + 2) {
-        this.cardHeaderShow = true;
-      } else {
-        this.cardHeaderShow = false;
-      }
-      this.$forceUpdate();
     }
   }
 };

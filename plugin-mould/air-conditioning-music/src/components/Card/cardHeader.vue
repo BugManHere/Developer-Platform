@@ -1,82 +1,110 @@
 <template>
-  <div class="music-header">
-    <!-- 左边文字 -->
-    <div class="left">
-      <div v-text="'点播'" @click="changeImshow(0)" :class="{ select: imshowType === 0 }" />
-      <div v-text="'技能'" @click="changeImshow(1)" :class="{ select: imshowType === 1 }" />
-    </div>
-    <!-- 右边按钮 -->
-    <div class="right">
-      <img src="@assets/img/music/statistical.png" />
-      <img src="@assets/img/music/history.png" />
+  <!-- <div class="card-header" :style="cardHeaderShow ? { height: 0 } : {}"> -->
+  <div ref="header-box">
+    <div class="card-header" :ref="headerId" :id="headerId">
+      <!-- 左边插槽 -->
+      <div class="left">
+        <slot name="left"></slot>
+      </div>
+      <!-- 右边插槽 -->
+      <div class="right">
+        <slot name="right"></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
+  props: {
+    headerId: String
+  },
   data() {
-    return {};
+    return {
+      cardHeaderShow: false,
+      scrollPos: 0,
+      scrollTimer: null,
+      scrollTimer2: null,
+      fadeHeader: null
+    };
   },
   computed: {
     ...mapState({
       imshowType: state => state.musicData.imshowType
     })
   },
+  mounted() {
+    const dom = document.getElementsByClassName('page-content')[0];
+    dom.addEventListener('scroll', this.getScroll);
+    dom.addEventListener('touchmove', () => {
+      clearTimeout(this.scrollTimer2);
+      this.scrollTimer2 = setTimeout(() => {
+        clearInterval(this.scrollTimer);
+        this.scrollTimer = null;
+      }, 1500);
+      if (this.scrollTimer) return;
+      this.scrollTimer = setInterval(() => {
+        this.getScroll();
+      }, 20);
+    });
+  },
+  // 跳转回来时恢复滚动条
+  activated() {
+    if (this.scrollPos) {
+      this.$nextTick(() => {
+        const dom = document.getElementsByClassName('page-content')[0];
+        dom.scrollTo(0, this.scrollPos);
+      });
+    }
+  },
+  // 离开路由时清除定时器
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.scrollTimer);
+    clearTimeout(this.scrollTimer2);
+    this.scrollTimer = null;
+    next();
+  },
+  watch: {
+    // 吸顶效果
+    cardHeaderShow(newVal) {
+      if (newVal) {
+        document.getElementById('blank-box').appendChild(this.$refs[this.headerId]);
+      } else {
+        this.$refs['header-box'].appendChild(this.$refs[this.headerId]);
+      }
+    }
+  },
   methods: {
-    ...mapMutations({
-      setMusicData: 'SET_MUSIC_DATA'
-    }),
-    changeImshow(type) {
-      this.setMusicData({ imshowType: type });
+    getScroll() {
+      const dom = document.getElementsByClassName('page-content')[0];
+      const currentScrollTop = dom.scrollTop;
+      currentScrollTop && (this.scrollPos = currentScrollTop);
+      const imshowTop = document.getElementsByClassName('tem-edit')[0].offsetHeight;
+      if (currentScrollTop >= imshowTop + 1) {
+        this.cardHeaderShow = true;
+      } else if (currentScrollTop < imshowTop) {
+        this.cardHeaderShow = false;
+      }
+      this.$forceUpdate();
     }
   }
 };
 </script>
 
 <style lang="scss">
-$headerHeight: 142px;
+$cardHeaderHeight: 142px;
 $fontSize: 44px;
-.music-header {
+.card-header {
   position: relative;
   top: 0;
-  border-bottom: 1px solid #f2f2f2;
-  height: $headerHeight;
+  height: $cardHeaderHeight;
   display: flex;
-  justify-content: space-between;
   background: #fff;
   border-radius: 100px 100px 0 0;
   width: 100%;
-  .left {
-    position: relative;
-    padding: 62px 0 0 12px;
-    font-size: $fontSize;
-    width: 380px;
-    display: flex;
-    justify-content: space-around;
-    div {
-      width: 200px;
-      display: flex;
-      justify-content: center;
-    }
-    .select {
-      color: rgb(0, 153, 255);
-      border-bottom: 6px solid rgb(0, 153, 255);
-    }
-  }
-  .right {
-    position: relative;
-    padding-top: 62px;
-    width: 380px;
-    display: flex;
-    justify-content: flex-end;
-    img {
-      width: 60px;
-      height: 54px;
-      padding-right: 70px;
-    }
-  }
+  justify-content: space-between;
+  font-size: $fontSize;
 }
 </style>

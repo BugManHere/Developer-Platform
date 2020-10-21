@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <music-ball />
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
@@ -8,7 +9,12 @@
 </template>
 
 <script>
+import music from '@/components/card/grown/music/Ball';
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    'music-ball': music
+  }
 };
 </script>

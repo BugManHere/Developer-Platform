@@ -13,6 +13,12 @@ let sendTime = 0;
 const { key } = require('@/../plugin.id.json');
 const { moreOption } = require(`@/../../../output/${key}.json`);
 const statueJson2 = moreOption.statueJson2;
+const searchJson = () => {
+  if (window && window.myvm && window.myvm.$store.state.devOptions.searchJson) {
+    return window.myvm.$store.state.devOptions.searchJson;
+  }
+  return moreOption.statueJson2;
+};
 
 // 自定义数据，根据业务更改
 function customizeDataObject(_dataObject) {
@@ -31,10 +37,8 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
-      if (statueJson2.includes(key)) {
-        setOpt.push(key);
-        setP.push(Number(setData[key]));
-      }
+      setOpt.push(key);
+      setP.push(Number(setData[key]));
     });
     setData = {};
     if (!setOpt.length || state.dataObject.functype || !state.ableSend) {

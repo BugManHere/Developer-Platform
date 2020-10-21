@@ -21,7 +21,7 @@ const state = {
     CO2: 401,
     SmartSlpModEx: 0,
     SwhSlp: 1,
-    TemSen: 65, // 室温
+    TemSen: 65 // 室温
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
