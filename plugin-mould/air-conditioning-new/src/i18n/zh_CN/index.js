@@ -118,6 +118,11 @@ module.exports = {
     title: '室内噪音',
     text: '请设置噪声大小'
   },
+  area: {
+    title: '区域送风',
+    title2: '禁止吹人',
+    tip: '可根据实际情况改变空调或人的所在位置'
+  },
   offline: {
     txt: '断开连接 ...',
     tip:

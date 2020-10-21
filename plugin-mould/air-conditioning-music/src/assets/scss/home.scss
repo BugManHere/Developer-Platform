@@ -1,15 +1,15 @@
 .home-view {
-  background-image: url(../img/bg_b.png);
+  position: relative;
+  top: 0;
+  height: 100vh;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
   background-size: 100% 100%;
 }
 .page-home {
-  $headerHeight: 669px;
   position: relative !important;
   top: 0;
   background-color: transparent !important;
-  // background: linear-gradient(rgb(75, 196, 248), rgb(0, 210, 255));
   .page-main {
     position: relative;
     top: 0;
@@ -17,7 +17,7 @@
   }
   .tem-edit {
     position: relative;
-    height: $headerHeight;
+    height: $temEditHeight;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -34,7 +34,6 @@
   }
 }
 .page-header {
-  $pageHeaderHeight: 120px;
   position: relative;
   top: 0;
   width: 100%;
@@ -60,40 +59,5 @@
   .header-pow {
     position: relative;
     right: 35px;
-  }
-}
-.page-footer {
-  $footerHeight: 160px;
-  $footerPaddingTop: 30px;
-  z-index: 100;
-  position: absolute;
-  bottom: 0;
-  min-height: $footerHeight;
-  max-height: $footerHeight;
-  width: 100%;
-  padding-top: $footerPaddingTop;
-  display: flex;
-  justify-content: space-between;
-  background: #fff;
-  border-top: 1px solid #f2f2f2;
-  .item:first-child {
-    margin-left: 50px;
-  }
-  .item:last-child {
-    margin-right: 50px;
-  }
-  .item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    img {
-      width: 70px;
-      height: 70px;
-      padding-bottom: 8px;
-    }
-    span {
-      font-size: 42px;
-      margin-top: 2px;
-    }
   }
 }

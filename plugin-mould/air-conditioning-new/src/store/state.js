@@ -1,5 +1,6 @@
 const state = {
   mac: '', // 设备mac
+  hiddenComponent: '',
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
   dataObject: {

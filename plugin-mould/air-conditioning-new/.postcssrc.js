@@ -1,3 +1,5 @@
+const { delete } = require('vue/types/umd');
+
 module.exports = {
   plugins: {
     autoprefixer: {

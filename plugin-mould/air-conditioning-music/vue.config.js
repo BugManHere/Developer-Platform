@@ -133,10 +133,20 @@ module.exports = {
       .options({
         symbolId: '[name]'
       });
-
     if (process.env.npm_config_report) {
       config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin);
     }
+    const oneOfsMap = config.module.rule('scss').oneOfs.store;
+    oneOfsMap.forEach(item => {
+      item
+        .use('sass-resources-loader')
+        .loader('sass-resources-loader')
+        .options({
+          // 公用scss
+          resources: './src/assets/scss/_style.scss'
+        })
+        .end();
+    });
   },
   devServer: {
     open: process.platform === 'darwin',
@@ -147,6 +157,5 @@ module.exports = {
     proxy: '',
     before: () => {},
     disableHostCheck: true
-  },
-  pluginOptions: {}
+  }
 };

@@ -34,8 +34,8 @@ router.get('/', function(req, res) {
     res.json(data);
     // const seriesList = data[0].seriesList;
     // seriesList.push({
-    //   "name": "商用挂机",
-    //   "img": "Hangon.png"
+    //   name: '音乐空调',
+    //   img: 'Hangon.png'
     // });
     // console.log(seriesList);
     // data[0].save();
