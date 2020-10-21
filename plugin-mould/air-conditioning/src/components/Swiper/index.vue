@@ -7,34 +7,27 @@
       @touch-start="setSwiperHold(slidesData.key)"
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
+      @touch-cancel.native="cancelSwiperHold(slidesData.key)"
       v-show="!isShowText"
     >
       <!-- :class="{'swiper-no-swiping': noSwiping}" -->
-      <swiper-slide 
-        v-for="(item, index) in slidesData.list" 
-        :key="index">
+      <swiper-slide v-for="(item, index) in slidesData.list" :key="index">
         <!-- 图片 -->
         <template v-if="item.img">
-          <img :src="item.img">
+          <img :src="item.img" />
         </template>
         <!-- 温度数字 -->
         <template v-else>
           <!-- 温度：正数 -->
           <p v-text="item.integer" />
           <!-- 温度：小数点 -->
-          <span 
-            v-show="item.decimal" 
-            v-text="`.${item.decimal}`" />
+          <span v-show="item.decimal" v-text="`.${item.decimal}`" />
         </template>
       </swiper-slide>
     </swiper>
     <!-- 文字 -->
-    <div 
-      class="swiper-text"
-      :class="{isNumber}">
-      <nobr
-        v-if="isShowText"
-        v-text="textContent" />
+    <div class="swiper-text" :class="{ isNumber }">
+      <nobr v-if="isShowText" v-text="textContent" />
     </div>
   </div>
 </template>
@@ -78,7 +71,7 @@ export default {
         },
         observer: true,
         observeParents: true,
-        touchAngle: 90,
+        touchAngle: 90
       },
       noSwiping: false,
       swiperPerView: {},
@@ -88,16 +81,19 @@ export default {
       initTimer: null,
       initTime: 0,
       isNumber: false,
-      checkTimer: null, // 检查手指是否松开
+      checkTimer: null // 检查手指是否松开
     };
   },
   computed: {
     ...mapState({
       swiperHold: state => state.swiperHold,
-      Pow: state => state.dataObject.Pow,
+      Pow: state => state.dataObject.Pow
     }),
     addDisableClass() {
-      return this.noSwiping || (this.swiperHold && this.swiperHold !== this.slidesData.key);
+      return (
+        this.noSwiping ||
+        (this.swiperHold && this.swiperHold !== this.slidesData.key)
+      );
     }
   },
   watch: {
@@ -141,19 +137,20 @@ export default {
           stretch: 0,
           slideShadows: false,
           depth: Math.floor(document.body.clientWidth / 6.5 / 10) * 10,
-          modifier: 3.2,
-        },
+          modifier: 3.2
+        }
       });
     }
   },
   mounted() {
     const init = () => {
       this.initTime += 1;
-      this.initTime >= 3 && (clearInterval(this.initTimer));
-      this.$refs[this.slidesData.key] && this.$refs[this.slidesData.key].swiper.update();
+      this.initTime >= 3 && clearInterval(this.initTimer);
+      this.$refs[this.slidesData.key] &&
+        this.$refs[this.slidesData.key].swiper.update();
       this.$nextTick(() => {
         this.$forceUpdate();
-      }); 
+      });
     };
     init();
     this.initTimer = setInterval(() => {
@@ -168,7 +165,10 @@ export default {
       this.$nextTick(() => {
         this.setState(['swiperHold', key]);
         const ref = this.$refs[key];
-        this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
+        this.$emit(
+          'activeIndex',
+          this.$refs[this.slidesData.key].swiper.activeIndex
+        );
         const realIndex = ref.swiper.realIndex;
         if (this.currentIndex === realIndex) {
           return;
@@ -177,9 +177,13 @@ export default {
         !this.swiperPerView[key] && (this.swiperPerView[key] = []);
         ['active', 'prev', 'next'].forEach(item => {
           try {
-            const dom = ref.$el.getElementsByClassName(`swiper-slide-${item}`)[0];
+            const dom = ref.$el.getElementsByClassName(
+              `swiper-slide-${item}`
+            )[0];
             // !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.opacity = 1);
-            !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.visibility = 'visible');
+            !this.swiperPerView[key].includes(dom) &&
+              this.swiperPerView[key].push(dom) &&
+              (dom.style.visibility = 'visible');
           } catch (err) {
             err;
           }
@@ -199,10 +203,21 @@ export default {
         this.emitIndex();
       });
     },
+    // 特殊奇葩操作，滑到一版手机息屏。需要设置值，再清除
+    cancelSwiperHold(key) {
+      this.setSwiperHold(key);
+      this.clearSwiperHold(key);
+    },
     emitIndex() {
       this.$nextTick(() => {
-        this.$emit('realIndex', this.$refs[this.slidesData.key].swiper.realIndex);
-        this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
+        this.$emit(
+          'realIndex',
+          this.$refs[this.slidesData.key].swiper.realIndex
+        );
+        this.$emit(
+          'activeIndex',
+          this.$refs[this.slidesData.key].swiper.activeIndex
+        );
       });
       this.setState(['ableSend', true]);
     },
