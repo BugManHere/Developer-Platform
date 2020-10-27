@@ -35,7 +35,7 @@ const mixin = {
       setMac: SET_MAC,
       setDataObject: SET_DATA_OBJECT,
       setCheckObject: SET_CHECK_OBJECT,
-      setRepair: SET_REPAIR,
+      setRepair: SET_REPAIR, 
       updateIsScene: IS_SCENE
     }),
     ...mapActions({ getDeviceInfo: GET_DEVICE_INFO }),
