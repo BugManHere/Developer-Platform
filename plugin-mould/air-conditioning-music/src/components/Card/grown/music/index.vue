@@ -6,7 +6,7 @@
       <img src="@assets/img/music/logo.png" class="logo" />
       <div v-text="'酷狗音乐'" class="name" />
       <div v-text="'登录后，可畅享千万正版曲库'" class="text" />
-      <gree-button round v-text="'立即登录'" size="small" />
+      <gree-button round v-text="'立即登录'" size="small" @click="goLoginPage" />
     </div>
     <!-- 已登录显示 -->
     <div v-else class="list-main">
@@ -198,6 +198,9 @@ export default {
           e;
         }
       }, 1000);
+    },
+    goLoginPage() {
+      location.href = 'http://office.rongbang-smart.com/pay/paydo.aspx?openId=123144232';
     }
   }
 };

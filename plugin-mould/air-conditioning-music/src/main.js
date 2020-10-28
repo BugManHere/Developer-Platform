@@ -71,7 +71,7 @@ async function createVue() {
   if (dev) {
     // 解析传入参数, id: 设备key, admin: 用户名
     let { id, admin } = router.currentRoute.query;
-    // let id = '5f4cc7c340a7fa41bc714160';
+    // let id = '5e980f526c19df243004d64b';
     // let admin = 'a1260011042@163.com';
     const storage = window.storage;
     // 已有id，则记录，没有则读取
