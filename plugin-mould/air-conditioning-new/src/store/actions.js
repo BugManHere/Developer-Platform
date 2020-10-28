@@ -87,7 +87,8 @@ export default {
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
-      isMqtt();
+      console.log('-------------------------isMqtt');
+      console.log(isMqtt());
       setMqttStatusCallback(state.mac, data => {
         dispatch(types.MQTT_CALLBACK, data);
       });
@@ -207,8 +208,8 @@ export default {
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          dispatch(types.GET_DEVICE_DATA);
-          dispatch(types.GET_DEVICE_INFO);
+          // dispatch(types.GET_DEVICE_DATA);
+          // dispatch(types.GET_DEVICE_INFO);
         }, 5000);
       }
     } else {
@@ -256,17 +257,18 @@ export default {
    * @description 原生调用插件的mqtt回调方法
    * @param { {data: Object, status: Boolean} } payload data: 设备数据  status: mqtt连接是否可用
    */
-  [types.MQTT_CALLBACK]({ dispatch }, payload) {
+  [types.MQTT_CALLBACK]({ state, dispatch, commit }, payload) {
     let dataObject = {};
     try {
       const res = JSON.parse(payload);
-      const { data } = res;
+      const { data, deviceState } = res;
 
       console.log('[mqtt] dataObject:', JSON.stringify(data));
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(data);
       // 更新本地数据
-      dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      dataObject && dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState });
 
       /*
        * 现架构，mqtt服需3分钟以上才能判断设备在线离线，故支持mqtt的设备还需保留原有8秒主动查询逻辑，进行离线在线判断

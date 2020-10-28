@@ -1,16 +1,16 @@
 <template>
-  <CardHeader header-id="grown-header">
-    <template v-slot:left id="xx">
-      <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)">
-        <span v-text="'点播'" />
-      </div>
-      <div :class="{ select: imshowType === 1 }" @click="changeImshow(1)">
+  <CardHeader header-id="grown-card-header">
+    <template v-slot:left>
+      <!-- <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)">
+        <span v-text="'语音技能'" />
+      </div> -->
+      <div @click="changeImshow(1)">
         <span v-text="'技能'" />
       </div>
     </template>
     <template v-slot:right>
-      <img src="@assets/img/music/statistical.png" />
-      <img src="@assets/img/music/history.png" />
+      <!-- <img src="@assets/img/music/statistical.png" />
+      <img src="@assets/img/music/history.png" /> -->
     </template>
   </CardHeader>
 </template>
@@ -40,20 +40,22 @@ export default {
 </script>
 
 <style lang="scss">
-#grown-header {
+$fontSize: 44px;
+#grown-card-header {
   $paddingTop: 62px;
   border-bottom: 1px solid #f2f2f2;
 
   .left {
-    width: 380px;
+    width: auto;
     display: flex;
-    justify-content: space-around;
-    padding-left: 12px;
+    justify-content: flex-start;
+    padding-left: 40px;
     padding-top: $paddingTop;
     div {
       width: 200px;
       display: flex;
       justify-content: center;
+      font-size: 48px;
     }
     .select span {
       color: rgb(0, 153, 255);

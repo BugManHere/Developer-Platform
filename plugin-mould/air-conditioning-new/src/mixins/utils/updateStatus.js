@@ -16,12 +16,8 @@ const updateStatus = {
     isOffline: {
       handler(newV, oldV) {
         if (newV === -1) {
-          this.$router.push({ name: 'Offline' }).catch(err => {
-            err;
-          });
-        } else if (oldV === -1) {
-          this.$router.push({ path: '/Home' }).catch(err => {
-            err;
+          this.$router.replace('Offline').catch(err => {
+            console.log(err);
           });
         }
       },

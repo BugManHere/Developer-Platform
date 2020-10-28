@@ -57,8 +57,10 @@ export default {
     flex-direction: column;
     align-items: center;
     padding: 0 50px;
+    position: relative;
     .img-select {
       position: absolute;
+      left: 12.5px;
       top: -55px;
       height: 220px;
       width: 228px;
@@ -71,7 +73,7 @@ export default {
       padding-bottom: 8px;
     }
     span {
-      font-size: 36px;
+      font-size: 38px;
       margin-top: 2px;
     }
   }

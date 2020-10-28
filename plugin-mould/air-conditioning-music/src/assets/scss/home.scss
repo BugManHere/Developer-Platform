@@ -19,17 +19,27 @@
     position: relative;
     height: $temEditHeight;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: #fff;
-    .gree-icon {
-      font-weight: bolder;
+    > div {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .tem-value {
-      font-family: 'RobotoLight';
-      margin: 0 70px;
-      font-size: 264px;
+    .power-on {
+      .gree-icon {
+        font-weight: bolder;
+      }
+      .tem-value {
+        font-family: 'Roboto-Light';
+        margin: 0 70px;
+        font-size: 264px;
+      }
+    }
+    .power-off {
+      &-txt {
+        font-size: 90px;
+      }
     }
   }
 }
@@ -39,7 +49,7 @@
   width: 100%;
   height: $pageHeaderHeight;
   margin-bottom: 0;
-  overflow: hidden;
+  z-index: 999;
   .gree-header-title {
     margin: 0 $pageHeaderHeight;
   }

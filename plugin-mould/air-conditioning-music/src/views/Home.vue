@@ -1,13 +1,13 @@
 <template>
   <gree-view
-    bg-color="#f4f4f4"
+    :bg-color="skinConfig && skinConfig.color"
     class="home-view"
     :style="{ 'background-size': `${bgWidth}px ${bgHeight}px`, 'background-color': skinConfig.color, 'background-image': `url(${skinConfig.homeBg})` }"
   >
     <!-- 头部 -->
     <div class="page-header">
       <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
-        <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="moreInfo" />
+        <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="setPow" />
         <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo" />
         <span v-text="devname" @click="onTest" />
         <a class="save" slot="right" v-if="functype" @click="sceneSave">
@@ -17,15 +17,19 @@
     </div>
     <!-- 卡片标题，预留的吸顶位置 -->
     <div id="blank-box" style="width: auto; height:auto" />
-    <!-- <CardHeader v-show="cardHeaderShow" /> -->
     <gree-page no-navbar class="page-home">
       <!-- 主要内容 -->
       <div class="page-main">
         <!-- 模式滑轮 -->
         <div class="tem-edit">
-          <gree-icon name="move" size="xl" />
-          <div v-text="SetTem" class="tem-value" />
-          <gree-icon name="add" size="xl" />
+          <div class="power-on" v-if="Pow">
+            <gree-icon name="move" size="xl" @click="setTem(-1)" />
+            <div v-text="SetTem" class="tem-value" />
+            <gree-icon name="add" size="xl" @click="setTem(1)" />
+          </div>
+          <div class="power-off" v-else>
+            <span v-text="'已关机'" class="power-off-txt" />
+          </div>
         </div>
         <!-- 卡片 -->
         <GrownCard />
@@ -48,9 +52,9 @@ import {
   // getMsg
 } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
-import LogicDefine from '@/logic/define';
 import BottomButton from '@/components/BottomButton';
 import GrownCard from '@/components/card/index';
+import LogicWatch from '@logic/watch';
 
 export default {
   components: {
@@ -64,7 +68,7 @@ export default {
     GrownCard,
     BottomButton
   },
-  mixins: [LogicDefine],
+  mixins: [LogicWatch],
   data() {
     return {
       onTestFlag: 0,
@@ -105,11 +109,9 @@ export default {
     this.bgHeight = this.bgWidth / 0.5625;
   },
   watch: {
-    colorChange: {
+    skinConfig: {
       handler(newVal) {
-        if (newVal && newVal !== '#000' && newVal !== '#000000') {
-          changeBarColor(newVal);
-        }
+        newVal && changeBarColor(newVal.color);
       },
       immediate: true
     }
@@ -128,6 +130,15 @@ export default {
       this.setState({ watchLock: false, ableSend: true });
       this.setDataObject(val);
       this.sendCtrl(val);
+    },
+    setTem(step) {
+      const SetTem = this.SetTem + step;
+      if (SetTem <= 30 && SetTem >= 16) {
+        this.changeData({ SetTem: this.SetTem + step });
+      }
+    },
+    setPow() {
+      this.changeData({ Pow: Number(!this.Pow) });
     },
     /**
      * @description 返回键

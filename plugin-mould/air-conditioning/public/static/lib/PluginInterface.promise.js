@@ -12,7 +12,8 @@ export const showToast = (msg, type) => {
   try {
     return navigator.PluginInterface.showToast(msg, type);
   } catch (e) {
-    console.error(e);
+    console.log(`%c调用showToast接口打印：${msg}`, 'color: blue');
+    // console.error(e);
   }
 };
 
@@ -29,6 +30,17 @@ export const editDevice = mac => {
 };
 
 /**
+ * 跳转到设备配网页面（配网activity）
+ */
+export const startCatalogConfigActivity = () => {
+  try {
+    return navigator.PluginInterface.startCatalogConfigActivity();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
  * 跳转到设备预约页
  * @param {string} mac
  */
@@ -36,7 +48,31 @@ export const timerListDevice = mac => {
   try {
     return navigator.PluginInterface.timerListDevice(mac);
   } catch (e) {
-    console.log('调用接口timerListDevice');
+    console.error(e);
+  }
+};
+
+/**
+ * 查询窗帘开合度
+ * @param {string} mac
+ */
+export const getCurtainOpenPercent = mac => {
+  try {
+    return navigator.PluginInterface.getCurtainOpenPercent(mac);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
+ * 影子设备项目中，提供回调让App主动传递变更的数据给插件页
+ * @param {string} mac
+ */
+export const setMqttStatusCallback = (mac, callBack) => {
+  try {
+    navigator.PluginInterface.setMqttStatusCallback(mac, callBack);
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -49,17 +85,12 @@ export const timerListDevice = mac => {
 export const sendDataToDevice = (mac, json, isFollowSysVibration) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.sendDataToDevice(
-        mac,
-        json,
-        isFollowSysVibration,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.sendDataToDevice(mac, json, isFollowSysVibration, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
-      // reject(err);
       err;
+      // reject(err);
     }
   });
 };
@@ -74,14 +105,9 @@ export const sendDataToDevice = (mac, json, isFollowSysVibration) => {
 export const sendDataToDevicePublic = (mac, json, isFollowSysVibration) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.sendDataToDevicePublic(
-        mac,
-        json,
-        isFollowSysVibration,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.sendDataToDevicePublic(mac, json, isFollowSysVibration, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -98,14 +124,9 @@ export const sendDataToDevicePublic = (mac, json, isFollowSysVibration) => {
 export const sendDataToDeviceDayPublic = (mac, json, isFollowSysVibration) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.sendDataToDeviceDayPublic(
-        mac,
-        json,
-        isFollowSysVibration,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.sendDataToDeviceDayPublic(mac, json, isFollowSysVibration, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -160,13 +181,13 @@ export const getInfo = mac => {
  * @param {string} color
  */
 export const changeBarColor = color => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.changeBarColor(color, (...params) => {
         resolve(...params);
       });
     } catch (err) {
-      console.log(`%c调用changeBarColor改变颜色：${color}`, `color:${color}`);
+      console.log('%c调用changeBarColor接口改变顶栏颜色', `color: ${color}`);
       // reject(err);
     }
   });
@@ -478,13 +499,9 @@ export const translateValue = jsonData => {
 export const pluginTranslateData = (url, jsonData) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.pluginTranslateData(
-        url,
-        jsonData,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.pluginTranslateData(url, jsonData, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -540,11 +557,7 @@ export const backToHomePage = () => {
  */
 export const sendDataToDeviceNoCallback = (mac, json, isFollowSysVibration) => {
   try {
-    return navigator.PluginInterface.sendDataToDeviceNoCallback(
-      mac,
-      json,
-      isFollowSysVibration
-    );
+    return navigator.PluginInterface.sendDataToDeviceNoCallback(mac, json, isFollowSysVibration);
   } catch (e) {
     console.error(e);
   }
@@ -553,20 +566,36 @@ export const sendDataToDeviceNoCallback = (mac, json, isFollowSysVibration) => {
 /**
  * post方式http接口
  * @param {*} url
- * @param {*} paramsStr
  * @param {*} headersStr
+ * @param {*} paramsStr
  */
-export const pluginHttpPost = (url, paramsStr, headersStr) => {
+export const pluginHttpPost = (url, headersStr, paramsStr) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.pluginHttpPost(
-        url,
-        paramsStr,
-        headersStr,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.pluginHttpPost(url, paramsStr, headersStr, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * post方式http接口
+ * @param {*} url
+ * @param {*} hearders
+ * @param {*} params
+ * @param {*} method
+ * @param {*} platform
+ * @param {*} extraParams
+ */
+export const pluginHttp = (url, hearders, params, method, platform, extraParams) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.pluginHttp(url, hearders, params, method, platform, extraParams, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -612,13 +641,9 @@ export const addStoreList = val => {
 export const getAllTimerList = (subMac, mainMac) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.getAllTimerList(
-        subMac,
-        mainMac,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.getAllTimerList(subMac, mainMac, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -633,13 +658,9 @@ export const getAllTimerList = (subMac, mainMac) => {
 export const getAllSubDevices = (subMac, mainMac) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.getAllSubDevices(
-        subMac,
-        mainMac,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.getAllSubDevices(subMac, mainMac, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -683,14 +704,9 @@ export const searchSubBLE = (isStart, mac) => {
 export const BLEAddMESH = (mac, subCount, hashList) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.BLEAddMESH(
-        mac,
-        subCount,
-        hashList,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.BLEAddMESH(mac, subCount, hashList, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -707,14 +723,9 @@ export const BLEAddMESH = (mac, subCount, hashList) => {
 export const BLEDelMESHSubDev = (mac, subCount, hashList) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.BLEDelMESHSubDev(
-        mac,
-        subCount,
-        hashList,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.BLEDelMESHSubDev(mac, subCount, hashList, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -730,14 +741,9 @@ export const BLEDelMESHSubDev = (mac, subCount, hashList) => {
 export const sendDataToDevicebyPower = (mac, json, isFollowSysVibration) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.sendDataToDevicebyPower(
-        mac,
-        json,
-        isFollowSysVibration,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.sendDataToDevicebyPower(mac, json, isFollowSysVibration, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -808,6 +814,7 @@ export const showLoading = () => {
   try {
     return navigator.PluginInterface.showLoading();
   } catch (e) {
+    // console.error(e);
     e;
   }
 };
@@ -819,6 +826,7 @@ export const hideLoading = () => {
   try {
     return navigator.PluginInterface.hideLoading();
   } catch (e) {
+    // console.error(e);
     e;
   }
 };
@@ -907,15 +915,9 @@ export const getCloudMenuDetailSteps = cid => {
 export const searchCloudMenu = (keyword, mid, index, cnt) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.searchCloudMenu(
-        keyword,
-        mid,
-        index,
-        cnt,
-        (...args) => {
-          resolve(...args);
-        }
-      );
+      navigator.PluginInterface.searchCloudMenu(keyword, mid, index, cnt, (...args) => {
+        resolve(...args);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1019,8 +1021,8 @@ export const generateMenuListByCaptureImg = () => {
       navigator.PluginInterface.generateMenuListByCaptureImg((...args) => {
         resolve(...args);
       });
-    } catch (e) {
-      reject(e);
+    } catch (err) {
+      reject(err);
     }
   });
 };
@@ -1115,6 +1117,18 @@ export const getMsgRequest = mac => {
 };
 
 /**
+ * 打开插件
+ * @param {String} mid
+ */
+export const startPlugin = mid => {
+  try {
+    navigator.PluginInterface.startPlugin(mid);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
  * 获取光伏空调用电统计
  * @param {string} mac
  * @param {string} type
@@ -1138,12 +1152,9 @@ export const getGridConLis = (mac, type) => {
 export const clearHistoricalPhotovoltaicPowerData = mac => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.clearHistoricalPhotovoltaicPowerData(
-        mac,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.clearHistoricalPhotovoltaicPowerData(mac, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -1157,12 +1168,9 @@ export const clearHistoricalPhotovoltaicPowerData = mac => {
 export const getFiveSystemDevicesAllStatus = mac => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.getFiveSystemDevicesAllStatus(
-        mac,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.getFiveSystemDevicesAllStatus(mac, (...params) => {
+        resolve(...params);
+      });
     } catch (err) {
       reject(err);
     }
@@ -1170,6 +1178,36 @@ export const getFiveSystemDevicesAllStatus = mac => {
 };
 
 /** ============================== 涂鸦体脂称接口 start ============================== */
+
+/**
+ * 涂鸦控制设备接口
+ * @param {string} mac
+ * @param {string} deviceTypeName
+ * @param {Array} payload
+ */
+export const tuyaControlDev = (mac, deviceTypeName, payload) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaControlDev(mac, deviceTypeName, payload, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * 涂鸦跳转设备详情
+ * @param {string} mac
+ */
+export const tuyaDeviceMore = mac => {
+  try {
+    navigator.PluginInterface.tuyaDeviceMore(mac);
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 /**
  * 涂鸦获取设备详细数据
@@ -1188,17 +1226,52 @@ export const tuyaRequestDevData = mac => {
 };
 
 /**
- * 涂鸦获取设备历史消息
+ * 欧瑞博灯带设置接口
  * @param {string} mac
  */
-export const tuyaGetDevLogs = mac => {
+export const setLightBeltControl = mac => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaGetDevLogs(mac, (...params) => {
+      navigator.PluginInterface.setLightBeltControl(mac, (...params) => {
         resolve(...params);
       });
     } catch (err) {
       reject(err);
+    }
+  });
+};
+
+/**
+ * 涂鸦获取设备历史消息
+ * @param {string} mac
+ */
+export const tuyaGetDevLogs = (mac, startTime, endTime, logType, logSize) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaGetDevLogs(mac, startTime, endTime, logType, logSize, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * 有规律（取小时，天平均值）查询设备历史记录 (温湿度传感器)
+ * @param {*} mac
+ * @param {*} startTime
+ * @param {*} endTime
+ * @param {*} code
+ */
+export const getDeviceRegulationLogs = (mac, startTime, endTime, code) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getDeviceRegulationLogs(mac, startTime, endTime, code, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
     }
   });
 };
@@ -1262,13 +1335,9 @@ export const tuyaWeightDelete = (mac, userId) => {
 export const tuyaWeightUpdate = (mac, updateData) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightUpdate(
-        mac,
-        updateData,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightUpdate(mac, updateData, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1283,13 +1352,9 @@ export const tuyaWeightUpdate = (mac, updateData) => {
 export const tuyaWeightHistory = (mac, requestData) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightHistory(
-        mac,
-        requestData,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightHistory(mac, requestData, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1306,15 +1371,9 @@ export const tuyaWeightHistory = (mac, requestData) => {
 export const tuyaWeightTrend = (mac, userId, startDay, endDay) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightTrend(
-        mac,
-        userId,
-        startDay,
-        endDay,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightTrend(mac, userId, startDay, endDay, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1330,14 +1389,9 @@ export const tuyaWeightTrend = (mac, userId, startDay, endDay) => {
 export const tuyaWeightCheckData = (mac, userId, id) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightCheckData(
-        mac,
-        userId,
-        id,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightCheckData(mac, userId, id, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1352,13 +1406,9 @@ export const tuyaWeightCheckData = (mac, userId, id) => {
 export const tuyaWeightHistorySingleDelete = (mac, id) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightHistorySingleDelete(
-        mac,
-        id,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightHistorySingleDelete(mac, id, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1389,13 +1439,9 @@ export const tuyaWeightList = mac => {
 export const tuyaWeightDatas = (mac, requestData) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.tuyaWeightDatas(
-        mac,
-        requestData,
-        (...params) => {
-          resolve(...params);
-        }
-      );
+      navigator.PluginInterface.tuyaWeightDatas(mac, requestData, (...params) => {
+        resolve(...params);
+      });
     } catch (error) {
       reject(error);
     }
@@ -1404,56 +1450,313 @@ export const tuyaWeightDatas = (mac, requestData) => {
 
 /** ============================== 涂鸦体脂称接口 end ============================== */
 
-// 语音技能接口
-export const startVoiceMainActivity = mac => {
+// AI感知器报警l记录接口
+export const getAIWarningRecordsList = (mac, cnt, lastUpdate) => {
   return new Promise((resolve, reject) => {
     try {
-      navigator.PluginInterface.startVoiceMainActivity(mac, (...params) => {
-        resolve(...params);
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-// 电量统计
-export const getGridConList = (mac, range) => {
-  console.log('!@@@@@@@@@@@@@@');
-  return new Promise((resolve, reject) => {
-    try {
-      navigator.PluginInterface.getGridConList(mac, range, (...params) => {
-        console.log('...params', ...params);
-        resolve(...params);
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-// 故障查询
-export const getDevRealTimeFault = mac => {
-  return new Promise((resolve, reject) => {
-    try {
-      navigator.PluginInterface.getDevRealTimeFault(mac, (...params) => {
-        resolve(...params);
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-
-/**
- * 获取消息提醒列表
- */
-export const getMsg = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      navigator.PluginInterface.getMsg((...args) => {
+      navigator.PluginInterface.getAIWarningRecordsList(mac, cnt, lastUpdate, (...args) => {
         resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 用于获取用户抽奖券数量
+export const activityGetUserTickets = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.activityGetUserTickets((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 获取用户获奖纪录
+export const activityGetWinHistory = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.activityGetWinHistory((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 获取所有人的获奖纪录
+export const activityGetAllWinHistory = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.activityGetAllWinHistory((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 加载抽奖信息
+export const activityGetAwardMapping = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.activityGetAwardMapping((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 提交抽奖请求
+export const activityTakeLottery = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.activityTakeLottery((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 跳转到商城账户页
+export const toMallUserPage = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.toMallUserPage((...args) => {
+        resolve(...args);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 涂鸦设备设置定时任务
+export const tuyaSetTimers = (mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaSetTimers(mac, data, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 查询涂鸦设备定时任务
+export const tuyaQueryTimerslist = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaQueryTimerslist(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 涂鸦修改定时任务
+export const tuyaEditTimers = (mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaEditTimers(mac, data, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 删除涂鸦设备定时任务
+export const tuyaDeleteTimers = (mac, groupId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.tuyaDeleteTimers(mac, groupId, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 透传获取云定时接口
+export const getCloudTimerByMac = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getCloudTimerByMac(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 获取某一天的用电量
+export const getDayUseAndGenerElec = (mac, time) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getDayUseAndGenerElec(mac, time, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+// 新：光伏 获取某一天电量
+export const getGridConListOneDay = (mac, range, oneDay) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getGridConListOneDay(mac, range, oneDay, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+//语音空调技能列表获取
+export const voiceACgetSkillList = (requestId, mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillList(mac, data, (...params) => {
+        // console.log('获取技能列表：', ...params);
+        resolve([requestId, ...params]);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+//语音空调技能详情获取
+export const voiceACgetSkillInfo = id => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillInfo(id, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+//语音空调技能搜索
+export const voiceACgetSkillSearch = (mac, skill) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearch(mac, skill, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+//语音技能热门与历史搜索记录接口
+export const voiceACgetSkillSearchJudge = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearchJudge(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+//语音技能用户历史搜索记录清空接口
+export const voiceACgetSkillSearchTruncate = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceACgetSkillSearchTruncate(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+//语音留言录音控制
+export const voiceSkillMsgAudioControl = (mac, cmd) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgAudioControl(mac, cmd, (...params) => {
+        // console.log('audio:', ...params);
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言提交接口
+export const voiceSkillMsgAdd = (mac, data) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgAdd(mac, data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言列表接口
+export const voiceSkillMsgList = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgList(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言播放接口
+export const voiceSkillMsgPlay = data => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgPlay(data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// 语音留言删除接口
+export const voiceSkillMsgDel = data => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.voiceSkillMsgDel(data, (...params) => {
+        resolve(...params);
       });
     } catch (error) {
       reject(error);

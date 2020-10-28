@@ -1,26 +1,17 @@
 <template>
   <gree-view :bg-color="colorChange">
-    <gree-page 
-      no-navbar 
-      class="page-home">
+    <gree-page no-navbar class="page-home">
       <!-- 头部 -->
-      <div 
-        class="page-header" 
-        :style="headerBg">
-        <gree-header 
+      <div class="page-header" :style="headerBg">
+        <gree-header
           theme="transparent"
-          :left-options="{ preventGoBack: true }" 
-          :right-options="{ showMore: !functype }" 
-          @on-click-back="goBack" 
-          @on-click-more="moreInfo">
-          <span
-            v-text="devname" 
-            @click="onTest"/>
-          <a 
-            class="save"
-            slot="right" 
-            v-if="functype"
-            @click="sceneSave">
+          :left-options="{ preventGoBack: true }"
+          :right-options="{ showMore: !functype }"
+          @on-click-back="goBack"
+          @on-click-more="moreInfo"
+        >
+          <span v-text="devname" @click="onTest" />
+          <a class="save" slot="right" v-if="functype" @click="sceneSave">
             保存
           </a>
         </gree-header>
@@ -28,25 +19,25 @@
         <div class="bar-top">
           <gree-row>
             <gree-col>
-              <div 
+              <div
                 class="mini-icon"
-                v-for="(item, index) in miniIcon" 
-                :key="index">
-                <img 
-                  v-if="item.img"
-                  :src="item.img" />
+                v-for="(item, index) in miniIcon"
+                :key="index"
+              >
+                <img v-if="item.img" :src="item.img" />
               </div>
             </gree-col>
           </gree-row>
         </div>
-        <div 
-          class="bar-co2" 
-          v-if="!functype && Air && devOptions.statueJson2.includes('CO2')">
-          <img :src="co2Img">
-          <span v-text="'CO2浓度等级'" @click="showCO2"/>
+        <div
+          class="bar-co2"
+          v-if="!functype && Air && devOptions.statueJson2.includes('CO2')"
+        >
+          <img :src="co2Img" />
+          <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow && !loading" key="modeSwiper"/>
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper" />
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
@@ -54,49 +45,56 @@
           <gree-icon slot="left" name="bell"></gree-icon>
           {{ warnningText }}
         </gree-notice-bar>
-        <div 
+        <div
           v-show="!Pow"
-          v-text="$language(`${Air? 'btn.Air' : 'home.powerOff'}`)" 
-          class="poweroff-tip"/>
+          v-text="$language(`${Air ? 'btn.Air' : 'home.powerOff'}`)"
+          class="poweroff-tip"
+        />
         <!-- 温度滑轮 -->
-        <temSwiper v-if="Pow && !loading" key="temSwiper"/>
+        <temSwiper v-if="Pow && !loading" key="temSwiper" />
         <!-- 温度单位图标 -->
-        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)">
+        <img
+          :src="temImg"
+          class="tem-unit"
+          @click="changeTemUn"
+          v-show="Pow && ![0, 5].includes(Mod)"
+        />
         <!-- 室内温度 -->
-        <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen"/>
+        <div
+          class="room-tem"
+          v-text="`当前温度${TemSen - 40}℃`"
+          v-if="hasTemSen"
+        />
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper" />
-        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/>
+        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
-        <div 
-          class="item"
-          v-for="(item, index) in functionList" 
-          :key="index">
-          <img
-            :src="item.url"
-            @click="footerFunction(item.key)" />
+        <div class="item" v-for="(item, index) in functionList" :key="index">
+          <img :src="item.url" @click="footerFunction(item.key)" />
           <span>{{ item.name }}</span>
         </div>
       </div>
       <!-- 底部弹框 -->
       <PopupBottom ref="PopupBottom" />
       <!-- 关机页面 -->
-      <gree-power-off
-        v-model="showPowOff"
-        :style="backgroundStyle" />
+      <gree-power-off v-model="showPowOff" :style="backgroundStyle" />
       <!-- CO2浓度查看 -->
-      <gree-dialog v-model="dialogOpen" :mask-closable="true" class="dialog-co2">
+      <gree-dialog
+        v-model="dialogOpen"
+        :mask-closable="true"
+        class="dialog-co2"
+      >
         <div class="dialog-co2-header">
-          <img :src="currentCO2Img" >
-          <span v-text="`CO2浓度 ${currentCO2}ppm`"/>
+          <img :src="currentCO2Img" />
+          <span v-text="`CO2浓度 ${currentCO2}ppm`" />
         </div>
         <div class="dialog-co2-content">
-          <span v-text="'优：CO2浓度较低，建议继续保持。'"/>
-          <span v-text="'中：CO2浓度中等，建议继续保持或升高风档。'"/>
-          <span v-text="'差：CO2浓度较高，建议升高风档，或适当打'"/>
-          <span v-text="'开门窗。'"/>
+          <span v-text="'优：CO2浓度较低，建议继续保持。'" />
+          <span v-text="'中：CO2浓度中等，建议继续保持或升高风档。'" />
+          <span v-text="'差：CO2浓度较高，建议升高风档，或适当打'" />
+          <span v-text="'开门窗。'" />
         </div>
       </gree-dialog>
     </gree-page>
@@ -104,18 +102,17 @@
 </template>
 
 <script>
-
 import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { 
-  closePage, 
-  editDevice, 
-  changeBarColor, 
-  getCCcmd, 
-  startVoiceMainActivity, 
-  showLoading, 
-  getCurrentMode, 
-  // getMsg 
+import {
+  closePage,
+  editDevice,
+  changeBarColor,
+  getCCcmd,
+  startVoiceMainActivity,
+  showLoading,
+  getCurrentMode
+  // getMsg
 } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import Carousel from '@/components/Carousel';
@@ -141,17 +138,17 @@ export default {
     modeSwiper,
     temSwiper,
     fanSwiper,
-    airFanSwiper,
+    airFanSwiper
   },
   mixins: [homeConfig, LogicDefine],
   data() {
     return {
       onTestFlag: 0,
-      dialogOpen: false, 
+      dialogOpen: false,
       currentCO2: 0,
       currentCO2Level: 0,
       currentCO2Img: 0,
-      warnningText: false,
+      warnningText: false
     };
   },
   computed: {
@@ -170,7 +167,7 @@ export default {
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
       CO2: state => state.dataObject.CO2,
-      CO2Level: state => state.dataObject.CO2Level,
+      CO2Level: state => state.dataObject.CO2Level
     }),
     isB() {
       return ['10f04'].includes(this.devOptions.mid); // B分体特殊ui
@@ -178,7 +175,9 @@ export default {
     headerBg() {
       if (!this.Pow) return {};
       const isB = this.isB;
-      const backgroundImage = `url(${require(`@/assets/img/mode/${isB ? 'bg_b' : 'mode_bg'}.png`)})`;
+      const backgroundImage = `url(${require(`@/assets/img/mode/${
+        isB ? 'bg_b' : 'mode_bg'
+      }.png`)})`;
       return {
         backgroundImage,
         'background-size': `${isB ? 1 : 5}00% 100%`,
@@ -190,11 +189,15 @@ export default {
     },
     backgroundStyle() {
       const Hot = this.Mod === this.$store.state.ModHeat;
-      return this.isB ? {
-        backgroundImage: `url(${require('@/assets/img/mode/bg_b_off.png')})`,
-      } : {
-        backgroundImage: `url(${require(`@/assets/img/bg_off_${Hot ? 'heat' : 'cool'}.png`)})`,
-      };
+      return this.isB
+        ? {
+            backgroundImage: `url(${require('@/assets/img/mode/bg_b_off.png')})`
+          }
+        : {
+            backgroundImage: `url(${require(`@/assets/img/bg_off_${
+              Hot ? 'heat' : 'cool'
+            }.png`)})`
+          };
     },
     modName() {
       return this.modeNameList[this.Mod];
@@ -229,7 +232,9 @@ export default {
     colorChange() {
       const Pow = this.Pow;
       const Hot = this.Mod === this.$store.state.ModHeat;
-      const Adv = this.$refs.PopupBottom ? this.$refs.PopupBottom.showPopup : false;
+      const Adv = this.$refs.PopupBottom
+        ? this.$refs.PopupBottom.showPopup
+        : false;
       let color = '#000';
       if (this.$route.name === 'Home') {
         if (this.isB) {
@@ -281,7 +286,7 @@ export default {
     },
     hasTemSen() {
       return this.devOptions.statueJson2.includes('TemSen');
-    },
+    }
   },
   watch: {
     colorChange: {
@@ -400,7 +405,7 @@ export default {
               setData.Air = this.Air ? 1 : 3;
             }
           }
-          this.changeData({...setData});
+          this.changeData({ ...setData });
           break;
         case 'Func':
           this.$refs.PopupBottom.showPopup = true;
@@ -413,9 +418,13 @@ export default {
           }
           break;
         case 'ElcEn':
-          this.$router.push({
-            name: 'Electric',
-          }).catch(err => { console.log(err); });
+          this.$router
+            .push({
+              name: 'Electric'
+            })
+            .catch(err => {
+              console.log(err);
+            });
           try {
             showLoading();
           } catch (e) {
@@ -428,7 +437,8 @@ export default {
     },
     // 切换温度单位
     changeTemUn() {
-      this.$store.state.devOptions.statueJson2.includes('TemUn') && this.changeData({TemUn: !this.TemUn - 0});
+      this.$store.state.devOptions.statueJson2.includes('TemUn') &&
+        this.changeData({ TemUn: !this.TemUn - 0 });
     },
     // 显示CO2弹框
     showCO2() {
@@ -443,10 +453,10 @@ export default {
         if (res === '0' || res === 0) {
           this.onTestFlag += 1;
           this.onTestFlag === 5 && new VConsole();
-          this.onTestFlag === 10 && this.$router.push({name: 'Test'});
+          this.onTestFlag === 10 && this.$router.push({ name: 'Test' });
         }
       });
-    },
+    }
   }
 };
 </script>

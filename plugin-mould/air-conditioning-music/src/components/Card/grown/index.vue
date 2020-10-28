@@ -16,6 +16,7 @@ import MusicContent from './music/index';
 import SkillContent from './skills/index';
 
 export default {
+  name: 'grown-card',
   components: {
     GrownHeader,
     MusicContent,
@@ -23,6 +24,7 @@ export default {
   },
   computed: {
     ...mapState({
+      selectKey: state => state.selectKey,
       imshowType: state => state.musicData.imshowType,
       playMap: state => state.musicData.playMap,
       listSongsMap: state => state.musicData.listSongsMap,
@@ -100,7 +102,6 @@ export default {
               ...this.listSongsMap
             }
           });
-          console.log(this.listSongsMap);
           break;
         // 批量请求歌曲信息
         case '/tme/song/infos':

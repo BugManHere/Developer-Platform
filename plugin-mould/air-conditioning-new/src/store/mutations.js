@@ -6,7 +6,6 @@ export default {
   },
   [type.SET_DEVICE_INFO](state, deviceInfo) {
     state.deviceInfo = deviceInfo;
-    return true;
   },
   [type.SET_DATA_OBJECT](state, obj) {
     const map = {};
@@ -17,7 +16,6 @@ export default {
   },
   [type.SET_CHECK_OBJECT](state, obj) {
     state.checkObject = { ...state.checkObject, ...obj };
-    return true;
   },
   [type.SET_STATE](state, obj) {
     Object.keys(obj).forEach(key => {
