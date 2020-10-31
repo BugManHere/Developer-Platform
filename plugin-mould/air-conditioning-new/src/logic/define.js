@@ -17,8 +17,16 @@ const LogicDefine = {
   },
   mounted() {
     const { key } = require('@/../plugin.id.json'); // 配置key
-    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } =
-      process.env.NODE_ENV === 'development' ? window.storage.get('config') : require(`@/../../../output/${key}.json`); // 获取配置
+    const isLocalConfig = process.env.VUE_APP_MODE === 'local'; // localconfig模式下强制启用本地配置
+    const isServeConfig = process.env.NODE_ENV === 'development'; // 如果是development环境，获取线上配置
+    const getLocalConfig = () => {
+      return isLocalConfig && require(`@/../../../output/${key}.json`);
+    };
+    const getServeConfig = () => {
+      return isServeConfig ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
+    };
+
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = getLocalConfig() || getServeConfig();
     this.g_deviceName = deviceName; // 设备名称
     this.g_moreOption = moreOption; // 更多配置项
     this.g_funcDefine = funcDefine; // 功能定义

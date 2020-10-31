@@ -53,7 +53,7 @@ export default {
      * @description 设备上线时返回主页
      */
     isOffline(newV) {
-      if (newV === 2) {
+      if (newV !== -1) {
         this.$router.push({ path: '/' });
       }
     }
