@@ -14,7 +14,7 @@ const updateStatus = {
      * @description 设备离线时跳转离线页面
      */
     isOffline: {
-      handler(newV, oldV) {
+      handler(newV) {
         if (newV === -1) {
           this.$router.replace('Offline').catch(err => {
             console.log(err);

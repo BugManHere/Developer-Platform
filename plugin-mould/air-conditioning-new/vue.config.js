@@ -21,7 +21,7 @@ const resolve = dir => {
 })();
 
 module.exports = {
-  publicPath: '/',
+  publicPath: '',
   outputDir: `dist/plugins/Plugins/${process.env.VUE_APP_MID}`,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,

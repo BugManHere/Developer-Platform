@@ -1,10 +1,10 @@
 <template>
   <CardHeader header-id="grown-card-header">
     <template v-slot:left>
-      <!-- <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)">
-        <span v-text="'语音技能'" />
-      </div> -->
-      <div @click="changeImshow(1)">
+      <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)">
+        <span v-text="'酷狗音乐'" />
+      </div>
+      <div :class="{ select: imshowType === 1 }" @click="changeImshow(1)">
         <span v-text="'技能'" />
       </div>
     </template>

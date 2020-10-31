@@ -263,7 +263,7 @@ export default {
       const res = JSON.parse(payload);
       const { data, deviceState } = res;
 
-      console.log('[mqtt] dataObject:', JSON.stringify(data));
+      console.log('[mqtt] result:', JSON.stringify(res));
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(data);
       // 更新本地数据

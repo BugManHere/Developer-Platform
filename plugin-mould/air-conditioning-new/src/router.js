@@ -9,13 +9,13 @@ const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'of
 
 // 高级功能倒三角进入
 export const functionPage = {
-  Test: r => require.ensure([], () => r(require('@views/functionPage/Test'))),
-  SweepConst: r => require.ensure([], () => r(require('@views/functionPage/SweepConst'))),
-  Electric: r => require.ensure([], () => r(require('@views/functionPage/Electric'))),
-  Noise: r => require.ensure([], () => r(require('@views/functionPage/Noise'))),
-  AssHt: r => require.ensure([], () => r(require('@views/functionPage/AssHt'))),
-  UDFanPort: r => require.ensure([], () => r(require('@views/functionPage/UDFanPort'))),
-  AreaFan: r => require.ensure([], () => r(require('@views/functionPage/AreaFan')))
+  Test: r => require.ensure([], () => r(require('./views/functionPage/Test'))),
+  SweepConst: r => require.ensure([], () => r(require('./views/functionPage/SweepConst'))),
+  Electric: r => require.ensure([], () => r(require('./views/functionPage/Electric'))),
+  Noise: r => require.ensure([], () => r(require('./views/functionPage/Noise'))),
+  AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
+  UDFanPort: r => require.ensure([], () => r(require('./views/functionPage/UDFanPort'))),
+  AreaFan: r => require.ensure([], () => r(require('./views/functionPage/AreaFan')))
 };
 
 Vue.use(Router);
