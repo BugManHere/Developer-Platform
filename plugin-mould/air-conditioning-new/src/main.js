@@ -65,15 +65,19 @@ async function createVue() {
 
   console.log(`当前服务器地址：${process.env.VUE_APP_SERVE_URL}`);
 
-  // 如果是开发模式，加载服务器/缓存配置
   window.storage = new Storage();
-  if (dev) {
+
+  const isLocalConfig = process.env.VUE_APP_MODE === 'local'; // localconfig模式下强制启用本地配置
+  const isServeConfig = dev; // 如果是development环境，获取线上配置
+
+  // 如果是development环境且不处于localconfig模式，加载服务器/缓存配置
+  if (isServeConfig && !isLocalConfig) {
     // 解析传入参数, id: 设备key, admin: 用户名
     let { id, admin } = router.currentRoute.query;
     // let id = '5f4cc7c340a7fa41bc714160';
     // let admin = 'a1260011042@163.com';
     const storage = window.storage;
-    // 已有id，则记录，没有则读取
+    // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
       // 更新mac
       vm.$store.commit(SET_STATE, { mac: id });
@@ -98,7 +102,7 @@ async function createVue() {
   }
   // 挂载到#app上
   vm.$mount('#app');
-  vm.$router.push('Home').catch(e => console.log(e));
+  vm.$router.replace('Home').catch(e => console.log(e));
 }
 
 /* 启用页面调试器 */
