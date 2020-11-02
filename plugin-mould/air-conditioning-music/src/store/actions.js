@@ -262,13 +262,14 @@ export default {
     let dataObject = {};
     try {
       const res = JSON.parse(payload);
-      const { data } = res;
+      const { data, deviceState } = res;
 
       console.log('[mqtt] dataObject:', JSON.stringify(data));
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(data);
       // 更新本地数据
       dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState });
 
       /*
        * 现架构，mqtt服需3分钟以上才能判断设备在线离线，故支持mqtt的设备还需保留原有8秒主动查询逻辑，进行离线在线判断
