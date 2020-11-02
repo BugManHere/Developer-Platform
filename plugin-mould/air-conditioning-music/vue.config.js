@@ -151,7 +151,8 @@ module.exports = {
   devServer: {
     open: process.platform === 'darwin',
     host: '0.0.0.0',
-    port: 8083,
+    // port: 8083,
+    port: 8082, //主体打包的端口号写的8082
     https: false,
     hotOnly: false,
     proxy: '',

@@ -171,6 +171,9 @@ export default {
         this.getMessageList(); // 刷新语音留言列表
       } catch (error) {
         showToast(error.message, 0);
+      } finally {
+        this.$router.replace('/VoiceMessage/index');
+        // 为了实现点击了“删除”按钮后，能返回播放页面
       }
     },
     onDelete() {
