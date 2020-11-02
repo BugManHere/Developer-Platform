@@ -98,7 +98,7 @@ export default {
     return {
       readList: [], // 已读语音留言列表
       unreadList: [], // 未读语音留言列表
-      isEmpty: true, // 语音留言是否为空
+      isEmpty: false, // 语音留言是否为空,默认是有数据
       isRecording: false, // 是否正在录制留言
       isPlaying: false, // 是否正在播放留言
       isUploading: false, // 是否正在上传留言
