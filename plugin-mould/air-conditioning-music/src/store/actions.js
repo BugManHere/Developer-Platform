@@ -89,10 +89,10 @@ export default {
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
-      isMqtt();
-      setMqttStatusCallback(state.mac, data => {
-        dispatch(types.MQTT_CALLBACK, data);
-      });
+      isMqtt() &&
+        setMqttStatusCallback(state.mac, data => {
+          dispatch(types.MQTT_CALLBACK, data);
+        });
     } catch (e) {
       console.warn(e);
     } finally {
