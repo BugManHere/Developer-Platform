@@ -1,7 +1,9 @@
 <template>
   <gree-view bg-color="#ffffff">
     <gree-page class="page-voice-message">
-      <gree-header style="background-color: #fff;">
+      <gree-header style="background-color: #fff;" 
+                  :left-options="{preventGoBack: true}" 
+                  @on-click-back="clickBack">
         语音留言簿
         <a slot="right" @click="gotoEdit" v-show="!isEmpty">编辑</a>
       </gree-header>
@@ -137,7 +139,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    // 安卓物理返回键处理
+    // 安卓物理返回键处理，停止录音，重置状态
     if (this.showDialog || this.isRecording) {
       if (this.showDialog) {
         this.onCancel();
@@ -177,6 +179,16 @@ export default {
       this.updateMessageList();
     }, 8 * 1000);
   },
+  mounted() {
+    if(window.history && window.history.pushState){
+      history.pushState(null,null,document.URL);
+      window.addEventListener('popstate',this.clickBack,false);
+    }
+  },
+  destroyed(){
+    window.removeEventListener('popstate',this.clickBack,false);
+  },
+  // mounted与destory共同监听物理返回键
   methods: {
     async getMessageList() {
       try {
@@ -418,7 +430,7 @@ export default {
           throw new Error('播放留言失败');
         }
         let haveMetStop = false;
-        let StopTime = 0;
+        // let StopTime = 0;
         gTimerForGetAudioStatus = setInterval(() => {
           voiceSkillMsgAudioControl(this.mac, 'getStatus').then(data => {
             const result = JSON.parse(data);
@@ -429,10 +441,12 @@ export default {
             //   // 状态不为playing（停止播放）时，重置状态
             //   this.resetPlayState();
             // }
-            // 在第一次播放语音的时候，主体会先传3个stop过来
-            // 这3个stop会影响实际的播放状态的判断
-            if(result.status === 'stop' && StopTime < 3 && !haveMetStop){
-              StopTime++;
+            // 在第一次播放语音的时候，主体会先传好几个个stop过来
+            // 这几个stop会影响实际的播放状态的判断
+            // if(result.status === 'stop' && StopTime < 3 && !haveMetStop){
+            if(result.status === 'stop' && !haveMetStop){
+              // StopTime++;
+              console.log('stop------->')
               return;
             }
             if(result.status === 'playing' || result.status === ''){
@@ -449,6 +463,9 @@ export default {
         this.resetPlayState();
         showToast('留言播放失败！', 0);
       }
+    },
+    clickBack(){
+      this.$router.replace('/Home');
     }
   }
 };

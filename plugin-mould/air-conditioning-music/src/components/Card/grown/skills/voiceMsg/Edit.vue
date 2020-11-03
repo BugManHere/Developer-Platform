@@ -90,18 +90,20 @@ export default {
       mac: state => state.mac
     })
   },
-  beforeRouteLeave(to, from, next) {
-    if (this.dialogOption.open) {
-      this.dialogOption.open = false;
-      next(false);
-    } else {
-      next();
-    }
-  },
   created() {
     changeBarColor('#fffffe');
     this.getMessageList();
   },
+  mounted() {
+    if(window.history && window.history.pushState){
+      history.pushState(null,null,document.URL);
+      window.addEventListener('popstate',this.goBack,false);
+    }
+  },
+  destroyed(){
+    window.removeEventListener('popstate',this.goBack,false);
+  },
+  // 监听物理返回键，执行goBack(replace到index)方法。
   methods: {
     async getMessageList() {
       try {
