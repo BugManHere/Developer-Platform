@@ -37,18 +37,28 @@ const LogicPort = {
     work_popupDefine() {
       return this.g_funcDefine_active.filter(module => module.type === `active-${this.work_popupsKey}`);
     },
-    // 显示插槽1, 存在被隐藏的状态就不显示
+    // 显示插槽1, 隐藏的状态被禁用就显示
     work_imshowSlot1() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === 'inertia-imshowSlot1')
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 存在多个的情况时，只取第一个，其他不处理
       if (modules.length) {
         const json = modules[0].json;
         const value = this.g_inputMap[json];
         const id = modules[0].identifier;
-        const text = this.$language(`slot1.${id}`).replace('%s', value);
-        return text;
+        // 处理字符串内运算
+        const text = this.$language(`slot1.${id}`);
+        let result = text;
+        const textMatch = text.match(/{{(%s.*)}}/);
+        if (textMatch) {
+          const matchContent = textMatch[1].replace('%s', value);
+          // 不推荐此写法，可优化
+          result = text.replace(/{{(%s.*)}}/, eval(matchContent));
+        } else {
+          result = text.replace('%s', value);
+        }
+        return result;
       }
       return undefined;
     },
@@ -56,14 +66,24 @@ const LogicPort = {
     work_imshowSlot2() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === 'inertia-imshowSlot2')
-        .filter(module => this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 存在多个的情况时，只取第一个，其他不处理
       if (modules.length) {
         const json = modules[0].json;
         const value = this.g_inputMap[json];
         const id = modules[0].identifier;
-        const text = this.$language(`slot2.${id}`).replace('%s', value);
-        return text;
+        // 处理字符串内运算
+        const text = this.$language(`slot2.${id}`);
+        let result = text;
+        const textMatch = text.match(/{{(%s.*)}}/);
+        if (textMatch) {
+          const matchContent = textMatch[1].replace('%s', value);
+          // 不推荐此写法，可优化
+          result = text.replace(/{{(%s.*)}}/, eval(matchContent));
+        } else {
+          result = text.replace('%s', value);
+        }
+        return result;
       }
       return undefined;
     },
@@ -71,7 +91,7 @@ const LogicPort = {
     work_temSetJson() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
       if (modules.length) return modules[0].json;
       return undefined; // 默认字段
@@ -85,7 +105,7 @@ const LogicPort = {
     work_temMinVal() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temMinKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
       if (modules.length) return this.g_inputMap[modules[0].json];
       return 16; // 默认温度最小值
@@ -94,7 +114,7 @@ const LogicPort = {
     work_temMaxVal() {
       const modules = this.g_funcDefine_inertia
         .filter(module => module.type === `inertia-${this.work_temMaxKey}`)
-        .filter(module => !this.g_hideStateArr.some(state => state.includes(module.identifier)));
+        .filter(module => !this.g_hideStateArr.some(state => state.includes(`${module.identifier}_`)));
       if (modules.length) return this.g_inputMap[modules[0].json];
       return 30; // 默认温度最大值
     },

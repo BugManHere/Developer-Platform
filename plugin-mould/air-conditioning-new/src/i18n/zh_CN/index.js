@@ -17,7 +17,7 @@ module.exports = {
     Electric: '电量查询'
   },
   slot1: {
-    OutWtTem: '实时出水温度 %s℃',
+    OutWtTem: '实时出水温度 {{%s-40}}℃',
     IndoorTem: '实时室内温度 %s℃',
     TemSen: '室温 %s℃'
   },

@@ -10,7 +10,7 @@ const LogicDefine = {
       g_funcDefine: [], // 功能定义
       g_excludeMap: {}, // 排斥关系
       g_hideMap: {}, // 隐藏关系
-      g_hideState: '[]', // 被隐藏的state，在watch.js里面有赋值
+      g_hideState: '[]', // 被隐藏的state
       g_deviceName: undefined, // 设备名称
       g_mid: '' // mid
     };
@@ -391,7 +391,7 @@ const LogicDefine = {
      * @input module: 功能， isHide： 是否考虑被隐藏的state
      * @return Object {value: status}
      */
-    g_getStatusName(module, isHide = false) {
+    g_getStatusName(module, checkHide = false) {
       const result = {};
       const hideState = JSON.parse(this.g_hideState); // 获取被隐藏的state
       const key = module.identifier;
@@ -400,7 +400,7 @@ const LogicDefine = {
       statusKeys.forEach(statusName => {
         if (statusName === 'undefined') return;
         const state = `${key}_${statusName}`;
-        if (isHide && hideState.includes(state)) {
+        if (checkHide && hideState.includes(state)) {
           // 被隐藏的state不参与计算
           return;
         }
@@ -468,6 +468,13 @@ const LogicDefine = {
         }
       });
       return result;
+    }
+  },
+  watch: {
+    g_hideStateArr(newVal) {
+      this.$nextTick(() => {
+        this.g_hideState = JSON.stringify(newVal);
+      });
     }
   }
 };

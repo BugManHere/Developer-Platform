@@ -1,7 +1,9 @@
 <template>
   <gree-view bg-color="#ffffff">
     <gree-page class="page-voice-message">
-      <gree-header style="background-color: #fff;">
+      <gree-header style="background-color: #fff;" 
+                  :left-options="{preventGoBack: true}" 
+                  @on-click-back="clickBack">
         语音留言簿
         <a slot="right" @click="gotoEdit" v-show="!isEmpty">编辑</a>
       </gree-header>
@@ -98,7 +100,7 @@ export default {
     return {
       readList: [], // 已读语音留言列表
       unreadList: [], // 未读语音留言列表
-      isEmpty: true, // 语音留言是否为空
+      isEmpty: false, // 语音留言是否为空,默认是有数据
       isRecording: false, // 是否正在录制留言
       isPlaying: false, // 是否正在播放留言
       isUploading: false, // 是否正在上传留言
@@ -137,7 +139,7 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    // 安卓物理返回键处理
+    // 安卓物理返回键处理，停止录音，重置状态
     if (this.showDialog || this.isRecording) {
       if (this.showDialog) {
         this.onCancel();
@@ -166,6 +168,10 @@ export default {
         clearInterval(gTimerForUpdateMsgList);
         gTimerForUpdateMsgList = null;
       }
+      voiceSkillMsgAudioControl(this.mac, 'stopPlay');
+      this.resetPlayState();
+      // 在页面销毁之前，发送停止播放的指令
+      // stopPlay是与主体沟通新增的
     });
     this.getMessageList();
     // 8秒轮询刷新列表
@@ -173,6 +179,16 @@ export default {
       this.updateMessageList();
     }, 8 * 1000);
   },
+  mounted() {
+    if(window.history && window.history.pushState){
+      history.pushState(null,null,document.URL);
+      window.addEventListener('popstate',this.clickBack,false);
+    }
+  },
+  destroyed(){
+    window.removeEventListener('popstate',this.clickBack,false);
+  },
+  // mounted与destory共同监听物理返回键
   methods: {
     async getMessageList() {
       try {
@@ -249,7 +265,9 @@ export default {
       this.countLabel = '0/10';
     },
     gotoEdit() {
-      this.$router.push('/VoiceMessage/Edit');
+      // this.$router.push('/VoiceMessage/Edit');
+      this.$router.replace('/VoiceMessage/Edit');
+      // 为了实现点击了“删除”按钮后，能返回播放页面
     },
     clearInterval() {
       if (gTimerForGetAudioStatus) {
@@ -325,7 +343,8 @@ export default {
       } catch (error) {
         console.log(error);
         this.isRecording = false;
-        showToast('录音开启失败', 0);
+        // showToast('录音开启失败', 0);
+        // 第一次录音时会请求录音权限，弹出这个会影响用户体验
       }
     },
     cancelRecord() {
@@ -410,16 +429,32 @@ export default {
         if (!result.code || Number(result.code) !== 200) {
           throw new Error('播放留言失败');
         }
+        let haveMetStop = false;
+        // let StopTime = 0;
         gTimerForGetAudioStatus = setInterval(() => {
           voiceSkillMsgAudioControl(this.mac, 'getStatus').then(data => {
             const result = JSON.parse(data);
-            console.log(result);
-            if (result.status === 'playing') {
-              this.isPlaying = true;
-            } else {
-              // 状态不为playing（停止播放）时，重置状态
-              this.resetPlayState();
+            console.log('radio data:',result);
+            // if (result.status === 'playing') {
+            //   this.isPlaying = true;
+            // } else {
+            //   // 状态不为playing（停止播放）时，重置状态
+            //   this.resetPlayState();
+            // }
+            // 在第一次播放语音的时候，主体会先传好几个个stop过来
+            // 这几个stop会影响实际的播放状态的判断
+            // if(result.status === 'stop' && StopTime < 3 && !haveMetStop){
+            if(result.status === 'stop' && !haveMetStop){
+              // StopTime++;
+              console.log('stop------->')
+              return;
             }
+            if(result.status === 'playing' || result.status === ''){
+              this.isPlaying = true;
+              haveMetStop = true;
+              return;
+            }
+            this.resetPlayState();
           });
         }, 100);
         this.setPlayStateByGuid(guid);
@@ -428,6 +463,9 @@ export default {
         this.resetPlayState();
         showToast('留言播放失败！', 0);
       }
+    },
+    clickBack(){
+      this.$router.replace('/Home');
     }
   }
 };

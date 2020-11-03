@@ -14,11 +14,6 @@ const LogicWatch = {
     g_mid(newVal) {
       console.info(`Current Running mid: ${newVal}`);
     },
-    g_hideStateArr(newVal) {
-      this.$nextTick(() => {
-        this.g_hideState = JSON.stringify(newVal);
-      });
-    },
     g_outputMap: {
       handler(newVal) {
         if (newVal) {

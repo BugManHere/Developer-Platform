@@ -2,7 +2,9 @@
   <gree-view bg-color="#ffffff">
     <gree-page class="page-edit-voice-message">
       <gree-header style="background-color: #fff;">
-        语音留言簿
+        <!-- 语音留言簿 -->
+        <a slot="overwrite-left" @click="goBack">取消</a>
+        已选择{{selectedNum}}条
         <a slot="right" @click="selectAll" v-show="!isEmpty">全选</a>
       </gree-header>
       <div class="page-main">
@@ -59,7 +61,7 @@ export default {
     return {
       readList: [], // 已读语音留言列表
       unreadList: [], // 未读语音留言列表
-      isEmpty: true, // 语音留言是否为空
+      isEmpty: false, // 语音留言是否为空,先默认有数据
       dialogOption: {
         open: false,
         btns: [
@@ -78,7 +80,9 @@ export default {
         ]
       },
       selectedRecords: [], // 选中需要删除的留言
-      isLoadFailed: false // 列表是否加载失败
+      isLoadFailed: false, // 列表是否加载失败
+      selectedNum: 0,
+      selectedArg:[]
     };
   },
   computed: {
@@ -86,18 +90,20 @@ export default {
       mac: state => state.mac
     })
   },
-  beforeRouteLeave(to, from, next) {
-    if (this.dialogOption.open) {
-      this.dialogOption.open = false;
-      next(false);
-    } else {
-      next();
-    }
-  },
   created() {
     changeBarColor('#fffffe');
     this.getMessageList();
   },
+  mounted() {
+    if(window.history && window.history.pushState){
+      history.pushState(null,null,document.URL);
+      window.addEventListener('popstate',this.goBack,false);
+    }
+  },
+  destroyed(){
+    window.removeEventListener('popstate',this.goBack,false);
+  },
+  // 监听物理返回键，执行goBack(replace到index)方法。
   methods: {
     async getMessageList() {
       try {
@@ -141,14 +147,31 @@ export default {
     selectAll() {
       this.unreadList.forEach(x => {
         x.selected = true; // eslint-disable-line
+        if(!this.selectedArg.includes(x.guid)){
+          this.selectedArg.push(x.guid)
+        }
       });
       this.readList.forEach(x => {
         x.selected = true; // eslint-disable-line
+        if(!this.selectedArg.includes(x.guid)){
+          this.selectedArg.push(x.guid);
+        }
       });
+      this.selectedNum = this.selectedArg.length;
+      // 全选功能：将未选中的语音添加进selectedArg当中
     },
     setState(item) {
-      console.log(item);
-      item.selected = !item.selected; // eslint-disable-line
+      item.selected = !item.selected; // eslint-disable-line   
+      if(this.selectedArg.includes(item.guid)){
+        let index = this.selectedArg.indexOf(item.guid);
+        this.selectedArg.splice(index,1);
+        this.selectedNum = this.selectedArg.length;
+      }else{
+        this.selectedArg.push(item.guid);
+        this.selectedNum = this.selectedArg.length;
+      }
+      // 将选中的语音的guid添加进selectedArg当中
+      // 可以统计选择了几项语音留言
     },
     async deleteRecords() {
       try {
@@ -171,6 +194,9 @@ export default {
         this.getMessageList(); // 刷新语音留言列表
       } catch (error) {
         showToast(error.message, 0);
+      } finally {
+        this.$router.replace('/VoiceMessage/index');
+        // 为了实现点击了“删除”按钮后，能返回播放页面
       }
     },
     onDelete() {
@@ -186,6 +212,9 @@ export default {
       if (this.selectedRecords.length > 0) {
         this.dialogOption.open = true;
       }
+    },
+    goBack(){
+      this.$router.replace('/VoiceMessage/index');
     }
   }
 };
