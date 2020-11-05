@@ -48,9 +48,18 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     console.log([opt, p]);
 
     const json = JSON.stringify({ mac, t, opt, p });
-    const res = await sendDataToDevice(mac, json, false);
     commit(types.SET_STATE, { ableSend: false });
 
+    try {
+      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
+      // 成功之后更新主体状态
+      updateStates(state.mac, JSON.stringify(_p));
+      console.log('updateStates:------------------', JSON.stringify(_p));
+    } catch (err) {
+      err;
+    }
+
+    await sendDataToDevice(mac, json, false);
     // 3秒后重启轮询
     if (_timer) {
       dispatch(types.SET_POLLING, false);
@@ -58,16 +67,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       _timer3 = setTimeout(() => {
         dispatch(types.SET_POLLING, true);
       }, 3000);
-    }
-
-    try {
-      const result = JSON.parse(res);
-      const { r } = result;
-      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
-      // 成功之后更新主体状态
-      r === 200 && updateStates(state.mac, JSON.stringify(_p));
-    } catch (err) {
-      err;
     }
   }, 350);
 }
@@ -115,7 +114,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -190,7 +189,7 @@ export default {
       }
       _firstCallback = false;
 
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
