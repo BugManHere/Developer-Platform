@@ -36,9 +36,7 @@ var app = {
   // The scope of 'this' is the event. In order to call the 'receivedEvent'
   // function, we must explicitly call 'app.receivedEvent(...);'
   onDeviceReady: function() {
-    console.log(
-      'onDeviceReady========================================onDeviceReady'
-    );
+    console.log('onDeviceReady========================================onDeviceReady');
     navigator.PluginInterface.onCallBack(onCallBack);
     //监听安卓后退键
     document.addEventListener(

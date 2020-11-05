@@ -10,7 +10,7 @@ const resolve = dir => {
 };
 
 // eslint-disable-next-line func-names
-(function () {
+(function() {
   const { key } = require('./plugin.id.json');
   const { productModel, moreOption } = require(`../../output/${key}.json`);
   const statueJson = moreOption.statueJson;
@@ -19,7 +19,7 @@ const resolve = dir => {
   process.env.VUE_APP_MID = productModel;
   process.env.VUE_APP_JSON = JSON.stringify(statueJson);
   process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
-}());
+})();
 
 module.exports = {
   publicPath: '',
@@ -101,7 +101,7 @@ module.exports = {
           to: path.resolve(
             __dirname,
             `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/js/`
-          ),
+          )
         }
       ])
     ]
@@ -135,5 +135,5 @@ module.exports = {
     before: () => {},
     disableHostCheck: true
   },
-  pluginOptions: {},
+  pluginOptions: {}
 };

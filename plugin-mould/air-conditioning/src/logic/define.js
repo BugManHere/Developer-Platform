@@ -36,6 +36,7 @@ const LogicDefine = {
       productModel,
       deviceName
     } = getLocalConfig() || getServeConfig();
+
     this.g_deviceName = deviceName; // 设备名称
     this.g_moreOption = moreOption;
     this.g_funcDefine = funcDefine;

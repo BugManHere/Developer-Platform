@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { View, Page } from 'gree-ui';
 
-import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { closePage, getInfo, finishLoad } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
 import router from './router';
 import store from './store';
@@ -18,6 +18,13 @@ import './assets/scss/global.scss';
 import language from './utils/language'; // 对i18n的封装
 
 import { SET_STATE } from './store/types';
+
+/* 启用页面调试器 */
+if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+  const VConsole = require('vconsole/dist/vconsole.min.js');
+  // eslint-disable-next-line no-new
+  new VConsole();
+}
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 
@@ -49,8 +56,7 @@ const dev = process.env.NODE_ENV === 'development';
 async function createVue() {
   const vm = new Vue({
     // el: '#app',
-    mixins: dev ? [debugMixin] : [initMixin],
-    // mixins: [initMixin],
+    mixins: [dev ? debugMixin : initMixin],
     render: h => h(App),
     router,
     store,
@@ -137,14 +143,7 @@ class Storage {
   }
 }
 
-/* 启用页面调试器 */
-if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
-  const VConsole = require('vconsole/dist/vconsole.min.js');
-  // eslint-disable-next-line no-new
-  new VConsole();
-}
-
-dev ? createVue() : '';
+dev && createVue();
 
 /* ********************************* Native Func ********************************* */
 
