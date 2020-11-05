@@ -1,11 +1,7 @@
 <template>
-  <gree-popup 
-    v-model="showPopup" 
-    position="bottom">
+  <gree-popup v-model="showPopup" position="bottom">
     <div class="popup-bottom">
-      <div 
-        class="arrow-down" 
-        @touchend.stop="hidePopUpDemo" />
+      <div class="arrow-down" @touchend.stop="hidePopUpDemo" />
       <gree-row v-if="g_funcDefine_btn">
         <gree-col
           v-for="(item, index) in g_funcDefine_btn"
@@ -18,24 +14,26 @@
         >
           <div
             class="icon"
-            @click="changeStatus(item.identifier, g_hideFuncArr.includes(item.identifier))"
+            @click="
+              changeStatus(
+                item.identifier,
+                g_hideFuncArr.includes(item.identifier)
+              )
+            "
           >
-            <img
-              v-if="imgList[index].img" 
-              :src="imgList[index].img" />
-            <div
-              v-else
-              class="blank-btn">
+            <img v-if="imgList[index].img" :src="imgList[index].img" />
+            <div v-else class="blank-btn">
               <img src="@/assets/img/functionBtn/blank.png" />
-              <span
-                v-html="imgList[index].text" 
-                class="blank-text"/>
+              <span v-html="imgList[index].text" class="blank-text" />
             </div>
           </div>
           <span
-            :class="{triangle: item.page}" 
-            @click="goPage(index, g_hideFuncArr.includes(item.identifier), item.page)"
-            v-text="btnName[index]"/>
+            :class="{ triangle: item.page }"
+            @click="
+              goPage(index, g_hideFuncArr.includes(item.identifier), item.page)
+            "
+            v-text="btnName[index]"
+          />
         </gree-col>
       </gree-row>
     </div>
@@ -48,9 +46,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import LogicDefine from '@/logic/define';
 import LogicWatch from '@/logic/watch';
 import Customize from '@/logic/customize';
-import {
-  showLoading,
-} from '@PluginInterface';
+import { showLoading } from '@PluginInterface';
 
 export default {
   components: {
@@ -73,7 +69,9 @@ export default {
       const result = [];
       this.g_funcDefine_btn.forEach(item => {
         let id = item.identifier;
-        const statusName = this.g_hideFuncArr.includes(id) ? 'default' : this.g_statusMap[id].define.name;
+        const statusName = this.g_hideFuncArr.includes(id)
+          ? 'default'
+          : this.g_statusMap[id].define.name;
         const map = {};
         // 如果有图片就显示图片，没有图片就显示文字
         try {
@@ -97,7 +95,8 @@ export default {
         const stateKey = `${key}_${statusName}`;
         let language = key;
         key === this.$language(key) || (language = this.$language(key));
-        stateKey === this.$language(stateKey) || (language = this.$language(stateKey));
+        stateKey === this.$language(stateKey) ||
+          (language = this.$language(stateKey));
         return language;
       });
       return result;
@@ -106,7 +105,7 @@ export default {
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
@@ -154,10 +153,14 @@ export default {
       if (isGray || !able) return;
       const { routerName, params } = this.g_funcDefine_btn[index].page;
       showLoading();
-      this.$router.push({
-        name: routerName,
-        params,
-      }).catch(err => { console.log(err); });
+      this.$router
+        .push({
+          name: routerName,
+          params
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
