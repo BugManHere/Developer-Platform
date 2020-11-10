@@ -98,7 +98,6 @@
 import { Header, Toast, Dialog, InputItem, Row, Col, Icon, List, Item, RadioList, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { sendDataToDevice } from '@PluginInterface';
-import LogicWatch from '@/logic/watch';
 
 export default {
   name: 'Air',
@@ -115,7 +114,6 @@ export default {
     [RadioList.name]: RadioList,
     [Button.name]: Button
   },
-  mixins: [LogicWatch],
   data() {
     return {
       imshowJson: [],
@@ -137,7 +135,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       dataObject: state => state.dataObject,
       devOptions: state => state.devOptions,
       mac: state => state.mac
@@ -238,11 +236,11 @@ export default {
     }, 5000);
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setDataObject: 'SET_DATA_OBJECT',
       setState: 'SET_STATE'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       updateDataObject: 'UPDATE_DATAOBJECT',
       sendCtrl: 'SEND_CTRL'
     }),

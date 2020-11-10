@@ -9,9 +9,8 @@
 
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
-import LogicDefine from '@/logic/define';
 
 export default {
   name: 'AssHt',
@@ -24,24 +23,24 @@ export default {
     [Item.name]: Item,
     [Toast.name]: Toast
   },
-  mixins: [LogicDefine],
   data() {
     return {};
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
       AssHt: state => state.dataObject.AssHt,
       mid: state => state.devOptions.mid
     }),
+    ...mapGetters('machine', ['identifierArr']),
     modes() {
       return [
         {
-          value: this.g_identifierArr.includes('AssHt(Final)') ? 1 : 0,
+          value: this.identifierArr.includes('AssHt(Final)') ? 1 : 0,
           text: '开'
         },
         {
-          value: this.g_identifierArr.includes('AssHt(Final)') ? 0 : 1,
+          value: this.identifierArr.includes('AssHt(Final)') ? 0 : 1,
           text: '关'
         },
         {
@@ -73,11 +72,11 @@ export default {
     hideLoading();
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setDataObject: 'SET_DATA_OBJECT',
       setState: 'SET_STATE'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       sendCtrl: 'SEND_CTRL'
     }),
     setAssHt(option) {

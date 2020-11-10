@@ -33,7 +33,7 @@
 
 <script>
 import { Header, List, Item, Row, Col, Button } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import BottomBtn from '@/components/BottomBtn';
 import FuncPopup from '@/components/BtnPopup/func';
@@ -41,12 +41,8 @@ import ModPopup from '@/components/BtnPopup/mod';
 import FanSwiper from '@/components/FanSwiper';
 import CenterSlider from '@/components/CenterSlider';
 import { closePage, editDevice, getCurrentMode, getCCcmd } from '@PluginInterface';
-import LogicWatch from '@logic/watch';
-// const { funcDefine_active } = require('@/stateMachine/computed');
-// const { funcDefine } = require('@/stateMachine/base');
 
 export default {
-  mixins: [LogicWatch],
   components: {
     [Header.name]: Header,
     [List.name]: List,
@@ -66,56 +62,35 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       statueJson2: state => state.devOptions.statueJson2,
       dataObject: state => state.dataObject,
-      work_fanKey: state => state.work_fanKey,
-      Mod: state => state.dataObject.Mod,
-      WdSpd: state => state.dataObject.WdSpd,
-      SetTem: state => state.dataObject.SetTem,
-      TemSen: state => state.dataObject.TemSen,
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac
     }),
+    ...mapState('machine', {
+      baseData: state => state.baseData
+    }),
+    ...mapGetters('machine', ['funcDefine_active', 'statusMap']),
     iconClassList() {
       const iconMsg = require('@assets/iconfont/iconfont.json');
       const result = iconMsg.glyphs.map(icon => icon.font_class);
       return result;
     },
     miniIconList() {
-      if (!this.g_funcDefine_active.filter(module => module.type === 'active-button').length) return [];
-      const result = this.g_funcDefine.map(func => {
+      if (!this.funcDefine_active.filter(module => module.type === 'active-button').length) return [];
+      const result = this.baseData.funcDefine.map(func => {
         const id = func.identifier;
-        if (!this.g_statusMap[id]) return {};
-        const statusName = this.g_statusMap[id].status;
+        if (!this.statusMap[id]) return {};
+        const statusName = this.statusMap[id].statusName;
         const miniIcon = func.statusDefine[statusName].miniIcon;
         return miniIcon;
       });
       return result;
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.setCheckObject(this.dataObject);
-    });
-    setInterval(() => {}, 1000);
-  },
   methods: {
-    ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
     /**
      * @description 返回键
      */
@@ -127,19 +102,6 @@ export default {
      */
     moreInfo() {
       editDevice(this.mac);
-    },
-    showPopUp(key, able) {
-      able && (this.$refs[key].showPopup = true);
-    },
-    goPage(name) {
-      if (name === 'Sleep') {
-        this.$router.push({
-          name,
-          params: {
-            id: 2
-          }
-        });
-      }
     },
     // 场景模式保存按钮
     sceneSave() {

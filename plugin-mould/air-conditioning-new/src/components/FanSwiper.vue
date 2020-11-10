@@ -15,11 +15,9 @@
 import { Popup } from 'gree-ui';
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
-import { mapState, mapMutations, mapActions } from 'vuex';
-import WorkLogic from '@logic/work';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
-  mixins: [WorkLogic],
   components: {
     [Popup.name]: Popup,
     Swiper,
@@ -39,32 +37,34 @@ export default {
         touchRatio: 0.5,
         observer: true
       },
-      fanStatusList: [], // 风档的顺序
+      fanStatusNameList: [], // 风档的顺序
       currentStatus: '' // 当前状态
     };
   },
+  mounted() {
+    this.init();
+  },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       FanPopup: state => state.dataObject.FanPopup
     }),
+    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet']),
+    ...mapGetters('machine', ['statusLoop']),
     swiper() {
       return this.$refs.fanSwiper.$swiper;
     },
     slideStep() {
       return this.swiper && 1 / (this.swiper.slides.length - 1);
     },
-    disableSwiper() {
-      return this.g_hideStateArr.some(state => state.includes('FanPopup'));
-    },
     fanData() {
-      const result = this.fanStatusList.map((fanStatus, value) => {
+      const result = this.fanStatusNameList.map((fanStatus, value) => {
         // status定义
-        const statusDefine = this.work_fanDefine.statusDefine[fanStatus];
+        const statusDefine = this.fanDefine.statusDefine[fanStatus];
         // 定义key
         const key = fanStatus;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${this.work_fanIdentifier}_${statusName}`;
+        const stateName = `${this.fanIdentifier}_${statusName}`;
         const text = this.$language(`fan.${stateName}`);
         return { text, key, value };
       });
@@ -91,50 +91,34 @@ export default {
         this.showPopup = false;
       }
     },
-    disableSwiper(newVal) {
-      newVal && (this.showPopup = false);
+    fanAbleSet(newVal) {
+      newVal || (this.showPopup = false);
     },
-    g_statusLoop: {
+    fanCurrentStatusName: {
       handler(newVal) {
-        const startStatus = 'default';
-        const fanLoop = newVal[this.work_fanIdentifier];
-        if (fanLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[this.work_fanIdentifier]));
-          const length = result.length;
-          let i = 0;
-          while (result[0] !== startStatus && i < length) {
-            result.push(result.shift());
-            i += 1;
-          }
-          this.fanStatusList = result;
-        }
-      },
-      deep: true,
-      immediate: true
-    },
-    g_statusMap: {
-      handler(newVal) {
-        const statusMap = newVal[this.work_fanIdentifier];
-        if (statusMap) this.currentStatus = statusMap.status;
+        newVal && (this.currentStatus = newVal);
         this.updateIndex();
       },
-      immediate: true,
-      deep: true
+      immediate: true
     }
   },
   methods: {
-    ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+    ...mapMutations('control', {
+      setDataObject: 'SET_DATA_OBJECT'
     }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
+    init() {
+      const startStatus = 'default';
+      const fanLoop = this.statusLoop[this.fanIdentifier];
+      if (fanLoop) {
+        const fanStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[this.fanIdentifier]));
+        const length = fanStatusNameList.length;
+        let i = 0;
+        while (fanStatusNameList[0] !== startStatus && i < length) {
+          fanStatusNameList.push(fanStatusNameList.shift());
+          i += 1;
+        }
+        this.fanStatusNameList = fanStatusNameList;
+      }
     },
     // 更新到对应位置
     updateIndex() {
@@ -147,34 +131,8 @@ export default {
     },
     setFan() {
       if (!this.isTouch) return;
-      const status = this.fanData[this.swiper.activeIndex].key;
-      const funcDefine = this.work_fanDefine;
-      const statusDefine = funcDefine.statusDefine[status];
-      const identifier = funcDefine.identifier;
-      const currentStatus = this.currentStatus;
-      const customize = statusDefine.customize;
-      // 执行自定义函数 'before'
-      switch (customize) {
-        case 'replace':
-          this.customizeFunc(identifier, currentStatus, status);
-          return;
-        case 'before':
-          this.customizeFunc(identifier, currentStatus, status);
-          break;
-        case 'after':
-          setTimeout(() => {
-            this.customizeFunc(identifier, currentStatus, status);
-          }, 0);
-          break;
-        default:
-          break;
-      }
-      const moreCommand = statusDefine.moreCommand;
-      const json = funcDefine.json;
-      const value = statusDefine.value;
-      let setData = moreCommand || {};
-      setData[json] = value;
-      this.changeData(setData);
+      const statusName = this.fanData[this.swiper.activeIndex].key;
+      this.$stateMachine.toStatus(this.fanIdentifier, statusName);
     },
     // 亮起当前滑动项
     imshowSelect(index) {
@@ -208,5 +166,3 @@ export default {
   }
 };
 </script>
-
-<style></style>

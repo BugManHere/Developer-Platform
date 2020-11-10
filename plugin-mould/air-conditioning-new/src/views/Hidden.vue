@@ -14,7 +14,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       hiddenComponent: state => state.hiddenComponent
     })
   },

@@ -217,7 +217,8 @@ export const updateStates = (mac, states) => {
         resolve(...params);
       });
     } catch (err) {
-      reject(err);
+      err;
+      // reject(err);
     }
   });
 };
