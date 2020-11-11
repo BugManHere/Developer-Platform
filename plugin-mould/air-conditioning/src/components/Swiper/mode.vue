@@ -3,11 +3,12 @@
     <Swiper
       :ref="ref"
       class="mode-swiper"
-      :slides-data="options" 
+      :slides-data="options"
       @realIndex="swiperChange"
-      @activeIndex="setFanName"/>
+      @activeIndex="setFanName"
+    />
     <div class="mode-name">
-      <span v-text="modeName"/>
+      <span v-text="modeName" />
     </div>
   </div>
 </template>
@@ -30,27 +31,66 @@ export default {
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
       modeList: [
-        {img: require('@/assets/img/mode/auto.png'), name: this.$language('mode.auto'), value: 0, key: 'Mod_auto'},
-        {img: require('@/assets/img/mode/auto.png'), name: this.$language('mode.auto'), value: 5, key: 'Mod_auto_b'},
-        {img: require('@/assets/img/mode/cool.png'), name: this.$language('mode.cool'), value: 1, key: 'Mod_cool'},
-        {img: require('@/assets/img/mode/dry.png'), name: this.$language('mode.dry'), value: 2, key: 'Mod_dry'},
-        {img: require('@/assets/img/mode/fan.png'), name: this.$language('mode.fan'), value: 3, key: 'Mod_fan'},
-        {img: require('@/assets/img/mode/heat.png'), name: this.$language('mode.heat'), value: 4, key: 'Mod_heat'},
+        {
+          img: require('@/assets/img/mode/auto.png'),
+          name: this.$language('mode.auto'),
+          value: 0,
+          key: 'Mod_auto'
+        },
+        {
+          img: require('@/assets/img/mode/auto.png'),
+          name: this.$language('mode.auto'),
+          value: 5,
+          key: 'Mod_auto_b'
+        },
+        {
+          img: require('@/assets/img/mode/cool.png'),
+          name: this.$language('mode.cool'),
+          value: 1,
+          key: 'Mod_cool'
+        },
+        {
+          img: require('@/assets/img/mode/dry.png'),
+          name: this.$language('mode.dry'),
+          value: 2,
+          key: 'Mod_dry'
+        },
+        {
+          img: require('@/assets/img/mode/fan.png'),
+          name: this.$language('mode.fan'),
+          value: 3,
+          key: 'Mod_fan'
+        },
+        {
+          img: require('@/assets/img/mode/heat.png'),
+          name: this.$language('mode.heat'),
+          value: 4,
+          key: 'Mod_heat'
+        }
       ],
       modeName: 'auto'
     };
   },
   computed: {
     ...mapState({
+      ableSend: state => state.ableSend,
       Mod: state => state.dataObject.Mod,
       devOptions: state => state.devOptions,
-      dataObject: state => state.dataObject,
+      dataObject: state => state.dataObject
     }),
     imshowList() {
       const result = this.modeList.filter(item => {
-        return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);
+        return (
+          !this.g_hideFuncArr.includes(item.key) &&
+          this.g_identifierArr.includes(item.key)
+        );
       });
-      result.length || result.push({img: require('@/assets/img/pow.png'), name: '无内容', index: 0});
+      result.length ||
+        result.push({
+          img: require('@/assets/img/pow.png'),
+          name: '无内容',
+          index: 0
+        });
       return result;
     },
     options() {
@@ -67,7 +107,7 @@ export default {
     // 实际index
     currentIndex() {
       return this.Mod;
-    },
+    }
   },
   watch: {
     currentIndex(newVal) {
@@ -76,7 +116,7 @@ export default {
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
       this.updateSwiper();
-    },
+    }
   },
   mounted() {
     this.setList();
@@ -102,7 +142,7 @@ export default {
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         const index = this.countIndex(this.swiperValue, i);
-        list.push(this.imshowList[index]);  
+        list.push(this.imshowList[index]);
       }
       this.itemList = list;
     },
@@ -119,13 +159,13 @@ export default {
         this.$refs[this.ref].setIndex(this.leftLen); // 定位到中间
       });
     },
-    // 计算滑轮向左（右）滑动moveLen个元素后的值                                                                                                              
+    // 计算滑轮向左（右）滑动moveLen个元素后的值
     countIndex(fromIndex, moveLen) {
       let toIndex = fromIndex + moveLen;
       const maxLen = this.imshowList.length;
       while (toIndex < 0) {
         toIndex += maxLen;
-      } 
+      }
       while (toIndex >= maxLen) {
         toIndex -= maxLen;
       }
@@ -135,17 +175,27 @@ export default {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(moveLen); i += 1) {
-        const startIndex = this.swiperValue + direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex =
+          this.swiperValue +
+          direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
-        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
+        this.$refs[this.ref][funcName](
+          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
+        );
       }
     },
     removeSlide(moveLen) {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
-      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
-        return direction ? (this.leftLen + this.rightLen) - index : index;
-      }); // 需要移除的slide的Index
+      const removeLen =
+        Math.abs(moveLen) <= this.swiperLen
+          ? Math.abs(moveLen)
+          : this.swiperLen;
+      const removeIndexList = Array.from(
+        { length: removeLen },
+        (item, index) => {
+          return direction ? this.leftLen + this.rightLen - index : index;
+        }
+      ); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 滑动事件
@@ -153,22 +203,31 @@ export default {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
       // const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
-
       // 缓存温度
-      const temSetting = window.storage.get('temSetting') || {};
-      let sendData = {...temSetting[toIndex], Mod: this.imshowList[toIndex].value, Emod: 0};
+      const temSetting = this.ableSend
+        ? window.storage.get('temSetting') || {}
+        : {};
+      let sendData = {
+        ...temSetting[toIndex],
+        Mod: this.imshowList[toIndex].value,
+        Emod: 0
+      };
       temSetting[this.dataObject.Mod] = {
         SetTem: this.dataObject.SetTem,
         'Add0.5': this.dataObject['Add0.5'],
-        'Add0.1': this.dataObject['Add0.1'],
+        'Add0.1': this.dataObject['Add0.1']
       };
       window.storage.set('temSetting', temSetting);
 
       // 自动模式需要发送温度
-      toIndex || (sendData = {...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0});
+      toIndex ||
+        (sendData = { ...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0 });
 
       // M3在WiFi处作了特殊处理，app要兼容
-      if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {
+      if (
+        sendData.Mod === 4 &&
+        this.devOptions.identifierArr.includes('AssHt(Auto)')
+      ) {
         sendData.AssHt = 0;
       }
 
@@ -177,7 +236,9 @@ export default {
     },
     setFanName(index) {
       if (index === undefined) {
-        this.modeName = this.imshowList.find(item => item.value === this.swiperValue).name;
+        this.modeName = this.imshowList.find(
+          item => item.value === this.swiperValue
+        ).name;
         return;
       }
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
