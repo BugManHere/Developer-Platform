@@ -48,7 +48,7 @@ export default {
     ...mapState('control', {
       FanPopup: state => state.dataObject.FanPopup
     }),
-    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet']),
+    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'modCurrentStatusName']),
     ...mapGetters('machine', ['statusLoop']),
     swiper() {
       return this.$refs.fanSwiper.$swiper;
@@ -94,9 +94,10 @@ export default {
     fanAbleSet(newVal) {
       newVal || (this.showPopup = false);
     },
-    fanCurrentStatusName: {
-      handler(newVal) {
-        newVal && (this.currentStatus = newVal);
+    modCurrentStatusName: {
+      handler() {
+        this.fanCurrentStatusName && (this.currentStatus = this.fanCurrentStatusName);
+        this.updateStatusNameList();
         this.updateIndex();
       },
       immediate: true
@@ -107,18 +108,7 @@ export default {
       setDataObject: 'SET_DATA_OBJECT'
     }),
     init() {
-      const startStatus = 'default';
-      const fanLoop = this.statusLoop[this.fanIdentifier];
-      if (fanLoop) {
-        const fanStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[this.fanIdentifier]));
-        const length = fanStatusNameList.length;
-        let i = 0;
-        while (fanStatusNameList[0] !== startStatus && i < length) {
-          fanStatusNameList.push(fanStatusNameList.shift());
-          i += 1;
-        }
-        this.fanStatusNameList = fanStatusNameList;
-      }
+      this.updateStatusNameList();
     },
     // 更新到对应位置
     updateIndex() {
@@ -162,6 +152,20 @@ export default {
         this.imshowSelect(index);
         this.isTouch = true;
       });
+    },
+    updateStatusNameList() {
+      const startStatus = 'default';
+      const fanLoop = this.statusLoop[this.fanIdentifier];
+      if (fanLoop) {
+        const fanStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[this.fanIdentifier]));
+        const length = fanStatusNameList.length;
+        let i = 0;
+        while (fanStatusNameList[0] !== startStatus && i < length) {
+          fanStatusNameList.push(fanStatusNameList.shift());
+          i += 1;
+        }
+        this.fanStatusNameList = fanStatusNameList;
+      }
     }
   }
 };

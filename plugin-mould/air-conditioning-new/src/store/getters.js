@@ -101,13 +101,11 @@ export default {
       .filter(model => model.type === `inertia-${state.temKey}`)
       .filter(model => !getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
     // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
-    if (models.length) return models[0].json;
-    return undefined; // 默认字段
+    return models.length && models[0].json; // 默认字段
   },
   // 温度显示值
   temSetVal: (state, getters) => {
-    if (state.temSetJson) return getters.inputMap[state.temSetJson];
-    return '';
+    return getters.temSetJson && getters.inputMap[getters.temSetJson];
   },
   // 温度最小值设定
   temMinVal: (state, getters) => {

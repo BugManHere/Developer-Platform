@@ -8,6 +8,7 @@ let _timer2 = null; // 延时发送指令定时器
 let _timer3 = null; // 重启轮询定时器
 let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
+let hasMqtt = isMqtt();
 
 const { key } = require('@/../plugin.id.json');
 const { moreOption } = require(`@/../../../output/${key}.json`);
@@ -71,19 +72,18 @@ export default {
   async [types.INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      await dispatch(types.INIT_DEVICE_DATA);
+      dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
-      dispatch(types.GET_DEVICE_DATA);
+      hasMqtt || dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
-      console.log('-------------------------isMqtt');
-      console.log(isMqtt());
-      setMqttStatusCallback(state.mac, data => {
-        dispatch(types.MQTT_CALLBACK, data);
-      });
+      hasMqtt &&
+        setMqttStatusCallback(state.mac, data => {
+          dispatch(types.MQTT_CALLBACK, data);
+        });
     } catch (e) {
       console.warn(e);
     } finally {
@@ -96,7 +96,7 @@ export default {
   /**
    * @description 初始化设备数据
    */
-  async [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
+  [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
@@ -107,7 +107,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -145,14 +145,17 @@ export default {
   },
 
   /**
-   * @description 获取设备信息，并开始轮询设备状态
+   * @description 获取设备信息
    */
-  async [types.GET_DEVICE_INFO]({ commit, state }) {
+  [types.GET_DEVICE_INFO]({ commit, state }) {
     try {
       const { mac } = state;
-      const res = await getInfo(mac).catch(e => console.error(e));
-      const deviceInfo = JSON.parse(res);
-      commit(types.SET_DEVICE_INFO, deviceInfo);
+      getInfo(mac)
+        .then(res => {
+          const deviceInfo = JSON.parse(res);
+          commit(types.SET_DEVICE_INFO, deviceInfo);
+        })
+        .catch(e => console.error(e));
     } catch (e) {
       console.error(e);
     }
@@ -200,8 +203,8 @@ export default {
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          dispatch(types.GET_DEVICE_DATA);
-          dispatch(types.GET_DEVICE_INFO);
+          hasMqtt || dispatch(types.GET_DEVICE_DATA);
+          hasMqtt || dispatch(types.GET_DEVICE_INFO);
         }, 5000);
       }
     } else {

@@ -1,18 +1,19 @@
 import * as types from './types';
+import * as rootTypes from '../types';
+
 import Vue from 'vue';
 
-const { customizeFunction, customizeInit } = require('./userdef');
+const { customizeFunction, customizeInit } = require('../userdef');
 
 export default {
   /**
-   * @description 状态机初始化
+   * @param {Object} context Vuex的context对象
    */
   [types.INIT](context) {
-    const { commit } = context;
     // 获取配置
     const baseData = getConfig();
     // 更新配置到vuex
-    updateConfig({ commit }, baseData);
+    updateConfig(context, baseData);
     // 创建状态机
     Vue.prototype.$stateMachine = new stateMachine(context);
     // 执行自定义函数初始化
@@ -21,7 +22,8 @@ export default {
 
   /**
    * @description 状态机执行事件
-   * @input stateQueue: 事件队列
+   * @param {Object} context Vuex的context对象
+   * @param {Array} stateQueue 事件队列
    */
   [types.RUN_QUEUE](context, stateQueue) {
     const { getters, dispatch } = context;
@@ -42,7 +44,7 @@ export default {
     const setData = nextStatusInfo.setData;
     // 定义自定义函数执行函数
     const runCustomizeFunction = identifier => {
-      // 先判断是否存在，如果存在，传入content与参数currentStatusName与nextStatusName执行
+      // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
       customizeFunction[identifier] && customizeFunction[identifier](context, currentStatusName, nextStatusInfo.statusName);
     };
     // 如果自定义函数接入方式为'before'，在返回输出前执行动作
@@ -52,22 +54,28 @@ export default {
       runCustomizeFunction(identifier);
     } else {
       // 将状态发送值输出
-      dispatch('STATE_MACHINE_INTERFACE', setData, { root: true }).then(() => {
+      dispatch(
+        rootTypes.STATE_MACHINE_INTERFACE,
+        { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName },
+        { root: true }
+      ).then(() => {
         // 如果自定义函数接入方式为'after'，在执行完输出函数后执行自定义函数
         customize === 'after' && runCustomizeFunction(identifier);
       });
     }
-    // 状态名称
-    const stateName = `${identifier}_${nextStatusName}`;
     // 检查互斥
-    checkLogic(context, stateName);
+    checkLogic(context, identifier, nextStatusName);
     // 如果队列里面还有事件，继续执行
     stateQueue.length && dispatch(types.RUN_QUEUE, stateQueue);
   }
 };
 
-// 定义状态机
 class stateMachine {
+  /**
+   *Creates an instance of stateMachine.
+   * @param {Object} context Vuex的context对象
+   * @memberof stateMachine 状态机模式
+   */
   constructor(context) {
     // 记录content
     this.vuexContext = context;
@@ -98,6 +106,10 @@ class stateMachine {
     // 触发事件
     this.vuexContext.dispatch(types.RUN_QUEUE, this.stateQueue);
   }
+  // 将checkLogic方法暴露
+  checkLogic(identifier) {
+    checkLogic(this.vuexContext, identifier);
+  }
 }
 
 // 执行自定义函数初始化
@@ -109,7 +121,10 @@ function runCustomizeInit(context) {
   });
 }
 
-// 获取配置
+/**
+ * @description 获取配置
+ * @returns json配置
+ */
 function getConfig() {
   // 配置key
   const { key } = require('@/../plugin.id.json');
@@ -127,8 +142,12 @@ function getConfig() {
   return getLocalConfig() || getServeConfig();
 }
 
-// 将配置更新到vuex
-function updateConfig({ commit }, baseData) {
+/**
+ * @description 将配置更新到vuex
+ * @param {Object} { commit, dispatch } Vuex的context对象
+ * @param {Object} baseData 从json获取的配置
+ */
+function updateConfig({ commit, dispatch }, baseData) {
   // 转换指令
   str2NumMap(baseData.funcDefine);
   // 更新到vuex
@@ -141,6 +160,8 @@ function updateConfig({ commit }, baseData) {
       statueJson2: JSON.stringify(baseData.moreOption.statueJson2)
     }
   });
+  // 提交设备名变更
+  dispatch(rootTypes.UPDATE_DEVICENAME, { data: { deviceName: baseData.deviceName }, type: 'deviceName' }, { root: true });
 }
 
 // 转换指令中的字符串（不重要，可以不看）
@@ -162,14 +183,16 @@ function str2NumMap(funcDefine) {
 }
 
 /**
- * @description 执行互斥
- * @input context: Vuex的context对象
- * @input stateName: 状态名称
+ * @param {Object} context Vuex的context对象
+ * @param {String} identifier model的唯一标识符
+ * @param {String} statusName 状态名称
  */
-function checkLogic(context, stateName) {
+function checkLogic(context, identifier, statusName) {
   const { state, getters } = context;
+  const checkStatusName = statusName || getters.statusMap[identifier].statusName;
+  const checkStateName = `${identifier}_${checkStatusName}`;
   // 提取互斥逻辑
-  const excludeStateNameArr = state.baseData.excludeMap[stateName];
+  const excludeStateNameArr = state.baseData.excludeMap[checkStateName];
   // 如果该状态存在互斥
   if (!excludeStateNameArr || !excludeStateNameArr.length) return;
   // 轮询互斥关系
@@ -231,5 +254,5 @@ function initData({ state, dispatch, rootGetters }) {
     }
   });
   // 输出初始化数据
-  dispatch('STATE_MACHINE_INITDATA', data, { root: true });
+  dispatch('STATE_MACHINE_INITDATA', { data, type: 'init' }, { root: true });
 }

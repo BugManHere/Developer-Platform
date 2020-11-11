@@ -1,16 +1,17 @@
-import { getCloudTimerByMac, showToast } from '@PluginInterface';
+import { timerListDevice, showToast } from '@PluginInterface';
 
 export const customizeFunction = {
-  AppTimer: () => {
+  AppTimer: ({ rootState }) => {
+    const mac = rootState.control.mac;
     try {
-      getCloudTimerByMac(this.state_mac);
+      timerListDevice(mac);
     } catch (e) {
-      console.log('%c running getCloudTimerByMac()', 'color: blue');
+      console.log('%c running timerListDevice()', 'color: blue');
     }
   },
-  ConstUD: (_, currentStatus) => {
+  ConstUD: ({ dispatch }, currentStatus) => {
     const goSweep = id => {
-      this.$router.push({
+      window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
@@ -22,12 +23,12 @@ export const customizeFunction = {
     const storage = window.storage;
     const funcData = storage.get('funcData') || {};
     if (funcData.ConstUD) {
-      this.changeData({ SwUpDn: funcData.ConstUD });
+      dispatch('STATE_MACHINE_INTERFACE', { SwUpDn: funcData.ConstUD }, { root: true });
     } else goSweep(2);
   },
-  ConstLR: (_, currentStatus) => {
+  ConstLR: ({ dispatch }, currentStatus) => {
     const goSweep = id => {
-      this.$router.push({
+      window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
@@ -39,11 +40,11 @@ export const customizeFunction = {
     const storage = window.storage;
     const funcData = storage.get('funcData') || {};
     if (funcData.ConstLR) {
-      this.changeData({ SwingLfRig: funcData.ConstLR });
+      dispatch('STATE_MACHINE_INTERFACE', { SwingLfRig: funcData.ConstLR }, { root: true });
     } else goSweep(1);
   },
   Elc: () => {
-    this.$router.push('Electric');
+    window.myvm.$router.push('Electric');
   },
   ModPopup: ({ commit }) => {
     commit('control/SET_DATA_OBJECT', { ModPopup: 1 }, { root: true });
@@ -112,4 +113,22 @@ export const customizeInit = {
   },
   // 噪声二级页面方法
   NoiseSet: () => {}
+};
+
+/**
+ * @returns {Object} identifier对应的缓存信息
+ * @param {String} storageKey 在localstorage中用作存储的key
+ * @param {Array} jsons 缓存的json数组
+ */
+export const cacheDataMap = {
+  Mod: [
+    {
+      storageKey: 'temSetting',
+      jsons: ['SetTem', 'Add0.5', 'Add0.1']
+    },
+    {
+      storageKey: 'fanSetting',
+      jsons: ['WdSpd', 'Tur', 'Quiet']
+    }
+  ]
 };
