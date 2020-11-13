@@ -156,7 +156,16 @@ module.exports = {
     noBodySave: 'Nobody',
     advance_vocCtlL: 'AC-Voice',
     advance_tempunit: 'Temp Unit',
-    advance_humidification: 'humidification'
+    advance_humidification: 'humidification',
+    // 商用
+    OutHome: '外出模式',
+    circulationPatterns: '循环模式',
+    LoopMod: '全新风',
+    LoopMod_混合风: '混合风',
+    SvSt: '节能',
+    Blo: '干燥',
+    Humi: '加湿',
+    x: '再热除湿',
   },
   sweep: {
     speedTitle: 'Swing',

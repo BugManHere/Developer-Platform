@@ -23,6 +23,7 @@ let _timer3 = null; // 重启轮询定时器
 let setData = {};
 let lastObject = {};
 let sendTime = 0;
+let isFirst = true;
 /**
  * @description 封装发送指令代码
  */
@@ -153,6 +154,12 @@ function getStatusOfDev({ state, commit, dispatch }) {
   fullstatueJson.cols = JSON.parse(state.devOptions.statueJson2);
   return sendDataToDevice(state.mac, JSON.stringify(fullstatueJson), false)
     .then(_res => {
+      // 解决进来时设备已离线问题
+      if (_res === '' && isFirst) {
+        showToast('网络异常', 1);
+        closePage();
+      }
+      isFirst && (isFirst = false);
       const DataObject = {};
       const res = JSON.parse(_res);
       fullstatueJson.cols.forEach((json, index) => {

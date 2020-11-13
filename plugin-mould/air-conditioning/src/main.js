@@ -153,9 +153,9 @@ dev ? createVue() : '';
  */
 window.backButton = function backButton() {
   const { name } = router.currentRoute;
-  if (name === 'Error' || name === 'Home' || name === 'Offline') {
+  if (name === 'Error' || name === 'Home' || name === 'Offline' || name === 'Status') {
     closePage();
-  } else if (name === 'Voice' || name === 'Sweep' || name === 'Air') {
+  } else if (['Voice', 'Sweep', 'Air', 'Loop', 'Humi'].includes(name)) {
     router.push({ name: 'Home' }).catch(err => {
       err;
     });

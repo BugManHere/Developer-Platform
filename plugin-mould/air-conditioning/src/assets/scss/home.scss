@@ -126,6 +126,17 @@
       }
     }
   }
+
+  // 故障提示框
+  .notice-bar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    .gree-notice-bar-content {
+      color: white;
+    }
+  }
 }
 
 .dialog-co2 {

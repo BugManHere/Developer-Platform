@@ -243,6 +243,7 @@ export default {
       }
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
       this.modeName = this.imshowList[toIndex].name;
+      this.$emit('modeName', this.modeName);
     }
   }
 };

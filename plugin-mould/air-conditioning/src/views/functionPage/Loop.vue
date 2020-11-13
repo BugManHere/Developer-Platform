@@ -1,16 +1,16 @@
 <template>
   <gree-view bg-color="#404040">
     <gree-page class="page-nobodysave">
-      <gree-header>{{ $language('btn.LoopMod') }}</gree-header>
+      <gree-header>{{ $language('btn.circulationPatterns') }}</gree-header>
 
       <div class="Loop-btn-block"> 
         <gree-row v-for="(item, index) in LoopModList" :key="index">
           <gree-col>
-            <gree-button round :type="LoopMod === index + 1 ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
+            <gree-button round :type="LoopMod === index ? 'primary' : 'default'" @click="changeLoopMod(index)">{{ item }}</gree-button>
           </gree-col>
         </gree-row>
       </div>
-
+      <div style="display:none">{{ errStatus }}</div>
     </gree-page>
   </gree-view>
 </template>
@@ -22,9 +22,10 @@ import {
   showToast,
   hideLoading
 } from '@PluginInterface';
+import errorConfig from '@/mixins/utils/error';
 
 export default {
-  name: 'Dazzling',
+  name: 'Loop',
   components: {
     [Header.name]: Header,
     [Radio.name]: Radio,
@@ -37,9 +38,10 @@ export default {
     [Row.name]: Row,
     [Col.name]: Col,
   },
+  mixins: [errorConfig],
   data() {
     return {
-      LoopModList: ['全新风', '混合风', '循环风'],
+      LoopModList: ['全新风', '循环风'],
     };
   },
   computed: {
@@ -48,6 +50,7 @@ export default {
       Mod: state => state.dataObject.Mod,
       LoopMod: state => state.dataObject.LoopMod,
       Dazzling: state => state.dataObject.Dazzling,
+      OutHome: state => state.dataObject.OutHome,
     }),
   },
   watch: {
@@ -77,6 +80,20 @@ export default {
         }
         this.$router.push({name: 'Home'}).catch(err => { err; });
       }
+    },
+
+    OutHome(newVal) {
+      if (newVal) {
+        try {
+          showToast('外出模式开启,不可设置。', 1);
+        } catch (e) {
+          Toast({
+            content: '外出模式开启,不可设置。',
+            position: 'bottom'
+          });
+        }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
+      }
     }
   },
   mounted() {
@@ -90,8 +107,9 @@ export default {
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
     }),
+    
     changeLoopMod(index) {
-      const obj = {LoopMod: index + 1};
+      const obj = {LoopMod: index};
       this.setState(['ableSend', true]);
       this.setDataObject(obj);
       this.sendCtrl(obj);
@@ -119,6 +137,10 @@ export default {
     }
     .gree-button:nth-of-type(1){
         margin-top: 110px;
+    }
+    .gree-button__text{
+      font-size: 40px !important;
+      color: #000 !important;
     }
   }
 }
