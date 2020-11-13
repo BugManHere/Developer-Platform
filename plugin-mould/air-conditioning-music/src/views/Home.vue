@@ -16,7 +16,7 @@
       </gree-header>
     </div>
     <!-- 卡片标题，预留的吸顶位置 -->
-    <div id="blank-box" style="width: auto; height:auto" />
+    <!-- <div id="blank-box" v-show="isCeiling" /> -->
     <gree-page no-navbar class="page-home">
       <!-- 主要内容 -->
       <div class="page-main">
@@ -37,18 +37,27 @@
     </gree-page>
     <!-- 尾部 -->
     <BottomButton />
+    <gree-overlay :absolute="true" v-show="authDialog === 1" z-index="998" />
+    <div class="login-dialog" v-show="authDialog === 1">
+      <div class="login-dialog-box">
+        <div v-text="'智慧鸟需要你的云小微和酷狗账号授权，才能给您带来更丰富的内容'" class="login-dialog-box-msg" />
+        <div v-text="'跳过，暂不授权 >'" class="login-dialog-box-cancel" @click="authCancel" />
+        <gree-button round v-text="'去授权'" size="small" class="login-dialog-box-confirm" @click="authConfirm" />
+      </div>
+    </div>
   </gree-view>
 </template>
 
 <script>
-import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog } from 'gree-ui';
+import { Header, PowerOff, Row, Col, NoticeBar, Icon, Dialog, Overlay, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import {
   closePage,
   editDevice,
   changeBarColor,
   getCCcmd,
-  getCurrentMode
+  getCurrentMode,
+  toVoicePage
   // getMsg
 } from '@PluginInterface';
 import VConsole from 'vconsole/dist/vconsole.min.js';
@@ -58,6 +67,8 @@ import LogicWatch from '@logic/watch';
 
 export default {
   components: {
+    [Button.name]: Button,
+    [Overlay.name]: Overlay,
     [Header.name]: Header,
     [PowerOff.name]: PowerOff,
     [Row.name]: Row,
@@ -84,6 +95,7 @@ export default {
   computed: {
     ...mapState({
       skinConfig: (state, getters) => getters.skinConfig,
+      authDialog: state => state.musicData.authDialog,
       dataObject: state => state.dataObject,
       devOptions: state => state.devOptions,
       devname: state => state.deviceInfo.name,
@@ -119,6 +131,7 @@ export default {
 
   methods: {
     ...mapMutations({
+      setMusicData: 'SET_MUSIC_DATA',
       setDataObject: 'SET_DATA_OBJECT',
       setCheckObject: 'SET_CHECK_OBJECT',
       setState: 'SET_STATE'
@@ -181,6 +194,13 @@ export default {
             });
         }
       });
+    },
+    authCancel() {
+      this.setMusicData({ authDialog: 0 });
+    },
+    authConfirm() {
+      this.setMusicData({ authDialog: 0 });
+      toVoicePage(this.mac, 2);
     }
   }
 };

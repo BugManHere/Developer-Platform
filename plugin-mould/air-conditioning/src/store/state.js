@@ -22,7 +22,22 @@ const state = {
     CO2: 401,
     SmartSlpModEx: 0,
     SwhSlp: 1,
-    TemSen: 65 // 室温
+    TemSen: 65, // 室温
+    FreshAirConditionState: 0,
+    Humi: 0,
+    LoopMod: 0,
+    ErrCode1: 0,
+    ErrCode2: 0,
+    JFerr: 0,
+    ErrCodeType: 0, // 温度控制是否禁用
+    SieveState: 0, // 滤网状态
+    WdSupPM: 0, // 送风PM2.5浓度
+    AirCO2: 0, // 回风CO2浓度
+    WdSupTem: 50, // 送风温度
+    InAirHumi: 50, // 室内回风湿度
+    InAirTem: 50, // 室内回风温度
+    OutEnvTem: 50, // 室外环境温度
+    fandisable: 0 // 风挡可调
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

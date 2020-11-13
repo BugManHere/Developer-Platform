@@ -2,7 +2,7 @@
   <!-- 底部按钮 -->
   <gree-toolbar position="bottom" no-hairline class="bottom-btn">
     <gree-row>
-      <div class="pow-button" :class="{ off: !Pow - 0 }" @click="changeData({ Pow: !Pow - 0 })">
+      <div class="pow-button" :class="{ off: !Pow - 0 }" @click="switchPow">
         <span class="iconfont iconfont-kaiguan" />
         <div class="button-boder" />
         <div class="ripple" v-show="!Pow" />
@@ -28,29 +28,27 @@
 
 <script>
 import { Row, Col, ToolBar } from 'gree-ui';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
-import Customize from '@logic/customize';
-import WorkLogic from '@logic/work';
 
 export default {
-  mixins: [WorkLogic, Customize],
   components: {
     [Row.name]: Row,
     [Col.name]: Col,
     [ToolBar.name]: ToolBar
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
       SwhSlp: state => state.dataObject.SwhSlp
     }),
+    ...mapGetters(['popupDefine']),
+    ...mapGetters('machine', ['statusMap', 'noDirectionFuncArr']),
     btnList() {
-      if (!Object.keys(this.g_statusMap).length) return [];
-      const result = this.work_popupDefine.map(module => {
-        // 定义key
-        const key = module.identifier;
-        if (!this.g_statusMap[key])
+      if (!Object.keys(this.statusMap).length) return [];
+      const result = this.popupDefine.map(model => {
+        const identifier = model.identifier;
+        if (!this.statusMap[identifier])
           return {
             icon: {},
             func: () => {
@@ -58,51 +56,30 @@ export default {
             }
           };
         // 当前status定义
-        const statusDefind = this.g_statusMap[key].define;
+        const status = this.statusMap[identifier].status;
         // 取名称
-        const defaultNameKey = `btn.${key}`;
-        const statusName = statusDefind.name;
+        const defaultNameKey = `btn.${identifier}`;
+        const statusName = status.name;
         const stateName = `${defaultNameKey}_${statusName}`;
         const name = stateName === this.$language(stateName) ? this.$language(defaultNameKey) : this.$language(stateName);
         // 图标
-        const icon = glyphs.some(item => item.font_class === statusDefind.icon.key) ? statusDefind.icon : { key: 'undefined', type: 'off' };
+        const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         // 是否置灰
-        const gray = this.g_noDirectionFuncArr.includes(key);
+        const gray = this.noDirectionFuncArr.includes(identifier);
         // 是否隐藏
-        const hide = statusDefind.icon.key === 'disable';
+        const hide = status.icon.key === 'disable';
         // 执行的函数
-        const func = (identifier, isGray = false) => {
-          this.changeStatus(identifier, isGray);
+        const func = (identifier, disable = false) => {
+          disable || this.$stateMachine.nextStatus(identifier);
         };
-        return { key, name, icon, gray, hide, func };
+        return { key: identifier, name, icon, gray, hide, func };
       });
       return result;
     }
   },
   methods: {
-    changeStatus(identifier, isGray) {
-      if (isGray) return;
-      const customize = this.g_nextStatusMap[identifier].customize;
-      const currentStatus = this.g_statusMap[identifier].status; // 当前状态
-      const nextStatus = this.g_nextStatusMap[identifier].status; // 下一状态
-      // 执行自定义函数 'before'
-      switch (customize) {
-        case 'replace':
-          this.customizeFunc(identifier, currentStatus, nextStatus);
-          return;
-        case 'before':
-          this.customizeFunc(identifier, currentStatus, nextStatus);
-          break;
-        case 'after':
-          setTimeout(() => {
-            this.customizeFunc(identifier, currentStatus, nextStatus);
-          }, 0);
-          break;
-        default:
-          break;
-      }
-      const setData = this.g_nextStatusMap[identifier].setData;
-      this.changeData(setData);
+    switchPow() {
+      this.$stateMachine.nextStatus('Pow');
     }
   }
 };

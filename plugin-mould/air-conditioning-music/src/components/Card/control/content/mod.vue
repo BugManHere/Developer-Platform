@@ -1,15 +1,6 @@
 <template>
-  <div class="mod-content" :style="contentHeight">
-    <CardHeader header-id="control-card-header" ref="header" @isCeiling="getCeiling">
-      <template v-slot:left>
-        <span v-text="'模式'" />
-      </template>
-      <template v-slot:right>
-        <span v-text="currentModName" @click="viewMod" />
-        <gree-icon name="arrow-down" size="lg" @click="viewMod" :class="{ unfold }" />
-      </template>
-    </CardHeader>
-    <div class="mod-content-box" ref="content">
+  <div class="mod-content">
+    <div class="mod-content-box" ref="content" :style="isMounted && { height: modUnfold ? `${contentHeight}px` : 0 }">
       <btn-content :btn-list="btnList" />
     </div>
   </div>
@@ -17,45 +8,46 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
-import CardHeader from '@/components/card/CardHeader';
 import WorkLogic from '@logic/work';
 import BtnContent from './btn/index';
-import { Icon } from 'gree-ui';
 
 export default {
   mixins: [WorkLogic],
   components: {
-    CardHeader,
-    [Icon.name]: Icon,
     'btn-content': BtnContent
+  },
+  props: {
+    modUnfold: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
-      unfold: false, // 是否展开模式选择
-      headerHeight: 0, // 顶栏高度
-      boxHeight: 0, // 内容高度
-      contentTop: 0, // 内容提升高度
-
+      contentHeight: 0,
+      isMounted: false,
       modStatusList: [], // 模式的顺序
       currentStatus: '', // 当前状态
       lastStatus: '' // 上一个状态,
     };
   },
+  mounted() {
+    const mountedTimer = setInterval(() => {
+      this.contentHeight = this.$refs && this.$refs.content.clientHeight;
+      if (this.contentHeight) {
+        clearInterval(mountedTimer);
+        this.isMounted = true;
+        console.log(this.contentHeight);
+      }
+    }, 20);
+  },
   computed: {
     ...mapState({
-      imshowType: state => state.musicData.imshowType,
       Pow: state => state.dataObject.Pow
     }),
     currentModName() {
       const defined = this.btnList.find(fan => fan.key === this.currentStatus);
       const result = defined && defined.name;
-      return result;
-    },
-    contentHeight() {
-      if (!this.headerHeight) return {};
-      const result = {};
-      let height = this.unfold ? this.headerHeight + this.boxHeight : this.headerHeight;
-      result.height = `${height}px`;
       return result;
     },
     // 按钮列表
@@ -89,17 +81,6 @@ export default {
       return result;
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.headerHeight = this.$refs.header.$el.clientHeight;
-      const getRealHeight = obj => {
-        const oStyle = obj.currentStyle || window.getComputedStyle(obj, null);
-        return parseFloat(oStyle.height);
-      };
-      this.headerHeight = getRealHeight(this.$refs.header.$el);
-      this.boxHeight = getRealHeight(this.$refs.content);
-    });
-  },
   watch: {
     g_statusLoop: {
       handler(newVal) {
@@ -131,6 +112,12 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    currentModName: {
+      handler(newVal) {
+        this.$emit('modName', newVal);
+      },
+      immediate: true
     }
   },
   methods: {
@@ -148,18 +135,6 @@ export default {
       this.setState({ ableSend: true });
       this.setDataObject(map);
       this.sendCtrl(map);
-    },
-    changeImshow(type) {
-      this.setMusicData({ imshowType: type });
-    },
-    // 展开模式选择
-    viewMod() {
-      this.unfold = !this.unfold;
-    },
-    // 是否吸顶
-    getCeiling(isCeiling) {
-      this.$emit('isCeiling', isCeiling);
-      this.$emit('headerHeight', this.headerHeight);
     },
     changeStatus(status, isGray) {
       if (isGray) return;
@@ -226,52 +201,19 @@ export default {
 
 <style lang="scss">
 $fontSize: 44px;
-// $cardHeaderHeight: 142px;
 .mod-content {
   position: relative;
-  height: $cardHeaderHeight;
   transition: all 0.5s;
   &-box {
     position: relative;
+    transition: all 0.5s;
     bottom: 0;
-    height: auto;
     background-color: #fff;
     font-size: $fontSize;
     padding: 0 32px;
     .col,
     .col-25 {
       padding: 20px 0 56px 0 !important;
-    }
-  }
-}
-#control-card-header {
-  .left {
-    padding-left: 74px;
-    display: flex;
-    align-items: flex-end;
-    color: rgba(64, 70, 87, 1);
-    font-size: 48px;
-    padding-bottom: 12px;
-  }
-  .right {
-    width: 156px;
-    padding-right: 68px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-bottom: 10px;
-    font-size: 48px;
-    color: #9ea0a7;
-    span {
-      position: relative;
-      right: 16px;
-    }
-    i {
-      transition: all 0.5s;
-      transform: scaleX(0.7);
-      &.unfold {
-        transform: rotate(-90deg) scaleX(0.7);
-      }
     }
   }
 }

@@ -34,7 +34,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
       UDFanPort: state => state.dataObject.UDFanPort
     }),
@@ -74,11 +74,11 @@ export default {
     this.isActive = this.UDFanPort !== 1;
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setDataObject: 'SET_DATA_OBJECT',
       setState: 'SET_STATE'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       sendCtrl: 'SEND_CTRL'
     }),
     switchUDFanPort(active) {

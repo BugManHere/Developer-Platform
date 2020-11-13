@@ -79,7 +79,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       SwingLfRig: state => state.dataObject.SwingLfRig,
       SwUpDn: state => state.dataObject.SwUpDn,
       Pow: state => state.dataObject.Pow,
@@ -140,11 +140,11 @@ export default {
     hideLoading();
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setDataObject: 'SET_DATA_OBJECT',
       setState: 'SET_STATE'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       sendCtrl: 'SEND_CTRL'
     }),
     turnBack() {

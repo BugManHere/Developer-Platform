@@ -3,17 +3,20 @@
     <Swiper
       :ref="ref"
       class="fan-swiper"
-      :slides-data="options" 
+      :slides-data="options"
       @realIndex="swiperChange"
-      @activeIndex="setFanName"/>
+      @activeIndex="setFanName"
+      @swiper-show-toast="swiperShowDisable"
+    />
     <div class="fan-name">
-      <span v-text="fanName"/>
+      <span v-text="fanName" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import { showToast } from '@PluginInterface';
 import LogicDefine from '@/logic/define';
 import Swiper from './index';
 
@@ -22,6 +25,12 @@ export default {
     Swiper
   },
   mixins: [LogicDefine],
+  props: {
+    modeName: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       ref: 'fanSwiper',
@@ -29,7 +38,7 @@ export default {
       swiperIndex: 3,
       leftLen: 3, // 按下滑轮后左边可供显示的元素数目（为了性能考虑，不全显示）
       rightLen: 3,
-      fanName: 'auto',
+      fanName: 'auto'
     };
   },
   computed: {
@@ -39,31 +48,95 @@ export default {
       Mod: state => state.dataObject.Mod,
       Tur: state => state.dataObject.Tur,
       Quiet: state => state.dataObject.Quiet,
-      SwhSlp: state => state.dataObject.SwhSlp,
+      SwhSlp: state => state.dataObject.SwhSlp
     }),
     fanList() {
       const result = [
-        {img: require('@/assets/img/fan/n_auto.png'), name: this.$language('fan.auto'), index: 0, key: 'Fan_auto'},
-        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low'},
-        // {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 1, key: 'Fan_low_b'},
-        {img: require('@/assets/img/fan/n_medium_low.png'), name: this.$language('fan.medium_low'), index: 2, key: 'Fan_medium_low'},
-        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 3, key: 'Fan_medium'},
-        // {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 2, key: 'Fan_medium_b'},
-        {img: require('@/assets/img/fan/n_medium_high.png'), name: this.$language('fan.medium_high'), index: 4, key: 'Fan_medium_high'},
-        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 5, key: 'Fan_high'},
-        // {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 3, key: 'Fan_high_b'},
-        {img: require('@/assets/img/fan/n_quiet.png'), name: this.$language('fan.quiet'), index: 7, key: 'Fan_quiet'}
+        {
+          img: require('@/assets/img/fan/n_auto.png'),
+          name: this.$language('fan.auto'),
+          index: 0,
+          key: 'Fan_auto'
+        },
+        {
+          img: require('@/assets/img/fan/n_low.png'),
+          name: this.$language('fan.low'),
+          index: 1,
+          key: 'Fan_low'
+        },
+        {
+          img: require('@/assets/img/fan/n_low.png'),
+          name: this.$language('fan.low'),
+          index: 1,
+          key: 'Fan_low_b'
+        },
+        {
+          img: require('@/assets/img/fan/n_medium_low.png'),
+          name: this.$language('fan.medium_low'),
+          index: 2,
+          key: 'Fan_medium_low'
+        },
+        {
+          img: require('@/assets/img/fan/n_medium.png'),
+          name: this.$language('fan.medium'),
+          index: 3,
+          key: 'Fan_medium'
+        },
+        {
+          img: require('@/assets/img/fan/n_medium.png'),
+          name: this.$language('fan.medium'),
+          index: 2,
+          key: 'Fan_medium_b'
+        },
+        {
+          img: require('@/assets/img/fan/n_medium_high.png'),
+          name: this.$language('fan.medium_high'),
+          index: 4,
+          key: 'Fan_medium_high'
+        },
+        {
+          img: require('@/assets/img/fan/n_high.png'),
+          name: this.$language('fan.high'),
+          index: 5,
+          key: 'Fan_high'
+        },
+        {
+          img: require('@/assets/img/fan/n_high.png'),
+          name: this.$language('fan.high'),
+          index: 3,
+          key: 'Fan_high_b'
+        },
+        {
+          img: require('@/assets/img/fan/n_quiet.png'),
+          name: this.$language('fan.quiet'),
+          index: 7,
+          key: 'Fan_quiet'
+        }
       ];
       // 如果开启智眠，则不能开启强劲档
       const len = result.length;
-      (this.g_identifierArr.includes('SmartSleep') && this.SwhSlp) || result.splice(len - 1, 0, {img: require('@/assets/img/fan/n_turbo.png'), name: this.$language('fan.turbo'), index: 6, key: 'Fan_tur'});
+      (this.g_identifierArr.includes('SmartSleep') && this.SwhSlp) ||
+        result.splice(len - 1, 0, {
+          img: require('@/assets/img/fan/n_turbo.png'),
+          name: this.$language('fan.turbo'),
+          index: 6,
+          key: 'Fan_tur'
+        });
       return result;
     },
     imshowList() {
       const result = this.fanList.filter(item => {
-        return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);
+        return (
+          !this.g_hideFuncArr.includes(item.key) &&
+          this.g_identifierArr.includes(item.key)
+        );
       });
-      result.length || result.push({img: require('@/assets/img/pow.png'), name: '无内容', index: 0});
+      result.length ||
+        result.push({
+          img: require('@/assets/img/pow.png'),
+          name: '无内容',
+          index: 0
+        });
       return result;
     },
     options() {
@@ -83,7 +156,9 @@ export default {
       if (this.Tur && turIndex !== -1) return turIndex;
       const QuietIndex = this.imshowList.findIndex(item => item.index === 7);
       if (this.Quiet && QuietIndex !== -1) return QuietIndex;
-      const index = this.imshowList.findIndex(item => item.index === this.WdSpd);
+      const index = this.imshowList.findIndex(
+        item => item.index === this.WdSpd
+      );
       if (index !== -1) return index;
       return 0;
     },
@@ -119,7 +194,7 @@ export default {
           this.$refs[this.ref].banTouch(!newVal);
         });
       },
-      immediate: true,
+      immediate: true
     }
   },
   mounted() {
@@ -156,7 +231,7 @@ export default {
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         const index = this.countIndex(this.swiperIndex, i);
-        list.push(this.imshowList[index]); 
+        list.push(this.imshowList[index]);
       }
       this.itemList = list;
     },
@@ -185,7 +260,7 @@ export default {
       const maxLen = this.imshowList.length;
       while (toIndex < 0) {
         toIndex += maxLen;
-      } 
+      }
       while (toIndex >= maxLen) {
         toIndex -= maxLen;
       }
@@ -193,39 +268,58 @@ export default {
     },
     insertSlide(moveLen) {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
-      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
+      const removeLen =
+        Math.abs(moveLen) <= this.swiperLen
+          ? Math.abs(moveLen)
+          : this.swiperLen;
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(removeLen); i += 1) {
-        const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex =
+          this.swiperIndex +
+          direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
-        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
+        this.$refs[this.ref][funcName](
+          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
+        );
       }
     },
     removeSlide(moveLen) {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
-      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
-        return direction ? (this.leftLen + this.rightLen) - index : index;
-      }); // 需要移除的slide的Index
+      const removeLen =
+        Math.abs(moveLen) <= this.swiperLen
+          ? Math.abs(moveLen)
+          : this.swiperLen;
+      const removeIndexList = Array.from(
+        { length: removeLen },
+        (item, index) => {
+          return direction ? this.leftLen + this.rightLen - index : index;
+        }
+      ); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 移除所有slide
     removeAllSlide() {
       this.$refs[this.ref].removeAllSlides();
     },
-    // 根据情况填充slide 
+    // 根据情况填充slide
     insertAllSlide() {
-      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
+      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
+        'swiper-wrapper'
+      )[0].childNodes.length;
       if (swiperNum >= this.leftLen + this.rightLen + 1) return;
       for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {
         const funcName = 'prependSlide';
         const moveLen = i;
         const toIndex = this.countIndex(this.swiperIndex, moveLen);
-        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
+        this.$refs[this.ref][funcName](
+          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
+        );
       }
 
       // 如果slide数量大于限定数量，则删掉
-      swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
+      swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
+        'swiper-wrapper'
+      )[0].childNodes.length;
       let maxLen = this.leftLen + this.rightLen + 1;
       if (swiperNum >= maxLen) {
         const removeList = [];
@@ -243,17 +337,17 @@ export default {
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
       const realIndex = this.imshowList[toIndex].index;
       switch (realIndex) {
-        case 6: 
-          this.changeData({Tur: 1, Quiet: 0, WdSpd: 5});
+        case 6:
+          this.changeData({ Tur: 1, Quiet: 0, WdSpd: 5 });
           break;
         case 7:
-          this.changeData({Tur: 0, Quiet: 2, WdSpd: 1});
+          this.changeData({ Tur: 0, Quiet: 2, WdSpd: 1 });
           break;
         default:
-          this.changeData({Tur: 0, Quiet: 0, WdSpd: realIndex});
+          this.changeData({ Tur: 0, Quiet: 0, WdSpd: realIndex });
           // 更新到localStorage
           window.storage.set('WdSpd', realIndex);
-          break; 
+          break;
       }
       this.updateList(index);
     },
@@ -264,6 +358,9 @@ export default {
       }
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
       this.fanName = this.imshowList[toIndex].name;
+    },
+    swiperShowDisable() {
+      showToast(`${this.modeName}模式下不可滑动`, 1);
     }
   }
 };

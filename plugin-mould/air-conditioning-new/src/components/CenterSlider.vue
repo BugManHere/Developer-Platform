@@ -1,7 +1,7 @@
 <template>
   <div class="center-slider">
     <div v-show="Pow" class="slider-main">
-      <div id="slider" :style="`opacity: ${work_temSetJson ? 1 : 0.01}`" />
+      <div id="slider" :style="`opacity: ${temSetJson ? 1 : 0.01}`" />
       <div class="layer" :style="{ width: lottieRadius / 1.5 + 'px', height: lottieRadius / 1.5 + 'px' }">
         <div class="rotate -one"></div>
         <div class="rotate -two"></div>
@@ -22,11 +22,11 @@
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>
         <!-- 显示插槽2 -->
-        <h3 v-if="work_imshowSlot2" class="auto-span" v-text="work_imshowSlot2" />
+        <h3 v-if="imshowSlot2" class="auto-span" v-text="imshowSlot2" />
         <h3 v-else class="tem" v-text="circleVal" />
         <!-- 显示插槽1 -->
-        <div v-if="work_imshowSlot1" class="room-tem-text">
-          <span v-text="work_imshowSlot1" />
+        <div v-if="imshowSlot1" class="room-tem-text">
+          <span v-text="imshowSlot1" />
         </div>
       </article>
     </div>
@@ -39,11 +39,9 @@
 
 <script>
 import { Block } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
-import WorkLogic from '@logic/work';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default {
-  mixins: [WorkLogic],
   components: {
     [Block.name]: Block
   },
@@ -65,13 +63,23 @@ export default {
     this.lottieRadius = this.svgRadius * 1.8;
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
-      SetTem: state => state.dataObject.SetTem,
-      TemSen: state => state.dataObject.TemSen,
-      Mod: state => state.dataObject.Mod,
-      WdSpd: state => state.dataObject.WdSpd
-    })
+      SetTem: state => state.dataObject.SetTem
+    }),
+    ...mapGetters([
+      'inputMap',
+      'temSetVal',
+      'temSetJson',
+      'temMinVal',
+      'temMaxVal',
+      'modDefine',
+      'modIdentifier',
+      'fanIdentifier',
+      'imshowSlot1',
+      'imshowSlot2'
+    ]),
+    ...mapGetters('machine', ['funcDefineMap', 'statusMap'])
   },
   mounted() {
     this.circleVal = this.SetTem;
@@ -112,14 +120,14 @@ export default {
     });
   },
   watch: {
-    g_statusMap: {
+    statusMap: {
       handler(newVal) {
         if (!newVal) return;
-        const fanStateName = this.getStateNameByKey(this.work_fanIdentifier);
+        const fanStateName = this.getStateNameByKey(this.fanIdentifier);
         if (fanStateName) {
           this.fanName = this.$language(`fan.${fanStateName}`);
         }
-        const modStateName = this.work_modDefine ? this.getStateNameByKey(this.work_modIdentifier) : '';
+        const modStateName = this.modDefine ? this.getStateNameByKey(this.modIdentifier) : '';
         if (modStateName) {
           this.modName = this.$language(`mod.${modStateName}`);
         }
@@ -128,7 +136,7 @@ export default {
       deep: true
     },
     // 圆环数值
-    work_temSetVal: {
+    temSetVal: {
       handler(newVal) {
         this.temChange = true;
         this.throttle(newVal, 'value');
@@ -136,23 +144,23 @@ export default {
       immediate: true
     },
     // 圆环字段
-    work_temSetJson: {
+    temSetJson: {
       handler(newVal) {
         this.temChange = true;
-        const value = this.g_inputMap[newVal];
+        const value = this.inputMap[newVal];
         this.throttle(value, 'value');
       },
       immediate: true
     },
     // 圆环最小值
-    work_temMinVal: {
+    temMinVal: {
       handler(newVal) {
         this.throttle(newVal, 'min');
       },
       immediate: true
     },
     // 圆环最大值
-    work_temMaxVal: {
+    temMaxVal: {
       handler(newVal) {
         this.throttle(newVal, 'max');
       },
@@ -160,12 +168,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setDataObject: 'SET_DATA_OBJECT',
       setCheckObject: 'SET_CHECK_OBJECT',
       setState: 'SET_STATE'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       sendCtrl: 'SEND_CTRL'
     }),
     changeData(map) {
@@ -176,15 +184,15 @@ export default {
     },
     // 温度设置方法
     temSetMethod(value) {
-      value === this.work_temSetVal || this.changeData({ [this.work_temSetJson]: value });
+      value === this.temSetVal || this.changeData({ [this.temSetJson]: value });
     },
-    getStateNameByKey(id) {
-      const map = this.g_statusMap[id];
+    getStateNameByKey(identifier) {
+      const map = this.statusMap[identifier];
       if (map) {
-        const status = map.status;
-        const define = this.g_funcDefineMap[id];
-        const statusName = define.statusDefine[status].name;
-        const stateName = `${id}_${statusName}`;
+        const statusName = map.statusName;
+        const status = this.funcDefineMap[identifier];
+        const name = status.statusDefine[statusName].name;
+        const stateName = `${identifier}_${name}`;
         return stateName;
       }
       return false;

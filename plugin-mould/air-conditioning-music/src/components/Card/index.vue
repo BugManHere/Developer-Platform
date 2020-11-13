@@ -4,7 +4,7 @@
       <!-- 内容 -->
       <div class="card-main" style="{height: 100%}">
         <keep-alive>
-          <component :is="selectKey" />
+          <component :is="selectKey" class="card-main-component" />
         </keep-alive>
       </div>
     </div>
@@ -28,3 +28,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.card-view {
+  margin-top: env(safe-area-inset-top);
+  // position: relative;
+  // $cardHeight: calc(100vh - #{$pageHeaderHeight} - #{$footerHeight});
+  // max-height: $cardHeight;
+}
+</style>

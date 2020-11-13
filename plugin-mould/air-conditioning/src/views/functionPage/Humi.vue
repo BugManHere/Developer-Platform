@@ -29,6 +29,7 @@
           <gree-button round type="default" style="width: 50%" :disabled="Humi===70" @click="changeHumiValue('add')">+</gree-button>
         </gree-col>
       </gree-row>
+      <div style="display:none">{{errStatus}}</div>
     </gree-page>
   </gree-view>
 </template>
@@ -49,6 +50,7 @@ import {
 } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
+import errorConfig from '@/mixins/utils/error'
 
 export default {
   name: 'Dazzling',
@@ -65,6 +67,7 @@ export default {
     [Col.name]: Col,
     [Button.name]: Button,
   },
+  mixins: [errorConfig],
   data() {
     return {
       isActive: true
@@ -73,7 +76,8 @@ export default {
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      Humi: state => state.dataObject.Humi
+      Humi: state => state.dataObject.Humi,
+      OutHome: state => state.dataObject.OutHome,
     }),
     humi_bg() {
       console.log('this.Humi', this.Humi);
@@ -95,12 +99,37 @@ export default {
           err;
         });
       }
+    },
+
+    OutHome(newVal) {
+      if (newVal) {
+        try {
+          showToast('外出模式开启,不可设置。', 1);
+        } catch (e) {
+          Toast({
+            content: '外出模式开启,不可设置。',
+            position: 'bottom'
+          });
+        }
+        this.$router.push({name: 'Home'}).catch(err => { err; });
+      }
     }
   },
+
   mounted() {
     hideLoading();
-    this.isActive = Boolean(this.Dazzling);
+    this.isActive = Boolean(this.Humi);
+    if(this.isActive){
+      window.storage.set('ishiddenTip', true)
+    }
   },
+
+  beforeDestroy() {
+    console.log('--------------');
+    this.isActive = false;
+    Dialog.closeAll();
+  },
+
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
@@ -112,16 +141,26 @@ export default {
 
     switchDazzling(active) {
       if (active) {
-        Dialog.confirm({
-          title: '提示',
-          content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
-          confirmText: '确定',
-          onConfirm: () => this.setHumi(50),
-          cancelText: '取消',
-          onCancel: () => {
-            this.isActive = false;
-          }
-        });
+        const ishiddenTip = window.storage.get('ishiddenTip')
+        console.log('--ishiddenTip--', ishiddenTip);
+        if(!ishiddenTip){
+          Dialog.confirm({
+            title: '提示',
+            content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
+            confirmText: '确定',
+            onConfirm: () =>  {               
+              window.storage.set('ishiddenTip', true)
+              this.setHumi(50)
+            },
+            cancelText: '取消',
+            onCancel: () => {
+              this.isActive = false;
+            }
+          });
+        } else {
+           this.isActive = true;
+           this.setHumi(50);
+        }
       } else {
         this.setHumi(0);
       }
@@ -173,11 +212,12 @@ export default {
     .humi-value {
       font-size: 295px;
       color: #404657;
+      font-family: appleLight;
     }
     .humi-unit {
       position: absolute;
       bottom: 70px;
-      left: 70%;
+      left: 75%;
       font-size: 100px;
       color: #404657;
       }
@@ -186,6 +226,9 @@ export default {
     margin-top: 90px;
     .humi-col{
       text-align: center;
+      .gree-button--normal{
+        font-size: 100px;
+      }
     }
   }
 }

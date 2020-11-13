@@ -21,3 +21,4 @@ export const SET_POLLING = 'SET_POLLING'; // 开启轮询
 export const SEND_CTRL = 'SEND_CTRL'; // 发送控制指令
 export const UPDATE_DATAOBJECT = 'UPDATE_DATAOBJECT'; // 更新本地数据
 export const MQTT_CALLBACK = 'MQTT_CALLBACK'; // 原生调用插件的mqtt回调方法
+export const GET_AUTH_TYPE = 'GET_AUTH_TYPE'; // 获取语音空调授权结果

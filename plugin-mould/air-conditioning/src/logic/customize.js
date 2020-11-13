@@ -122,6 +122,9 @@ const Customize = {
             default:
               break;
           }
+        },     
+        Status: (currentStatus, afterStatus) => {
+          this.$router.push({name: 'Status'}).catch(e => { console.log(e); });
         },
         RFan: () => {
           this.changeData({UDFanPort: 3});
@@ -143,6 +146,9 @@ const Customize = {
           if (this.dataObject.functype) {
             this.updateDataObject({ SwhSlp: 0, SlpMod: 0 });
           }
+        },
+        AppTimer: () => {
+          this.dataObject.functype && (this.g_funcDefineMap.AppTimer.type = 'inertia');
         }
       };
     },

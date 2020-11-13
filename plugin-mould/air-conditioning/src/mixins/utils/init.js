@@ -48,6 +48,14 @@ const mixin = {
       const dataArr = getQueryStringByName('data');
       console.log(`mac: ${mac}`);
 
+	  let FreshAirConditionState = 0;
+      try {
+        FreshAirConditionState = getQueryStringByName('FreshAirConditionState');
+        console.log('是否跳设备状态页', FreshAirConditionState);
+      } catch (error) {
+        console.log('---拿不到跳设备状态的值----', error);
+      }
+
       const valArr = JSON.parse(dataArr);
       console.log('----------url传值-----------');
       console.log(dataArr);
@@ -79,6 +87,7 @@ const mixin = {
       }
 
       (DataObject.functype = functype) && (DataObject.OutHome = 0);
+FreshAirConditionState && (DataObject.FreshAirConditionState = FreshAirConditionState);
 
       valArr && this.setCheckObject(DataObject);
       valArr && this.setDataObject(DataObject);

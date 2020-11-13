@@ -4,7 +4,7 @@ import { mapState } from 'vuex';
  */
 const updateStatus = {
   computed: {
-    ...mapState({
+    ...mapState('control', {
       isOffline: state => state.deviceInfo.deviceState,
       lang: state => state.deviceInfo.lang
     })

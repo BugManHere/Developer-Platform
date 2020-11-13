@@ -31,13 +31,36 @@
         </div>
         <div
           class="bar-co2"
-          v-if="!functype && Air && devOptions.statueJson2.includes('CO2')"
+          v-if="
+            !functype &&
+              Air &&
+              JSON.parse(devOptions.statueJson2).includes('CO2')
+          "
         >
           <img :src="co2Img" />
           <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow && !loading" key="modeSwiper" />
+        <modeSwiper
+          v-if="Pow && !loading"
+          key="modeSwiper"
+          @modeName="getModeName"
+        />
+
+        <!-- 故障提示 -->
+        <gree-notice-bar
+          scrollable
+          v-show="errStatus"
+          class="notice-bar"
+          icon="warning"
+          v-text="errMsg"
+        >
+          <router-link to="/Error">
+            <span class="err-detail">
+              查看详情
+            </span>
+          </router-link>
+        </gree-notice-bar>
       </div>
       <!-- 居中内容提示 -->
       <div class="page-main">
@@ -66,8 +89,12 @@
           v-if="hasTemSen"
         />
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow && !loading" key="fanSwiper" />
-        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper" />
+        <fanSwiper
+          v-if="Pow && !loading"
+          key="fanSwiper"
+          :mode-name="modeName"
+        />
+        <!-- <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/> -->
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -123,6 +150,7 @@ import modeSwiper from '@/components/Swiper/mode';
 import temSwiper from '@/components/Swiper/tem';
 import fanSwiper from '@/components/Swiper/fan';
 import airFanSwiper from '@/components/Swiper/airFan';
+import errorConfig from '@/mixins/utils/error';
 
 export default {
   components: {
@@ -140,7 +168,7 @@ export default {
     fanSwiper,
     airFanSwiper
   },
-  mixins: [homeConfig, LogicDefine],
+  mixins: [homeConfig, LogicDefine, errorConfig],
   data() {
     return {
       onTestFlag: 0,
@@ -148,7 +176,8 @@ export default {
       currentCO2: 0,
       currentCO2Level: 0,
       currentCO2Img: '',
-      warnningText: false
+      warnningText: false,
+      modeName: ''
     };
   },
   computed: {
@@ -334,20 +363,6 @@ export default {
     } else {
       window.storage.set('WdSpd', this.WdSpd);
     }
-    // getMsg().then(res => {
-    //   console.log('-------------------getMsg---------------------');
-    //   console.log(res);
-    //   const msgs = JSON.parse(res);
-    //   console.log('-----------------parse------------------------');
-    //   console.log(msgs);
-    //   console.log('-----------------------m-----------------------');
-    //   console.log(msgs.msgs);
-    //   if (msgs && msgs.msgs && msgs.msgs.length) {
-    //     const msg = msgs.msgs.find(item => { return item.data.notice.extras.ext.data.t === 'warn' && item.data.notice.extras.ext.mac === this.mac; });
-    //     this.warnningText = msg.data.notice.extras.msg;
-    //     // const title = msg.data.notice.extras.title;
-    //   }
-    // });
   },
   methods: {
     ...mapMutations({
@@ -446,6 +461,9 @@ export default {
       this.currentCO2Level = this.CO2Level;
       this.currentCO2Img = this.co2Img;
       this.dialogOpen = true;
+    },
+    getModeName(val) {
+      this.modeName = val;
     },
     // 点击10次进入调试模式
     onTest() {

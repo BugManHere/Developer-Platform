@@ -8,6 +8,7 @@
       @touch-end="clearSwiperHold(slidesData.key)"
       @touch-move="setSwiperHold(slidesData.key)"
       @touchcancel.native="cancelSwiperHold(slidesData.key)"
+      @touchstart.native="swiperShowDisable"
       v-show="!isShowText"
     >
       <!-- :class="{'swiper-no-swiping': noSwiping}" -->
@@ -27,7 +28,10 @@
     </swiper>
     <!-- 文字 -->
     <div class="swiper-text" :class="{ isNumber }">
-      <nobr v-if="isShowText" v-text="textContent" />
+      <nobr 
+      	@touchend="textShowToast"
+      	v-if="isShowText" 
+      	v-text="textContent" />
     </div>
   </div>
 </template>
@@ -254,6 +258,13 @@ export default {
     },
     banTouch(val) {
       this.noSwiping = val;
+    },
+    textShowToast() {
+      this.$emit('text-show-toast');
+    },
+    swiperShowDisable() {
+      if (!this.noSwiping) return;
+      this.$emit('swiper-show-toast');
     }
   }
 };

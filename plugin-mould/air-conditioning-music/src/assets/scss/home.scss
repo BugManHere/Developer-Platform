@@ -5,11 +5,55 @@
   background-repeat: no-repeat;
   background-position: top;
   background-size: 100% 100%;
+  #blank-box {
+    width: auto;
+    height: auto;
+    margin-top: calc(env(safe-area-inset-top));
+  }
+  .login-dialog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &-box {
+      z-index: 999;
+      height: 771px;
+      width: 861px;
+      background-image: url('../../assets/img/music/dialog.png');
+      background-size: 100% 100%;
+      text-align: center;
+      &-msg {
+        padding: 339px 108px 0 108px;
+        font-size: 38px;
+        color: #000;
+        line-height: 60px;
+      }
+      &-cancel {
+        font-size: 34px;
+        color: rgba(116, 116, 116, 1);
+        padding-top: 80px;
+      }
+      &-confirm {
+        margin-top: 42px;
+        width: 585px;
+        font-size: 38px;
+        color: #fff;
+        background-color: rgba(0, 174, 255, 1);
+      }
+    }
+  }
 }
 .page-home {
   position: relative !important;
   top: 0;
   background-color: transparent !important;
+  .page-content {
+    padding-top: 0 !important;
+  }
   .page-main {
     position: relative;
     top: 0;
