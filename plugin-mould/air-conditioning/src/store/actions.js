@@ -103,8 +103,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       const _p = JSON.parse(state.devOptions.statueJson).map(json =>
         state.dataObject[json] === undefined ? 0 : state.dataObject[json]
       );
-      console.log('----------_p');
-      console.log(_p);
       // 成功之后更新主体状态
       commit(SET_STATE, ['swiperHold', false]);
       commit(SET_STATE, ['uilock', false]);
@@ -118,16 +116,17 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 }
 
 // 查询云定时
-async function getCloudTimer({ state, commit }) {
-  const res = await getCloudTimerByMac(state.mac);
-  const { timerTasks } = JSON.parse(res);
-  let result = false;
-  if (timerTasks.length) {
-    result = timerTasks.some(task => {
-      return task.timer.status;
-    });
-  }
-  commit(SET_STATE, ['cloudTimer', result]);
+function getCloudTimer({ state, commit }) {
+  getCloudTimerByMac(state.mac).then(res => {
+    const { timerTasks } = JSON.parse(res);
+    let result = false;
+    if (timerTasks.length) {
+      result = timerTasks.some(task => {
+        return task.timer.status;
+      });
+    }
+    commit(SET_STATE, ['cloudTimer', result]);
+  });
 }
 
 /**
@@ -224,14 +223,14 @@ export default {
     } else {
       const deviceInfo = JSON.parse(_res);
       commit(SET_DEVICE_INFO, deviceInfo);
-      await dispatch(GET_ALL_STATES);
+      dispatch(GET_ALL_STATES);
     }
   },
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
   async [GET_ALL_STATES]({ state, commit, dispatch }) {
-    await getStatusOfDev({ state, commit }).then(res => res);
+    await getStatusOfDev({ state, commit });
     finishLoad();
     setTimeout(() => {
       commit(SET_STATE, ['loading', false]);

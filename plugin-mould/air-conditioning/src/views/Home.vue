@@ -175,7 +175,7 @@ export default {
       dialogOpen: false,
       currentCO2: 0,
       currentCO2Level: 0,
-      currentCO2Img: 0,
+      currentCO2Img: '',
       warnningText: false,
       modeName: ''
     };

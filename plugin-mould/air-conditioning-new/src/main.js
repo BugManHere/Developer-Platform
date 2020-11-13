@@ -18,9 +18,8 @@ import initMixin from './mixins/utils/init'; // 生产环境初始化
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
-import Storage from './utils/storage'; // 对i18n的封装
+import Storage from './utils/storage';
 import axios from 'axios';
-import { SET_STATE } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
@@ -80,7 +79,7 @@ async function createVue() {
     // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
       // 更新mac
-      vm.$store.commit(SET_STATE, { mac: id });
+      vm.$store.commit('control/SET_STATE', { mac: id });
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
@@ -97,7 +96,7 @@ async function createVue() {
       // 取出缓存的配置
       let oldId = localStorage.getItem('device_config_id');
       // 更新mac
-      vm.$store.commit(SET_STATE, { mac: oldId });
+      vm.$store.commit('control/SET_STATE', { mac: oldId });
     }
   }
   // 挂载到#app上
@@ -135,7 +134,7 @@ window.onReFocus = function onReFocus(msg) {
   getInfo(store.state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.$store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.$store.commit('control/SET_DEVICE_INFO', deviceInfo);
     })
     .catch(err => {
       err;
@@ -150,7 +149,7 @@ window.onResume = function onResume(msg) {
   getInfo(store.state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.commit('control/SET_DEVICE_INFO', deviceInfo);
     })
     .catch(err => {
       err;
