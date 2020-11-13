@@ -170,9 +170,7 @@ $fontSize: 44px;
         left: 0;
         top: calc(50% - 0.5px);
         width: 100%;
-        // border: 1px solid rgba(228, 229, 231, 1);
-        height: 2px;
-        background-color: rgba(228, 229, 231, 1);
+        border-bottom: 1px solid rgba(228, 229, 231, 1);
       }
     }
     &-txt {

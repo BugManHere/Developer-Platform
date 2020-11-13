@@ -1,5 +1,6 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
 import LogicDefine from './define';
+const dev = process.env.NODE_ENV === 'development';
 
 const LogicWatch = {
   mixins: [LogicDefine],
@@ -47,7 +48,7 @@ const LogicWatch = {
     // 显示设备名
     g_deviceName: {
       handler(newVal) {
-        if (newVal && process.env.NODE_ENV === 'development') {
+        if (newVal && dev) {
           const deviceInfo = JSON.parse(JSON.stringify(this.deviceInfo));
           deviceInfo.name = newVal;
           this.setDeviceInfo(deviceInfo);

@@ -1,21 +1,22 @@
 <template>
   <CardHeader header-id="grown-card-header">
     <template v-slot:left>
-      <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)">
+      <div :class="{ select: imshowType === 0 }" @click="changeImshow(0)" v-show="authReasult !== 2">
         <span v-text="'酷狗音乐'" />
       </div>
-      <div :class="{ select: imshowType === 1 }" @click="changeImshow(1)">
+      <div :class="{ select: imshowType === 1 && authReasult !== 2 }" @click="changeImshow(1)">
         <span v-text="'技能'" />
       </div>
     </template>
     <template v-slot:right>
-      <!-- <img src="@assets/img/music/statistical.png" />
-      <img src="@assets/img/music/history.png" /> -->
+      <img src="@assets/img/music/statistical.png" @click="goPage(0)" />
+      <img src="@assets/img/music/history.png" @click="goPage(1)" />
     </template>
   </CardHeader>
 </template>
 
 <script>
+import { toVoicePage } from '@PluginInterface';
 import { mapState, mapMutations } from 'vuex';
 import CardHeader from '@/components/card/CardHeader';
 
@@ -25,6 +26,8 @@ export default {
   },
   computed: {
     ...mapState({
+      mac: state => state.mac,
+      authReasult: state => state.musicData.authReasult,
       imshowType: state => state.musicData.imshowType
     })
   },
@@ -34,6 +37,9 @@ export default {
     }),
     changeImshow(type) {
       this.setMusicData({ imshowType: type });
+    },
+    goPage(index) {
+      toVoicePage(this.mac, index);
     }
   }
 };

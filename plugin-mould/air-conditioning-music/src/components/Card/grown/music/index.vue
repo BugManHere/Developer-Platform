@@ -2,14 +2,9 @@
   <!-- 内容 -->
   <div class="song-list">
     <!-- 没登录的时候显示 -->
-    <div v-if="!isLogin" class="no-login">
-      <img src="@assets/img/music/logo.png" class="logo" />
-      <div v-text="'酷狗音乐'" class="name" />
-      <div v-text="'登录后，可畅享千万正版曲库'" class="text" />
-      <gree-button round v-text="'立即登录'" size="small" @click="goLoginPage" />
-    </div>
+    <MusicLogic v-if="authReasult !== 2" />
     <!-- 已登录显示 -->
-    <div v-else class="list-main">
+    <!-- <div v-else class="list-main">
       <gree-search-bar
         :placeholder="reWord"
         shape="round"
@@ -40,19 +35,20 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { Button, SearchBar, Icon } from 'gree-ui';
+import { SearchBar, Icon } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
+import MusicLogic from './page/Login';
 
 export default {
   components: {
-    [Button.name]: Button,
     [SearchBar.name]: SearchBar,
-    [Icon.name]: Icon
+    [Icon.name]: Icon,
+    MusicLogic
   },
   props: {
     isTop: {
@@ -62,7 +58,6 @@ export default {
   },
   data() {
     return {
-      isLogin: true,
       reWord: '贝瓦儿歌',
       searchBarOnFocus: false,
       isScrollTop: true,
@@ -73,6 +68,7 @@ export default {
   },
   computed: {
     ...mapState({
+      authReasult: state => state.musicData.authReasult,
       playMap: state => state.musicData.playMap,
       groupsUnfold: state => state.musicData.groupsUnfold,
       groups: state => state.musicData.groups
@@ -198,9 +194,6 @@ export default {
           e;
         }
       }, 1000);
-    },
-    goLoginPage() {
-      location.href = 'http://office.rongbang-smart.com/pay/paydo.aspx?openId=123144232';
     }
   }
 };
@@ -215,43 +208,7 @@ export default {
   min-height: $musicMainHeight;
   height: 100%;
   background-color: #fff;
-  // display: flex;
-  // justify-content: center;
-  // flex-wrap: wrap;
-  .no-login {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: $musicMainHeight;
-    min-height: $musicMainHeight;
-    .logo {
-      height: 250px;
-      width: 250px;
-      padding-bottom: 30px;
-    }
-    .name {
-      width: 100%;
-      font-size: $fontSize;
-      text-align: center;
-      padding-bottom: 130px;
-    }
-    .text {
-      width: 100%;
-      font-size: 52px;
-      text-align: center;
-      padding-bottom: 100px;
-    }
-    .gree-button {
-      position: relative;
-      bottom: 0;
-      background: #0099ff;
-      color: #fff;
-      width: 60%;
-      height: 120px;
-      margin-bottom: 80px;
-    }
-  }
+
   .list-main {
     height: 100%;
     display: flex;

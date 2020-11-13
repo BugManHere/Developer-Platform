@@ -1,0 +1,74 @@
+<template>
+  <CardHeader header-id="control-card-header" ref="header">
+    <template v-slot:left>
+      <span v-text="'模式'" />
+    </template>
+    <template v-slot:right>
+      <span v-text="headerTxt" @click="viewMod" />
+      <gree-icon name="arrow-down" size="lg" @click="viewMod" :class="{ unfold: isUnfold }" />
+    </template>
+  </CardHeader>
+</template>
+
+<script>
+import CardHeader from '@/components/card/CardHeader';
+import { Icon } from 'gree-ui';
+
+export default {
+  components: {
+    CardHeader,
+    [Icon.name]: Icon
+  },
+  props: {
+    headerTxt: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      isUnfold: true
+    };
+  },
+  methods: {
+    viewMod() {
+      this.isUnfold = !this.isUnfold;
+      this.$emit('modUnfold', this.isUnfold);
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+#control-card-header {
+  .left {
+    padding-left: 74px;
+    display: flex;
+    align-items: flex-end;
+    color: rgba(64, 70, 87, 1);
+    font-size: 48px;
+    padding-bottom: 12px;
+  }
+  .right {
+    width: 156px;
+    padding-right: 68px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    font-size: 48px;
+    color: #9ea0a7;
+    span {
+      position: relative;
+      right: 16px;
+    }
+    i {
+      transition: all 0.5s;
+      transform: scaleX(0.7);
+      &.unfold {
+        transform: rotate(-90deg) scaleX(0.7);
+      }
+    }
+  }
+}
+</style>

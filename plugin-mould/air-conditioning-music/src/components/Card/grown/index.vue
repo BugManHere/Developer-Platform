@@ -59,7 +59,7 @@ export default {
     // 连接建立失败重连
     websocketonerror() {
       console.log('------------websocket重连中---------------');
-      this.initWebSocket();
+      // this.initWebSocket();
     },
     // 数据接收
     websocketonmessage(e) {

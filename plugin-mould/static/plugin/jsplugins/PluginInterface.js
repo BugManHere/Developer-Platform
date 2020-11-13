@@ -656,6 +656,12 @@ cordova.define('com.gree.codovaplugin.PluginInterface', function(require, export
     voiceSkillMsgDel: function(data, callback) {
       //语音留言删除接口
       exec(callback, null, 'PluginInterface', 'voiceSkillMsgDel', [data]);
+    },
+    getAuthResult: function(mac, callback) {
+      exec(callback, null, 'PluginInterface', 'getAuthResult', [mac]);
+    },
+    toVoicePage: function(mac, pageType, extra, callback) {
+      exec(callback, null, 'PluginInterface', 'toVoicePage', [mac, pageType, extra]);
     }
   };
 });

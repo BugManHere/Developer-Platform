@@ -1763,3 +1763,27 @@ export const voiceSkillMsgDel = data => {
     }
   });
 };
+
+export const getAuthResult = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getAuthResult(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const toVoicePage = (mac, pageType, extra) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.toVoicePage(mac, pageType, extra, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

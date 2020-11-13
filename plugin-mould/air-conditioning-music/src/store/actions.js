@@ -1,4 +1,4 @@
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, getAuthResult } from '@PluginInterface'; // 主体接口
 import * as types from './types';
 
 import { getQueryStringByName, isMqtt } from '../utils/index';
@@ -83,6 +83,7 @@ export default {
       // 初始化设备数据
       await dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
+      await dispatch(types.GET_AUTH_TYPE);
       dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
       dispatch(types.GET_DEVICE_DATA);
@@ -299,5 +300,17 @@ export default {
       console.error(e);
     }
     return dataObject;
+  },
+  async [types.GET_AUTH_TYPE]({ state, commit }) {
+    await getAuthResult(state.mac).then(res => {
+      const authReasult = Number(res);
+      const commitData = {};
+      authReasult === 2 && (commitData.imshowType = 1);
+      commitData.authReasult = authReasult;
+      if (state.musicData.authDialog === 2) {
+        commitData.authDialog = Number(authReasult !== 2);
+      }
+      commit(types.SET_MUSIC_DATA, commitData);
+    });
   }
 };

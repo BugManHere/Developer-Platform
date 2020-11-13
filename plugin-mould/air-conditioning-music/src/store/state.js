@@ -4,6 +4,7 @@ const state = {
   selectKey: 'grown-card',
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
+  isCeiling: false,
   dataObject: {
     functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,
@@ -29,7 +30,9 @@ const state = {
     identifierArr: []
   },
   musicData: {
-    imshowType: 0, // 0点播 1技能
+    authDialog: 2, // 授权弹框 0不弹框 1弹框 2待确定
+    authReasult: 0, // 0未授权 1授权云小微 2授权云小微与音乐
+    imshowType: 1, // 0点播 1技能
     // 分组、分类
     groups: [], // 分组
     groupsUnfold: [], // 分组的展开

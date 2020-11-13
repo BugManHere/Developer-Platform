@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="content">
-      <div class="sidebar">
+      <div ref="sidebar" class="sidebar">
         <gree-sidebar v-model="activeDomainIndex" @change="onChangeDomain">
           <gree-sidebar-item v-for="item in sidebarItems" :key="item.index" :title="item.name"> </gree-sidebar-item>
         </gree-sidebar>
@@ -116,18 +116,30 @@ export default {
     })
   },
   mounted() {
-    console.log('2');
-    try {
-      let self = this;
-      setTimeout(() => {
+    const mountedTimer = setInterval(() => {
+      const listHeight = this.$refs && this.$refs.skillList.clientHeight;
+      if (listHeight) {
+        this.pageInit();
+        clearInterval(mountedTimer);
+      }
+    }, 20);
+  },
+  methods: {
+    pageInit() {
+      console.log('2');
+      try {
+        let self = this;
+        // setTimeout(() => {
         let listHeight = this.$refs.skillList.clientHeight;
         let pageContent = document.querySelector('.page-content');
         // 赋予初始高度
         self.$refs.skillList.style.height = `${listHeight + pageContent.scrollTop}px`;
+        self.$refs.sidebar.style.height = `${listHeight + pageContent.scrollTop}px`;
         // eslint-disable-next-line
         function scrollHandler(ev) {
           let scrollTop = this.scrollTop;
           self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
+          self.$refs.sidebar.style.height = `${scrollTop + listHeight}px`;
         }
         pageContent.addEventListener('scroll', scrollHandler, false);
         this.$once('hook:beforeDestroy', () => {
@@ -135,12 +147,11 @@ export default {
         });
 
         this.loadSkillList(1);
-      }, 0);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  methods: {
+        // }, 0);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async onChangeDomain(index) {
       let domain = this.sidebarItems.find(x => x.index === index);
       if (domain) {
@@ -257,10 +268,10 @@ export default {
   height: $size;
 }
 .voice-skill {
-  $skillMainHeight: calc(100vh - #{$pageHeaderHeight});
+  $skillMainHeight: calc(100vh - #{$pageHeaderHeight} - #{$cardHeaderHeight} - env(safe-area-inset-top));
   $toolbar: 317px;
   $sidebarWidth: 270px;
-  $skillContentHeight: calc(#{$skillMainHeight} - #{$temEditHeight} - #{$cardHeaderHeight} - #{$toolbar} - #{$footerHeight});
+  $skillContentHeight: calc(#{$skillMainHeight} - #{$temEditHeight} - #{$toolbar} - #{$footerHeight});
   $bgColor: #fafafa;
   $contentColor: #f5f5f5;
   overflow: hidden;
