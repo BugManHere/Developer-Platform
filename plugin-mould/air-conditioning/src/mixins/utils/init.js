@@ -16,11 +16,14 @@ import { getQueryStringByName } from '../../utils';
 const mixin = {
   mixins: [updateStatus, LogicDefine], // 该mixin自定义初始化时检测故障等功能，需更改
   computed: {
-    ...mapState({ 
+    ...mapState({
       mac: state => state.mac,
       dataObject: state => state.dataObject,
-      devOptions: state => state.devOptions,
+      devOptions: state => state.devOptions
     })
+  },
+  created() {
+    this.init();
   },
   methods: {
     ...mapMutations({
@@ -36,7 +39,10 @@ const mixin = {
      */
     init() {
       const { key } = require('@/../plugin.id.json');
-      const { funcDefine, moreOption } = require(`@/../../../output/${key}.json`);
+      const {
+        funcDefine,
+        moreOption
+      } = require(`@/../../../output/${key}.json`);
 
       const mac = getQueryStringByName('mac');
       const dataArr = getQueryStringByName('data');
@@ -53,7 +59,7 @@ const mixin = {
       hasReportedForRepair === 'true'
         ? this.setRepair(true)
         : this.setRepair(false);
-      
+
       this.setMac(mac);
       this.getDeviceInfo(mac);
 
@@ -63,14 +69,17 @@ const mixin = {
       jsonKey.forEach((item, index) => {
         DataObject[item] = Number(valArr[index]);
       });
-      
+
       // 兼容辅热，如果开启了八度制热，则不更新辅热
-      if (funcDefine.some(item => item.identifier === 'AssHt(Auto)') && DataObject.StHt) {
+      if (
+        funcDefine.some(item => item.identifier === 'AssHt(Auto)') &&
+        DataObject.StHt
+      ) {
         DataObject.AssHt = 1;
       }
 
       (DataObject.functype = functype) && (DataObject.OutHome = 0);
-      
+
       valArr && this.setCheckObject(DataObject);
       valArr && this.setDataObject(DataObject);
       console.log('-------------init finish--------------');
