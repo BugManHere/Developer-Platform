@@ -80,11 +80,11 @@ export default {
     },
     miniIconList() {
       if (!this.funcDefine_active.filter(module => module.type === 'active-button').length) return [];
-      const result = this.baseData.funcDefine.map(func => {
-        const id = func.identifier;
-        if (!this.statusMap[id]) return {};
-        const statusName = this.statusMap[id].statusName;
-        const miniIcon = func.statusDefine[statusName].miniIcon;
+      const result = this.baseData.funcDefine.map(model => {
+        const identifier = model.identifier;
+        const statusName = this.statusMap[identifier].statusName;
+        if (!this.statusMap[identifier] || !model.statusDefine[statusName]) return {};
+        const miniIcon = model.statusDefine[statusName].miniIcon;
         return miniIcon;
       });
       return result;

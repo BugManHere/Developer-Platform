@@ -26,7 +26,7 @@ export default {
       FuncPopup: state => state.dataObject.FuncPopup
     }),
     ...mapGetters(['buttonDefine']),
-    ...mapGetters('machine', ['statusMap', 'noDirectionFuncArr']),
+    ...mapGetters('machine', ['statusMap', 'noDirectionModelArr']),
     // 按钮列表
     btnList() {
       const result = this.buttonDefine.map(btn => {
@@ -41,7 +41,7 @@ export default {
         // 图标
         const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         // 是否置灰
-        const gray = this.noDirectionFuncArr.includes(identifier);
+        const gray = this.noDirectionModelArr.includes(identifier);
         // 是否隐藏
         const hide = status.icon.key === 'disable';
         // 跳转页面
