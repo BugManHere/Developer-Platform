@@ -60,18 +60,6 @@ export default {
     return result;
   },
   /**
-   * @description 根据identifier与value获取当前statusName（没经过隐藏关系处理）
-   * @return Object {identifier: {value: statusName}}
-   */
-  valToRealStatusName: (state, getters, rootState, rootGetters) => {
-    const result = {};
-    state.baseData.funcDefine.forEach(model => {
-      const identifier = model.identifier;
-      result[identifier] = getStatusName({ state, getters, rootGetters }, model, false);
-    });
-    return result;
-  },
-  /**
    * @description 根据identifier获取statusName列表
    * @return Object: {identifier: [statusName]}
    */
@@ -84,38 +72,67 @@ export default {
     return result;
   },
   /**
-   * @description 根据identifier获取当前状态的更多信息
+   * @description 根据identifier获取当前状态的更多信息，没有经过隐藏状态处理
    * @return Object: {identifier: {statusName, stateName, status}}
    */
-  statusMap: (state, getters, rootState, rootGetters) => {
+  $_statusMap: (state, getters, rootState, rootGetters) => {
     const result = {};
+    // 根据字段值，返回当前状态信息
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;
       const json = model.json;
+      // 字段值
       const currentVal = rootGetters.inputMap[json];
+      // 当前statusName
       let statusName = getters.valToStatusName[identifier][currentVal];
       let status = model.statusDefine[statusName];
+      // 如果statusName不存在，返回'undefined'
       if (!status) {
-        statusName = 'default';
-        status = model.statusDefine[statusName];
+        statusName = 'undefined';
+        status = model.statusDefine.undefined;
       }
+      // 当前stateName
       const stateName = `${identifier}_${statusName}`;
-      const realStatusName = getters.valToRealStatusName[identifier][currentVal];
-      const realStateName = `${identifier}_${realStatusName}`;
-      const realStatus = model.statusDefine[realStatusName];
       result[identifier] = {
         statusName,
         stateName,
-        status,
-        realStatusName,
-        realStateName,
-        realStatus
+        status
       };
     });
     return result;
   },
   /**
-   * @description stateName对应的identifier
+   * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
+   * @return Object: {identifier: {statusName, stateName, status}}
+   */
+  statusMap: (state, getters) => {
+    const result = {};
+    // 获取当前被隐藏的stateName
+    const hideStateNameArr = getters.hideStateNameArr;
+    // 根据被隐藏的stateName，重新获取当前状态信息
+    state.baseData.funcDefine.forEach(model => {
+      const identifier = model.identifier;
+      // 获取未经过隐藏状态处理的状态信息
+      let { statusName, stateName, status } = getters.$_statusMap[identifier];
+      // 如果状态被隐藏
+      if (hideStateNameArr.includes(stateName)) {
+        // 获取新的指向
+        const directionStatusName = getters.statusDirectionMap[identifier]; // model的指向statusName
+        // 如果没有指向，则返回'undefined'
+        statusName = statusName === directionStatusName ? 'undefined' : directionStatusName;
+        stateName = `${identifier}_${statusName}`;
+        status = model.statusDefine[statusName];
+      }
+      result[identifier] = {
+        statusName,
+        stateName,
+        status
+      };
+    });
+    return result;
+  },
+  /**
+   * @description 根据stateName获取对应的identifier
    * @return Object: {stateName: identifier}
    */
   stateNameToId: (state, getters) => {
@@ -130,13 +147,13 @@ export default {
     return result;
   },
   /**
-   * @description 隐藏的stateName列表
+   * @description 隐藏的stateName数组
    * @return Array: [stateName]
    */
   hideStateNameArr: (state, getters) => {
     const result = [];
     getters.identifierArr.forEach(identifier => {
-      const statusName = getters.statusMap[identifier].statusName;
+      const statusName = getters.$_statusMap[identifier].statusName;
       const stateName = `${identifier}_${statusName}`;
       if (state.baseData.hideMap[stateName]) {
         result.push(...state.baseData.hideMap[stateName]);
@@ -145,66 +162,77 @@ export default {
     return result;
   },
   /**
-   * @description status循环
+   * @description 根据identifier获取statusName指向关系
    * @return Object: {identifier: [statusName]}
    */
   statusLoop: (state, getters) => {
     const result = {};
-    // 设定规则，undefined不能被指向，会被重新指向为default
-    const rule = statusName => {
-      let result = statusName || 'default';
-      result === 'undefined' && (result = 'default');
+    // 设定规则，undefined不能被其他status指向，会被重新指向为自身
+    const rule = (toStatusName, formStatusName) => {
+      let result = toStatusName || formStatusName;
+      result === 'undefined' && (result = formStatusName);
       return result;
     };
     // 遍历功能，提取status关系
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;
-      const map = model.map; // 指向关系
-      let statusName = getters.statusMap[identifier].statusName; // function的当前status
-      const statusNameArr = []; // status顺序数组形式
-      const checkStatusNameArr = []; // 已检查的状态
+      // 指向关系
+      const map = model.map;
+      // 当前statusName
+      let statusName = getters.$_statusMap[identifier].statusName;
+      // 存放statusName用
+      const statusNameArr = [];
+      // 存放已检查的statusName用
+      const checkStatusNameArr = [];
       if (map) {
-        let directionStatusName = rule(map[statusName]); // status指向
+        // status指向
+        let directionStatusName = String(map[statusName]);
         // 再次指向原点时推出，形成闭环
         while (!checkStatusNameArr.includes(directionStatusName)) {
-          statusName = directionStatusName; // 下一个status
-          const state = `${identifier}_${statusName}`;
-          getters.hideStateNameArr.includes(state) || statusNameArr.push(directionStatusName); // 按顺序存入数组
-          checkStatusNameArr.push(directionStatusName); // 按顺序存入数组
-          directionStatusName = rule(map[statusName]) || 'default'; // 更新status指向
+          // 下一个statusName
+          statusName = directionStatusName;
+          const stateName = `${identifier}_${statusName}`;
+          // 按顺序存入数组
+          getters.hideStateNameArr.includes(stateName) || statusNameArr.push(directionStatusName);
+          checkStatusNameArr.push(directionStatusName);
+          // 更新指向
+          directionStatusName = String(map[statusName]);
         }
-      } else {
-        statusNameArr.push(statusName);
       }
+      // 无意义的指向改为'undefined'
+      statusNameArr.length === 0 && statusNameArr.push('undefined');
       result[identifier] = statusNameArr;
     });
     return result;
   },
   /**
-   * @description function的当前指向statusName
+   * @description model的当前指向statusName
    * @return Object: {identifier: statusName}
    */
   statusDirectionMap: (state, getters) => {
     const result = {};
-    // 遍历功能，提取function当前指向statusName
+    // 遍历功能，提取model当前指向statusName
     getters.identifierArr.forEach(identifier => {
       const directionStatusName = getters.statusLoop[identifier].find(statusName => {
         const stateName = `${identifier}_${statusName}`; // 获取指向stateName
         return !getters.hideStateNameArr.includes(stateName); // 如果没被隐藏，则返回
       });
-      result[identifier] = directionStatusName || getters.statusMap[identifier].statusName; // 如果都被隐藏， 则返回当前status
+      result[identifier] = directionStatusName || getters.$_statusMap[identifier].statusName; // 如果都被隐藏， 则返回当前status
     });
     return result;
   },
   /**
-   * @description 没有指向的function
+   * @description 获取没有指向的model数组
    * @return Array: [identifier]
    */
-  noDirectionFuncArr: (state, getters) => {
+  noDirectionModelArr: (state, getters) => {
     const result = getters.identifierArr.filter(identifier => {
-      const statusName = getters.statusMap[identifier].statusName; // function的当前statusName
-      const directionStatusName = getters.statusDirectionMap[identifier]; // function的指向statusName
-      return statusName === directionStatusName;
+      // 当前statusName
+      const statusName = getters.statusMap[identifier].statusName;
+      // 指向statusName
+      const directionStatusName = getters.statusDirectionMap[identifier];
+      // 如果指向statusName为'undefined'或当前statusName，则认为指向无效
+      return directionStatusName === 'undefined' || directionStatusName === statusName;
     });
     return result;
   },
@@ -214,7 +242,7 @@ export default {
    */
   hideByStateNameMap: (state, getters) => {
     const result = {};
-    getters.noDirectionFuncArr.forEach(identifier => {
+    getters.noDirectionModelArr.forEach(identifier => {
       const statusNameArr = getters.statusLoop[identifier]; // 获取status指向数组
       result[identifier] = {};
       if (statusNameArr.length >= 1) {
@@ -315,21 +343,23 @@ function mapRelation(fromMap, toMap) {
   return 4;
 }
 /**
- * @description 获取function的statusName
+ * @description 获取model的statusName
  * @input model: 功能， isHide： 是否考虑被隐藏的stateName
  * @return Object {value: statusName}
  */
 function getStatusName({ state, getters, rootGetters }, model, checkHide = false) {
   const result = {};
-  const hideStateNameArr = JSON.parse(state.deriveData.hideStateNameJson); // 获取被隐藏的stateName
+  // 获取被隐藏的stateName
+  const hideStateNameArr = JSON.parse(state.deriveData.hideStateNameJson);
   const identifier = model.identifier;
+  // 根据identifier获取statusName列表
   const statusNameArr = getters.statusNameMap[identifier];
   // result[identifier] = {};
   statusNameArr.forEach(statusName => {
     if (statusName === 'undefined') return;
     const stateName = `${identifier}_${statusName}`;
+    // 隐藏的状态不参与
     if (checkHide && hideStateNameArr.includes(stateName)) {
-      // 被隐藏的state不参与计算
       return;
     }
     const val = model.statusDefine[statusName].value;
