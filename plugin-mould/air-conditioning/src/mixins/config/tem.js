@@ -1,4 +1,3 @@
-
 const temChange = {
   methods: {
     // 华氏转摄氏
@@ -50,7 +49,7 @@ const temChange = {
         87: [31, 0],
         88: [31, 1],
         89: [32, 0],
-        90: [32, 1],
+        90: [32, 1]
       }[integer];
       result && (result[0] += decimal);
       return result || [16, 0];
@@ -85,7 +84,7 @@ const temChange = {
         30: [86, 86]
       }[integer][temRec];
       return result ? result + decimal : 61;
-    },
+    }
   }
 };
 

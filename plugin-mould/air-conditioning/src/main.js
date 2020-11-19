@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { View, Page } from 'gree-ui';
 
-import { closePage, getInfo, finishLoad } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 import App from './App';
 import router from './router';
 import store from './store';
@@ -21,8 +21,7 @@ import { SET_STATE } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
-axios.defaults.headers.post['Content-Type'] =
-  'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
 
 // 安装插件
 Vue.use(Vuex);
@@ -105,8 +104,7 @@ class Storage {
   }
   // 初始化
   initRun() {
-    this.source[store.state.mac] ||
-      window.localStorage.setItem(store.state.mac, '{}');
+    this.source[store.state.mac] || window.localStorage.setItem(store.state.mac, '{}');
   }
   // 设置数据
   set(key, value, mac = store.state.mac) {
@@ -150,12 +148,7 @@ dev && createVue();
  */
 window.backButton = function backButton() {
   const { name } = router.currentRoute;
-  if (
-    name === 'Error' ||
-    name === 'Home' ||
-    name === 'Offline' ||
-    name === 'Status'
-  ) {
+  if (name === 'Error' || name === 'Home' || name === 'Offline' || name === 'Status') {
     closePage();
   } else if (['Voice', 'Sweep', 'Air', 'Loop', 'Humi'].includes(name)) {
     router.push({ name: 'Home' }).catch(err => {

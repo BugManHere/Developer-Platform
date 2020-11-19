@@ -23,19 +23,10 @@ const LogicDefine = {
       return isLocalConfig && require(`@/../../../output/${key}.json`);
     };
     const getServeConfig = () => {
-      return isServeConfig
-        ? window.storage.get('config')
-        : require(`@/../../../output/${key}.json`);
+      return isServeConfig ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
     };
 
-    const {
-      funcDefine,
-      excludeMap,
-      hideMap,
-      moreOption,
-      productModel,
-      deviceName
-    } = getLocalConfig() || getServeConfig();
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = getLocalConfig() || getServeConfig();
 
     this.g_deviceName = deviceName; // 设备名称
     this.g_moreOption = moreOption;
@@ -214,15 +205,10 @@ const LogicDefine = {
         const currentIndex = order.indexOf(currentStatus);
         let status = 'default';
         let index = 1;
-        while (
-          ![len - 1, -1].includes(currentIndex) &&
-          order[currentIndex + index] &&
-          status === 'default'
-        ) {
+        while (![len - 1, -1].includes(currentIndex) && order[currentIndex + index] && status === 'default') {
           const statusName = order[currentIndex + index];
           const state = `${item.identifier}_${statusName}`;
-          !this.g_hideStateArr.includes(state) &&
-            (status = order[currentIndex + index]);
+          !this.g_hideStateArr.includes(state) && (status = order[currentIndex + index]);
           index += 1;
         }
         // if (![len - 1, -1].includes(currentIndex)) {
@@ -249,16 +235,11 @@ const LogicDefine = {
       const arr = [];
       this.g_funcDefine.forEach(item => {
         Object.keys(item.statusDefine).forEach(statusItem => {
-          statusItem === 'undefined' ||
-            item.statusDefine[statusItem].customize === 'replace' ||
-            arr.includes(item.json) ||
-            arr.push(item.json);
+          statusItem === 'undefined' || item.statusDefine[statusItem].customize === 'replace' || arr.includes(item.json) || arr.push(item.json);
           if (item.statusDefine[statusItem].moreCommand) {
-            Object.keys(item.statusDefine[statusItem].moreCommand).forEach(
-              moreJson => {
-                arr.includes(moreJson) || arr.push(moreJson);
-              }
-            );
+            Object.keys(item.statusDefine[statusItem].moreCommand).forEach(moreJson => {
+              arr.includes(moreJson) || arr.push(moreJson);
+            });
           }
         });
       });
@@ -369,16 +350,10 @@ const LogicDefine = {
         if (beforeStatus) {
           const commandBefore = funcItem.statusDefine[beforeStatus].moreCommand;
           const commandCurrent = funcItem.statusDefine[statusName].moreCommand;
-          const currentType = this.g_mapRelation(
-            commandCurrent,
-            this.g_inputMap
-          );
+          const currentType = this.g_mapRelation(commandCurrent, this.g_inputMap);
           // 同源状态是否有moreCommand
           if (commandBefore) {
-            const beforeType = this.g_mapRelation(
-              commandBefore,
-              this.g_inputMap
-            ); // 状态是否满足
+            const beforeType = this.g_mapRelation(commandBefore, this.g_inputMap); // 状态是否满足
             let isCurrent = false;
             // 判断两个同源状态之间的关系
             switch (this.g_mapRelation(commandCurrent, commandBefore)) {

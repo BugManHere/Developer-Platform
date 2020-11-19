@@ -217,7 +217,8 @@ export const updateStates = (mac, states) => {
         resolve(...params);
       });
     } catch (err) {
-      reject(err);
+      err;
+      // reject(err);
     }
   });
 };
@@ -1133,7 +1134,7 @@ export const startPlugin = mid => {
  * @param {string} mac
  * @param {string} type
  */
-export const getGridConLis = (mac, type) => {
+export const getGridConList = (mac, type) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.getGridConList(mac, type, (...params) => {
@@ -1756,6 +1757,30 @@ export const voiceSkillMsgDel = data => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.voiceSkillMsgDel(data, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getAuthResult = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getAuthResult(mac, (...params) => {
+        resolve(...params);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const toVoicePage = (mac, pageType, extra) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.toVoicePage(mac, pageType, extra, (...params) => {
         resolve(...params);
       });
     } catch (error) {

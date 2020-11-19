@@ -77,10 +77,7 @@ export default {
     },
     // 实际温度值
     currentVal() {
-      let result =
-        this.SetTem +
-          ((this.has01 && this.add01 * 0.1) ||
-            (this.has05 && this.add05 * 0.5)) || 0;
+      let result = this.SetTem + ((this.has01 && this.add01 * 0.1) || (this.has05 && this.add05 * 0.5)) || 0;
       this.TemUn && (result = this.tempC2F(result, this.TemRec));
       if (result >= this.maxTem) return this.maxTem;
       if (result <= this.minTem) return this.minTem;
@@ -218,47 +215,27 @@ export default {
     removeSlide(moveLen) {
       if (this.temList.length === this.swiperLen) return;
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
-      const removeIndexList = Array.from(
-        { length: removeLen },
-        (item, index) => {
-          return direction ? this.leftLen + this.rightLen - index : index;
-        }
-      );
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
+      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
+        return direction ? this.leftLen + this.rightLen - index : index;
+      });
       // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
       // 更新temList
-      this.temList.splice(
-        direction ? this.leftLen + this.rightLen - Math.abs(moveLen) + 1 : 0,
-        Math.abs(moveLen)
-      );
+      this.temList.splice(direction ? this.leftLen + this.rightLen - Math.abs(moveLen) + 1 : 0, Math.abs(moveLen));
     },
     // 新增slide
     insertSlide(moveLen) {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
       const len = direction === 1 ? this.rightLen : this.leftLen;
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
-      const startIndex =
-        Math.abs(moveLen) <= this.swiperLen
-          ? 1
-          : Math.abs(moveLen) - this.swiperLen + 1;
+      const startIndex = Math.abs(moveLen) <= this.swiperLen ? 1 : Math.abs(moveLen) - this.swiperLen + 1;
       for (let i = startIndex; i <= Math.abs(moveLen); i += 1) {
-        const value = this.countVal(
-          this.swiperVal,
-          (i + len) * this.currentTemStep * direction -
-            moveLen * this.currentTemStep
-        );
+        const value = this.countVal(this.swiperVal, (i + len) * this.currentTemStep * direction - moveLen * this.currentTemStep);
         const decimal = Math.round((value * 10) % 10);
         const integer = Math.floor(value);
         if (!this.temList.map(item => item.value).includes(value)) {
-          this.$refs[this.ref][funcName](
-            `<div class="swiper-slide"><p>${integer}</p>${
-              decimal ? `<span>.${decimal}</span>` : ''
-            }</div>`
-          );
+          this.$refs[this.ref][funcName](`<div class="swiper-slide"><p>${integer}</p>${decimal ? `<span>.${decimal}</span>` : ''}</div>`);
           // 更新temList
           const operate = direction === 1 ? 'push' : 'unshift';
           this.temList[operate]({
@@ -278,9 +255,7 @@ export default {
     },
     // 根据情况填充slide
     insertAllSlide() {
-      if (
-        this.$refs[this.ref].$el.getElementsByClassName('swiper-slide').length
-      ) {
+      if (this.$refs[this.ref].$el.getElementsByClassName('swiper-slide').length) {
         this.removeAllSlide();
       }
       const value = this.currentVal;
@@ -300,11 +275,7 @@ export default {
         const toVal = this.countVal(leftTem, i * step);
         const decimal = Math.round((toVal * 10) % 10);
         const integer = Math.floor(toVal);
-        this.$refs[this.ref].prependSlide(
-          `<div class="swiper-slide"><p>${integer}</p>${
-            decimal ? `<span>.${decimal}</span>` : ''
-          }</div>`
-        );
+        this.$refs[this.ref].prependSlide(`<div class="swiper-slide"><p>${integer}</p>${decimal ? `<span>.${decimal}</span>` : ''}</div>`);
         // 更新temList
         this.temList.unshift({
           value: toVal,
@@ -313,11 +284,7 @@ export default {
         });
       }
       // 中间
-      this.$refs[this.ref].appendSlide(
-        `<div class="swiper-slide"><p>${valueInteger}</p>${
-          valueDecimal ? `<span>.${valueDecimal}</span>` : ''
-        }</div>`
-      );
+      this.$refs[this.ref].appendSlide(`<div class="swiper-slide"><p>${valueInteger}</p>${valueDecimal ? `<span>.${valueDecimal}</span>` : ''}</div>`);
       // 更新temList
       this.temList.push({
         value,
@@ -329,11 +296,7 @@ export default {
         const toVal = this.countVal(rightTem, i * step);
         const decimal = Math.round((toVal * 10) % 10);
         const integer = Math.floor(toVal);
-        this.$refs[this.ref].appendSlide(
-          `<div class="swiper-slide"><p>${integer}</p>${
-            decimal ? `<span>.${decimal}</span>` : ''
-          }</div>`
-        );
+        this.$refs[this.ref].appendSlide(`<div class="swiper-slide"><p>${integer}</p>${decimal ? `<span>.${decimal}</span>` : ''}</div>`);
         // 更新temList
         this.temList.push({
           value: toVal,
@@ -377,11 +340,7 @@ export default {
       if (this.banSwiping) {
         this.banSwiping.value
           ? ref.showText(true, this.banSwiping.value, this.banSwiping.isNumber)
-          : ref.showText(
-              true,
-              this.$language(`ban.${this.banSwiping.txt}`),
-              this.banSwiping.isNumber
-            );
+          : ref.showText(true, this.$language(`ban.${this.banSwiping.txt}`), this.banSwiping.isNumber);
       } else {
         ref.showText(false);
       }

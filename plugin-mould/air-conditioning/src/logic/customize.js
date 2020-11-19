@@ -10,7 +10,7 @@ const Customize = {
   computed: {
     ...mapState({
       mac: state => state.mac,
-      dataObject: state => state.dataObject,
+      dataObject: state => state.dataObject
     }),
     customize() {
       return {
@@ -23,32 +23,40 @@ const Customize = {
         },
         BabySleep: () => {
           showLoading();
-          this.$router.push({
-            name: 'Sleep',
-            params: {
-              id: 1
-            }
-          }).catch(e => { console.log(e); });
+          this.$router
+            .push({
+              name: 'Sleep',
+              params: {
+                id: 1
+              }
+            })
+            .catch(e => {
+              console.log(e);
+            });
         },
         SmartSleep: () => {
           showLoading();
-          this.$router.push({
-            name: 'Sleep',
-            params: {
-              id: 2
-            }
-          }).catch(e => { console.log(e); });
+          this.$router
+            .push({
+              name: 'Sleep',
+              params: {
+                id: 2
+              }
+            })
+            .catch(e => {
+              console.log(e);
+            });
         },
         TemStep: (currentStatus, afterStatus) => {
           switch (afterStatus) {
             case 'default':
-              this.setDataObject({has01: 1, has05: 0});
+              this.setDataObject({ has01: 1, has05: 0 });
               break;
             case 'status_1':
-              this.setDataObject({has01: 0, has05: 1});
+              this.setDataObject({ has01: 0, has05: 1 });
               break;
             default:
-              this.setDataObject({has01: 1, has05: 0});
+              this.setDataObject({ has01: 1, has05: 0 });
               break;
           }
         },
@@ -56,9 +64,9 @@ const Customize = {
           switch (afterStatus) {
             case 'default':
               if (this.dataObject.SmartWind === 3) {
-                this.changeData({SmartWind: 0});
+                this.changeData({ SmartWind: 0 });
               } else if (this.dataObject.SmartWind === 2) {
-                this.changeData({SmartWind: 3});
+                this.changeData({ SmartWind: 3 });
               }
               break;
             default:
@@ -69,9 +77,9 @@ const Customize = {
           switch (afterStatus) {
             case 'default':
               if (this.dataObject.SmartWind === 2) {
-                this.changeData({SmartWind: 0});
+                this.changeData({ SmartWind: 0 });
               } else if (this.dataObject.SmartWind === 3) {
-                this.changeData({SmartWind: 2});
+                this.changeData({ SmartWind: 2 });
               }
               break;
             default:
@@ -81,60 +89,65 @@ const Customize = {
         'UDFanPort(Auto)': (currentStatus, afterStatus) => {
           switch (afterStatus) {
             case 'status_1':
-              this.changeData({UDFanPort: 2});
+              this.changeData({ UDFanPort: 2 });
               break;
             case 'status_2':
-              this.changeData({UDFanPort: 1});
+              this.changeData({ UDFanPort: 1 });
               break;
             case 'default':
-              this.changeData({UDFanPort: 2});
+              this.changeData({ UDFanPort: 2 });
               break;
             default:
-              this.changeData({UDFanPort: 0});
+              this.changeData({ UDFanPort: 0 });
               break;
           }
         },
         FanLR: (currentStatus, afterStatus) => {
           switch (afterStatus) {
             case 'status_1':
-              this.changeData({UDFanPort: 3});
+              this.changeData({ UDFanPort: 3 });
               break;
             case 'status_2':
-              this.changeData({UDFanPort: 1});
+              this.changeData({ UDFanPort: 1 });
               break;
             case 'default':
               if (this.dataObject.UDFanPort === 3) {
-                this.changeData({UDFanPort: 2});
+                this.changeData({ UDFanPort: 2 });
               } else {
-                this.changeData({UDFanPort: 1});
+                this.changeData({ UDFanPort: 1 });
               }
               break;
             default:
-              this.changeData({UDFanPort: 2});
+              this.changeData({ UDFanPort: 2 });
               break;
           }
         },
         Humi: (currentStatus, afterStatus) => {
           switch (afterStatus) {
             case 'status_1':
-              this.$router.push({name: 'Humi'}).catch(e => { console.log(e); });
+              this.$router.push({ name: 'Humi' }).catch(e => {
+                console.log(e);
+              });
               break;
             default:
               break;
           }
-        },     
-        Status: (currentStatus, afterStatus) => {
-          this.$router.push({name: 'Status'}).catch(e => { console.log(e); });
+        },
+
+        Status: () => {
+          this.$router.push({ name: 'Status' }).catch(e => {
+            console.log(e);
+          });
         },
         RFan: () => {
-          this.changeData({UDFanPort: 3});
+          this.changeData({ UDFanPort: 3 });
         },
         LFan: () => {
-          this.changeData({UDFanPort: 1});
+          this.changeData({ UDFanPort: 1 });
         },
         LRFan: () => {
-          this.changeData({UDFanPort: 2});
-        },
+          this.changeData({ UDFanPort: 2 });
+        }
       };
     },
     /**
@@ -151,12 +164,12 @@ const Customize = {
           this.dataObject.functype && (this.g_funcDefineMap.AppTimer.type = 'inertia');
         }
       };
-    },
+    }
   },
   methods: {
     ...mapMutations({
       setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE',
+      setState: 'SET_STATE'
     }),
     ...mapActions({
       updateDataObject: 'UPDATE_DATAOBJECT',
@@ -177,7 +190,7 @@ const Customize = {
       } catch (e) {
         console.log(`%c 找不到${key}的自定义函数`, 'color: blue');
       }
-    },
+    }
   }
 };
 export default Customize;

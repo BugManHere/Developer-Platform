@@ -3,21 +3,11 @@
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.SmartWind') }}</gree-header>
       <gree-list>
-        <gree-list-item title="智能送风" >
-          <gree-switch
-            slot="after"
-            v-model="isActive"
-            @change="switchSmartWind(isActive)"
-          ></gree-switch>
+        <gree-list-item title="智能送风">
+          <gree-switch slot="after" v-model="isActive" @change="switchSmartWind(isActive)"></gree-switch>
         </gree-list-item>
       </gree-list>
-      <gree-radio-list
-        :options="modes"
-        :value="SmartWind"
-        icon-size="md"
-        @change="setSmartWind"
-        v-show="isActive"
-      ></gree-radio-list>
+      <gree-radio-list :options="modes" :value="SmartWind" icon-size="md" @change="setSmartWind" v-show="isActive"></gree-radio-list>
     </gree-page>
   </gree-view>
 </template>
@@ -25,10 +15,7 @@
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  showToast,
-  hideLoading
-} from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 
 export default {
   name: 'SmartWind',
@@ -39,11 +26,11 @@ export default {
     [Switch.name]: Switch,
     [List.name]: List,
     [Item.name]: Item,
-    [Toast.name]: Toast,
+    [Toast.name]: Toast
   },
   data() {
     return {
-      isActive: true,
+      isActive: true
     };
   },
   computed: {
@@ -52,7 +39,7 @@ export default {
       SmartWind(state) {
         this.isActive = Boolean(state.dataObject.SmartWind);
         return state.dataObject.SmartWind;
-      },
+      }
     }),
     modes() {
       return [
@@ -65,25 +52,27 @@ export default {
         {
           value: 2,
           text: '风随人',
-          disabled: !this.isActive,
+          disabled: !this.isActive
         },
         {
           value: 3,
           text: '风避人',
-          disabled: !this.isActive,
+          disabled: !this.isActive
         },
         {
           value: 4,
           text: '环绕风',
-          disabled: !this.isActive,
-        },
+          disabled: !this.isActive
+        }
       ];
     }
   },
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
         try {
           showToast('空调已被关闭，自动退出智能新风设置。', 1);
         } catch (e) {

@@ -3,12 +3,7 @@
     <gree-page class="page-sleep">
       <gree-header>
         <span v-text="$language('btn.SmartSleep')" />
-        <a
-          class="save"
-          slot="right"
-          v-if="SwhSlp && SlpMod === 3"
-          @click="saveSlp"
-        >
+        <a class="save" slot="right" v-if="SwhSlp && SlpMod === 3" @click="saveSlp">
           保存
         </a>
       </gree-header>
@@ -18,12 +13,7 @@
           <!-- 列表 -->
           <gree-list>
             <gree-list-item title="睡眠" style="font-size: 18px">
-              <gree-switch
-                slot="after"
-                class="blue"
-                v-model="sleepActive"
-                @change="sleepBtn(sleepActive)"
-              ></gree-switch>
+              <gree-switch slot="after" class="blue" v-model="sleepActive" @change="sleepBtn(sleepActive)"></gree-switch>
             </gree-list-item>
           </gree-list>
           <gree-radio-list
@@ -64,40 +54,15 @@
           </div>
         </div>
         <!-- 图表 -->
-        <div
-          v-show="showEchart"
-          class="body-chart"
-          id="echart"
-          ref="mychart"
-          :style="{ height: `${clientHeight * 0.55}px` }"
-        />
+        <div v-show="showEchart" class="body-chart" id="echart" ref="mychart" :style="{ height: `${clientHeight * 0.55}px` }" />
         <!-- 列表 -->
         <div v-if="imshowType === 1" class="body-bottom">
           <gree-list>
-            <gree-list-item
-              title="防直吹"
-              style="font-size: 18px"
-              footer="防止风直接吹人"
-            >
-              <gree-switch
-                :disabled="Mod !== 1"
-                slot="after"
-                class="blue"
-                v-model="blowActive"
-                @change="blowBtn(blowActive)"
-              ></gree-switch>
+            <gree-list-item title="防直吹" style="font-size: 18px" footer="防止风直接吹人">
+              <gree-switch :disabled="Mod !== 1" slot="after" class="blue" v-model="blowActive" @change="blowBtn(blowActive)"></gree-switch>
             </gree-list-item>
-            <gree-list-item
-              title="自动灯光"
-              style="font-size: 18px"
-              footer="夜间自动关闭灯光"
-            >
-              <gree-switch
-                slot="after"
-                class="blue"
-                v-model="ligActive"
-                @change="ligBtn(ligActive)"
-              ></gree-switch>
+            <gree-list-item title="自动灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
+              <gree-switch slot="after" class="blue" v-model="ligActive" @change="ligBtn(ligActive)"></gree-switch>
             </gree-list-item>
           </gree-list>
         </div>
@@ -230,276 +195,15 @@ export default {
         'StSlp4HSp'
       ],
       slpModExVal: [
-        [
-          1,
-          2,
-          4,
-          1,
-          1,
-          131,
-          1,
-          1,
-          131,
-          1,
-          120,
-          0,
-          6,
-          120,
-          0,
-          6,
-          300,
-          8,
-          6,
-          300,
-          8,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          2,
-          1,
-          133,
-          1,
-          1,
-          133,
-          1,
-          120,
-          0,
-          6,
-          120,
-          0,
-          6,
-          300,
-          5,
-          6,
-          300,
-          5,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          3,
-          1,
-          136,
-          1,
-          1,
-          136,
-          1,
-          120,
-          0,
-          6,
-          120,
-          0,
-          6,
-          300,
-          3,
-          6,
-          300,
-          3,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          4,
-          1,
-          133,
-          1,
-          1,
-          133,
-          1,
-          240,
-          10,
-          6,
-          240,
-          10,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          5,
-          1,
-          138,
-          1,
-          1,
-          138,
-          1,
-          240,
-          10,
-          6,
-          240,
-          10,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          6,
-          1,
-          143,
-          1,
-          1,
-          143,
-          1,
-          240,
-          5,
-          6,
-          240,
-          5,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          2,
-          4,
-          7,
-          60,
-          130,
-          1,
-          60,
-          130,
-          1,
-          180,
-          0,
-          6,
-          180,
-          0,
-          6,
-          240,
-          5,
-          6,
-          240,
-          5,
-          6,
-          300,
-          10,
-          6,
-          300,
-          10,
-          6
-        ],
-        [
-          1,
-          2,
-          4,
-          8,
-          60,
-          133,
-          1,
-          60,
-          133,
-          1,
-          180,
-          0,
-          6,
-          180,
-          0,
-          6,
-          240,
-          5,
-          6,
-          240,
-          5,
-          6,
-          300,
-          10,
-          6,
-          300,
-          10,
-          6
-        ],
-        [
-          1,
-          2,
-          4,
-          9,
-          60,
-          133,
-          1,
-          60,
-          133,
-          1,
-          180,
-          0,
-          6,
-          180,
-          0,
-          6,
-          240,
-          5,
-          6,
-          240,
-          5,
-          6,
-          0,
-          0,
-          1,
-          0,
-          0,
-          1
-        ]
+        [1, 2, 4, 1, 1, 131, 1, 1, 131, 1, 120, 0, 6, 120, 0, 6, 300, 8, 6, 300, 8, 6, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 2, 1, 133, 1, 1, 133, 1, 120, 0, 6, 120, 0, 6, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 3, 1, 136, 1, 1, 136, 1, 120, 0, 6, 120, 0, 6, 300, 3, 6, 300, 3, 6, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 4, 1, 133, 1, 1, 133, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 5, 1, 138, 1, 1, 138, 1, 240, 10, 6, 240, 10, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 6, 1, 143, 1, 1, 143, 1, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+        [1, 2, 4, 7, 60, 130, 1, 60, 130, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
+        [1, 2, 4, 8, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 300, 10, 6, 300, 10, 6],
+        [1, 2, 4, 9, 60, 133, 1, 60, 133, 1, 180, 0, 6, 180, 0, 6, 240, 5, 6, 240, 5, 6, 0, 0, 1, 0, 0, 1]
       ],
       selectItem: '',
       selectRadio: 1,
@@ -810,9 +514,7 @@ export default {
             break;
         }
         this.$nextTick(() => {
-          this.updateData(
-            ['expert', 'tradition', 'expert', 'diy', 'nap'][newVal]
-          );
+          this.updateData(['expert', 'tradition', 'expert', 'diy', 'nap'][newVal]);
           this.updateEchart();
         });
       },
@@ -1084,10 +786,7 @@ export default {
 
       this.$set(this.data[dataIndex], 1, data);
 
-      this.position[dataIndex] = this.myChart.convertToPixel(
-        'grid',
-        this.data[dataIndex]
-      );
+      this.position[dataIndex] = this.myChart.convertToPixel('grid', this.data[dataIndex]);
 
       this.myChart.setOption({
         series: [

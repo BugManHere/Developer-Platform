@@ -1,12 +1,6 @@
 <template>
   <div>
-    <Swiper
-      :ref="ref"
-      class="mode-swiper"
-      :slides-data="options"
-      @realIndex="swiperChange"
-      @activeIndex="setFanName"
-    />
+    <Swiper :ref="ref" class="mode-swiper" :slides-data="options" @realIndex="swiperChange" @activeIndex="setFanName" />
     <div class="mode-name">
       <span v-text="modeName" />
     </div>
@@ -80,10 +74,7 @@ export default {
     }),
     imshowList() {
       const result = this.modeList.filter(item => {
-        return (
-          !this.g_hideFuncArr.includes(item.key) &&
-          this.g_identifierArr.includes(item.key)
-        );
+        return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);
       });
       result.length ||
         result.push({
@@ -176,27 +167,17 @@ export default {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(moveLen); i += 1) {
-        const startIndex =
-          this.swiperValue +
-          direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex = this.swiperValue + direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
-        this.$refs[this.ref][funcName](
-          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
-        );
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
     },
     removeSlide(moveLen) {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
-      const removeIndexList = Array.from(
-        { length: removeLen },
-        (item, index) => {
-          return direction ? this.leftLen + this.rightLen - index : index;
-        }
-      ); // 需要移除的slide的Index
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
+      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
+        return direction ? this.leftLen + this.rightLen - index : index;
+      }); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 滑动事件
@@ -205,9 +186,7 @@ export default {
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
       // const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
       // 缓存温度
-      const temSetting = this.ableSend
-        ? window.storage.get('temSetting') || {}
-        : {};
+      const temSetting = this.ableSend ? window.storage.get('temSetting') || {} : {};
       let sendData = {
         ...temSetting[toIndex],
         Mod: this.imshowList[toIndex].value,
@@ -221,14 +200,10 @@ export default {
       window.storage.set('temSetting', temSetting);
 
       // 自动模式需要发送温度
-      toIndex ||
-        (sendData = { ...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0 });
+      toIndex || (sendData = { ...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0 });
 
       // M3在WiFi处作了特殊处理，app要兼容
-      if (
-        sendData.Mod === 4 &&
-        this.devOptions.identifierArr.includes('AssHt(Auto)')
-      ) {
+      if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {
         sendData.AssHt = 0;
       }
 
@@ -237,9 +212,7 @@ export default {
     },
     setFanName(index) {
       if (index === undefined) {
-        this.modeName = this.imshowList.find(
-          item => item.value === this.swiperValue
-        ).name;
+        this.modeName = this.imshowList.find(item => item.value === this.swiperValue).name;
         return;
       }
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);

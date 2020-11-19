@@ -1,10 +1,7 @@
 /**
  * @description 故障配置
  */
-import {
-  mapState,
-  mapMutations
-} from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import errorList from '@/utils/error';
 
 const errorConfig = {
@@ -12,7 +9,7 @@ const errorConfig = {
     return {
       errorList,
       errMsg: '', // 故障文字
-      warnMsg: '', // 提醒文字
+      warnMsg: '' // 提醒文字
     };
   },
 
@@ -21,7 +18,7 @@ const errorConfig = {
       ErrCode1: state => state.dataObject.ErrCode1,
       ErrCode2: state => state.dataObject.ErrCode2,
       JFerr: state => state.dataObject.JFerr,
-      ErrCodeType: state => state.dataObject.ErrCodeType,
+      ErrCodeType: state => state.dataObject.ErrCodeType
     }),
 
     /**
@@ -53,7 +50,7 @@ const errorConfig = {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
+      setDataObject: 'SET_DATA_OBJECT'
     }),
 
     changeRoute(value) {
@@ -75,7 +72,6 @@ const errorConfig = {
         });
       }
     },
-
 
     /**
      * @description 判断err2 是否需要跳故障页
@@ -107,16 +103,14 @@ const errorConfig = {
       let msg = [];
       msg = this.HandleErrorCode(this.ErrCode2);
       if (msg.length > 0) {
-        this.errMsg = `故障:  ${this.errorList.ErrCode2[msg[0]].code}, ${
-          this.$language(`error.${this.errorList.ErrCode2[msg[0]].title}`)
-        }。 `;
+        this.errMsg = `故障:  ${this.errorList.ErrCode2[msg[0]].code}, ${this.$language(`error.${this.errorList.ErrCode2[msg[0]].title}`)}。 `;
       }
     },
 
     /**
      * @description 十进制转2进制下标
      * @function HandleErrorCode
-     * @param { number} value 传入的十进制数 
+     * @param { number} value 传入的十进制数
      * @return eg 13 => [0, 1, 3]
      */
     HandleErrorCode(value) {
@@ -130,7 +124,7 @@ const errorConfig = {
         }
       }
       return indexList;
-    },
+    }
   }
 };
 

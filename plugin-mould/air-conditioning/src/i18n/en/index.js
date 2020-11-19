@@ -30,20 +30,14 @@ module.exports = {
     notify_fault_name_E3: 'Low pressure protection',
     notify_fault_name_E4: 'Compressor high discharge temperature protection',
     notify_fault_name_E5: 'Overcurrent protection',
-    notify_fault_name_E6:
-      'Communication error between indoor unit and outdoor unit',
+    notify_fault_name_E6: 'Communication error between indoor unit and outdoor unit',
     notify_fault_name_E7: 'Mode conflict',
     notify_fault_name_E8: 'High temperature protection',
-    notify_fault_name_F1:
-      'Open/short circuit of indoor ambient temperature sensor',
-    notify_fault_name_F2:
-      'Open/short circuit of indoor evaporator temperature sensor',
-    notify_fault_name_F3:
-      'Open/short circuit of outdoor ambient temperature sensor',
-    notify_fault_name_F4:
-      'Open/short circuit of outdoor condenser temperature sensor',
-    notify_fault_name_F5:
-      'Open/short circuit of outdoor discharge temperature sensor',
+    notify_fault_name_F1: 'Open/short circuit of indoor ambient temperature sensor',
+    notify_fault_name_F2: 'Open/short circuit of indoor evaporator temperature sensor',
+    notify_fault_name_F3: 'Open/short circuit of outdoor ambient temperature sensor',
+    notify_fault_name_F4: 'Open/short circuit of outdoor condenser temperature sensor',
+    notify_fault_name_F5: 'Open/short circuit of outdoor discharge temperature sensor',
     notify_fault_name_F6: '过负荷限/降频',
     notify_fault_name_F8: '电流过大降频',
     notify_fault_name_F9: '排气过高降频',
@@ -71,8 +65,7 @@ module.exports = {
     notify_fault_name_U7: '4-way valve reversing error',
     notify_fault_name_En: '模块过电流限频/降频',
     notify_fault_name_FH: '防冻结限/降频',
-    notify_fault_name_FC:
-      'Sliding door error (only for the models with sliding door)',
+    notify_fault_name_FC: 'Sliding door error (only for the models with sliding door)',
     notify_fault_name_F0: 'Refrigerant lacking or valve cut-off protection',
     notify_fault_name_oE: '外机任意停机故障',
     notify_fault_name_e6: '室内主板与显示板通故障',
@@ -84,13 +77,11 @@ module.exports = {
     notify_Fault_name_A4: 'Refrigerant heater temperature sensor error',
     notify_Fault_name_A5: 'Condenser inlet pipe temperature sensor error',
     notify_Fault_name_A7: 'Condenser outlet pipe temperature sensor error',
-    notify_Fault_name_JF:
-      'Communication error between indoor unit and detection board',
+    notify_Fault_name_JF: 'Communication error between indoor unit and detection board',
     notify_Fault_name_rF: 'RF module error',
     notify_Fault_name_no: 'Matching error of inverter and non-inverter models',
     notify_Fault_name_Fc: 'Unit head lifting error',
-    notify_Fault_name_J6:
-      'Communication error between display board and drive board'
+    notify_Fault_name_J6: 'Communication error between display board and drive board'
   },
   voice: {
     voiceAssistant: 'Voice Assistant',
@@ -102,8 +93,7 @@ module.exports = {
     prompt_mod: '自动/送风/制热/制冷/除湿模式',
     prompt_wdspd: '静音/低/中低/中档/中高/高/强劲风',
     prompt_wdspdud: '增大/调高/加快/减小/调低/减慢风速',
-    voice_cmd_not_found:
-      'This command isn’t supported, please try another command.',
+    voice_cmd_not_found: 'This command isn’t supported, please try another command.',
     voice_cmd_max_level: 'The gear level is already minimal.',
     voice_cmd_min_level: 'The gear level is already the largest.'
   },
@@ -165,32 +155,28 @@ module.exports = {
     SvSt: '节能',
     Blo: '干燥',
     Humi: '加湿',
-    x: '再热除湿',
+    x: '再热除湿'
   },
   sweep: {
     speedTitle: 'Swing',
     advance_updown: 'Up&Down',
     advance_leftright: 'Left&Right',
-    speedDownTitle:
-      'Click to select fixed-angle swing and slide to select regional swing.',
+    speedDownTitle: 'Click to select fixed-angle swing and slide to select regional swing.',
     sweep_ud_tips: 'Do not support swing in this region.',
     sweep_ud_tips2: 'Up-Down swing only supports full angle swing.',
     sweep_ud_turnoff_tips: 'Up-Down sweep was closed.',
     sweep_lr_tips: 'Left&right swing only supports full angle swing.',
     sweep_lr_turnoff_tips: 'Left-Right sweep was closed.',
-    sweep_powoff_tips:
-      'Air conditioning has been shut down and this page will automatically exit.',
+    sweep_powoff_tips: 'Air conditioning has been shut down and this page will automatically exit.',
     sweep_txtlf: 'Left-Right sweep',
-    sweep_txt2:
-      'Click to select fixed-angle swing <br> and slide to select regional swing <br> and click other zone to cancle.'
+    sweep_txt2: 'Click to select fixed-angle swing <br> and slide to select regional swing <br> and click other zone to cancle.'
   },
   air: {
     title: 'Fresh air',
     on: 'air on',
     off: 'air off',
     Intelligent: 'Intelligent air',
-    air_powoff_tips:
-      'Air conditioning has been shut down and this page will automatically exit.'
+    air_powoff_tips: 'Air conditioning has been shut down and this page will automatically exit.'
   },
   humidify: {
     title: 'Humidification Settings',
@@ -200,7 +186,6 @@ module.exports = {
     fiftyPercent: '加湿50%',
     sixtyPercent: '加湿60%',
     seventyPercent: '加湿70%',
-    humidify_powoff_tips:
-      'Air conditioning has been shut down and this page will automatically exit.'
+    humidify_powoff_tips: 'Air conditioning has been shut down and this page will automatically exit.'
   }
 };

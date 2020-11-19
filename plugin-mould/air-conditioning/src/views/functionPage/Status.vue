@@ -1,18 +1,18 @@
 <template>
   <gree-view bg-color="#404040">
-    <gree-header @on-click-back="clickBack" :left-options="{ preventGoBack: true }" >机组运行状态</gree-header>
+    <gree-header @on-click-back="clickBack" :left-options="{ preventGoBack: true }">机组运行状态</gree-header>
     <gree-page class="page-status">
       <div class="status">
         <h3 class="headline" style="border-top: 1px solid #D6D6D6">机组运行状态</h3>
         <gree-list>
           <gree-list-item title="运行模式" :text="!isGoBackFlag ? ModStatus : '---'" media-item />
-          <gree-list-item title="风挡状态" :text="!isGoBackFlag ? WdSpdStatus: '---'" media-item />
-          <gree-list-item title="循环模式" :text="!isGoBackFlag ? LoopModStatus: '---'" media-item />
-          <gree-list-item title="室外环境温度" :text="!isGoBackFlag ? OutEnvTemStatus: '---'" media-item />
-          <gree-list-item title="室内回风温度" :text="!isGoBackFlag ? InAirTemStatus: '---'" media-item />
-          <gree-list-item title="室内回风湿度" :text="!isGoBackFlag ? InAirHumiStatus: '---'" media-item />
-          <gree-list-item title="送风温度" :text="!isGoBackFlag ? WdSupTemStatus: '---'" media-item />
-        <!-- <gree-list-item
+          <gree-list-item title="风挡状态" :text="!isGoBackFlag ? WdSpdStatus : '---'" media-item />
+          <gree-list-item title="循环模式" :text="!isGoBackFlag ? LoopModStatus : '---'" media-item />
+          <gree-list-item title="室外环境温度" :text="!isGoBackFlag ? OutEnvTemStatus : '---'" media-item />
+          <gree-list-item title="室内回风温度" :text="!isGoBackFlag ? InAirTemStatus : '---'" media-item />
+          <gree-list-item title="室内回风湿度" :text="!isGoBackFlag ? InAirHumiStatus : '---'" media-item />
+          <gree-list-item title="送风温度" :text="!isGoBackFlag ? WdSupTemStatus : '---'" media-item />
+          <!-- <gree-list-item
           title="实时耗电量"
           :text="ActualElecStatus"
           footer="实时耗电量数据仅供查考"
@@ -23,15 +23,15 @@
         <h3 class="headline">空气品质状态</h3>
         <gree-list>
           <gree-list-item title="送风PM2.5浓度" :text="!isGoBackFlag ? WdSupPMStatus : '---'" media-item />
-          <gree-list-item title="回风CO2浓度" :text=" !isGoBackFlag ? AirCO2Status: '---'" media-item />
+          <gree-list-item title="回风CO2浓度" :text="!isGoBackFlag ? AirCO2Status : '---'" media-item />
         </gree-list>
 
         <h3 class="headline">滤网状态</h3>
         <gree-list>
           <gree-list-item title="新风粗效滤网" :text="!isGoBackFlag ? getSieveStateStatus(1) : '---'" media-item />
-          <gree-list-item title="回风粗效滤网" :text="!isGoBackFlag ? getSieveStateStatus(2): '---'" media-item />
-          <gree-list-item title="高效滤网" :text="!isGoBackFlag ? getSieveStateStatus(0): '---'" media-item />
-          <gree-list-item title="换热芯体" :text="!isGoBackFlag ? getSieveStateStatus(3): '---'" media-item />
+          <gree-list-item title="回风粗效滤网" :text="!isGoBackFlag ? getSieveStateStatus(2) : '---'" media-item />
+          <gree-list-item title="高效滤网" :text="!isGoBackFlag ? getSieveStateStatus(0) : '---'" media-item />
+          <gree-list-item title="换热芯体" :text="!isGoBackFlag ? getSieveStateStatus(3) : '---'" media-item />
         </gree-list>
 
         <h3 class="status-bottom">到底啦~</h3>
@@ -43,7 +43,7 @@
 <script>
 import { Header, Toast, List, Item, Dialog } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import { showToast, closePage } from '@PluginInterface';
+import { closePage } from '@PluginInterface';
 
 export default {
   name: 'Status',
@@ -77,7 +77,7 @@ export default {
       ErrCode1: state => state.dataObject.ErrCode1,
       ErrCode2: state => state.dataObject.ErrCode2,
       JFerr: state => state.dataObject.JFerr,
-      isOffline: state => state.deviceInfo.deviceState,
+      isOffline: state => state.deviceInfo.deviceState
     }),
 
     ModStatus() {
@@ -85,7 +85,7 @@ export default {
       return list[this.Mod - 1];
     },
     WdSpdStatus() {
-      const list = ['低风挡', '中风挡', '高风挡']; 
+      const list = ['低风挡', '中风挡', '高风挡'];
       return list[this.WdSpd - 1];
     },
     LoopModStatus() {
@@ -94,23 +94,23 @@ export default {
     },
     // 室外环境温度
     OutEnvTemStatus() {
-      return `${this.OutEnvTem - 40}℃`; 
+      return `${this.OutEnvTem - 40}℃`;
     },
     // 室内回风温度
     InAirTemStatus() {
-      return `${this.InAirTem - 40}℃`; 
+      return `${this.InAirTem - 40}℃`;
     },
     // 室内回风湿度
     InAirHumiStatus() {
-      return `${this.InAirHumi}%RH`; 
+      return `${this.InAirHumi}%RH`;
     },
     // 送风温度
     WdSupTemStatus() {
-      return `${this.WdSupTem - 40}℃`; 
+      return `${this.WdSupTem - 40}℃`;
     },
     // 实时耗电量
     ActualElecStatus() {
-      return `${this.ActualElec}KW/h`; 
+      return `${this.ActualElec}KW/h`;
     },
 
     // 送风PM2.5浓度 区间取值
@@ -120,7 +120,7 @@ export default {
       const index = district.findIndex(value => {
         return value >= this.WdSupPM;
       });
-      return districtValue[index]; 
+      return districtValue[index];
     },
 
     // 回风CO2浓度 区间取值
@@ -130,12 +130,13 @@ export default {
       const index = district.findIndex(value => {
         return value >= this.AirCO2;
       });
-      return districtValue[index]; 
+      return districtValue[index];
     },
 
     /**
      * @description 设置正常状态判断
-     */    
+     */
+
     getSieveStateStatus() {
       return index => {
         const value = this.SieveState >> index;
@@ -144,7 +145,7 @@ export default {
         }
         return '正常';
       };
-    },
+    }
   },
 
   watch: {
@@ -217,10 +218,11 @@ export default {
      */
     clickBack() {
       closePage();
-    }, 
+    },
     /**
      * @description 退出当前页面
-     */    
+     */
+
     colse(type) {
       this.toastMsg = `设备${type}，将退出状态查询功能。 <br/>  请确认设备状态后重试。`;
       this.isGoBackFlag = true;
@@ -239,23 +241,23 @@ export default {
 
 <style lang="scss">
 .page-status {
-  .page-content{
+  .page-content {
     padding-bottom: 50px;
   }
-  .status{
+  .status {
     overflow: auto;
   }
   .list {
     margin-top: 0;
     margin-bottom: 0.1rem;
-    .item-content{
-    .item-title {
-      font-size: 42px;
-      color: #404657;
-    }
+    .item-content {
+      .item-title {
+        font-size: 42px;
+        color: #404657;
+      }
     }
   }
-  .status-bottom{
+  .status-bottom {
     text-align: center;
     margin-top: 50px;
     color: #989898;
@@ -270,7 +272,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.gree-dialog-body{
+.gree-dialog-body {
   text-align: center !important;
 }
 </style>

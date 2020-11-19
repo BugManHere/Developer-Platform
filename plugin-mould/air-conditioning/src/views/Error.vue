@@ -1,24 +1,12 @@
-
 <template>
   <gree-view class="error" bg-color="#f4f4f4">
-    <gree-header 
-      :left-options="{preventGoBack: true}"
-      @on-click-back="clickBack">故障详情
-    </gree-header>
+    <gree-header :left-options="{ preventGoBack: true }" @on-click-back="clickBack">故障详情 </gree-header>
     <gree-page>
-      <gree-error-page
-        type="malfunction"
-        :bg-url="BgUrl2"
-        :text="errorMultiText"
-      ></gree-error-page>
+      <gree-error-page type="malfunction" :bg-url="BgUrl2" :text="errorMultiText"></gree-error-page>
     </gree-page>
     <gree-toolbar position="bottom">
       <gree-row>
-        <gree-col
-          v-for="(item, index) in options"
-          :key="index"
-          @click.native="setFunction(index)"
-        >
+        <gree-col v-for="(item, index) in options" :key="index" @click.native="setFunction(index)">
           <div class="icon">
             <img :src="require('@/assets/img/' + item.ImgName + '.png')" />
           </div>
@@ -30,15 +18,8 @@
 </template>
 
 <script>
-import {
-  Header,
-  Row,
-  Col,
-  Icon,
-  ToolBar,
-  ErrorPage 
-} from 'gree-ui';
-import { changeBarColor, closePage, toWebPage, callNumber} from '@PluginInterface';
+import { Header, Row, Col, Icon, ToolBar, ErrorPage } from 'gree-ui';
+import { changeBarColor, closePage, toWebPage, callNumber } from '@PluginInterface';
 import errorConfig from '@/mixins/utils/error';
 
 export default {
@@ -48,7 +29,7 @@ export default {
     [Col.name]: Col,
     [Icon.name]: Icon,
     [ToolBar.name]: ToolBar,
-    [ErrorPage.name]: ErrorPage 
+    [ErrorPage.name]: ErrorPage
   },
   mixins: [errorConfig],
   data() {
@@ -80,7 +61,7 @@ export default {
     clickBack() {
       const bit0 = 0;
       const bit4 = 4;
-      const errCode2Colsepage = ((this.ErrCode2 >> bit0) % 2) === 1 || ((this.ErrCode2 >> bit4) % 2) === 1; // ErrCode2中closePage的位 第0位 和 第四位
+      const errCode2Colsepage = (this.ErrCode2 >> bit0) % 2 === 1 || (this.ErrCode2 >> bit4) % 2 === 1; // ErrCode2中closePage的位 第0位 和 第四位
       if (this.JFerr || this.ErrCode1 || errCode2Colsepage) {
         closePage();
       } else {
@@ -137,14 +118,12 @@ export default {
       element.subtitle = this.$language('error.subtitle');
       return element;
     }
-
-
   }
 };
 </script>
 
 <style lang="scss">
-.error{
+.error {
   .list {
     .item-content {
       .item-media {
@@ -167,16 +146,15 @@ export default {
           }
         }
       }
-      .item-inner{
+      .item-inner {
         .item-title,
-        .item-after{
+        .item-after {
           white-space: normal;
         }
       }
     }
   }
 }
-
 </style>
 
 <style lang="scss" scoped>
@@ -208,4 +186,3 @@ export default {
   }
 }
 </style>
-  

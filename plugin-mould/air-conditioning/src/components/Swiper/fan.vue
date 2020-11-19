@@ -1,13 +1,6 @@
 <template>
   <div>
-    <Swiper
-      :ref="ref"
-      class="fan-swiper"
-      :slides-data="options"
-      @realIndex="swiperChange"
-      @activeIndex="setFanName"
-      @swiper-show-toast="swiperShowDisable"
-    />
+    <Swiper :ref="ref" class="fan-swiper" :slides-data="options" @realIndex="swiperChange" @activeIndex="setFanName" @swiper-show-toast="swiperShowDisable" />
     <div class="fan-name">
       <span v-text="fanName" />
     </div>
@@ -126,10 +119,7 @@ export default {
     },
     imshowList() {
       const result = this.fanList.filter(item => {
-        return (
-          !this.g_hideFuncArr.includes(item.key) &&
-          this.g_identifierArr.includes(item.key)
-        );
+        return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);
       });
       result.length ||
         result.push({
@@ -262,34 +252,21 @@ export default {
       console.log('-insertSlide');
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
       console.log('direction------------', direction);
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
       console.log('removeLen------------', removeLen);
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(removeLen); i += 1) {
-        const startIndex =
-          this.swiperIndex +
-          direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
-        this.$refs[this.ref][funcName](
-          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
-        );
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
     },
     removeSlide(moveLen) {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
-      const removeIndexList = Array.from(
-        { length: removeLen },
-        (item, index) => {
-          return direction ? this.leftLen + this.rightLen - index : index;
-        }
-      ); // 需要移除的slide的Index
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
+      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
+        return direction ? this.leftLen + this.rightLen - index : index;
+      }); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 移除所有slide
@@ -299,23 +276,17 @@ export default {
     // 根据情况填充slide
     insertAllSlide() {
       console.log('insertAllSlide-');
-      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
-        'swiper-wrapper'
-      )[0].childNodes.length;
+      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       if (swiperNum >= this.leftLen + this.rightLen + 1) return;
       for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {
         const funcName = 'prependSlide';
         const moveLen = i;
         const toIndex = this.countIndex(this.swiperIndex, moveLen);
-        this.$refs[this.ref][funcName](
-          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
-        );
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
 
       // 如果slide数量大于限定数量，则删掉
-      swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
-        'swiper-wrapper'
-      )[0].childNodes.length;
+      swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       let maxLen = this.leftLen + this.rightLen + 1;
       if (swiperNum >= maxLen) {
         const removeList = [];

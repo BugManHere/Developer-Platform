@@ -10,7 +10,7 @@ const updateStatus = {
     ...mapState({
       isOffline: state => state.deviceInfo.deviceState,
       lang: state => state.deviceInfo.lang,
-      FreshAirConditionState: state => state.dataObject.FreshAirConditionState,
+      FreshAirConditionState: state => state.dataObject.FreshAirConditionState
     })
   },
   watch: {
@@ -19,7 +19,9 @@ const updateStatus = {
      */
     isOffline(newV) {
       if (newV === -1 && this.$route.name !== 'Status') {
-        this.$router.push({ name: 'Offline' }).catch(err => { err; });
+        this.$router.push({ name: 'Offline' }).catch(err => {
+          err;
+        });
       }
     },
     /**
@@ -27,7 +29,9 @@ const updateStatus = {
      */
     FreshAirConditionState(newV) {
       if (newV) {
-        this.$router.push({ name: 'Status' }).catch(err => { err; });
+        this.$router.push({ name: 'Status' }).catch(err => {
+          err;
+        });
       }
     },
     lang: {
@@ -43,11 +47,17 @@ const updateStatus = {
      */
     initApp() {
       if (this.isOffline === -1) {
-        this.$router.push({ name: 'Offline' }).catch(err => { err; });
+        this.$router.push({ name: 'Offline' }).catch(err => {
+          err;
+        });
       } else if (this.FreshAirConditionState) {
-        this.$router.push({ name: 'Status' }).catch(err => { err; });
+        this.$router.push({ name: 'Status' }).catch(err => {
+          err;
+        });
       } else {
-        this.$router.push({ path: '/' }).catch(err => { err; });
+        this.$router.push({ path: '/' }).catch(err => {
+          err;
+        });
       }
     }
   }

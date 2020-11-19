@@ -2,12 +2,7 @@
   <gree-view bg-color="#404040">
     <gree-page class="page-smart-wind">
       <gree-header>{{ $language('btn.AssHt') }}</gree-header>
-      <gree-radio-list
-        :options="modes"
-        icon-size="md"
-        :value="AssHt"
-        @change="setAssHt"
-      ></gree-radio-list>
+      <gree-radio-list :options="modes" icon-size="md" :value="AssHt" @change="setAssHt"></gree-radio-list>
     </gree-page>
   </gree-view>
 </template>
@@ -15,10 +10,7 @@
 <script>
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
-import {
-  showToast,
-  hideLoading
-} from '@PluginInterface';
+import { showToast, hideLoading } from '@PluginInterface';
 import LogicDefine from '@/logic/define';
 
 export default {
@@ -30,41 +22,42 @@ export default {
     [Switch.name]: Switch,
     [List.name]: List,
     [Item.name]: Item,
-    [Toast.name]: Toast,
+    [Toast.name]: Toast
   },
   mixins: [LogicDefine],
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
       AssHt: state => state.dataObject.AssHt,
-      mid: state => state.devOptions.mid,
+      mid: state => state.devOptions.mid
     }),
     modes() {
       return [
         {
           value: this.g_identifierArr.includes('AssHt(Final)') ? 1 : 0,
-          text: '开',
+          text: '开'
         },
         {
           value: this.g_identifierArr.includes('AssHt(Final)') ? 0 : 1,
-          text: '关',
+          text: '关'
         },
         {
           value: 2,
           text: '自动',
           brief: '根据环境温度自动开启、关闭辅热，提高制热效率'
-        },
+        }
       ];
-    },
+    }
   },
   watch: {
     Pow(newVal) {
       if (!newVal) {
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
         try {
           showToast('空调已被关闭，自动退出辅热设置。', 1);
         } catch (e) {
@@ -74,7 +67,7 @@ export default {
           });
         }
       }
-    },
+    }
   },
   mounted() {
     hideLoading();
@@ -86,12 +79,12 @@ export default {
       setState: 'SET_STATE'
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL',
+      sendCtrl: 'SEND_CTRL'
     }),
     setAssHt(option) {
       this.setState(['ableSend', true]);
-      this.setDataObject({AssHt: option.value});
-      this.sendCtrl({AssHt: option.value});
+      this.setDataObject({ AssHt: option.value });
+      this.sendCtrl({ AssHt: option.value });
     }
   }
 };

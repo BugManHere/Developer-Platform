@@ -1,39 +1,19 @@
 <template>
-  <div
-    ref="wrapper"
-    class="carousel-wrapper"
-    :style="{width: options.width, 'margin-left': options.marginLeft}"
-  >
-    <section
-      v-if="options.isShow"
-      class="container_mode"
-      :style="{'height': options.height}"
-    >
-      <div
-        ref="itemsWrapper"
-        id="itemsWrapper"
-        class="panels-backface-invisible"
-        :style="{'width': options.spaceBetween, 'height': options.spaceBetween}"
-      >
-        <figure
-          v-for="(item,index) in computedData"
-          :key="index"
-          @touchstart="changeMode"
-          style="margin: 0 auto"
-        >
+  <div ref="wrapper" class="carousel-wrapper" :style="{ width: options.width, 'margin-left': options.marginLeft }">
+    <section v-if="options.isShow" class="container_mode" :style="{ height: options.height }">
+      <div ref="itemsWrapper" id="itemsWrapper" class="panels-backface-invisible" :style="{ width: options.spaceBetween, height: options.spaceBetween }">
+        <figure v-for="(item, index) in computedData" :key="index" @touchstart="changeMode" style="margin: 0 auto">
           <div
             class="content-wrapper"
-            :class="{hidden:selectId!=item.id && !isEdit
-                       && options.controlMode == 1,
-                     showThreeItems:index!=showThreeId[0]
-                       &&index!=showThreeId[1]
-                       &&index!=showThreeId[2]&&!isEdit
-            &&options.threeOrAll==1}"
+            :class="{
+              hidden: selectId != item.id && !isEdit && options.controlMode == 1,
+              showThreeItems: index != showThreeId[0] && index != showThreeId[1] && index != showThreeId[2] && !isEdit && options.threeOrAll == 1
+            }"
           >
             <div
               v-if="options.isShow && options.showNumOrImg"
               :style="{
-                'height': options.height,
+                height: options.height,
                 'font-size': fontSizeChange[item.id],
                 'margin-top': marginTopChange[item.id],
                 'margin-left': marginLeftChange[item.id],
@@ -41,16 +21,9 @@
               }"
             >
               {{ item.content }}
-              <span
-                v-show="item.id % 2 && options.has05"
-                :style="{'font-size': '1.45rem', 'margin-left': '-40px', 'font-family': 'RobotoLight'}"
-              >.5</span>
+              <span v-show="item.id % 2 && options.has05" :style="{ 'font-size': '1.45rem', 'margin-left': '-40px', 'font-family': 'RobotoLight' }">.5</span>
             </div>
-            <img
-              v-if="options.isShow && !options.showNumOrImg"
-              :src="item.content"
-              :style="{'height': options.height}"
-            />
+            <img v-if="options.isShow && !options.showNumOrImg" :src="item.content" :style="{ height: options.height }" />
           </div>
         </figure>
       </div>
@@ -81,9 +54,7 @@ Carousel3D.prototype.modify = function modify() {
   let panel;
   let angle;
 
-  this.panelSize = this.element[
-    this.isHorizontal ? 'offsetWidth' : 'offsetHeight'
-  ];
+  this.panelSize = this.element[this.isHorizontal ? 'offsetWidth' : 'offsetHeight'];
   this.panelWith = this.panelSize;
   this.rotateFn = this.isHorizontal ? 'rotateY' : 'rotateX';
   this.theta = 360 / this.totalPanelCount;
@@ -91,9 +62,7 @@ Carousel3D.prototype.modify = function modify() {
   //  do some trig to figure out how big the carousel
   //  is in 3D space
   // 这里计算半径（决定滚轮整体的大小，子项间距）
-  this.radius =
-    Math.round(this.panelSize / 2 / Math.tan(Math.PI / this.totalPanelCount)) *
-    this.radiusMutiply;
+  this.radius = Math.round(this.panelSize / 2 / Math.tan(Math.PI / this.totalPanelCount)) * this.radiusMutiply;
 
   for (let i = 0; i < this.totalPanelCount; i += 1) {
     panel = this.element.children[i];
@@ -101,8 +70,7 @@ Carousel3D.prototype.modify = function modify() {
     panel.style.opacity = 1;
     //  rotate panel, then push it out in 3D space
     //  在此处配置radius可改变布局密度 , 在此可修改angle来改变排布顺序
-    panel.style.transform = `${this.rotateFn}(${angle}deg) translateZ(${this
-      .radius * 1.5}px)`;
+    panel.style.transform = `${this.rotateFn}(${angle}deg) translateZ(${this.radius * 1.5}px)`;
     panel.id = i;
   }
 
@@ -113,9 +81,7 @@ Carousel3D.prototype.modify = function modify() {
 };
 
 Carousel3D.prototype.transform = function transform() {
-  this.element.style.transform = `translateZ(-${this.radius * 1.5}px) ${
-    this.rotateFn
-  }(${this.rotation}deg)`;
+  this.element.style.transform = `translateZ(-${this.radius * 1.5}px) ${this.rotateFn}(${this.rotation}deg)`;
 };
 
 // 自带节流函数：使用 Data() 实现
@@ -165,7 +131,7 @@ export default {
           spaceBetween: '108px',
           radiusMutiply: 1,
           has05: false,
-          has01: false,
+          has01: false
         };
       }
     }
@@ -235,30 +201,18 @@ export default {
     },
     showThreeId() {
       const threeId = [];
-      this.selectOrderId - 1 < 0
-        ? threeId.push(this.computedData.length - 1)
-        : threeId.push(this.selectOrderId - 1);
+      this.selectOrderId - 1 < 0 ? threeId.push(this.computedData.length - 1) : threeId.push(this.selectOrderId - 1);
       threeId.push(this.selectOrderId);
-      this.selectOrderId + 1 > this.computedData.length - 1
-        ? threeId.push(0)
-        : threeId.push(this.selectOrderId + 1);
+      this.selectOrderId + 1 > this.computedData.length - 1 ? threeId.push(0) : threeId.push(this.selectOrderId + 1);
       return threeId;
     },
     fontSize0_5() {
-      return (
-        parseFloat(
-          this.options.fontSize.slice(0, this.options.fontSize.length - 3)
-        ) /
-          2 +
-        'rem'
-      );
+      return parseFloat(this.options.fontSize.slice(0, this.options.fontSize.length - 3)) / 2 + 'rem';
     },
     fontSizeChange() {
       const spacing = 360 / this.computedData.length;
       const numBorder = 360 / this.multiple;
-      const maxSize = parseFloat(
-        this.options.fontSize.slice(0, this.options.fontSize.length - 3)
-      );
+      const maxSize = parseFloat(this.options.fontSize.slice(0, this.options.fontSize.length - 3));
       const arr = [];
       let angle = this.carousel.rotation;
       if (angle > 0) {
@@ -289,33 +243,24 @@ export default {
         arr[num] = maxSize + 'rem';
       }
       if (angle > this.computedData.length - 1) {
-        arr[0] =
-          maxSize * (1 - (this.computedData.length - angle) * 0.5) + 'rem';
+        arr[0] = maxSize * (1 - (this.computedData.length - angle) * 0.5) + 'rem';
       }
       return arr;
     },
     marginTopChange() {
       const arr = [];
-      const maxSize = parseFloat(
-        this.options.fontSize.slice(0, this.options.fontSize.length - 3)
-      );
+      const maxSize = parseFloat(this.options.fontSize.slice(0, this.options.fontSize.length - 3));
       for (let i = 0; i < this.computedData.length; i += 1) {
-        arr[i] = parseFloat(
-          this.fontSizeChange[i].slice(0, this.fontSizeChange[i].length - 3)
-        );
+        arr[i] = parseFloat(this.fontSizeChange[i].slice(0, this.fontSizeChange[i].length - 3));
         arr[i] = (maxSize - arr[i]) / 2 + 'rem';
       }
       return arr;
     },
     marginLeftChange() {
       const arr = [];
-      const maxSize = parseFloat(
-        this.options.fontSize.slice(0, this.options.fontSize.length - 3)
-      );
+      const maxSize = parseFloat(this.options.fontSize.slice(0, this.options.fontSize.length - 3));
       for (let i = 0; i < this.computedData.length; i += 1) {
-        arr[i] = parseFloat(
-          this.fontSizeChange[i].slice(0, this.fontSizeChange[i].length - 3)
-        );
+        arr[i] = parseFloat(this.fontSizeChange[i].slice(0, this.fontSizeChange[i].length - 3));
         arr[i] = (maxSize - arr[i]) * 0.707 + 'rem';
       }
       return arr;
@@ -366,8 +311,7 @@ export default {
       // 滚动到对应角度，
       this.selectId = exceed ? this.propData.length - 1 : tempSelectId;
       this.selectOrderId = this.selectId;
-      this.carousel.rotation =
-        -1 * this.carousel.theta * parseInt(this.selectId, 10);
+      this.carousel.rotation = -1 * this.carousel.theta * parseInt(this.selectId, 10);
       this.carousel.transform();
     },
     // 初始化函数
@@ -386,12 +330,7 @@ export default {
     },
 
     _touchstart(event) {
-      if (
-        !this.options.controlAble ||
-        event.touches.item(0).identifier !==
-          event.targetTouches.item(0).identifier
-      )
-        return;
+      if (!this.options.controlAble || event.touches.item(0).identifier !== event.targetTouches.item(0).identifier) return;
       //  状态监控：
       event.preventDefault(); //  阻止浏览器默认事件，重要
       this.isEdit = true;
@@ -416,17 +355,12 @@ export default {
       if (!this.options.controlAble) return;
       this.isEditTime = event.timeStamp || Date.now();
       if (event.targetTouches.length !== 0) {
-        const nowX = this.options.horizontal
-          ? event.touches[0].pageX
-          : event.touches[0].pageY;
+        const nowX = this.options.horizontal ? event.touches[0].pageX : event.touches[0].pageY;
         this.lastPosition = nowX;
         //  根据move移动距离移动数字
-        const moveX = this.options.horizontal
-          ? nowX - this.startPosition
-          : this.startPosition - nowX;
+        const moveX = this.options.horizontal ? nowX - this.startPosition : this.startPosition - nowX;
 
-        const valpresect =
-          (moveX / this.carousel.panelWith) * this.carousel.theta * 0.5;
+        const valpresect = (moveX / this.carousel.panelWith) * this.carousel.theta * 0.5;
         let ChangeRotate = valpresect;
         ChangeRotate = parseInt(ChangeRotate, 10);
         if (this.carousel.rotation !== ChangeRotate) {
@@ -472,44 +406,33 @@ export default {
       }
       if (isNaN(val)) val = 0;
       // 根据方向补剩余移动量
-      let tmp =
-        (this.carousel.theta + (this.carousel.rotation % this.carousel.theta)) %
-        this.carousel.theta;
+      let tmp = (this.carousel.theta + (this.carousel.rotation % this.carousel.theta)) % this.carousel.theta;
       if (dir === 1) {
         // 手左滑
         // 不够20%不移动
         if ((tmp * 100) / this.carousel.theta < 80) {
           this.carousel.rotation = this.carousel.rotation - tmp;
-          this.carousel.rotation +=
-            Math.abs(val) * dir * -1 * this.carousel.theta;
+          this.carousel.rotation += Math.abs(val) * dir * -1 * this.carousel.theta;
         } else {
           // 复原
-          this.carousel.rotation =
-            this.carousel.rotation + (this.carousel.theta - Math.abs(tmp));
+          this.carousel.rotation = this.carousel.rotation + (this.carousel.theta - Math.abs(tmp));
         }
       } else {
         // 手右滑
         tmp = this.carousel.theta - Math.abs(tmp);
         if ((tmp * 100) / this.carousel.theta < 80) {
           this.carousel.rotation = this.carousel.rotation + tmp;
-          this.carousel.rotation +=
-            Math.abs(val) * dir * -1 * this.carousel.theta;
+          this.carousel.rotation += Math.abs(val) * dir * -1 * this.carousel.theta;
         } else {
-          this.carousel.rotation =
-            this.carousel.rotation - (this.carousel.theta - Math.abs(tmp));
+          this.carousel.rotation = this.carousel.rotation - (this.carousel.theta - Math.abs(tmp));
         }
       }
       this.carousel.transform();
 
       //  状态监控：
       this.isEdit = false;
-      const selectIdTmp =
-        Math.round(this.carousel.rotation / this.carousel.theta) %
-        this.carousel.totalPanelCount;
-      this.selectOrderId =
-        this.carousel.rotation <= 0
-          ? -selectIdTmp
-          : this.carousel.totalPanelCount - selectIdTmp;
+      const selectIdTmp = Math.round(this.carousel.rotation / this.carousel.theta) % this.carousel.totalPanelCount;
+      this.selectOrderId = this.carousel.rotation <= 0 ? -selectIdTmp : this.carousel.totalPanelCount - selectIdTmp;
       this.selectId = this.selectOrderId % this.propData.length;
       //  向父组件传出事件：
       this.$emit('currentChange', this.selectId);

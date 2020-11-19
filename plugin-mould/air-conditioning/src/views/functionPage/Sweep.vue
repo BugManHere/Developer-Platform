@@ -69,28 +69,12 @@ export default {
       Pow: state => state.dataObject.Pow,
       selectSwingLfRig: state => {
         const swingLfRig = state.dataObject.SwingLfRig;
-        const swingLfRigMap = [
-          [],
-          ['1', '2', '3', '4', '5'],
-          ['1'],
-          ['2'],
-          ['3'],
-          ['4'],
-          ['5']
-        ];
+        const swingLfRigMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swingLfRigMap[swingLfRig];
       },
       selectSwUpDn: state => {
         const swUpDn = state.dataObject.SwUpDn;
-        const swUpDnMap = [
-          [],
-          ['1', '2', '3', '4', '5'],
-          ['1'],
-          ['2'],
-          ['3'],
-          ['4'],
-          ['5']
-        ];
+        const swUpDnMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swUpDnMap[swUpDn];
       }
     }),
@@ -143,10 +127,12 @@ export default {
       setState: 'SET_STATE'
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL',
+      sendCtrl: 'SEND_CTRL'
     }),
     turnBack() {
-      this.$router.push({ name: 'Home' }).catch(err => { err; });
+      this.$router.push({ name: 'Home' }).catch(err => {
+        err;
+      });
     },
     sweepLrChangeHandler(val) {
       const val2 = [];
@@ -194,13 +180,10 @@ export default {
       if (!data) {
         return;
       }
-      if (
-        typeof data.SwingLfRig !== 'undefined' &&
-        this.SwingLfRig !== data.SwingLfRig
-      ) {
+      if (typeof data.SwingLfRig !== 'undefined' && this.SwingLfRig !== data.SwingLfRig) {
         this.setState(['ableSend', true]);
-        this.setDataObject({...data, SmartWind: 0});
-        this.sendCtrl({...data, SmartWind: 0});
+        this.setDataObject({ ...data, SmartWind: 0 });
+        this.sendCtrl({ ...data, SmartWind: 0 });
         if (data.SwingLfRig === 0) {
           try {
             showToast(this.$language('sweep.sweep_lr_turnoff_tips'), 0);
@@ -212,8 +195,8 @@ export default {
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
         this.setState(['ableSend', true]);
-        this.setDataObject({...data, SmartWind: 0, AntiDirectBlow: 0});
-        this.sendCtrl({...data, SmartWind: 0, AntiDirectBlow: 0});
+        this.setDataObject({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
+        this.sendCtrl({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
         if (data.SwUpDn === 0) {
           showToast(this.$language('sweep.sweep_ud_turnoff_tips'), 0);
           try {

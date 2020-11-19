@@ -22,9 +22,10 @@ function customizeDataObject(_dataObject) {
 
 // 封装发送指令代码
 function sendControl({ state, commit, dispatch }, dataMap) {
+  if (state.dataObject.functype) return;
   commit(types.SET_STATE, { ableSend: true });
-  _timer2 && clearTimeout(_timer2);
   setData = { ...setData, ...dataMap };
+  _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
     commit(types.SET_STATE, { ableSend: false });
     const setOpt = [];
@@ -34,7 +35,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       setP.push(Number(setData[key]));
     });
     setData = {};
-    if (!setOpt.length || state.dataObject.functype) return;
+    if (!setOpt.length) return;
     const mac = state.mac;
     const t = 'cmd';
     const opt = setOpt;
