@@ -311,10 +311,12 @@ export default {
       return Boolean(!this.Pow && this.Air);
     },
     hasAir() {
-      return this.devOptions.statueJson2.includes('Air');
+      const statueJson2 = JSON.parse(this.devOptions.statueJson2);
+      return statueJson2.includes('Air');
     },
     hasTemSen() {
-      return this.devOptions.statueJson2.includes('TemSen');
+      const statueJson2 = JSON.parse(this.devOptions.statueJson2);
+      return statueJson2.includes('TemSen');
     }
   },
   watch: {
