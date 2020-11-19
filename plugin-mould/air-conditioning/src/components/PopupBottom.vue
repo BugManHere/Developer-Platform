@@ -1,7 +1,7 @@
 <template>
   <gree-popup v-model="showPopup" position="bottom">
     <div class="popup-bottom">
-      <div class="arrow-down" @touchend.stop="hidePopUpDemo" />
+      <div class="arrow-down" @click="hidePopUpDemo" />
       <gree-row v-if="g_funcDefine_btn">
         <gree-col
           v-for="(item, index) in g_funcDefine_btn"
