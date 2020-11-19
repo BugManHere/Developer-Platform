@@ -1,56 +1,58 @@
-import {
-  sendDataToDevice,
-  getInfo,
-  updateStates,
-  showToast,
-  closePage,
-  finishLoad,
-  getCloudTimerByMac
-} from '@PluginInterface'; // 主体接口
-import {
-  GET_DEVICE_INFO,
-  GET_ALL_STATES,
-  SET_DEVICE_INFO,
-  SET_DATA_OBJECT,
-  SET_CHECK_OBJECT,
-  SET_STATE,
-  SEND_CTRL,
-  UPDATE_DATAOBJECT,
-  SET_POLLING
-} from './types';
+import { sendDataToDevice, getInfo, updateStates, setMqttStatusCallback, showToast, closePage, finishLoad, getCloudTimerByMac } from '@PluginInterface'; // 主体接口
+import * as types from './types';
+
+import { getQueryStringByName, isMqtt } from '../utils/index';
 
 let _timer = 0; // 轮询定时器
 let _timer2 = null;
 let _timer3 = null; // 重启轮询定时器
+let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
-let lastObject = {};
-let sendTime = 0;
-let isFirst = true;
+let hasMqtt = isMqtt();
+const { key } = require('@/../plugin.id.json');
+
+const { moreOption } = require(`@/../../../output/${key}.json`);
+const statueJson2 = moreOption.statueJson2;
+
+// 自定义数据，根据业务更改
+function customizeDataObject({ state }, _dataObject) {
+  const dataObject = _dataObject;
+  // 兼容辅热，如果开启了八度制热，则不更新辅热
+  if ('AssHt' in dataObject && state.devOptions.identifierArr.includes('AssHt(Auto)') && dataObject.StHt) {
+    dataObject.AssHt = 1;
+  }
+  // 云定时
+  if ('AppTimer' in dataObject) {
+    dataObject.AppTimer = dataObject.AppTimer || state.cloudTimer;
+  }
+  // 外出模式
+  if ('OutHome' in dataObject && dataObject.functype) {
+    dataObject.OutHome = 0;
+  }
+  return dataObject;
+}
+
 /**
  * @description 封装发送指令代码
  */
 function sendControl({ state, commit, dispatch }, dataMap) {
-  _timer2 && clearTimeout(_timer2) && (_timer2 = null);
-  (sendTime += 1) >= 500 && commit(SET_STATE, ['watchLock', true]); // 互斥锁
+  if (state.dataObject.functype) return;
+  commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
+  commit(types.SET_STATE, ['ableSend', true]);
   setData = { ...setData, ...dataMap };
-  commit(SET_STATE, ['uilock', true]); // ui锁
+  _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
+    commit(types.SET_STATE, ['ableSend', false]);
     if (state.swiperHold) {
       sendControl({ state, commit }, {});
       return;
     }
-    sendTime = 0;
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
       // 温度命令需要一组一起发送
-      if (
-        setData[key] !== lastObject[key] ||
-        ['SetTem', 'Add0.1', 'Add0.5'].includes(key)
-      ) {
-        setOpt.push(key);
-        setP.push(Number(setData[key]));
-      }
+      setOpt.push(key);
+      setP.push(Number(setData[key]));
     });
     setData = {};
     if (!setOpt.length) return;
@@ -60,14 +62,11 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const p = setP;
 
     console.table([opt, p]);
+    console.log([opt, p]);
 
     // 8度制热相关操作
-    state.isStHt && commit(SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
-    if (
-      state.devOptions.identifierArr.includes('AssHt(Auto)') &&
-      opt.includes('StHt') &&
-      !opt.includes('AssHt')
-    ) {
+    state.isStHt && commit(types.SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
+    if (state.devOptions.identifierArr.includes('AssHt(Auto)') && opt.includes('StHt') && !opt.includes('AssHt')) {
       setOpt.push('AssHt');
       setP.push(1);
     } else if (!setOpt.includes('StHt')) {
@@ -77,42 +76,22 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 
     const json = JSON.stringify({ mac, t, opt, p });
 
-    if (state.dataObject.functype || !state.ableSend) {
-      commit(SET_STATE, ['uilock', false]); // ui锁
-      return;
-    }
-    commit(SET_STATE, ['watchLock', true]);
-    commit(SET_STATE, ['ableSend', false]);
-    console.log(json);
-    const res = await sendDataToDevice(mac, json, false)
-      .then(res => {
-        // 发送指令后暂停接收，过3秒后重启轮询
-        if (_timer) {
-          dispatch(SET_POLLING, false);
-          clearTimeout(_timer3);
-          _timer3 = setTimeout(() => {
-            dispatch(SET_POLLING, true);
-          }, 3000);
-        }
-        return res;
-      })
-      .catch(err => err);
-    lastObject = state.checkObject;
-
     try {
-      const result = JSON.parse(res);
-      const { r } = result;
-      const _p = JSON.parse(state.devOptions.statueJson).map(json =>
-        state.dataObject[json] === undefined ? 0 : state.dataObject[json]
-      );
+      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
       // 成功之后更新主体状态
-      commit(SET_STATE, ['swiperHold', false]);
-      commit(SET_STATE, ['uilock', false]);
-      r === 200 && updateStates(state.mac, JSON.stringify(_p));
+      updateStates(state.mac, JSON.stringify(_p));
     } catch (err) {
-      commit(SET_STATE, ['swiperHold', false]);
-      commit(SET_STATE, ['uilock', false]);
       err;
+    }
+
+    await sendDataToDevice(mac, json, false);
+    // 3秒后重启轮询
+    if (_timer) {
+      dispatch(types.SET_POLLING, false);
+      clearTimeout(_timer3);
+      _timer3 = setTimeout(() => {
+        dispatch(types.SET_POLLING, true);
+      }, 3000);
     }
   }, 350);
 }
@@ -127,180 +106,223 @@ function getCloudTimer({ state, commit }) {
         return task.timer.status;
       });
     }
-    commit(SET_STATE, ['cloudTimer', result]);
-  });
-}
-
-/**
- * @description 获取设备在线状态
- */
-function getDeviceInfo({ state, commit }) {
-  return getInfo(state.mac)
-    .then(res => {
-      const deviceInfo = JSON.parse(res);
-
-      commit(SET_DEVICE_INFO, deviceInfo);
-      return res;
-    })
-    .catch(err => {
-      err;
-    });
-}
-
-/**
- * @description 返回一个向整机查询数据的promise，这个promise执行成功后返回查到的数据DataObject
- */
-function getStatusOfDev({ state, commit, dispatch }) {
-  const fullstatueJson = JSON.parse(state.deviceInfo.fullstatueJson);
-  fullstatueJson.cols = JSON.parse(state.devOptions.statueJson2);
-  return sendDataToDevice(state.mac, JSON.stringify(fullstatueJson), false)
-    .then(_res => {
-      // 解决进来时设备已离线问题
-      if (_res === '' && isFirst) {
-        showToast('网络异常', 1);
-        closePage();
-      }
-      isFirst && (isFirst = false);
-      const DataObject = {};
-      const res = JSON.parse(_res);
-      fullstatueJson.cols.forEach((json, index) => {
-        DataObject[json] = res[index];
-      });
-
-      // 兼容辅热，如果开启了八度制热，则不更新辅热
-      if (
-        state.devOptions.identifierArr.includes('AssHt(Auto)') &&
-        DataObject.StHt
-      ) {
-        DataObject.AssHt = 1;
-      }
-
-      // 云定时
-      DataObject.AppTimer = DataObject.AppTimer || state.cloudTimer;
-
-      if (!state.dataObject.functype && !state.uilock) {
-        // 非场景时提交数据
-        commit(SET_CHECK_OBJECT, DataObject);
-        commit(SET_DATA_OBJECT, DataObject);
-        lastObject = state.checkObject;
-      } else if (state.dataObject.functype) {
-        dispatch(SET_POLLING, false);
-      }
-      console.log('--------------DataObject-------------');
-      console.log(DataObject);
-      return DataObject;
-    })
-    .catch(err => {
-      return err;
-    });
-}
-/**
- * @returns Promise，等待计时结束进行下一项任务
- */
-function sleep(time) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, time);
+    commit(types.SET_STATE, ['cloudTimer', result]);
   });
 }
 
 export default {
   /**
-   * @description 获取设备信息，并开始轮询设备状态
+   * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  async [GET_DEVICE_INFO]({ dispatch, commit, state }) {
-    getCloudTimer({ state, commit });
-    const _res = await getInfo(state.mac)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        err;
-      });
-    // 防止Android端第一次下载插件fullstatueJson为空值
-    if (JSON.parse(_res).fullstatueJson === '') {
-      await sleep(1000);
-      dispatch(GET_DEVICE_INFO);
-    } else {
-      const deviceInfo = JSON.parse(_res);
-      commit(SET_DEVICE_INFO, deviceInfo);
-      dispatch(GET_ALL_STATES);
+  async [types.INIT]({ dispatch, state }) {
+    try {
+      // 初始化设备数据
+      dispatch(types.INIT_DEVICE_DATA);
+      // 获取设备信息
+      dispatch(types.GET_DEVICE_INFO);
+      // 查询一包数据
+      hasMqtt || dispatch(types.GET_DEVICE_DATA);
+      // 定时轮询 - 获取设备所有状态数据
+      dispatch(types.SET_POLLING, true);
+      // 初始化 原生调用插件的mqtt回调方法
+      hasMqtt &&
+        setMqttStatusCallback(state.mac, data => {
+          dispatch(types.MQTT_CALLBACK, data);
+        });
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      // 关闭原生加载H5的全屏白底loading
+      // TODO: vue 可能没渲染完页面
+      finishLoad();
     }
   },
+
+  /**
+   * @description 初始化设备数据
+   */
+  [types.INIT_DEVICE_DATA]({ dispatch, commit, state }) {
+    try {
+      // 获取mac
+      const mac = getQueryStringByName('mac');
+      console.log('[url] mac:', mac);
+      commit(types.SET_MAC, mac);
+
+      // 获取小卡片提供第一包设备数据
+      const data = getQueryStringByName('data');
+      console.log('[url] data:', data);
+      // 根据设备信息解析第一包设备数据
+      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
+
+      // 获取functype
+      const functype = getQueryStringByName('functype') || 0;
+      console.log('[url] functype:', functype);
+      dataObject.functype = Number(functype);
+
+      // 设备状态页
+      const FreshAirConditionState = getQueryStringByName('FreshAirConditionState') || 0;
+      dataObject.FreshAirConditionState = Number(FreshAirConditionState);
+
+      // 自定义数据，根据业务更改
+      dataObject = customizeDataObject({ state }, dataObject);
+      // 更新本地数据
+      dispatch(types.UPDATE_DATAOBJECT, dataObject);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+
+  /**
+   * @description 解析设备数据
+   * @param {String} data
+   */
+  [types.PARSE_DATA_BY_COLS](context, payload) {
+    const dataObject = {};
+    if (!payload) return dataObject;
+    try {
+      const cols = statueJson2;
+      const res = JSON.parse(payload);
+      // 遍历查询到的数据
+      cols.forEach((json, index) => {
+        dataObject[json] = res[index];
+      });
+      console.log('dataObject:', JSON.stringify(dataObject));
+    } catch (e) {
+      console.error(e);
+    }
+    return dataObject;
+  },
+
+  /**
+   * @description 获取设备信息
+   */
+  [types.GET_DEVICE_INFO]({ commit, state }) {
+    try {
+      const { mac } = state;
+      getInfo(mac)
+        .then(res => {
+          const deviceInfo = JSON.parse(res);
+          commit(types.SET_DEVICE_INFO, deviceInfo);
+        })
+        .catch(e => console.error(e));
+    } catch (e) {
+      console.error(e);
+    }
+  },
+
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
-  async [GET_ALL_STATES]({ state, commit, dispatch }) {
-    await getStatusOfDev({ state, commit });
-    finishLoad();
-    setTimeout(() => {
-      commit(SET_STATE, ['loading', false]);
-    }, 1000);
-    dispatch(SET_POLLING, true);
+  async [types.GET_DEVICE_DATA]({ state, dispatch }) {
+    try {
+      // 集中控制时数据不查询
+      if (state.functype) return;
+
+      const { mac } = state;
+
+      // 采用本地 SEARCH_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
+      const cols = statueJson2;
+      const t = 'status';
+      const SEARCH_JSON = JSON.stringify({ cols, mac, t });
+
+      const data = await sendDataToDevice(mac, SEARCH_JSON, false);
+
+      // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
+      if (_firstCallback && data === '') {
+        showToast('网络异常', 1);
+        closePage();
+      }
+      _firstCallback = false;
+
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      // 自定义数据，根据业务更改
+      dataObject = customizeDataObject({ state }, dataObject);
+      // 更新本地数据
+      dispatch(types.UPDATE_DATAOBJECT, dataObject);
+    } catch (e) {
+      console.error(e);
+    }
   },
 
   /**
    * @description 开启/关闭轮询
    */
-  async [SET_POLLING]({ state, commit }, boolean) {
+  async [types.SET_POLLING]({ dispatch }, boolean) {
     clearTimeout(_timer3);
     if (boolean) {
-      if (_timer === 0) {
+      if (!_timer) {
         _timer = setInterval(() => {
-          getDeviceInfo({ state, commit });
-          getCloudTimer({ state, commit });
-          getStatusOfDev({ state, commit });
+          getCloudTimer();
+          hasMqtt || dispatch(types.GET_DEVICE_DATA);
+          hasMqtt || dispatch(types.GET_DEVICE_INFO);
         }, 5000);
       }
     } else {
       clearInterval(_timer);
-      _timer = 0;
+      _timer = null;
     }
   },
 
   /**
    * @description 发送控制指令
    */
-  async [SEND_CTRL]({ state, commit }, DataObject) {
+  async [types.SEND_CTRL]({ state, commit }, DataObject) {
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
     const dataMap = {};
-    const Json2 = JSON.parse(state.devOptions.statueJson2);
     keys.forEach(key => {
       // 组装指令，根据业务更改，温度值需要整套发送
-      if (
-        (DataObject[key] !== state.checkObject[key] ||
-          ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) &&
-        Json2.includes(key)
-      ) {
-        const val = isNaN(DataObject[key]) ? 0 : DataObject[key];
+      if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) {
+        const val = DataObject[key] || 0;
         opt.push(key);
         p.push(val);
-        commit(SET_CHECK_OBJECT, JSON.parse(`{"${key}":${val}}`));
+        commit(types.SET_CHECK_OBJECT, { [key]: val });
         dataMap[key] = val;
       }
     });
     // 所有操作都需要关掉8度制热，所以直接在这写好了
     if (!state.isStHt && state.ableSend) {
       dataMap.StHt = 0;
-      commit(SET_DATA_OBJECT, { StHt: 0 });
-      commit(SET_CHECK_OBJECT, { StHt: 0 });
+      commit(types.SET_DATA_OBJECT, { StHt: 0 });
+      commit(types.SET_CHECK_OBJECT, { StHt: 0 });
     }
-    if (p.length !== 0) {
+    if (p.length) {
       sendControl({ state, commit }, dataMap);
     } else {
-      !_timer2 && commit(SET_STATE, ['watchLock', true]);
+      !_timer2 && commit(types.SET_STATE, ['ableSend', false]);
     }
   },
 
   /**
    * @description 更新本地数据
    */
-  [UPDATE_DATAOBJECT]({ state, commit }, DataObject) {
-    commit(SET_DATA_OBJECT, DataObject);
-    commit(SET_CHECK_OBJECT, DataObject);
-    lastObject = state.checkObject;
+  [types.UPDATE_DATAOBJECT]({ commit, state }, dataObject) {
+    if (!state.dataObject.functype && !state.ableSend && dataObject) {
+      commit(types.SET_DATA_OBJECT, dataObject);
+      commit(types.SET_CHECK_OBJECT, dataObject);
+    }
+  },
+
+  /**
+   * @description 原生调用插件的mqtt回调方法
+   * @param { {data: Object, status: Boolean} } payload data: 设备数据  status: mqtt连接是否可用
+   */
+  [types.MQTT_CALLBACK]({ state, dispatch, commit }, payload) {
+    let dataObject = {};
+    try {
+      const res = JSON.parse(payload);
+      const { data, deviceState } = res;
+
+      console.log('[mqtt] result:', JSON.stringify(res));
+      // 自定义数据，根据业务更改
+      dataObject = customizeDataObject({ state }, data);
+      // 更新本地数据
+      dataObject && dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState });
+    } catch (e) {
+      console.error(e);
+    }
+    return dataObject;
   }
 };

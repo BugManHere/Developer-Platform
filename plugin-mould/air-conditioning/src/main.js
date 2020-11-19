@@ -19,15 +19,7 @@ import language from './utils/language'; // 对i18n的封装
 
 import { SET_STATE } from './store/types';
 
-/* 启用页面调试器 */
-if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
-  const VConsole = require('vconsole/dist/vconsole.min.js');
-  // eslint-disable-next-line no-new
-  new VConsole();
-}
-
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
-
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] =
   'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
@@ -143,6 +135,12 @@ class Storage {
   }
 }
 
+/* 启用页面调试器 */
+if (['test', 'debug'].includes(process.env.VUE_APP_MODE)) {
+  const VConsole = require('vconsole/dist/vconsole.min.js');
+  new VConsole();
+}
+
 dev && createVue();
 
 /* ********************************* Native Func ********************************* */
@@ -152,7 +150,12 @@ dev && createVue();
  */
 window.backButton = function backButton() {
   const { name } = router.currentRoute;
-  if (name === 'Error' || name === 'Home' || name === 'Offline' || name === 'Status') {
+  if (
+    name === 'Error' ||
+    name === 'Home' ||
+    name === 'Offline' ||
+    name === 'Status'
+  ) {
     closePage();
   } else if (['Voice', 'Sweep', 'Air', 'Loop', 'Humi'].includes(name)) {
     router.push({ name: 'Home' }).catch(err => {
