@@ -13,8 +13,8 @@ import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
 
-import debugMixin from './mixins/utils/debug'; // 开发环境初始化
-import initMixin from './mixins/utils/init'; // 生产环境初始化
+import debugMixin from './mixins/debug'; // 开发环境初始化
+import initMixin from './mixins/init'; // 生产环境初始化
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装

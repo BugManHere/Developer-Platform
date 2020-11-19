@@ -26,47 +26,49 @@ export default {
    * @param {Array} stateQueue 事件队列
    */
   [types.RUN_QUEUE](context, stateQueue) {
-    const { getters, dispatch } = context;
+    // 队列没有事件，退出
     if (!stateQueue.length) return;
+    const { getters, dispatch } = context;
     // 从队列中获取事件stateEvent，解构得出identifier、statusName（指定到此status）
     const { identifier, statusName } = stateQueue.shift();
     // 根据identifier得出当前statusName：currentStatusName
     const currentStatusName = getters.statusMap[identifier].statusName;
     // 根据情况获取当前status信息，情况1：已有指定statusName，从statusInfoMap获取信息；情况2：没有指定statusName，从status指向中获取信息
     const nextStatusInfo = statusName ? getters.statusInfoMap[identifier][statusName] : getters.nextStatusInfoMap[identifier];
-    // 下一状态名称
+    // 获取指向statusName
     const nextStatusName = nextStatusInfo.statusName;
-    // 如果statusName为undefined，返回
-    if (!nextStatusName || nextStatusName === 'undefined') return;
-    // 获取自定义函数接入方式
-    const customize = nextStatusInfo.customize;
-    // 获取需要发送的指令
-    const setData = nextStatusInfo.setData;
-    // 定义自定义函数执行函数
-    const runCustomizeFunction = identifier => {
-      // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
-      customizeFunction[identifier] && customizeFunction[identifier](context, currentStatusName, nextStatusInfo.statusName);
-    };
-    // 如果自定义函数接入方式为'before'，在返回输出前执行动作
-    customize === 'before' && runCustomizeFunction(identifier);
-    // 如果自定义函数接入方式为'replace'，则取代输出
-    if (customize === 'replace') {
-      runCustomizeFunction(identifier);
-    } else {
-      // 将状态发送值输出
-      dispatch(
-        rootTypes.STATE_MACHINE_INTERFACE,
-        { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName },
-        { root: true }
-      ).then(() => {
-        // 如果自定义函数接入方式为'after'，在执行完输出函数后执行自定义函数
-        customize === 'after' && runCustomizeFunction(identifier);
-      });
+    // 如果statusName为undefined，不输出状态值
+    if (nextStatusName && nextStatusName !== 'undefined') {
+      // 获取自定义函数接入方式
+      const customize = nextStatusInfo.customize;
+      // 获取需要发送的指令
+      const setData = nextStatusInfo.setData;
+      // 定义自定义函数执行函数
+      const runCustomizeFunction = identifier => {
+        // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
+        customizeFunction[identifier] && customizeFunction[identifier](context, currentStatusName, nextStatusInfo.statusName);
+      };
+      // 如果自定义函数接入方式为'before'，在返回输出前执行动作
+      customize === 'before' && runCustomizeFunction(identifier);
+      // 如果自定义函数接入方式为'replace'，则取代输出
+      if (customize === 'replace') {
+        runCustomizeFunction(identifier);
+      } else {
+        // 将状态发送值输出
+        dispatch(
+          rootTypes.STATE_MACHINE_INTERFACE,
+          { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName },
+          { root: true }
+        ).then(() => {
+          // 如果自定义函数接入方式为'after'，在执行完输出函数后执行自定义函数
+          customize === 'after' && runCustomizeFunction(identifier);
+        });
+      }
+      // 根据identifier检查对应model的互斥
+      checkLogic(context, identifier, nextStatusName);
     }
-    // 检查互斥
-    checkLogic(context, identifier, nextStatusName);
-    // 如果队列里面还有事件，继续执行
-    stateQueue.length && dispatch(types.RUN_QUEUE, stateQueue);
+    // 执行下一事件
+    dispatch(types.RUN_QUEUE, stateQueue);
   }
 };
 
@@ -112,7 +114,7 @@ class stateMachine {
   }
 }
 
-// 执行自定义函数初始化
+// 执行自定义初始化方法
 function runCustomizeInit(context) {
   const { getters } = context;
   getters.identifierArr.forEach(identifier => {
@@ -183,6 +185,7 @@ function str2NumMap(funcDefine) {
 }
 
 /**
+ * @description 根据identifier检查对应model的互斥
  * @param {Object} context Vuex的context对象
  * @param {String} identifier model的唯一标识符
  * @param {String} statusName 状态名称
@@ -211,9 +214,8 @@ function checkLogic(context, identifier, statusName) {
 
 // 创建事件队列，绑定到作用域下
 function creatQueue({ dispatch }) {
-  // 创建事件队列
+  // 创建队列数组
   let queue = [];
-  // 事件队列清空
   Object.defineProperty(this, 'stateQueue', {
     // 改写getter方法
     get() {

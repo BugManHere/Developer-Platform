@@ -1,5 +1,9 @@
 import { timerListDevice, showToast } from '@PluginInterface';
 
+/**
+ * @description 自定义函数，根据status.customize的取值选择插入方式
+ * @returns {Object} identifier对应的自定义函数
+ */
 export const customizeFunction = {
   AppTimer: ({ rootState }) => {
     const mac = rootState.control.mac;
@@ -79,44 +83,30 @@ export const customizeFunction = {
         break;
     }
   },
-  NoiseSet: async () => {
-    // 加载对应页面
-    this.setState({ hiddenComponent: 'Noise' });
-    // 获取对应组件内容
-    const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
-    // 获取需要执行的方法
-    const defaultFunction = await hiddenComponent.getFunc();
-    // 执行二级页面内部方法
-    defaultFunction();
+  NoiseSet: ({ commit }) => {
+    runPageMethod({ commit }, 'Noise');
   },
-  EnvAreaSt: async () => {
-    // 加载对应页面
-    this.setState({ hiddenComponent: 'AreaFan' });
-    // 获取对应组件内容
-    const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
-    // 获取需要执行的方法
-    const defaultFunction = await hiddenComponent.getFunc();
-    // 执行二级页面内部方法
-    defaultFunction();
+  EnvAreaSt: ({ commit }) => {
+    runPageMethod({ commit }, 'AreaFan');
   }
 };
 
+/**
+ * @description 自定义初始化函数，如果存在此identifier，里面的内容会在初始化的时候执行
+ * @returns {Object} identifier对应的自定义初始化函数
+ */
 export const customizeInit = {
   Demo: () => {
     console.log('run Demo init');
   },
-  // 如果是场景模式，删除预约图标
   AppTimer: () => {
-    // if (this.state_dataObject.functype === 1) {
-    //   this.state_funcDefineMap.AppTimer.type = 'inertia';
-    // }
-  },
-  // 噪声二级页面方法
-  NoiseSet: () => {}
+    // console.log('放开注释，执行自定义初始化函数，打印这句话');
+  }
 };
 
 /**
- * @returns {Object} identifier对应的缓存信息
+ * @description 缓存信息
+ * @returns {Object} identifier对应的缓存信息，当对应的状态切换时会执行缓存
  * @param {String} storageKey 在localstorage中用作存储的key
  * @param {Array} jsons 缓存的json数组
  */
@@ -132,3 +122,19 @@ export const cacheDataMap = {
     }
   ]
 };
+
+/**
+ * @description 执行二级页面内方法
+ * @param {Object} { commit } Vuex的commit方法
+ * @param {String} routerName 路由名称
+ */
+async function runPageMethod({ commit }, routerName) {
+  // 加载对应页面
+  commit('control/SET_STATE', { hiddenComponent: routerName }, { root: true });
+  // 获取对应组件内容
+  const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
+  // 获取需要执行的方法
+  const defaultFunction = await hiddenComponent.getFunc();
+  // 执行二级页面内部方法
+  defaultFunction();
+}

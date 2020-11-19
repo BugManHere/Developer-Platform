@@ -40,7 +40,7 @@ function getCache(inputData, identifier, lastStateName, currentStateName) {
   // 根据identifier获取需要缓存的json
   const cacheDataArr = cacheDataMap[identifier];
   // 如果没有需要缓存的json,返回
-  if (!cacheDataArr || !cacheDataArr.length) return;
+  if (!cacheDataArr || !cacheDataArr.length) return {};
   /**
    * @param {String} storageKey 在localstorage中用作存储的key
    * @param {Array} jsons 缓存的json数组

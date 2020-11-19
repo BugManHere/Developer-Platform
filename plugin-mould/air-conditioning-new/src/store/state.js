@@ -1,8 +1,8 @@
 export default {
-  fanKey: 'fan',
-  modKey: 'mod',
+  fanKey: 'fan', // 风档type
+  modKey: 'mod', // 模式type
   popupsKey: 'homeButton', // 主页按钮type
   temKey: 'tem', // 温度type
-  temMinKey: 'temMin', // 查找温度下限用
-  temMaxKey: 'temMax' // 查找温度上限用
+  temMinKey: 'temMin', // 温度下限type
+  temMaxKey: 'temMax' // 温度上限type
 };

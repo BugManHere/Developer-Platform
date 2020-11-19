@@ -167,12 +167,6 @@ export default {
    */
   statusLoop: (state, getters) => {
     const result = {};
-    // 设定规则，undefined不能被其他status指向，会被重新指向为自身
-    const rule = (toStatusName, formStatusName) => {
-      let result = toStatusName || formStatusName;
-      result === 'undefined' && (result = formStatusName);
-      return result;
-    };
     // 遍历功能，提取status关系
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;

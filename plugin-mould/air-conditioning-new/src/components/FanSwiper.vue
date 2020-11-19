@@ -37,8 +37,7 @@ export default {
         touchRatio: 0.5,
         observer: true
       },
-      fanStatusNameList: [], // 风档的顺序
-      currentStatus: '' // 当前状态
+      fanStatusNameList: [] // 风档的顺序
     };
   },
   mounted() {
@@ -94,13 +93,11 @@ export default {
     fanAbleSet(newVal) {
       newVal || (this.showPopup = false);
     },
-    modCurrentStatusName: {
-      handler() {
-        this.fanCurrentStatusName && (this.currentStatus = this.fanCurrentStatusName);
-        this.updateStatusNameList();
-        this.updateIndex();
-      },
-      immediate: true
+    modCurrentStatusName() {
+      this.init();
+    },
+    fanCurrentStatusName() {
+      this.init();
     }
   },
   methods: {
@@ -109,12 +106,14 @@ export default {
     }),
     init() {
       this.updateStatusNameList();
+      this.updateIndex();
     },
     // 更新到对应位置
     updateIndex() {
       // 已显示picker且没有在滑动
       if (this.showSwiper && this.swiper) {
-        const index = this.fanData.findIndex(fan => fan.key === this.currentStatus);
+        const index = this.fanData.findIndex(fan => fan.key === this.fanCurrentStatusName);
+        console.log(this.fanCurrentStatusName);
         this.swiper.slideTo(index, 500);
         this.imshowSelect(-1);
       }
