@@ -37,7 +37,7 @@ export default {
           } else if ((currentTime += timeStep) >= outTime) {
             // 如果超时，则退出
             clearInterval(timer);
-            reject('超时');
+            reject('二级页面加载超时');
           }
         }, timeStep);
       });
