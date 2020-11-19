@@ -2,6 +2,8 @@ import {
   sendDataToDevice,
   getInfo,
   updateStates,
+  showToast,
+  closePage,
   finishLoad,
   getCloudTimerByMac
 } from '@PluginInterface'; // 主体接口
