@@ -10,6 +10,7 @@
       <div class="page-main">
         <div v-if="isEmpty" class="placeholder">
           <img src="@assets/img/skill/voice_message_bg.png" />
+          <div class="placeholder_text">没有语音留言</div>
         </div>
         <div v-else>
           <voice-msg-list :message-list="unreadList" @play-msg="playVoiceMsg"></voice-msg-list>
@@ -589,6 +590,10 @@ export default {
         img {
           width: 963px;
           height: 747px;
+        }
+        .placeholder_text{
+          font-size: 42px;
+          color: #989898;
         }
       }
 
