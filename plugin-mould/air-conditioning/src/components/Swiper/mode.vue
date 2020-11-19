@@ -122,6 +122,7 @@ export default {
     this.setList();
     this.updateSwiper();
     this.setFanName();
+    this.$emit('modeName', this.modeName);
   },
   methods: {
     ...mapMutations({
