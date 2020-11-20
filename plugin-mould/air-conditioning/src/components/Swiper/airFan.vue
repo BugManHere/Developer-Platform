@@ -1,13 +1,8 @@
 <template>
   <div>
-    <Swiper
-      :ref="ref"
-      class="air-fan-swiper"
-      :slides-data="options" 
-      @realIndex="swiperChange"
-      @activeIndex="setFanName"/>
+    <Swiper :ref="ref" class="air-fan-swiper" :slides-data="options" @realIndex="swiperChange" @activeIndex="setFanName" />
     <div class="air-fan-name">
-      <span v-text="fanName"/>
+      <span v-text="fanName" />
     </div>
   </div>
 </template>
@@ -40,9 +35,9 @@ export default {
     }),
     imgList() {
       const list = [
-        {img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 0},
-        {img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 1},
-        {img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 2}
+        { img: require('@/assets/img/fan/n_low.png'), name: this.$language('fan.low'), index: 0 },
+        { img: require('@/assets/img/fan/n_medium.png'), name: this.$language('fan.medium'), index: 1 },
+        { img: require('@/assets/img/fan/n_high.png'), name: this.$language('fan.high'), index: 2 }
       ];
       return list;
     },
@@ -69,11 +64,11 @@ export default {
           break;
         case 1:
         default:
-          index = 0; 
+          index = 0;
           break;
       }
       return index;
-    },
+    }
   },
   watch: {
     currentIndex(newVal) {
@@ -118,7 +113,7 @@ export default {
       const list = [];
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         const index = this.countIndex(this.swiperIndex, i);
-        list.push(this.imgList[index]); 
+        list.push(this.imgList[index]);
       }
       this.itemList = list;
     },
@@ -135,13 +130,13 @@ export default {
         this.$refs[this.ref].setIndex(this.leftLen); // 定位到中间
       });
     },
-    // 计算滑轮向左（右）滑动moveLen个元素后的值                                                                                                              
+    // 计算滑轮向左（右）滑动moveLen个元素后的值
     countIndex(fromIndex, moveLen) {
       let toIndex = fromIndex + moveLen;
       const maxLen = this.imgList.length;
       while (toIndex < 0) {
         toIndex += maxLen;
-      } 
+      }
       while (toIndex >= maxLen) {
         toIndex -= maxLen;
       }
@@ -160,17 +155,17 @@ export default {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
       const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
       const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
-        return direction ? (this.leftLen + this.rightLen) - index : index;
+        return direction ? this.leftLen + this.rightLen - index : index;
       }); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 移除所有slide
     removeAllSlide() {
-      const list = Array.from({length: this.swiperLen}, (v, index) => index);
+      const list = Array.from({ length: this.swiperLen }, (v, index) => index);
       list.splice(this.leftLen, 1);
       this.$refs[this.ref].removeSlide(list);
     },
-    // 根据情况填充slide 
+    // 根据情况填充slide
     insertAllSlide() {
       for (let i = -this.leftLen; i <= this.rightLen; i += 1) {
         if (i) {
@@ -186,7 +181,7 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      this.changeData({WdSpd: [1, 3, 5][toIndex]});
+      this.changeData({ WdSpd: [1, 3, 5][toIndex] });
       // 更新到localStorage
       window.storage.set('AirWdSpd', [1, 3, 5][toIndex]);
       this.updateList(index);

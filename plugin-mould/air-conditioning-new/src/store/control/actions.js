@@ -22,9 +22,10 @@ function customizeDataObject(_dataObject) {
 
 // 封装发送指令代码
 function sendControl({ state, commit, dispatch }, dataMap) {
+  if (state.dataObject.functype) return;
   commit(types.SET_STATE, { ableSend: true });
-  _timer2 && clearTimeout(_timer2);
   setData = { ...setData, ...dataMap };
+  _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
     commit(types.SET_STATE, { ableSend: false });
     const setOpt = [];
@@ -34,7 +35,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       setP.push(Number(setData[key]));
     });
     setData = {};
-    if (!setOpt.length || state.dataObject.functype) return;
+    if (!setOpt.length) return;
     const mac = state.mac;
     const t = 'cmd';
     const opt = setOpt;
@@ -96,7 +97,7 @@ export default {
   /**
    * @description 初始化设备数据
    */
-  [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
+  async [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
@@ -107,7 +108,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;

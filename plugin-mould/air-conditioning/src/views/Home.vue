@@ -19,42 +19,21 @@
         <div class="bar-top">
           <gree-row>
             <gree-col>
-              <div
-                class="mini-icon"
-                v-for="(item, index) in miniIcon"
-                :key="index"
-              >
+              <div class="mini-icon" v-for="(item, index) in miniIcon" :key="index">
                 <img v-if="item.img" :src="item.img" />
               </div>
             </gree-col>
           </gree-row>
         </div>
-        <div
-          class="bar-co2"
-          v-if="
-            !functype &&
-              Air &&
-              JSON.parse(devOptions.statueJson2).includes('CO2')
-          "
-        >
+        <div class="bar-co2" v-if="!functype && Air && JSON.parse(devOptions.statueJson2).includes('CO2')">
           <img :src="co2Img" />
           <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper
-          v-if="Pow && !loading"
-          key="modeSwiper"
-          @modeName="getModeName"
-        />
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeName="getModeName" />
 
         <!-- 故障提示 -->
-        <gree-notice-bar
-          scrollable
-          v-show="errStatus"
-          class="notice-bar"
-          icon="warning"
-          v-text="errMsg"
-        >
+        <gree-notice-bar scrollable v-show="errStatus" class="notice-bar" icon="warning" v-text="errMsg">
           <router-link to="/Error">
             <span class="err-detail">
               查看详情
@@ -68,32 +47,15 @@
           <gree-icon slot="left" name="bell"></gree-icon>
           {{ warnningText }}
         </gree-notice-bar>
-        <div
-          v-show="!Pow"
-          v-text="$language(`${Air ? 'btn.Air' : 'home.powerOff'}`)"
-          class="poweroff-tip"
-        />
+        <div v-show="!Pow" v-text="$language(`${Air ? 'btn.Air' : 'home.powerOff'}`)" class="poweroff-tip" />
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow && !loading" key="temSwiper" />
         <!-- 温度单位图标 -->
-        <img
-          :src="temImg"
-          class="tem-unit"
-          @click="changeTemUn"
-          v-show="Pow && ![0, 5].includes(Mod)"
-        />
+        <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)" />
         <!-- 室内温度 -->
-        <div
-          class="room-tem"
-          v-text="`当前温度${TemSen - 40}℃`"
-          v-if="hasTemSen"
-        />
+        <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen" />
         <!-- 风档滑轮 -->
-        <fanSwiper
-          v-if="Pow && !loading"
-          key="fanSwiper"
-          :mode-name="modeName"
-        />
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-name="modeName" />
         <!-- <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/> -->
       </div>
       <!-- 尾部 -->
@@ -108,11 +70,7 @@
       <!-- 关机页面 -->
       <gree-power-off v-model="showPowOff" :style="backgroundStyle" />
       <!-- CO2浓度查看 -->
-      <gree-dialog
-        v-model="dialogOpen"
-        :mask-closable="true"
-        class="dialog-co2"
-      >
+      <gree-dialog v-model="dialogOpen" :mask-closable="true" class="dialog-co2">
         <div class="dialog-co2-header">
           <img :src="currentCO2Img" />
           <span v-text="`CO2浓度 ${currentCO2}ppm`" />
@@ -204,9 +162,7 @@ export default {
     headerBg() {
       if (!this.Pow) return {};
       const isB = this.isB;
-      const backgroundImage = `url(${require(`@/assets/img/mode/${
-        isB ? 'bg_b' : 'mode_bg'
-      }.png`)})`;
+      const backgroundImage = `url(${require(`@/assets/img/mode/${isB ? 'bg_b' : 'mode_bg'}.png`)})`;
       return {
         backgroundImage,
         'background-size': `${isB ? 1 : 5}00% 100%`,
@@ -223,9 +179,7 @@ export default {
             backgroundImage: `url(${require('@/assets/img/mode/bg_b_off.png')})`
           }
         : {
-            backgroundImage: `url(${require(`@/assets/img/bg_off_${
-              Hot ? 'heat' : 'cool'
-            }.png`)})`
+            backgroundImage: `url(${require(`@/assets/img/bg_off_${Hot ? 'heat' : 'cool'}.png`)})`
           };
     },
     modName() {
@@ -261,9 +215,7 @@ export default {
     colorChange() {
       const Pow = this.Pow;
       const Hot = this.Mod === this.$store.state.ModHeat;
-      const Adv = this.$refs.PopupBottom
-        ? this.$refs.PopupBottom.showPopup
-        : false;
+      const Adv = this.$refs.PopupBottom ? this.$refs.PopupBottom.showPopup : false;
       let color = '#000';
       if (this.$route.name === 'Home') {
         if (this.isB) {
@@ -311,10 +263,12 @@ export default {
       return Boolean(!this.Pow && this.Air);
     },
     hasAir() {
-      return this.devOptions.statueJson2.includes('Air');
+      const statueJson2 = JSON.parse(this.devOptions.statueJson2);
+      return statueJson2.includes('Air');
     },
     hasTemSen() {
-      return this.devOptions.statueJson2.includes('TemSen');
+      const statueJson2 = JSON.parse(this.devOptions.statueJson2);
+      return statueJson2.includes('TemSen');
     }
   },
   watch: {
@@ -393,8 +347,18 @@ export default {
     },
     // 场景模式保存按钮
     sceneSave() {
+      const removeJson = (inputArr, removeJsonArr) => {
+        removeJsonArr.forEach(json => {
+          const index = inputArr.indexOf(json);
+          if (index !== -1) {
+            inputArr.splice(index, 1);
+          }
+        });
+      };
+      const removeArr = ['AppTimer'];
       const remarks = '...';
       const opt = JSON.parse(this.devOptions.statueJson2);
+      removeJson(opt, removeArr);
       console.log(opt);
       const p = opt.map(item => {
         return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
@@ -452,8 +416,7 @@ export default {
     },
     // 切换温度单位
     changeTemUn() {
-      this.$store.state.devOptions.statueJson2.includes('TemUn') &&
-        this.changeData({ TemUn: !this.TemUn - 0 });
+      this.$store.state.devOptions.statueJson2.includes('TemUn') && this.changeData({ TemUn: !this.TemUn - 0 });
     },
     // 显示CO2弹框
     showCO2() {

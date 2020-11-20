@@ -1134,7 +1134,7 @@ export const startPlugin = mid => {
  * @param {string} mac
  * @param {string} type
  */
-export const getGridConLis = (mac, type) => {
+export const getGridConList = (mac, type) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.getGridConList(mac, type, (...params) => {
@@ -1625,6 +1625,19 @@ export const getGridConListOneDay = (mac, range, oneDay) => {
   return new Promise((resolve, reject) => {
     try {
       navigator.PluginInterface.getGridConListOneDay(mac, range, oneDay, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+//跳转语音技能页面
+export const startVoiceMainActivity = mac => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.startVoiceMainActivity(mac, (...params) => {
         resolve(...params);
       });
     } catch (err) {

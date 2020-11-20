@@ -59,13 +59,13 @@ export const throttle = (fn, interval) => {
  * 判读模块是否 MQTT 协议
  */
 export const isMqtt = () => {
-  var reg = /upper_device_protocol_version\/(.+)/g;
-  var ver = reg.exec(navigator.userAgent);
-  console.log(navigator.userAgent);
+  let reg = /upper_device_protocol_version\/(.+)/g;
+  let ver = reg.exec(UA);
+  console.log(UA);
   try {
     if (ver === null) return false;
 
-    var version = ver[1]; // 模块传的值 "V3.0"
+    let version = ver[1]; // 模块传的值 "V3.0"
     if (Number(version.split('V')[1].split('.')[0]) >= 3) {
       return true;
     }
@@ -76,6 +76,4 @@ export const isMqtt = () => {
   }
 };
 
-const u = navigator.userAgent;
-export const isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
-export const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+const UA = navigator.userAgent;

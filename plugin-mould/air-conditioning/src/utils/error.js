@@ -7,13 +7,13 @@ const errorList = {
       index: 0
       // headtitle: this.$language('error.headtitle'),
       // subtitle: this.$language('error.subtitle'),
-    },   
+    },
     {
       code: 'F4',
       title: 'notify_fault_name_F4',
       text: 'notify_Fault_resolve_F4',
       index: 1
-    },   
+    },
     {
       code: 'F3',
       title: 'notify_fault_name_F3',
@@ -31,7 +31,7 @@ const errorList = {
       title: 'notify_fault_name_F2',
       text: 'notify_Fault_resolve_F4',
       index: 4
-    },
+    }
   ],
   ErrCode2: [
     {
@@ -70,13 +70,13 @@ const errorList = {
       text: 'notify_Fault_resolve_E6',
       index: 5
     },
-    { 
+    {
       code: 'E6', // 可控
       title: 'notify_fault_name_E6',
       text: 'notify_Fault_resolve_E6',
       index: 6
     },
-    { 
+    {
       code: 'E6', // 可控
       title: 'notify_fault_name_E6',
       text: 'notify_Fault_resolve_E6',
@@ -91,6 +91,6 @@ const errorList = {
       index: 0
     }
   ]
-}
+};
 
-export default errorList
+export default errorList;

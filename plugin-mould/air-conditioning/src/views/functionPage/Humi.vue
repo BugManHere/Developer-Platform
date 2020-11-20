@@ -4,53 +4,33 @@
       <gree-header>{{ $language('humidify.title') }}</gree-header>
       <gree-list>
         <gree-list-item title="加湿设置">
-          <gree-switch
-            slot="after"
-            v-model="isActive"
-            @change="switchDazzling(isActive)"
-          ></gree-switch>
+          <gree-switch slot="after" v-model="isActive" @change="switchDazzling(isActive)"></gree-switch>
         </gree-list-item>
       </gree-list>
 
-      <div
-        class="humi-wheel"
-        :style="{ backgroundImage: 'url(' + humi_bg + ')' }"
-        v-if="Humi"
-      >
+      <div class="humi-wheel" :style="{ backgroundImage: 'url(' + humi_bg + ')' }" v-if="Humi">
         <span class="humi-value">{{ Humi }}</span>
         <span class="humi-unit">%</span>
       </div>
 
       <gree-row class="humi-btn" v-show="Humi">
         <gree-col class="humi-col">
-          <gree-button round type="default" style="width: 50%" :disabled="Humi===30" @click="changeHumiValue('subtract')">-</gree-button>
+          <gree-button round type="default" style="width: 50%" :disabled="Humi === 30" @click="changeHumiValue('subtract')">-</gree-button>
         </gree-col>
         <gree-col class="humi-col">
-          <gree-button round type="default" style="width: 50%" :disabled="Humi===70" @click="changeHumiValue('add')">+</gree-button>
+          <gree-button round type="default" style="width: 50%" :disabled="Humi === 70" @click="changeHumiValue('add')">+</gree-button>
         </gree-col>
       </gree-row>
-      <div style="display:none">{{errStatus}}</div>
+      <div style="display:none">{{ errStatus }}</div>
     </gree-page>
   </gree-view>
 </template>
 
 <script>
-import {
-  Header,
-  Toast,
-  Radio,
-  RadioList,
-  Switch,
-  List,
-  Item,
-  Dialog,
-  Row,
-  Col,
-  Button
-} from 'gree-ui';
+import { Header, Toast, Radio, RadioList, Switch, List, Item, Dialog, Row, Col, Button } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
-import errorConfig from '@/mixins/utils/error'
+import errorConfig from '@/mixins/utils/error';
 
 export default {
   name: 'Dazzling',
@@ -65,7 +45,7 @@ export default {
     [Dialog.name]: Dialog,
     [Row.name]: Row,
     [Col.name]: Col,
-    [Button.name]: Button,
+    [Button.name]: Button
   },
   mixins: [errorConfig],
   data() {
@@ -77,7 +57,7 @@ export default {
     ...mapState({
       Pow: state => state.dataObject.Pow,
       Humi: state => state.dataObject.Humi,
-      OutHome: state => state.dataObject.OutHome,
+      OutHome: state => state.dataObject.OutHome
     }),
     humi_bg() {
       console.log('this.Humi', this.Humi);
@@ -111,7 +91,9 @@ export default {
             position: 'bottom'
           });
         }
-        this.$router.push({name: 'Home'}).catch(err => { err; });
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
       }
     }
   },
@@ -119,8 +101,8 @@ export default {
   mounted() {
     hideLoading();
     this.isActive = Boolean(this.Humi);
-    if(this.isActive){
-      window.storage.set('ishiddenTip', true)
+    if (this.isActive) {
+      window.storage.set('ishiddenTip', true);
     }
   },
 
@@ -141,16 +123,16 @@ export default {
 
     switchDazzling(active) {
       if (active) {
-        const ishiddenTip = window.storage.get('ishiddenTip')
+        const ishiddenTip = window.storage.get('ishiddenTip');
         console.log('--ishiddenTip--', ishiddenTip);
-        if(!ishiddenTip){
+        if (!ishiddenTip) {
           Dialog.confirm({
             title: '提示',
             content: '请确认机组是否具有加湿功能/模块,否则设置无效？',
             confirmText: '确定',
-            onConfirm: () =>  {               
-              window.storage.set('ishiddenTip', true)
-              this.setHumi(50)
+            onConfirm: () => {
+              window.storage.set('ishiddenTip', true);
+              this.setHumi(50);
             },
             cancelText: '取消',
             onCancel: () => {
@@ -158,8 +140,8 @@ export default {
             }
           });
         } else {
-           this.isActive = true;
-           this.setHumi(50);
+          this.isActive = true;
+          this.setHumi(50);
         }
       } else {
         this.setHumi(0);
@@ -220,13 +202,13 @@ export default {
       left: 75%;
       font-size: 100px;
       color: #404657;
-      }
+    }
   }
-  .humi-btn{
+  .humi-btn {
     margin-top: 90px;
-    .humi-col{
+    .humi-col {
       text-align: center;
-      .gree-button--normal{
+      .gree-button--normal {
         font-size: 100px;
       }
     }

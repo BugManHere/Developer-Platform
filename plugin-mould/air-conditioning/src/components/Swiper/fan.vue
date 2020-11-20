@@ -1,13 +1,6 @@
 <template>
   <div>
-    <Swiper
-      :ref="ref"
-      class="fan-swiper"
-      :slides-data="options"
-      @realIndex="swiperChange"
-      @activeIndex="setFanName"
-      @swiper-show-toast="swiperShowDisable"
-    />
+    <Swiper :ref="ref" class="fan-swiper" :slides-data="options" @realIndex="swiperChange" @activeIndex="setFanName" @swiper-show-toast="swiperShowDisable" />
     <div class="fan-name">
       <span v-text="fanName" />
     </div>
@@ -55,61 +48,61 @@ export default {
         {
           img: require('@/assets/img/fan/n_auto.png'),
           name: this.$language('fan.auto'),
-          index: 0,
+          value: 0,
           key: 'Fan_auto'
         },
         {
           img: require('@/assets/img/fan/n_low.png'),
           name: this.$language('fan.low'),
-          index: 1,
+          value: 1,
           key: 'Fan_low'
         },
         {
           img: require('@/assets/img/fan/n_low.png'),
           name: this.$language('fan.low'),
-          index: 1,
+          value: 1,
           key: 'Fan_low_b'
         },
         {
           img: require('@/assets/img/fan/n_medium_low.png'),
           name: this.$language('fan.medium_low'),
-          index: 2,
+          value: 2,
           key: 'Fan_medium_low'
         },
         {
           img: require('@/assets/img/fan/n_medium.png'),
           name: this.$language('fan.medium'),
-          index: 3,
+          value: 3,
           key: 'Fan_medium'
         },
         {
           img: require('@/assets/img/fan/n_medium.png'),
           name: this.$language('fan.medium'),
-          index: 2,
+          value: 2,
           key: 'Fan_medium_b'
         },
         {
           img: require('@/assets/img/fan/n_medium_high.png'),
           name: this.$language('fan.medium_high'),
-          index: 4,
+          value: 4,
           key: 'Fan_medium_high'
         },
         {
           img: require('@/assets/img/fan/n_high.png'),
           name: this.$language('fan.high'),
-          index: 5,
+          value: 5,
           key: 'Fan_high'
         },
         {
           img: require('@/assets/img/fan/n_high.png'),
           name: this.$language('fan.high'),
-          index: 3,
+          value: 3,
           key: 'Fan_high_b'
         },
         {
           img: require('@/assets/img/fan/n_quiet.png'),
           name: this.$language('fan.quiet'),
-          index: 7,
+          value: 7,
           key: 'Fan_quiet'
         }
       ];
@@ -119,23 +112,20 @@ export default {
         result.splice(len - 1, 0, {
           img: require('@/assets/img/fan/n_turbo.png'),
           name: this.$language('fan.turbo'),
-          index: 6,
+          value: 6,
           key: 'Fan_tur'
         });
       return result;
     },
     imshowList() {
       const result = this.fanList.filter(item => {
-        return (
-          !this.g_hideFuncArr.includes(item.key) &&
-          this.g_identifierArr.includes(item.key)
-        );
+        return !this.g_hideFuncArr.includes(item.key) && this.g_identifierArr.includes(item.key);
       });
       result.length ||
         result.push({
           img: require('@/assets/img/pow.png'),
           name: '无内容',
-          index: 0
+          value: 0
         });
       return result;
     },
@@ -152,15 +142,7 @@ export default {
     },
     // 实际index
     currentIndex() {
-      const turIndex = this.imshowList.findIndex(item => item.index === 6);
-      if (this.Tur && turIndex !== -1) return turIndex;
-      const QuietIndex = this.imshowList.findIndex(item => item.index === 7);
-      if (this.Quiet && QuietIndex !== -1) return QuietIndex;
-      const index = this.imshowList.findIndex(
-        item => item.index === this.WdSpd
-      );
-      if (index !== -1) return index;
-      return 0;
+      return this.getSwiperIndex(this.WdSpd);
     },
     hideState() {
       return this.g_hideStateArr.includes('WdSpd_default');
@@ -181,7 +163,7 @@ export default {
       handler(newVal, oldVal) {
         this.$nextTick(() => {
           if (newVal === 1) {
-            oldVal === undefined || this.swiperChange(this.imshowList[0].index);
+            oldVal === undefined || this.swiperChange(this.currentIndex);
           }
           this.initSwiper();
         });
@@ -239,9 +221,9 @@ export default {
     updateList(index) {
       const maxLen = this.imshowList.length;
       let moveLen = index - this.leftLen;
-      if (moveLen >= maxLen - this.rightLen) {
+      if (moveLen > this.rightLen) {
         moveLen -= maxLen;
-      } else if (moveLen <= this.leftLen - maxLen) {
+      } else if (moveLen < -this.leftLen) {
         moveLen += maxLen;
       }
       this.removeSlide(moveLen);
@@ -268,33 +250,20 @@ export default {
     },
     insertSlide(moveLen) {
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(removeLen); i += 1) {
-        const startIndex =
-          this.swiperIndex +
-          direction * (direction ? this.rightLen : this.leftLen);
+        const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
         const toIndex = this.countIndex(startIndex, i * direction);
-        this.$refs[this.ref][funcName](
-          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
-        );
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
     },
     removeSlide(moveLen) {
       const direction = moveLen <= 0; // false：往右滑，true：往左滑
-      const removeLen =
-        Math.abs(moveLen) <= this.swiperLen
-          ? Math.abs(moveLen)
-          : this.swiperLen;
-      const removeIndexList = Array.from(
-        { length: removeLen },
-        (item, index) => {
-          return direction ? this.leftLen + this.rightLen - index : index;
-        }
-      ); // 需要移除的slide的Index
+      const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
+      const removeIndexList = Array.from({ length: removeLen }, (item, index) => {
+        return direction ? this.leftLen + this.rightLen - index : index;
+      }); // 需要移除的slide的Index
       this.$refs[this.ref].removeSlide(removeIndexList);
     },
     // 移除所有slide
@@ -303,23 +272,17 @@ export default {
     },
     // 根据情况填充slide
     insertAllSlide() {
-      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
-        'swiper-wrapper'
-      )[0].childNodes.length;
+      let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       if (swiperNum >= this.leftLen + this.rightLen + 1) return;
       for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {
         const funcName = 'prependSlide';
         const moveLen = i;
         const toIndex = this.countIndex(this.swiperIndex, moveLen);
-        this.$refs[this.ref][funcName](
-          `<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`
-        );
+        this.$refs[this.ref][funcName](`<div class="swiper-slide"><img src=${this.imshowList[toIndex].img}></div>`);
       }
 
       // 如果slide数量大于限定数量，则删掉
-      swiperNum = this.$refs[this.ref].$el.getElementsByClassName(
-        'swiper-wrapper'
-      )[0].childNodes.length;
+      swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       let maxLen = this.leftLen + this.rightLen + 1;
       if (swiperNum >= maxLen) {
         const removeList = [];
@@ -335,8 +298,8 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperIndex, index - this.leftLen);
-      const realIndex = this.imshowList[toIndex].index;
-      switch (realIndex) {
+      const value = this.imshowList[toIndex].value;
+      switch (value) {
         case 6:
           this.changeData({ Tur: 1, Quiet: 0, WdSpd: 5 });
           break;
@@ -344,9 +307,7 @@ export default {
           this.changeData({ Tur: 0, Quiet: 2, WdSpd: 1 });
           break;
         default:
-          this.changeData({ Tur: 0, Quiet: 0, WdSpd: realIndex });
-          // 更新到localStorage
-          window.storage.set('WdSpd', realIndex);
+          this.changeData({ Tur: 0, Quiet: 0, WdSpd: value });
           break;
       }
       this.updateList(index);
@@ -361,6 +322,15 @@ export default {
     },
     swiperShowDisable() {
       showToast(`${this.modeName}模式下不可滑动`, 1);
+    },
+    getSwiperIndex(value) {
+      const turIndex = this.imshowList.findIndex(item => item.value === 6);
+      if (this.Tur && turIndex !== -1) return turIndex;
+      const QuietIndex = this.imshowList.findIndex(item => item.value === 7);
+      if (this.Quiet && QuietIndex !== -1) return QuietIndex;
+      const result = this.imshowList.findIndex(item => item.value === value);
+      if (result !== -1) return result;
+      return 0;
     }
   }
 };

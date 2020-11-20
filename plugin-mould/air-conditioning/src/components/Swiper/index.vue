@@ -28,10 +28,7 @@
     </swiper>
     <!-- 文字 -->
     <div class="swiper-text" :class="{ isNumber }">
-      <nobr 
-      	@touchend="textShowToast"
-      	v-if="isShowText" 
-      	v-text="textContent" />
+      <nobr @touchend="textShowToast" v-if="isShowText" v-text="textContent" />
     </div>
   </div>
 </template>
@@ -94,10 +91,7 @@ export default {
       Pow: state => state.dataObject.Pow
     }),
     addDisableClass() {
-      return (
-        this.noSwiping ||
-        (this.swiperHold && this.swiperHold !== this.slidesData.key)
-      );
+      return this.noSwiping || (this.swiperHold && this.swiperHold !== this.slidesData.key);
     }
   },
   watch: {
@@ -150,8 +144,7 @@ export default {
     const init = () => {
       this.initTime += 1;
       this.initTime >= 3 && clearInterval(this.initTimer);
-      this.$refs[this.slidesData.key] &&
-        this.$refs[this.slidesData.key].swiper.update();
+      this.$refs[this.slidesData.key] && this.$refs[this.slidesData.key].swiper.update();
       this.$nextTick(() => {
         this.$forceUpdate();
       });
@@ -169,10 +162,7 @@ export default {
       this.$nextTick(() => {
         this.setState(['swiperHold', key]);
         const ref = this.$refs[key];
-        this.$emit(
-          'activeIndex',
-          this.$refs[this.slidesData.key].swiper.activeIndex
-        );
+        this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
         const realIndex = ref.swiper.realIndex;
         if (this.currentIndex === realIndex) {
           return;
@@ -181,13 +171,9 @@ export default {
         !this.swiperPerView[key] && (this.swiperPerView[key] = []);
         ['active', 'prev', 'next'].forEach(item => {
           try {
-            const dom = ref.$el.getElementsByClassName(
-              `swiper-slide-${item}`
-            )[0];
+            const dom = ref.$el.getElementsByClassName(`swiper-slide-${item}`)[0];
             // !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.opacity = 1);
-            !this.swiperPerView[key].includes(dom) &&
-              this.swiperPerView[key].push(dom) &&
-              (dom.style.visibility = 'visible');
+            !this.swiperPerView[key].includes(dom) && this.swiperPerView[key].push(dom) && (dom.style.visibility = 'visible');
           } catch (err) {
             err;
           }
@@ -214,14 +200,8 @@ export default {
     },
     emitIndex() {
       this.$nextTick(() => {
-        this.$emit(
-          'realIndex',
-          this.$refs[this.slidesData.key].swiper.realIndex
-        );
-        this.$emit(
-          'activeIndex',
-          this.$refs[this.slidesData.key].swiper.activeIndex
-        );
+        this.$emit('realIndex', this.$refs[this.slidesData.key].swiper.realIndex);
+        this.$emit('activeIndex', this.$refs[this.slidesData.key].swiper.activeIndex);
       });
       this.setState(['ableSend', true]);
     },

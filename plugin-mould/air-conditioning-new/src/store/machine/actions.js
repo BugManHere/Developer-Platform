@@ -105,8 +105,6 @@ class stateMachine {
   toStatus(identifier, statusName) {
     // 将事件推送到事件队列内
     this.stateQueue.push({ identifier, statusName: String(statusName) });
-    // 触发事件
-    this.vuexContext.dispatch(types.RUN_QUEUE, this.stateQueue);
   }
   // 将checkLogic方法暴露
   checkLogic(identifier) {

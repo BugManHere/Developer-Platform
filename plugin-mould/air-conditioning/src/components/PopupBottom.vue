@@ -1,7 +1,7 @@
 <template>
   <gree-popup v-model="showPopup" position="bottom">
     <div class="popup-bottom">
-      <div class="arrow-down" @touchend.stop="hidePopUpDemo" />
+      <div class="arrow-down" @click="hidePopUpDemo" />
       <gree-row v-if="g_funcDefine_btn">
         <gree-col
           v-for="(item, index) in g_funcDefine_btn"
@@ -12,28 +12,14 @@
           :key="index"
           width="25"
         >
-          <div
-            class="icon"
-            @click="
-              changeStatus(
-                item.identifier,
-                g_hideFuncArr.includes(item.identifier)
-              )
-            "
-          >
+          <div class="icon" @click="changeStatus(item.identifier, g_hideFuncArr.includes(item.identifier))">
             <img v-if="imgList[index].img" :src="imgList[index].img" />
             <div v-else class="blank-btn">
               <img src="@/assets/img/functionBtn/blank.png" />
               <span v-html="imgList[index].text" class="blank-text" />
             </div>
           </div>
-          <span
-            :class="{ triangle: item.page }"
-            @click="
-              goPage(index, g_hideFuncArr.includes(item.identifier), item.page)
-            "
-            v-text="btnName[index]"
-          />
+          <span :class="{ triangle: item.page }" @click="goPage(index, g_hideFuncArr.includes(item.identifier), item.page)" v-text="btnName[index]" />
         </gree-col>
       </gree-row>
     </div>
@@ -69,9 +55,7 @@ export default {
       const result = [];
       this.g_funcDefine_btn.forEach(item => {
         let id = item.identifier;
-        const statusName = this.g_hideFuncArr.includes(id)
-          ? 'default'
-          : this.g_statusMap[id].define.name;
+        const statusName = this.g_hideFuncArr.includes(id) ? 'default' : this.g_statusMap[id].define.name;
         const map = {};
         // 如果有图片就显示图片，没有图片就显示文字
         try {
@@ -95,8 +79,7 @@ export default {
         const stateKey = `${key}_${statusName}`;
         let language = key;
         key === this.$language(key) || (language = this.$language(key));
-        stateKey === this.$language(stateKey) ||
-          (language = this.$language(stateKey));
+        stateKey === this.$language(stateKey) || (language = this.$language(stateKey));
         return language;
       });
       return result;

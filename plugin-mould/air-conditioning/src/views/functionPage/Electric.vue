@@ -7,12 +7,7 @@
  -->
 <template>
   <gree-view class="page-electric" bgcolor="#f4f4f4">
-    <gree-header
-      :style="{ 'background-color': 'white' }"
-      :left-options="{ preventGoBack: true }"
-      @on-click-back="goBack()"
-    >电量统计</gree-header
-    >
+    <gree-header :style="{ 'background-color': 'white' }" :left-options="{ preventGoBack: true }" @on-click-back="goBack()">电量统计</gree-header>
     <gree-page>
       <!-- 总电量显示 -->
       <gree-block class="total-clean">
@@ -28,7 +23,7 @@
           @click="btnIndex(index)"
           :style="{
             color: index === selcetedIndex ? 'white' : 'black',
-            background: index === selcetedIndex ? '#00aeff' : 'white',
+            background: index === selcetedIndex ? '#00aeff' : 'white'
           }"
         >
           {{ item }}
@@ -42,10 +37,7 @@
               <span>日累计用电量</span>
               <span>{{ 0 }} kW·h</span>
             </div>
-            <gree-divider
-              type="center"
-              direction="horizontal"
-            ></gree-divider>
+            <gree-divider type="center" direction="horizontal"></gree-divider>
           </div>
           <div v-show="isNoData" class="isNoData">服务器暂无数据</div>
           <div class="chart-canves" ref="day" v-show="selcetedIndex === 0" />
@@ -65,13 +57,7 @@ import echarts from 'echarts';
 import { View, Page, Header, Row, Col, Block, Divider, Dialog } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import chartsConfig from '@/mixins/config/echarts';
-import {
-  showLoading,
-  hideLoading,
-  showToast,
-  getGridConList,
-  clearHistoricalPhotovoltaicPowerData,
-} from '@PluginInterface';
+import { showLoading, hideLoading, showToast, getGridConList, clearHistoricalPhotovoltaicPowerData } from '@PluginInterface';
 
 export default {
   components: {
@@ -82,7 +68,7 @@ export default {
     [Col.name]: Col,
     [Block.name]: Block,
     [Divider.name]: Divider,
-    [Dialog.name]: Dialog,
+    [Dialog.name]: Dialog
   },
   mixins: [chartsConfig],
   data() {
@@ -97,15 +83,15 @@ export default {
       weekChart: '',
       isNoData: true, // 无数据显示
       daytotle: 0, // 日累计用电量
-      tooltip: {},
+      tooltip: {}
     };
   },
   computed: {
     ...mapState({
       mac: state => state.mac,
       isClear: state => state.isClear,
-      chartData: state => state.chartData,
-    }),
+      chartData: state => state.chartData
+    })
   },
   mounted() {
     this.initCharts(); // 初始化图表
@@ -120,7 +106,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setChartData: 'SET_CHART_DATA',
+      setChartData: 'SET_CHART_DATA'
     }),
     ...mapActions({
       sendCtrl: 'SEND_CTRL'
@@ -147,28 +133,28 @@ export default {
         textStyle: {
           fontFamily: 'FZLTH--GB1-4',
           fontSize: '0.31rem',
-          color: '#404657',
-        },
+          color: '#404657'
+        }
       };
       const dataZoom = [
         {
           show: false,
           start: 1,
-          end: 50,
+          end: 50
         },
         {
-          type: 'inside',
-        },
+          type: 'inside'
+        }
       ];
       switch (index) {
         case 0:
-          this.chartData.dayChart ? this.dayChartSet() : this.getDayData();     
+          this.chartData.dayChart ? this.dayChartSet() : this.getDayData();
           break;
         case 1:
-          this.chartData.weekChart ? this.weekChartSet(dataZoom) : this.getWeekData();  
+          this.chartData.weekChart ? this.weekChartSet(dataZoom) : this.getWeekData();
           break;
         case 2:
-          this.chartData.monthChart ? this.monthChartSet(dataZoom) : this.getMonthData();  
+          this.chartData.monthChart ? this.monthChartSet(dataZoom) : this.getMonthData();
           break;
         case 3:
           this.chartData.yearChart ? this.yearChartSet(dataZoom) : this.getYearData();
@@ -186,10 +172,10 @@ export default {
         confirmText: '确定',
         onConfirm: () => this.cleanElcInterface(),
         cancelText: '取消',
-        onCancel: () => console.log('[Dialog.confirm] cancel clicked'),
+        onCancel: () => console.log('[Dialog.confirm] cancel clicked')
       });
     },
-    async getDayData() {  
+    async getDayData() {
       await getGridConList(this.mac, 'day')
         .then(res => {
           hideLoading();
@@ -209,7 +195,7 @@ export default {
             count[i] = 2 * (i + 1);
           }
           this.isNoData = !time.length;
-          this.setChartData({ dayChart: [day, count]});
+          this.setChartData({ dayChart: [day, count] });
           this.refreshChart(day, count, 'dayChart');
         })
         .catch(res => {
@@ -226,11 +212,7 @@ export default {
           const obj = JSON.parse(res);
           const { time, val } = obj.data;
 
-          const d = new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() + 1,
-            0,
-          );
+          const d = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
           const monthCount = d.getDate();
           const month = [];
           const count = [];
@@ -244,7 +226,7 @@ export default {
             month[time[i] - 1] = val[i];
           }
           this.isNoData = !time.length;
-          this.setChartData({ weekChart: [month, count]});
+          this.setChartData({ weekChart: [month, count] });
           this.refreshChart(month, count, 'weekChart');
         })
         .catch(res => {
@@ -272,7 +254,7 @@ export default {
             year[time[i] - 1] = val[i].toFixed(2);
           }
           this.isNoData = !time.length;
-          this.setChartData({ monthChart: [year, count]});
+          this.setChartData({ monthChart: [year, count] });
           this.refreshChart(year, count, 'monthChart');
         })
         .catch(res => {
@@ -297,9 +279,9 @@ export default {
             count[i] = time[i];
             TOTAL += val[i];
           }
-          this.setChartData({total: TOTAL.toFixed(2)});
+          this.setChartData({ total: TOTAL.toFixed(2) });
           this.isNoData = !time.length;
-          this.setChartData({ yearChart: [all, count]});
+          this.setChartData({ yearChart: [all, count] });
           this.refreshChart(all, count, 'yearChart');
         })
         .catch(res => {
@@ -311,21 +293,22 @@ export default {
     // 清除电量接口
     cleanElcInterface() {
       showLoading();
-      clearHistoricalPhotovoltaicPowerData(this.mac).then(result => {
-        hideLoading();
-        const res = JSON.parse(result);
-        // 判断是否成功清除电量
-        if (res.r === 400) {
-          console.log('Api调用失败');
-        } else if (res.r === 200) {
-          console.log('成功请求，清除电量');
-          this.sendCtrl({ Electnumzero: 0 });
-        } else if (res.r === 10700) {
-          showToast('您没有权限清除电量哦', 0);
-        } else {
-          console.log('失败！其他原因');
-        }
-      })
+      clearHistoricalPhotovoltaicPowerData(this.mac)
+        .then(result => {
+          hideLoading();
+          const res = JSON.parse(result);
+          // 判断是否成功清除电量
+          if (res.r === 400) {
+            console.log('Api调用失败');
+          } else if (res.r === 200) {
+            console.log('成功请求，清除电量');
+            this.sendCtrl({ Electnumzero: 0 });
+          } else if (res.r === 10700) {
+            showToast('您没有权限清除电量哦', 0);
+          } else {
+            console.log('失败！其他原因');
+          }
+        })
         .catch(err => {
           console.log('err', err);
           hideLoading();
@@ -334,9 +317,9 @@ export default {
     refreshChart(value, count, type) {
       const realValue = value.map(item => item / 10);
       this.otherOpt.xAxis.data = count;
-      this.otherOpt.series[0].data = realValue;     
+      this.otherOpt.series[0].data = realValue;
       this.dayChartOpt.xAxis.data = count;
-      this.dayChartOpt.series[0].data = realValue;     
+      this.dayChartOpt.series[0].data = realValue;
       this[type].setOption(type === 'dayChart' ? this.dayChartOpt : this.otherOpt, true);
       this.$nextTick(() => {
         this[type].resize();
@@ -371,7 +354,7 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
-    },
-  },
+    }
+  }
 };
 </script>
