@@ -42,7 +42,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
   setData = { ...setData, ...dataMap };
   _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
-    commit(types.SET_STATE, ['ableSend', false]);
     if (state.swiperHold) {
       sendControl({ state, commit, dispatch }, {});
       return;
@@ -87,6 +86,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     // 3秒后重启轮询
     dispatch(types.SET_POLLING, false);
     _timer3 = setTimeout(() => {
+      commit(types.SET_STATE, ['ableSend', false]);
       dispatch(types.SET_POLLING, true);
     }, 3000);
 
