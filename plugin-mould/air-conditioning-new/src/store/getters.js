@@ -27,6 +27,7 @@ export default {
   fanIdentifier: (state, getters) => {
     return getters.fanDefine && getters.fanDefine.identifier;
   },
+  // 风速当前statusName
   fanCurrentStatusName: (state, getters) => {
     const statusMap = getters['machine/statusMap'];
     const fanIdentifier = getters.fanIdentifier;
@@ -36,6 +37,11 @@ export default {
   fanAbleSet: (state, getters) => {
     const hideStateNameArr = getters['machine/hideStateNameArr'];
     return hideStateNameArr.every(state => !state.includes('FanPopup'));
+  },
+  // 风速的状态指向循环
+  fanLoop: (state, getters) => {
+    const statusLoop = getters['machine/statusLoop'];
+    return statusLoop[getters.fanIdentifier];
   },
   // 高级功能按钮的定义
   buttonDefine: (state, getters) => {

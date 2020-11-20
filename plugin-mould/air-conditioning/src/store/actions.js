@@ -37,12 +37,11 @@ function customizeDataObject({ state }, _dataObject) {
  */
 function sendControl({ state, commit, dispatch }, dataMap) {
   if (state.dataObject.functype) return;
-  commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
   commit(types.SET_STATE, ['ableSend', true]);
   setData = { ...setData, ...dataMap };
   _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
-    commit(types.SET_STATE, ['ableSend', false]);
+    commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
     if (state.swiperHold) {
       sendControl({ state, commit, dispatch }, {});
       return;
@@ -87,6 +86,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     // 3秒后重启轮询
     dispatch(types.SET_POLLING, false);
     _timer3 = setTimeout(() => {
+      commit(types.SET_STATE, ['ableSend', false]);
       dispatch(types.SET_POLLING, true);
     }, 3000);
 
@@ -270,6 +270,7 @@ export default {
    * @description 发送控制指令
    */
   async [types.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
+    console.log(DataObject);
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];

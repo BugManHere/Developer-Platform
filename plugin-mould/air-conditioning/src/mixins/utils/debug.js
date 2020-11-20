@@ -13,6 +13,11 @@ const mixin = {
     this.setCheckObject(this.dataObject);
     this.setState(['ableSend', true]);
     this.setState(['loading', false]);
+    navigator.PluginInterface = {
+      getCloudTimerByMac: () => {
+        console.log('run getCloudTimerByMac');
+      }
+    };
   },
   methods: {
     ...mapMutations({
