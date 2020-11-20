@@ -249,11 +249,8 @@ export default {
       return toIndex;
     },
     insertSlide(moveLen) {
-      console.log('-insertSlide');
       const direction = moveLen / Math.abs(moveLen); // 1：往右，-1：往左
-      console.log('direction------------', direction);
       const removeLen = Math.abs(moveLen) <= this.swiperLen ? Math.abs(moveLen) : this.swiperLen;
-      console.log('removeLen------------', removeLen);
       const funcName = direction === 1 ? 'appendSlide' : 'prependSlide';
       for (let i = 1; i <= Math.abs(removeLen); i += 1) {
         const startIndex = this.swiperIndex + direction * (direction ? this.rightLen : this.leftLen);
@@ -275,7 +272,6 @@ export default {
     },
     // 根据情况填充slide
     insertAllSlide() {
-      console.log('insertAllSlide-');
       let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       if (swiperNum >= this.leftLen + this.rightLen + 1) return;
       for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {

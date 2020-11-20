@@ -16,14 +16,14 @@ const statueJson2 = moreOption.statueJson2;
 
 // 自定义数据，根据业务更改
 function customizeDataObject({ state }, _dataObject) {
-  const dataObject = _dataObject;
+  const dataObject = _dataObject || {};
   // 兼容辅热，如果开启了八度制热，则不更新辅热
   if ('AssHt' in dataObject && state.devOptions.identifierArr.includes('AssHt(Auto)') && dataObject.StHt) {
     dataObject.AssHt = 1;
   }
   // 云定时
   if ('AppTimer' in dataObject) {
-    dataObject.AppTimer = dataObject.AppTimer || state.cloudTimer;
+    dataObject.AppTimer = Number(dataObject.AppTimer || state.cloudTimer);
   }
   // 外出模式
   if ('OutHome' in dataObject && dataObject.functype) {
@@ -44,7 +44,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
   _timer2 = setTimeout(async () => {
     commit(types.SET_STATE, ['ableSend', false]);
     if (state.swiperHold) {
-      sendControl({ state, commit }, {});
+      sendControl({ state, commit, dispatch }, {});
       return;
     }
     const setOpt = [];
@@ -84,15 +84,13 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       err;
     }
 
-    await sendDataToDevice(mac, json, false);
     // 3秒后重启轮询
-    if (_timer) {
-      dispatch(types.SET_POLLING, false);
-      clearTimeout(_timer3);
-      _timer3 = setTimeout(() => {
-        dispatch(types.SET_POLLING, true);
-      }, 3000);
-    }
+    dispatch(types.SET_POLLING, false);
+    _timer3 = setTimeout(() => {
+      dispatch(types.SET_POLLING, true);
+    }, 3000);
+
+    sendDataToDevice(mac, json, false);
   }, 350);
 }
 
@@ -121,7 +119,7 @@ export default {
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA);
+      dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
@@ -141,7 +139,7 @@ export default {
   /**
    * @description 初始化设备数据
    */
-  [types.INIT_DEVICE_DATA]({ dispatch, commit, state }) {
+  async [types.INIT_DEVICE_DATA]({ dispatch, commit, state }) {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
@@ -152,7 +150,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -167,6 +165,9 @@ export default {
       dataObject = customizeDataObject({ state }, dataObject);
       // 更新本地数据
       dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      console.log('------------INIT_DEVICE_DATA----------');
+      console.log(dataObject);
+      commit(types.SET_STATE, ['loading', false]);
     } catch (e) {
       console.error(e);
     }
@@ -213,7 +214,7 @@ export default {
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
-  async [types.GET_DEVICE_DATA]({ state, dispatch }) {
+  async [types.GET_DEVICE_DATA]({ state, dispatch, commit }) {
     try {
       // 集中控制时数据不查询
       if (state.functype) return;
@@ -239,6 +240,7 @@ export default {
       dataObject = customizeDataObject({ state }, dataObject);
       // 更新本地数据
       dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      commit(types.SET_STATE, ['loading', false]);
     } catch (e) {
       console.error(e);
     }
@@ -247,14 +249,15 @@ export default {
   /**
    * @description 开启/关闭轮询
    */
-  async [types.SET_POLLING]({ dispatch }, boolean) {
+  async [types.SET_POLLING]({ state, commit, dispatch }, boolean) {
     clearTimeout(_timer3);
+    _timer3 = null;
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          getCloudTimer();
-          hasMqtt || dispatch(types.GET_DEVICE_DATA);
-          hasMqtt || dispatch(types.GET_DEVICE_INFO);
+          getCloudTimer({ state, commit });
+          dispatch(types.GET_DEVICE_DATA);
+          dispatch(types.GET_DEVICE_INFO);
         }, 5000);
       }
     } else {
@@ -266,7 +269,7 @@ export default {
   /**
    * @description 发送控制指令
    */
-  async [types.SEND_CTRL]({ state, commit }, DataObject) {
+  async [types.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
@@ -288,7 +291,7 @@ export default {
       commit(types.SET_CHECK_OBJECT, { StHt: 0 });
     }
     if (p.length) {
-      sendControl({ state, commit }, dataMap);
+      sendControl({ state, commit, dispatch }, dataMap);
     } else {
       !_timer2 && commit(types.SET_STATE, ['ableSend', false]);
     }

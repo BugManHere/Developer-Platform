@@ -97,7 +97,7 @@ export default {
   /**
    * @description 初始化设备数据
    */
-  [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
+  async [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
@@ -108,7 +108,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;

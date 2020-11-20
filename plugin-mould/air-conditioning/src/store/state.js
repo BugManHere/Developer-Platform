@@ -5,7 +5,7 @@ const state = {
   autoAbleSetTem: false,
   swiperHold: false,
   ableSend: false, // 是否允许发送命令
-  loading: false,
+  loading: true,
   isStHt: false,
   cloudTimer: false,
   dataObject: {

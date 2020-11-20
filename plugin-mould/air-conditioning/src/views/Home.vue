@@ -30,7 +30,7 @@
           <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow" key="modeSwiper" @modeName="getModeName" />
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeName="getModeName" />
 
         <!-- 故障提示 -->
         <gree-notice-bar scrollable v-show="errStatus" class="notice-bar" icon="warning" v-text="errMsg">
@@ -49,14 +49,14 @@
         </gree-notice-bar>
         <div v-show="!Pow" v-text="$language(`${Air ? 'btn.Air' : 'home.powerOff'}`)" class="poweroff-tip" />
         <!-- 温度滑轮 -->
-        <temSwiper v-if="Pow" key="temSwiper" />
+        <temSwiper v-if="Pow && !loading" key="temSwiper" />
         <!-- 温度单位图标 -->
         <img :src="temImg" class="tem-unit" @click="changeTemUn" v-show="Pow && ![0, 5].includes(Mod)" />
         <!-- 室内温度 -->
         <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen" />
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow" key="fanSwiper" :mode-name="modeName" />
-        <!-- <airFanSwiper v-else-if="Air " key="airFanSwiper"/> -->
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-name="modeName" />
+        <!-- <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/> -->
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -145,6 +145,7 @@ export default {
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
+      loading: state => state.loading,
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
@@ -346,8 +347,18 @@ export default {
     },
     // 场景模式保存按钮
     sceneSave() {
+      const removeJson = (inputArr, removeJsonArr) => {
+        removeJsonArr.forEach(json => {
+          const index = inputArr.indexOf(json);
+          if (index !== -1) {
+            inputArr.splice(index, 1);
+          }
+        });
+      };
+      const removeArr = ['AppTimer'];
       const remarks = '...';
       const opt = JSON.parse(this.devOptions.statueJson2);
+      removeJson(opt, removeArr);
       console.log(opt);
       const p = opt.map(item => {
         return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
