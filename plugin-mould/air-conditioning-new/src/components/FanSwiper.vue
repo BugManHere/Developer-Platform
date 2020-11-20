@@ -47,8 +47,7 @@ export default {
     ...mapState('control', {
       FanPopup: state => state.dataObject.FanPopup
     }),
-    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'modCurrentStatusName']),
-    ...mapGetters('machine', ['statusLoop']),
+    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'fanLoop']),
     swiper() {
       return this.$refs.fanSwiper.$swiper;
     },
@@ -93,7 +92,7 @@ export default {
     fanAbleSet(newVal) {
       newVal || (this.showPopup = false);
     },
-    modCurrentStatusName() {
+    fanLoop() {
       this.init();
     },
     fanCurrentStatusName() {
@@ -154,9 +153,8 @@ export default {
     },
     updateStatusNameList() {
       const startStatus = 'default';
-      const fanLoop = this.statusLoop[this.fanIdentifier];
-      if (fanLoop) {
-        const fanStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[this.fanIdentifier]));
+      if (this.fanLoop) {
+        const fanStatusNameList = [...this.fanLoop];
         const length = fanStatusNameList.length;
         let i = 0;
         while (fanStatusNameList[0] !== startStatus && i < length) {
