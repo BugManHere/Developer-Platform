@@ -8,9 +8,5 @@ export default {
     Object.keys(obj).forEach(key => {
       state[key] = obj[key];
     });
-  },
-  [types.GET_STATUS_NAME]() {
-    console.log('2');
-    return 123;
   }
 };
