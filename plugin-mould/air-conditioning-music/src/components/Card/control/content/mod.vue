@@ -37,7 +37,6 @@ export default {
       if (this.contentHeight) {
         clearInterval(mountedTimer);
         this.isMounted = true;
-        console.log(this.contentHeight);
       }
     }, 20);
   },

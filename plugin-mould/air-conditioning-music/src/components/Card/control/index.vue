@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <ControlHeader @modUnfold="getModUnfold" :headerTxt="headerTxt" />
     <!-- 内容 -->
-    <div class="card-content">
+    <div class="card-content" v-scroll-through>
       <div class="card-content-box">
         <ModContent @modName="getModName" :modUnfold="modUnfold" />
         <FanContent />

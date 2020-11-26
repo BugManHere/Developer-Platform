@@ -15,6 +15,7 @@ import './assets/scss/global.scss';
 
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
+import scrollThrough from '@/directives/scrollThrough';
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
@@ -38,6 +39,7 @@ Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
 Vue.use(IotfeComponents);
+Vue.directive('scroll-through', scrollThrough);
 
 // 使用语言包
 const i18n = new VueI18n({

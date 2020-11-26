@@ -14,40 +14,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-
 export default {
   props: {
     headerId: {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {
-      cardHeaderShow: false,
-      headerHeight: 0,
-      contentHeight: 0,
-      contentDom: null,
-      scrollPos: 0,
-      scrollTimer: null,
-      scrollTimer2: null,
-      currentScrollTop: 0,
-      safeAreaHeight: 0
-    };
-  },
-  computed: {
-    ...mapState({
-      selectKey: state => state.selectKey
-    })
-  },
-  mounted() {},
-  deactivated() {},
-  // 离开路由时清除定时器
-  beforeRouteLeave(to, from, next) {},
-  watch: {},
-  methods: {
-    ...mapMutations({})
   }
 };
 </script>
