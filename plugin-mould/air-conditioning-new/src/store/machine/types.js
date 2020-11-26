@@ -5,4 +5,4 @@ export const GET_STATUS_NAME = 'GET_STATUS_NAME';
 
 /** actions */
 export const INIT = 'INIT'; // 初始化
-export const RUN_QUEUE = 'RUN_QUEUE';
+export const RUN_EVENT = 'RUN_EVENT';

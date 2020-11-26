@@ -39,24 +39,7 @@ export default {
     btnList: {
       type: Array,
       default: () => {
-        return [
-          {
-            key: 'Lig',
-            name: '灯光',
-            gray: false,
-            hide: false,
-            icon: {
-              key: 'Lig',
-              type: 'off'
-            },
-            page: {
-              routerName: 'Lig'
-            },
-            func: () => {
-              console.log('Lig');
-            }
-          }
-        ];
+        return [];
       }
     }
   },

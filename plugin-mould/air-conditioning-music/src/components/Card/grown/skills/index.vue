@@ -126,7 +126,6 @@ export default {
   },
   methods: {
     pageInit() {
-      console.log('2');
       try {
         let self = this;
         // setTimeout(() => {

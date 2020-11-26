@@ -1,28 +1,28 @@
 /** stateMachine */
 export default {
   /**
-   * @description 显性功能
+   * @description 定义为显性功能的model合集
    * @return Array [model]
    */
   funcDefine_active: state => {
     return state.baseData.funcDefine.filter(model => model.type.includes('active'));
   },
   /**
-   * @description 隐性功能
+   * @description 定义为隐性功能的model合集
    * @return Array [model]
    */
   funcDefine_inertia: state => {
     return state.baseData.funcDefine.filter(model => model.type.includes('inertia'));
   },
   /**
-   * @description identifier合集
+   * @description 所有model的identifier合集
    * @return Array [identifier]
    */
   identifierArr: state => {
     return state.baseData.funcDefine.map(model => model.identifier);
   },
   /**
-   * @description funcDefine的map版本
+   * @description funcDefine的map版本，根据identifier找到对应的model
    * @return Object {identifier: model}
    */
   funcDefineMap: state => {
@@ -34,7 +34,7 @@ export default {
     return result;
   },
   /**
-   * @description hideMap的反义，根据被隐藏的stateName获取stateName
+   * @description hideMap的反义，根据被隐藏的stateName找到具有隐藏关系的stateName合集
    * @return Object {stateName: [stateName]}
    */
   hideMapReverse: state => {
@@ -48,7 +48,7 @@ export default {
     return result;
   },
   /**
-   * @description 根据identifier与value获取当前statusName
+   * @description 根据identifier与value获取statusName
    * @return Object {identifier: {value: statusName}}
    */
   valToStatusName: (state, getters, rootState, rootGetters) => {
@@ -230,26 +230,26 @@ export default {
     });
     return result;
   },
-  /**
-   * @description 输入被隐藏的model的identifier，返回参与隐藏的model的identifier
-   * @return Object: {identifier: {stateName: stateName}}
-   */
-  hideByStateNameMap: (state, getters) => {
-    const result = {};
-    getters.noDirectionModelArr.forEach(identifier => {
-      const statusNameArr = getters.statusLoop[identifier]; // 获取status指向数组
-      result[identifier] = {};
-      if (statusNameArr.length >= 1) {
-        // 轮询每个statusName指向
-        statusNameArr.forEach(statusName => {
-          const stateName = `${identifier}_${statusName}`;
-          const stateNameArr = getters.hideMapReverse[stateName];
-          stateNameArr && (result[identifier] = { ...result[identifier], [stateName]: stateNameArr });
-        });
-      }
-    });
-    return result;
-  },
+  // /**
+  //  * @description 输入被隐藏的model的identifier，返回参与隐藏的model的identifier
+  //  * @return Object: {identifier: {stateName: stateName}}
+  //  */
+  // hideByStateNameMap: (state, getters) => {
+  //   const result = {};
+  //   getters.noDirectionModelArr.forEach(identifier => {
+  //     const statusNameArr = getters.statusLoop[identifier]; // 获取status指向数组
+  //     result[identifier] = {};
+  //     if (statusNameArr.length >= 1) {
+  //       // 轮询每个statusName指向
+  //       statusNameArr.forEach(statusName => {
+  //         const stateName = `${identifier}_${statusName}`;
+  //         const stateNameArr = getters.hideMapReverse[stateName];
+  //         stateNameArr && (result[identifier] = { ...result[identifier], [stateName]: stateNameArr });
+  //       });
+  //     }
+  //   });
+  //   return result;
+  // },
   /**
    * @description 某一status的详细信息
    * @return Object: {identifier: {statusName: {statusName, status, json, setData, customize}}}

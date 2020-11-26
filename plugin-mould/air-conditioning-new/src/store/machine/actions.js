@@ -25,7 +25,7 @@ export default {
    * @param {Object} context Vuex的context对象
    * @param {Array} stateQueue 事件队列
    */
-  [types.RUN_QUEUE](context, stateQueue) {
+  [types.RUN_EVENT](context, stateQueue) {
     // 队列没有事件，退出
     if (!stateQueue.length) return;
     const { getters, dispatch } = context;
@@ -68,7 +68,7 @@ export default {
       checkLogic(context, identifier, nextStatusName);
     }
     // 执行下一事件
-    dispatch(types.RUN_QUEUE, stateQueue);
+    dispatch(types.RUN_EVENT, stateQueue);
   }
 };
 
@@ -92,21 +92,20 @@ class stateMachine {
     initData(this.vuexContext);
   }
   // 根据identifier获取statusName
-  getStatus(identifier) {
+  getStatusName(identifier) {
     return this.vuexContext.getters.statusMap[identifier].statusName;
   }
-  // 根据identifier跳转到指向status
+  // 根据`identifier`激活`model`的次态
   nextStatus(identifier) {
     // 将事件推送到事件队列内
     this.stateQueue.push({ identifier, statusName: undefined });
-    // 触发事件
   }
-  // 根据identifier跳转到指定status
+  // 根据identifier跳转到指定状态
   toStatus(identifier, statusName) {
     // 将事件推送到事件队列内
     this.stateQueue.push({ identifier, statusName: String(statusName) });
   }
-  // 将checkLogic方法暴露
+  // 将checkLogic方法暴露，根据identifier检查model的互斥
   checkLogic(identifier) {
     checkLogic(this.vuexContext, identifier);
   }
@@ -217,10 +216,10 @@ function creatQueue({ dispatch }) {
   Object.defineProperty(this, 'stateQueue', {
     // 改写getter方法
     get() {
-      // setTimeout把方法放到下一个宏任务，保证数组更新
+      // setTimeout把方法放到下一个宏任务，保证队列更新
       setTimeout(() => {
         // 如果队列中存在事件，则执行
-        queue.length && dispatch(types.RUN_QUEUE, queue);
+        queue.length && dispatch(types.RUN_EVENT, queue);
       }, 0);
       return queue;
     },

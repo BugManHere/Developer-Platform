@@ -31,10 +31,8 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
-      if (statueJson2.includes(key)) {
-        setOpt.push(key);
-        setP.push(Number(setData[key]));
-      }
+      setOpt.push(key);
+      setP.push(Number(setData[key]));
     });
     setData = {};
     if (!setOpt.length || state.dataObject.functype || !state.ableSend) {
@@ -83,7 +81,7 @@ export default {
       // 初始化设备数据
       await dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
-      await dispatch(types.GET_AUTH_TYPE);
+      dispatch(types.GET_AUTH_TYPE);
       dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
       dispatch(types.GET_DEVICE_DATA);
@@ -162,6 +160,7 @@ export default {
       const { mac } = state;
       const res = await getInfo(mac).catch(e => console.error(e));
       const deviceInfo = JSON.parse(res);
+      console.log(deviceInfo);
       commit(types.SET_DEVICE_INFO, deviceInfo);
     } catch (e) {
       console.error(e);

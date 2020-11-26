@@ -10,42 +10,6 @@
     height: auto;
     margin-top: calc(env(safe-area-inset-top));
   }
-  .login-dialog {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &-box {
-      z-index: 999;
-      height: 771px;
-      width: 861px;
-      background-image: url('../../assets/img/music/dialog.png');
-      background-size: 100% 100%;
-      text-align: center;
-      &-msg {
-        padding: 339px 108px 0 108px;
-        font-size: 38px;
-        color: #000;
-        line-height: 60px;
-      }
-      &-cancel {
-        font-size: 34px;
-        color: rgba(116, 116, 116, 1);
-        padding-top: 80px;
-      }
-      &-confirm {
-        margin-top: 42px;
-        width: 585px;
-        font-size: 38px;
-        color: #fff;
-        background-color: rgba(0, 174, 255, 1);
-      }
-    }
-  }
 }
 .page-home {
   position: relative !important;
@@ -59,51 +23,28 @@
     top: 0;
     overflow: auto;
   }
-  .tem-edit {
-    position: relative;
-    height: $temEditHeight;
-    width: 100%;
-    color: #fff;
-    > div {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .power-on {
-      .gree-icon {
-        font-weight: bolder;
-      }
-      .tem-value {
-        font-family: 'Roboto-Light';
-        margin: 0 70px;
-        font-size: 264px;
-      }
-    }
-    .power-off {
-      &-txt {
-        font-size: 90px;
-      }
-    }
-  }
 }
 .page-header {
   position: relative;
   top: 0;
+  margin-top: calc(env(safe-area-inset-top));
   width: 100%;
   height: $pageHeaderHeight;
   margin-bottom: 0;
   z-index: 999;
-  .gree-header-title {
-    margin: 0 $pageHeaderHeight;
-  }
-  .gree-header-right {
-    height: 100%;
-    .save {
-      font-size: 48px;
-      line-height: 48px;
-      color: #fff;
-      font-weight: 500;
+  .gree-header {
+    top: 0 !important;
+    &.-title {
+      margin: 0 $pageHeaderHeight;
+    }
+    &.-right {
+      height: 100%;
+      .save {
+        font-size: 48px;
+        line-height: 48px;
+        color: #fff;
+        font-weight: 500;
+      }
     }
   }
   .header-more {

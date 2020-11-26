@@ -163,7 +163,6 @@
           if (random >= 5) {
             data = JSON.parse(data);
             const notDeleteMsgList = MockVoiceMsgList.filter(x => data.guidList.indexOf(x.guid) === -1);
-            console.log(data.guidList, notDeleteMsgList);
             MockVoiceMsgList.splice(0, MockVoiceMsgList.length, ...notDeleteMsgList);
             callback({ code: 200 });
           } else {
@@ -173,7 +172,6 @@
       }
     },
     voiceACgetSkillList(mac, data, callback) {
-      console.log('--------in');
       const query = JSON.parse(data);
       const domainData = MockSkillList.find(x => x.domain === query.domain);
       const startIndex = (query.pageNum - 1) * query.pageSize;

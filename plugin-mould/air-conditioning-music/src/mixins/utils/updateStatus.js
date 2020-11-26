@@ -1,13 +1,18 @@
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+import { SET_CHECK_OBJECT, SET_DATA_OBJECT } from '../../store/types';
 /**
  * @description 检测有没有故障，有没有掉线
  */
 const updateStatus = {
   computed: {
     ...mapState({
+      dataObject: state => state.dataObject,
       isOffline: state => state.deviceInfo.deviceState,
       lang: state => state.deviceInfo.lang
     })
+  },
+  mounted() {
+    this.setCheckObject(this.dataObject);
   },
   watch: {
     /**
@@ -33,6 +38,12 @@ const updateStatus = {
       },
       immediate: true
     }
+  },
+  methods: {
+    ...mapMutations({
+      setCheckObject: SET_CHECK_OBJECT,
+      setDataObject: SET_DATA_OBJECT
+    })
   }
 };
 export default updateStatus;

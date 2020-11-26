@@ -33,12 +33,12 @@ const getters = {
           url: require(`@assets/img/skins/${state.skinIndex}/control.png`),
           name: '空调控制',
           key: 'control-card'
+        },
+        {
+          url: require(`@assets/img/skins/${state.skinIndex}/sleep.png`),
+          name: '健康睡眠',
+          key: 'sleep-card'
         }
-        // {
-        //   url: require(`@assets/img/skins/${state.skinIndex}/sleep.png`),
-        //   name: '健康睡眠',
-        //   key: 'sleep-card'
-        // }
       ]
     };
   }

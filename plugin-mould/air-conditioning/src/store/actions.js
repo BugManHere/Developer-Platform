@@ -83,12 +83,12 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       err;
     }
 
-    // 3秒后重启轮询
+    // 1秒后重启轮询
     dispatch(types.SET_POLLING, false);
     _timer3 = setTimeout(() => {
       commit(types.SET_STATE, ['ableSend', false]);
       dispatch(types.SET_POLLING, true);
-    }, 3000);
+    }, 1000);
 
     sendDataToDevice(mac, json, false);
   }, 350);

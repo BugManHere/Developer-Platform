@@ -15,11 +15,13 @@
 import { mapState } from 'vuex';
 import GrownCard from './grown/index';
 import ControlCard from './control/index';
+import SleepCard from './sleep/index';
 
 export default {
   components: {
     [GrownCard.name]: GrownCard,
-    [ControlCard.name]: ControlCard
+    [ControlCard.name]: ControlCard,
+    [SleepCard.name]: SleepCard
   },
   computed: {
     ...mapState({
