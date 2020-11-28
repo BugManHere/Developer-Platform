@@ -18,3 +18,4 @@ export const GET_DEVICE_INFO = 'GET_DEVICE_INFO'; // 获取设备信息
 export const GET_DEVICE_DATA = 'GET_DEVICE_INFO';
 export const SEND_CTRL = 'SEND_CTRL'; // 发送控制指令
 export const UPDATE_DATAOBJECT = 'UPDATE_DATAOBJECT'; //
+export const GET_CLOUD_TIMER = 'GET_CLOUD_TIMER'; // 查询云定时
