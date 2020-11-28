@@ -8,6 +8,32 @@
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>iotfe</title>
+    <style>
+      @font-face {
+        font-family: 'appleUltralight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+      }
+      @font-face {
+        font-family: 'appleLight';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+      }
+      @font-face {
+        font-family: 'appleRegular';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
+      }
+      @font-face {
+        font-family: 'appleThin';
+        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
+      }
+      @font-face {
+        font-family: 'FZLTHJ';
+        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
+      }
+      @font-face {
+        font-family: 'Roboto-Light';
+        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
+      }
+    </style>
     <% if (NODE_ENV === 'testing') { %>
     <script>
       function trigger() {
@@ -28,87 +54,10 @@
     </script>
     <!-- <script src="http://iotfe.gree.com/cordovainit.js"></script> -->
     <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
-    </style>
-    <% } else if (NODE_ENV === 'development') { %>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
-    </style>
     <% } else if (NODE_ENV === 'production') { %>
     <script src="./../../cordova.js"></script>
     <script src="./js/cordovainit.js"></script>
     <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
       /* @font-face {
         font-family: 'appleUltralight';
         src: url('./../../font/SF-UI-Display-Ultralight.otf');

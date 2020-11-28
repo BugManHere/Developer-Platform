@@ -1,54 +1,37 @@
 <template>
   <div class="tem-edit">
-    <div class="power-on" v-if="Pow">
-      <gree-icon name="move" size="xl" @click="setTem(-1)" />
-      <div v-text="SetTem" class="tem-value" />
-      <gree-icon name="add" size="xl" @click="setTem(1)" />
+    <div class="power-on" v-if="Pow && Mod">
+      <div class="tem-control" v-if="Mod">
+        <gree-icon name="move" size="xl" @click="setTem(-1)" />
+        <gree-animated-number class="tem-value" :value="currentTem" :precision="1" :duration="200" transition />
+        <gree-icon name="add" size="xl" @click="setTem(1)" />
+      </div>
     </div>
-    <div class="power-off" v-else>
+    <div class="power-off" v-else-if="!Pow">
       <span v-text="'已关机'" class="power-off-txt" />
+    </div>
+    <div class="power-off" v-else-if="!Mod">
+      <span v-text="'自动调温'" class="power-off-txt" />
     </div>
   </div>
 </template>
 
 <script>
-import { Icon } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState } from 'vuex';
+import { Icon, AnimatedNumber } from 'gree-ui';
+import temConfig from '@/mixins/utils/tem';
 
 export default {
+  mixins: [temConfig],
   components: {
-    [Icon.name]: Icon
+    [Icon.name]: Icon,
+    [AnimatedNumber.name]: AnimatedNumber
   },
   computed: {
     ...mapState({
       Pow: state => state.dataObject.Pow,
-      SetTem: state => state.dataObject.SetTem,
-      has01: state => state.dataObject.has01,
-      has05: state => state.dataObject.has05
+      Mod: state => state.dataObject.Mod
     })
-  },
-  methods: {
-    ...mapMutations({
-      setMusicData: 'SET_MUSIC_DATA',
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(val) {
-      this.setState({ watchLock: false, ableSend: true });
-      this.setDataObject(val);
-      this.sendCtrl(val);
-    },
-    // 温度设置
-    setTem(step) {
-      const SetTem = this.SetTem + step;
-      if (SetTem <= 30 && SetTem >= 16) {
-        this.changeData({ SetTem: this.SetTem + step });
-      }
-    }
   }
 };
 </script>
@@ -66,6 +49,17 @@ export default {
     align-items: center;
   }
   .power-on {
+    position: relative;
+    .tem-control {
+      position: relative;
+      padding: 0 132px;
+      top: -40px;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     .gree-icon {
       font-weight: bolder;
     }

@@ -21,6 +21,7 @@ const SkillSearchIndex = r => require.ensure([], () => r(require('@components/ca
 const SkillSearchResult = r => require.ensure([], () => r(require('@components/card/grown/skills/search/Result.vue')));
 const VoiceMessageIndex = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/index.vue')));
 const VoiceMessageEdit = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/Edit.vue')));
+const UserAgeInfo = r => require.ensure([], () => r(require('./views/functionPage/UserAgeInfo')));
 
 Vue.use(Router);
 
@@ -79,6 +80,11 @@ const router = new Router({
       path: '/UDFanPort',
       name: 'UDFanPort',
       component: UDFanPort
+    },
+    {
+      path: '/UserAgeInfo',
+      name: 'UserAgeInfo',
+      component: UserAgeInfo
     },
     {
       path: '/MusicCollect',
@@ -153,7 +159,9 @@ router.beforeEach((to, from, next) => {
   if (from.name && to.path === '/Loading') {
     router.go(0);
   }
-  if (to.name !== 'Home') {
+  if (to.name === 'UserAgeInfo') {
+    changeBarColor('#36b6df');
+  } else if (to.name !== 'Home') {
     // 顶栏颜色操作
     const color = '#F4F4F4';
     changeBarColor(color);

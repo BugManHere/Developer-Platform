@@ -91,7 +91,20 @@ const Customize = {
               break;
           }
         },
-        NoiseSet: () => {}
+        NoiseSet: () => {},
+        TemStep: (currentStatus, nextStatus) => {
+          switch (nextStatus) {
+            case 'default':
+              this.setDataObject({ has01: 0, has05: 1 });
+              break;
+            case 'status_1':
+              this.setDataObject({ has01: 1, has05: 1 });
+              break;
+            default:
+              this.setDataObject({ has01: 0, has05: 1 });
+              break;
+          }
+        }
       };
     },
     /**

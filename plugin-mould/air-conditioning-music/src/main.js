@@ -105,7 +105,13 @@ async function createVue() {
   }
   // 挂载到#app上
   vm.$mount('#app');
-  vm.$router.push('Home').catch(e => console.log(e));
+  const userAgeInfo = localStorage.getItem('userAgeInfo');
+  console.log(userAgeInfo);
+  if (userAgeInfo) {
+    vm.$router.push('Home').catch(e => console.log(e));
+  } else {
+    vm.$router.push('UserAgeInfo').catch(e => console.log(e));
+  }
 }
 
 /* 启用页面调试器 */
