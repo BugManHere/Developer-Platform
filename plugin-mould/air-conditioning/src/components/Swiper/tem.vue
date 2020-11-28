@@ -77,7 +77,7 @@ export default {
     },
     // 实际温度值
     currentVal() {
-      let result = this.SetTem + ((this.has01 && this.add01 * 0.1) || (this.has05 && this.add05 * 0.5)) || 0;
+      let result = this.SetTem + ((this.has01 && this.add01 * 0.1) || ((this.has05 || this.has01) && this.add05 * 0.5) || 0);
       this.TemUn && (result = this.tempC2F(result, this.TemRec));
       if (result >= this.maxTem) return this.maxTem;
       if (result <= this.minTem) return this.minTem;

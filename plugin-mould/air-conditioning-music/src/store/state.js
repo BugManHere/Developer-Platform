@@ -9,6 +9,10 @@ const state = {
     functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,
     Mod: 1,
+    'Add0.1': 8,
+    'Add0.5': 1,
+    has01: 1,
+    has05: 1,
     SetTem: 25,
     WdSpd: 5,
     Quiet: 0,

@@ -3,10 +3,12 @@
     <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
       <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="setPow" />
       <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo" />
-      <div v-if="isCenterTop" class="title-tem-control">
-        <gree-icon name="move" size="md" />
-        <span v-text="`${SetTem}`" class="title-tem-control-value" />
-        <gree-icon name="add" size="md" />
+      <div v-if="isCenterTop && Mod && Pow" class="title-tem-control">
+        <gree-icon name="move" size="md" @click="setTem(-1)" />
+        <div class="title-tem-control-value">
+          <gree-animated-number :value="currentTem" :precision="1" :duration="200" transition />
+        </div>
+        <gree-icon name="add" size="md" @click="setTem(1)" />
       </div>
       <span v-text="devname" @click="onTest" v-else />
       <a class="save" slot="right" v-if="functype" @click="sceneSave">
@@ -17,12 +19,14 @@
 </template>
 
 <script>
-import { Header, Icon } from 'gree-ui';
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { Header, Icon, AnimatedNumber } from 'gree-ui';
+import { mapState } from 'vuex';
 import { closePage, editDevice, getCCcmd, getCurrentMode } from '@PluginInterface';
+import temConfig from '@/mixins/utils/tem';
 
 export default {
   name: 'page-header',
+  mixins: [temConfig],
   props: {
     isCenterTop: {
       type: Boolean,
@@ -31,31 +35,19 @@ export default {
   },
   components: {
     [Header.name]: Header,
+    [AnimatedNumber.name]: AnimatedNumber,
     [Icon.name]: Icon
   },
   computed: {
     ...mapState({
       devname: state => state.deviceInfo.name,
-      SetTem: state => state.dataObject.SetTem,
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
-      Pow: state => state.dataObject.Pow
+      Pow: state => state.dataObject.Pow,
+      Mod: state => state.dataObject.Mod
     })
   },
   methods: {
-    ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(val) {
-      this.setState({ watchLock: false, ableSend: true });
-      this.setDataObject(val);
-      this.sendCtrl(val);
-    },
     /**
      * @description 返回键
      */
@@ -116,15 +108,20 @@ export default {
     font-family: 'Roboto-Light';
     &-value {
       position: relative;
-      font-size: 60px;
+      font-size: 64px;
       padding: 0 50px;
-      &::after {
-        position: absolute;
-        right: 24px;
-        // top: -20px;
-        // left: 10px;
-        content: '°';
+      min-width: 180px;
+      span {
+        position: relative;
+        left: 12px;
+        &::after {
+          right: 0;
+          content: '°';
+        }
       }
+    }
+    .gree-icon {
+      font-weight: bolder;
     }
   }
 }

@@ -36,10 +36,9 @@ function customizeDataObject({ state }, _dataObject) {
  * @description 封装发送指令代码
  */
 function sendControl({ state, commit, dispatch }, dataMap) {
-  if (state.dataObject.functype) return;
-  commit(types.SET_STATE, ['ableSend', true]);
+  if (state.dataObject.functype || !state.ableSend) return;
   setData = { ...setData, ...dataMap };
-  _timer2 && clearTimeout(_timer2);
+  clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
     commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
     if (state.swiperHold) {
@@ -59,9 +58,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const t = 'cmd';
     const opt = setOpt;
     const p = setP;
-
-    console.table([opt, p]);
-    console.log([opt, p]);
 
     // 8度制热相关操作
     state.isStHt && commit(types.SET_STATE, ['isStHt', false]); // 关闭8度制热标志位
@@ -85,10 +81,14 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 
     // 1秒后重启轮询
     dispatch(types.SET_POLLING, false);
+    clearTimeout(_timer3);
     _timer3 = setTimeout(() => {
       commit(types.SET_STATE, ['ableSend', false]);
       dispatch(types.SET_POLLING, true);
     }, 1000);
+
+    console.table([opt, p]);
+    console.log([opt, p]);
 
     sendDataToDevice(mac, json, false);
   }, 350);
@@ -96,6 +96,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 
 // 查询云定时
 function getCloudTimer({ state, commit }) {
+  console.log('------------getCloudTimer-------');
   getCloudTimerByMac(state.mac).then(res => {
     const { timerTasks } = JSON.parse(res);
     let result = false;
@@ -118,6 +119,8 @@ export default {
       dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO);
+      // 查询云定时
+      dispatch(types.GET_CLOUD_TIMER);
       // 查询一包数据
       dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
@@ -240,6 +243,8 @@ export default {
       dataObject = customizeDataObject({ state }, dataObject);
       // 更新本地数据
       dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      console.log('------------GET_DEVICE_DATA----------');
+      console.log(dataObject);
       commit(types.SET_STATE, ['loading', false]);
     } catch (e) {
       console.error(e);
@@ -250,10 +255,9 @@ export default {
    * @description 开启/关闭轮询
    */
   async [types.SET_POLLING]({ state, commit, dispatch }, boolean) {
-    clearTimeout(_timer3);
-    _timer3 = null;
     if (boolean) {
       if (!_timer) {
+        clearInterval(_timer);
         _timer = setInterval(() => {
           getCloudTimer({ state, commit });
           dispatch(types.GET_DEVICE_DATA);
@@ -270,7 +274,6 @@ export default {
    * @description 发送控制指令
    */
   async [types.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
-    console.log(DataObject);
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
@@ -316,9 +319,9 @@ export default {
     let dataObject = {};
     try {
       const res = JSON.parse(payload);
+      console.log('[mqtt] result:', JSON.stringify(res));
       const { data, deviceState } = res;
 
-      console.log('[mqtt] result:', JSON.stringify(res));
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject({ state }, data);
       // 更新本地数据
@@ -328,5 +331,10 @@ export default {
       console.error(e);
     }
     return dataObject;
+  },
+
+  // 查询云定时
+  [types.GET_CLOUD_TIMER]({ state, commit }) {
+    getCloudTimer({ state, commit });
   }
 };

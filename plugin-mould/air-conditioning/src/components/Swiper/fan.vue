@@ -198,6 +198,7 @@ export default {
     },
     // 初始化
     initSwiper() {
+      this.$refs[this.ref].updateSwiper(this.leftLen);
       setTimeout(() => {
         this.removeAllSlide();
         this.insertAllSlide();

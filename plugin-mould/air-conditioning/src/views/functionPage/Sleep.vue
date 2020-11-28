@@ -90,10 +90,10 @@ export default {
   data() {
     return {
       imshowType: 2,
+      checkTimer: null,
       sleepActive: true,
       blowActive: false,
       ligActive: true,
-      symbolSize: 20,
       position: [],
       data: [
         [1, 26],
@@ -209,6 +209,7 @@ export default {
       selectRadio: 1,
       selectBody: 1,
       disableUpdate: false,
+      waitCallBack: 0,
       getSlpTimer: false // 轮询标记
     };
   },
@@ -223,6 +224,7 @@ export default {
       Lig: state => state.dataObject.Lig,
       AntiDirectBlow: state => state.dataObject.AntiDirectBlow,
       Mod: state => state.dataObject.Mod,
+      Pow: state => state.dataObject.Pow,
       mac: state => state.mac
     }),
     myChart() {
@@ -485,10 +487,10 @@ export default {
           err;
         });
         try {
-          showToast('空调已被关闭，自动退出睡眠设置。', 1);
+          showToast('空调已被关闭，自动退出智眠设置。', 1);
         } catch (e) {
           Toast({
-            content: '空调已被关闭，自动退出睡眠设置。',
+            content: '空调已被关闭，自动退出智眠设置。',
             position: 'bottom'
           });
         }
@@ -564,7 +566,7 @@ export default {
     this.$nextTick(() => {
       this.updateLocal(this.dataObject);
     });
-    setInterval(() => {
+    this.checkTimer = setInterval(() => {
       this.getSlpVal(); // 轮询
     }, 5000);
   },
@@ -580,6 +582,8 @@ export default {
       setPolling: 'SET_POLLING'
     }),
     async changeDataObject(obj, hasToast = false) {
+      clearInterval(this.checkTimer);
+      this.waitCallBack += 1;
       this.disableUpdate = true;
       this.getSlpTimer = false;
       const control = obj;
@@ -614,11 +618,20 @@ export default {
         hasToast && showToast(hasToast, 1);
         return;
       }
-      // console.log(json);
+      console.log('---------------------sendDataToDevice---start-');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const res = await sendDataToDevice(this.mac, json, false);
+      console.log('---------------------sendDataToDevice---end-');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
+      }
+      this.waitCallBack -= 1;
+      if (!this.waitCallBack) {
+        this.checkTimer = setInterval(() => {
+          this.getSlpVal(); // 轮询
+        }, 5000);
       }
       this.disableUpdate = false;
     },
@@ -646,7 +659,8 @@ export default {
         'Slp1L7',
         'Slp1H7',
         'Slp1L8',
-        'Slp1H8'
+        'Slp1H8',
+        'Pow'
       ];
       const statueJson = JSON.stringify({
         mac: this.mac,
@@ -660,8 +674,9 @@ export default {
         dataObject[cols[index]] = item;
       });
 
-      if (this.disableUpdate || !this.getSlpTimer) return;
-
+      if (this.disableUpdate || !this.getSlpTimer || this.waitCallBack) return;
+      console.log('---------------------updateLocal----');
+      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
     },
@@ -897,7 +912,7 @@ export default {
         }
       } else if (this.imshowType === 2) {
         if (type) {
-          if (isNaN(this.currentAge) || this.currentAge === 3) {
+          if (isNaN(this.currentAge) || this.currentAge === 3 || this.selectRadio === 3) {
             this.setDiy();
           } else {
             this.sendSlpModEx();

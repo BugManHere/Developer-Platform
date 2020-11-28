@@ -17,7 +17,7 @@ import './assets/js/flexible';
 import './assets/scss/global.scss';
 import language from './utils/language'; // 对i18n的封装
 
-import { SET_STATE } from './store/types';
+import { SET_STATE, GET_CLOUD_TIMER, SET_DEVICE_INFO } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
@@ -164,10 +164,11 @@ window.backButton = function backButton() {
  */
 window.onReFocus = function onReFocus(msg) {
   msg;
+  store.dispatch(GET_CLOUD_TIMER);
   getInfo(store.state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.$store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.$store.commit(SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;
@@ -179,10 +180,11 @@ window.onReFocus = function onReFocus(msg) {
  */
 window.onResume = function onResume(msg) {
   msg;
+  store.dispatch(GET_CLOUD_TIMER);
   getInfo(store.state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.commit(SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;
