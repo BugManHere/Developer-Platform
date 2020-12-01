@@ -90,6 +90,33 @@ class stateMachine {
     creatQueue.call(this, this.vuexContext);
     // 初始化状态机数据
     initData(this.vuexContext);
+    // 实时刷新状态
+    let checkTime = 0;
+    let oldList = '';
+    Object.defineProperty(this, 'updateState', {
+      get() {
+        const { getters, state, commit } = this.vuexContext;
+        const result = JSON.stringify(
+          getters.identifierArr.map(identifier => {
+            return getters.statusMap[identifier].stateName;
+          })
+        );
+        if (result === oldList || checkTime >= 20) {
+          checkTime = 0;
+        } else {
+          checkTime += 1;
+          oldList = result;
+          this.updateState;
+          commit(types.SET_BASEDATA, { funcDefine: state.baseData.funcDefine });
+        }
+        return true;
+      },
+      set(newVal) {
+        return newVal;
+      },
+      Configurable: false
+    });
+    this.updateState;
   }
   // 根据identifier获取statusName
   getStatusName(identifier) {
@@ -99,11 +126,17 @@ class stateMachine {
   nextStatus(identifier) {
     // 将事件推送到事件队列内
     this.stateQueue.push({ identifier, statusName: undefined });
+    setTimeout(() => {
+      this.updateState;
+    }, 0);
   }
   // 根据identifier跳转到指定状态
   toStatus(identifier, statusName) {
     // 将事件推送到事件队列内
     this.stateQueue.push({ identifier, statusName: String(statusName) });
+    setTimeout(() => {
+      this.updateState;
+    }, 0);
   }
   // 将checkLogic方法暴露，根据identifier检查model的互斥
   checkLogic(identifier) {
@@ -201,7 +234,7 @@ function checkLogic(context, identifier, statusName) {
     const identifier = getters.stateNameToId[stateName];
     if (!identifier) return;
     // 获取identifier的当前statusName
-    const currentStatusName = getters.statusMap[identifier].statusName;
+    const currentStatusName = getters.fakeStatusMap[identifier].statusName;
     // 获取identifier的当前stateName
     const currentStateName = `${identifier}_${currentStatusName}`;
     // 如果当前stateName被排斥，则跳转到指向状态
