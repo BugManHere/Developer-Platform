@@ -12,12 +12,20 @@ export default {
     commit('control/SET_CHECK_OBJECT', data);
   },
   // 处理状态机接口数据
-  [types.STATE_MACHINE_INTERFACE]({ commit, dispatch, getters }, { data, identifier, from, to }) {
+  [types.STATE_MACHINE_INTERFACE]({ dispatch, getters }, { data, identifier, from, to }) {
     // 获取需要缓存的数据
     const cacheData = getCache(getters.inputMap, identifier, `${identifier}_${from}`, `${identifier}_${to}`);
     // 更新并发送
-    commit('control/SET_DATA_OBJECT', { ...data, ...cacheData });
-    dispatch('control/SEND_CTRL', { ...data, ...cacheData });
+    dispatch(types.SEND_DATA, { ...data, ...cacheData });
+  },
+  // 发送数据接口
+  [types.SEND_DATA](context, data) {
+    const { commit, dispatch } = context;
+    const sendData = dataHandle(context, data);
+    // 更新并发送
+    commit('control/SET_DATA_OBJECT', sendData);
+    commit('control/SET_STATE', { ableSend: true });
+    dispatch('control/SEND_CTRL', sendData);
   },
   // 处理状态机设备名变更
   [types.UPDATE_DEVICENAME]({ commit, state }, { data }) {
@@ -75,4 +83,34 @@ function getCache(inputData, identifier, lastStateName, currentStateName) {
     };
   });
   return output;
+}
+
+// 自定义处理数据逻辑
+function dataHandle({ state, getters }, data) {
+  // 温度处理逻辑
+  const temSetJson = getters.temSetJson;
+  if (temSetJson in data) {
+    // 温度间隔
+    const temStep = getters.temStep;
+    // 温度值
+    const temValue = data[temSetJson];
+    // 温度整数
+    const temInt = Math.floor(temValue);
+    // 温度小数
+    const temDeci = (temValue % 1) * 10;
+    if (temStep === 0.5) {
+      // 处理0.5度逻辑
+      const temJson05 = state.jsonArr.tem05;
+      data[temJson05] = Number(temDeci >= 5);
+    } else if (temStep === 0.1) {
+      // 处理0.1度逻辑
+      const temJson05 = state.jsonArr.tem05;
+      const temJson01 = state.jsonArr.tem01;
+      data[temJson05] = Number(temDeci >= 5);
+      data[temJson01] = Number(temDeci);
+    }
+    // 发送整数
+    data[temSetJson] = temInt;
+  }
+  return data;
 }

@@ -1,4 +1,4 @@
-import { timerListDevice, showToast } from '@PluginInterface';
+import { timerListDevice, showToast, showConfirm } from '@PluginInterface';
 
 /**
  * @description 自定义函数，根据status.customize的取值选择插入方式
@@ -13,14 +13,14 @@ export const customizeFunction = {
       console.log('%c running timerListDevice()', 'color: blue');
     }
   },
-  ConstUD: ({ dispatch }, currentStatus) => {
+  ConstUD: ({ dispatch }, currentStatusName) => {
     const goSweep = id => {
       window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
     };
-    if (!['undefined', undefined].includes(currentStatus)) {
+    if (!['undefined', undefined].includes(currentStatusName)) {
       goSweep(2);
       return;
     }
@@ -30,14 +30,14 @@ export const customizeFunction = {
       dispatch('STATE_MACHINE_INTERFACE', { SwUpDn: funcData.ConstUD }, { root: true });
     } else goSweep(2);
   },
-  ConstLR: ({ dispatch }, currentStatus) => {
+  ConstLR: ({ dispatch }, currentStatusName) => {
     const goSweep = id => {
       window.myvm.$router.push({
         name: 'SweepConst',
         params: { id }
       });
     };
-    if (!['undefined', undefined].includes(currentStatus)) {
+    if (!['undefined', undefined].includes(currentStatusName)) {
       goSweep(1);
       return;
     }
@@ -59,8 +59,8 @@ export const customizeFunction = {
   FuncPopup: ({ commit }) => {
     commit('control/SET_DATA_OBJECT', { FuncPopup: 1 }, { root: true });
   },
-  BottomSleep: (_, currentStatus) => {
-    switch (currentStatus) {
+  BottomSleep: (_, currentStatusName) => {
+    switch (currentStatusName) {
       case 'status_1':
         showToast('睡眠已关闭', 0);
         break;
@@ -71,8 +71,8 @@ export const customizeFunction = {
         break;
     }
   },
-  'BottomSleep(ordinary)': (_, currentStatus) => {
-    switch (currentStatus) {
+  'BottomSleep(ordinary)': (_, currentStatusName) => {
+    switch (currentStatusName) {
       case 'status_1':
         showToast('睡眠已关闭', 0);
         break;
@@ -88,6 +88,35 @@ export const customizeFunction = {
   },
   EnvAreaSt: ({ commit }) => {
     runPageMethod({ commit }, 'AreaFan');
+  },
+  CleanState: async ({ commit, dispatch }, currentStatusName, nextStatusName) => {
+    const switchClean = value => {
+      dispatch('SEND_DATA', { AutoClean: value }, { root: true });
+      commit('control/SET_DATA_OBJECT', { CleanState: value }, { root: true });
+    };
+    let value = 0;
+    let res = true;
+    nextStatusName === 'status_1' && (value = 1);
+    value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
+    res && switchClean(value);
+  },
+  SwingUD: () => {
+    const storage = window.storage;
+    const sweepSetting = storage.get('sweepSetting') || {};
+    if (!sweepSetting.SwingUD) {
+      showToast('部分内机可能不支持此功能', 0);
+      sweepSetting.SwingUD = 1;
+      storage.set('sweepSetting', sweepSetting);
+    }
+  },
+  SwingLR: () => {
+    const storage = window.storage;
+    const sweepSetting = storage.get('sweepSetting') || {};
+    if (!sweepSetting.SwingLR) {
+      showToast('部分内机可能不支持此功能', 0);
+      sweepSetting.SwingLR = 1;
+      storage.set('sweepSetting', sweepSetting);
+    }
   }
 };
 

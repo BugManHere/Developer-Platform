@@ -60,6 +60,18 @@ export default {
     return result;
   },
   /**
+   * @description 根据identifier与value获取statusName，没有经过隐藏状态处理
+   * @return Object {identifier: {value: statusName}}
+   */
+  valToFakeStatusName: (state, getters, rootState, rootGetters) => {
+    const result = {};
+    state.baseData.funcDefine.forEach(model => {
+      const identifier = model.identifier;
+      result[identifier] = getStatusName({ state, getters, rootGetters }, model, false);
+    });
+    return result;
+  },
+  /**
    * @description 根据identifier获取statusName列表
    * @return Object: {identifier: [statusName]}
    */
@@ -102,6 +114,37 @@ export default {
     return result;
   },
   /**
+   * @description 根据identifier获取当前状态的更多信息，没有经过隐藏状态处理
+   * @return Object: {identifier: {statusName, stateName, status}}
+   * TODO: 此处需要修改，后续优化
+   */
+  // statusMap: (state, getters, rootState, rootGetters) => {
+  //   const result = {};
+  //   // 根据字段值，返回当前状态信息
+  //   state.baseData.funcDefine.forEach(model => {
+  //     const identifier = model.identifier;
+  //     const json = model.json;
+  //     // 字段值
+  //     const currentVal = rootGetters.inputMap[json];
+  //     // 当前statusName
+  //     let statusName = getters.valToStatusName[identifier][currentVal];
+  //     let status = model.statusDefine[statusName];
+  //     // 如果statusName不存在，返回'undefined'
+  //     if (!status) {
+  //       statusName = 'undefined';
+  //       status = model.statusDefine.undefined;
+  //     }
+  //     // 当前stateName
+  //     const stateName = `${identifier}_${statusName}`;
+  //     result[identifier] = {
+  //       statusName,
+  //       stateName,
+  //       status
+  //     };
+  //   });
+  //   return result;
+  // },
+  /**
    * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
    * @return Object: {identifier: {statusName, stateName, status}}
    */
@@ -123,6 +166,36 @@ export default {
         stateName = `${identifier}_${statusName}`;
         status = model.statusDefine[statusName];
       }
+      result[identifier] = {
+        statusName,
+        stateName,
+        status
+      };
+    });
+    return result;
+  },
+  /**
+   * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
+   * @return Object: {identifier: {statusName, stateName, status}}
+   */
+  fakeStatusMap: (state, getters, rootState, rootGetters) => {
+    const result = {};
+    // 根据字段值，返回当前状态信息
+    state.baseData.funcDefine.forEach(model => {
+      const identifier = model.identifier;
+      const json = model.json;
+      // 字段值
+      const currentVal = rootGetters.inputMap[json];
+      // 当前statusName
+      let statusName = getters.valToFakeStatusName[identifier][currentVal];
+      let status = model.statusDefine[statusName];
+      // 如果statusName不存在，返回'undefined'
+      if (!status) {
+        statusName = 'undefined';
+        status = model.statusDefine.undefined;
+      }
+      // 当前stateName
+      const stateName = `${identifier}_${statusName}`;
       result[identifier] = {
         statusName,
         stateName,
@@ -159,6 +232,7 @@ export default {
         result.push(...state.baseData.hideMap[stateName]);
       }
     });
+    window.myvm.$set(state.deriveData, 'hideStateNameJson', JSON.stringify(result));
     return result;
   },
   /**
@@ -338,7 +412,8 @@ function mapRelation(fromMap, toMap) {
 }
 /**
  * @description 获取model的statusName
- * @input model: 功能， isHide： 是否考虑被隐藏的stateName
+ * @input {Object} model: 功能
+ * @input {Boolean} checkHide: 是否考虑被隐藏的stateName
  * @return Object {value: statusName}
  */
 function getStatusName({ state, getters, rootGetters }, model, checkHide = false) {

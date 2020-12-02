@@ -51,9 +51,6 @@ export default {
     swiper() {
       return this.$refs.fanSwiper.$swiper;
     },
-    slideStep() {
-      return this.swiper && 1 / (this.swiper.slides.length - 1);
-    },
     fanData() {
       const result = this.fanStatusNameList.map((fanStatus, value) => {
         // status定义
@@ -112,7 +109,6 @@ export default {
       // 已显示picker且没有在滑动
       if (this.showSwiper && this.swiper) {
         const index = this.fanData.findIndex(fan => fan.key === this.fanCurrentStatusName);
-        console.log(this.fanCurrentStatusName);
         this.swiper.slideTo(index, 500);
         this.imshowSelect(-1);
       }
@@ -138,13 +134,14 @@ export default {
     clearTouch() {
       this.$nextTick(() => {
         this.isTouch = false;
+        this.updateIndex();
       });
     },
     moveTouch() {
       this.$nextTick(() => {
         const progress = this.swiper.progress;
         const len = this.swiper.slides.length - 1;
-        let index = Math.round(progress / this.slideStep);
+        let index = Math.round(progress / (1 / len));
         index > len && (index = len);
         index < 0 && (index = 0);
         this.imshowSelect(index);
@@ -152,9 +149,15 @@ export default {
       });
     },
     updateStatusNameList() {
-      const startStatus = 'default';
+      let startStatus = 'default';
       if (this.fanLoop) {
         const fanStatusNameList = [...this.fanLoop];
+        if (!fanStatusNameList.includes(startStatus)) {
+          fanStatusNameList.sort((statusNameA, statusNameB) => {
+            return statusNameA[statusNameA.length - 1] - statusNameB[statusNameB.length - 1];
+          });
+          startStatus = fanStatusNameList[0];
+        }
         const length = fanStatusNameList.length;
         let i = 0;
         while (fanStatusNameList[0] !== startStatus && i < length) {

@@ -1,7 +1,7 @@
 <template>
   <div class="center-slider">
     <div v-show="Pow" class="slider-main">
-      <div id="slider" :style="`opacity: ${temSetJson ? 1 : 0.01}`" />
+      <div id="slider" :style="`opacity: ${temAbleSet ? 1 : 0.01}`" />
       <div class="layer" :style="{ width: lottieRadius / 1.5 + 'px', height: lottieRadius / 1.5 + 'px' }">
         <div class="rotate -one"></div>
         <div class="rotate -two"></div>
@@ -23,7 +23,16 @@
         </gree-block>
         <!-- 显示插槽2 -->
         <h3 v-if="imshowSlot2" class="auto-span" v-text="imshowSlot2" />
-        <h3 v-else class="tem" v-text="circleVal" />
+        <!-- <h3 v-else class="tem" v-text="circleVal" /> -->
+        <gree-animated-number
+          v-else
+          class="tem-value"
+          :class="{ 'deci-tem': temStep < 1, 'unit-tem': temSetJson === 'SetTem', 'unit-wet': temSetJson === 'SetCoolHumi' }"
+          :value="circleVal"
+          :precision="Number(temStep < 1)"
+          :duration="200"
+          transition
+        />
         <!-- 显示插槽1 -->
         <div v-if="imshowSlot1" class="room-tem-text">
           <span v-text="imshowSlot1" />
@@ -38,12 +47,13 @@
 </template>
 
 <script>
-import { Block } from 'gree-ui';
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { Block, AnimatedNumber } from 'gree-ui';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
-    [Block.name]: Block
+    [Block.name]: Block,
+    [AnimatedNumber.name]: AnimatedNumber
   },
   data() {
     return {
@@ -64,8 +74,7 @@ export default {
   },
   computed: {
     ...mapState('control', {
-      Pow: state => state.dataObject.Pow,
-      SetTem: state => state.dataObject.SetTem
+      Pow: state => state.dataObject.Pow
     }),
     ...mapGetters([
       'inputMap',
@@ -73,6 +82,8 @@ export default {
       'temSetJson',
       'temMinVal',
       'temMaxVal',
+      'temStep',
+      'temAbleSet',
       'modDefine',
       'modIdentifier',
       'fanIdentifier',
@@ -82,7 +93,7 @@ export default {
     ...mapGetters('machine', ['funcDefineMap', 'statusMap'])
   },
   mounted() {
-    this.circleVal = this.SetTem;
+    this.circleVal = this.temSetVal;
     // init circular slider
     this.circleObj = $('#slider').roundSlider({
       min: 16,
@@ -99,25 +110,32 @@ export default {
       circleShape: 'full',
       handleShape: 'dot',
       start: () => {
+        this.temChange = false;
         $('span.rs-block').css('padding', '2.7px');
       },
       stop: () => {
         $('span.rs-block').css('padding', '2px');
       },
       drag: e => {
-        this.circleVal = Math.round(e.value);
+        const base = 1 / this.temStep;
+        this.circleVal = Math.round(e.value * base) / base;
       },
       beforeValueChange: e => {
-        if (Math.abs(e.preValue - e.value) >= e.options.step * 30 && !this.temChange) return false;
+        if (Math.abs(e.preValue - e.value) >= (this.temMaxVal - this.temMinVal) / 3 && !this.temChange) return false;
+        const base = 1 / this.temStep;
         this.temChange = false;
-        this.circleVal = Math.round(e.value);
+        this.circleVal = Math.round(e.value * base) / base;
       },
       change: e => {
-        this.circleVal = Math.round(e.value);
+        const base = 1 / this.temStep;
+        this.circleVal = Math.round(e.value * base) / base;
         this.temSetMethod(this.circleVal);
         this.throttle(this.circleVal, 'value');
       }
     });
+  },
+  activated() {
+    this.setSliderArea();
   },
   watch: {
     statusMap: {
@@ -168,23 +186,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
+    ...mapActions({
+      sendData: 'SEND_DATA'
     }),
-    ...mapActions('control', {
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
     // 温度设置方法
     temSetMethod(value) {
-      value === this.temSetVal || this.changeData({ [this.temSetJson]: value });
+      value === this.temSetVal || this.sendData({ [this.temSetJson]: value });
     },
     getStateNameById(identifier) {
       const map = this.statusMap[identifier];
@@ -209,6 +216,15 @@ export default {
           this.temChange = false;
         });
       }, 20);
+    },
+    // 设置温度上下限
+    setSliderArea() {
+      this.temChange = true;
+      $('#slider').roundSlider({
+        min: this.temMinVal,
+        max: this.temMaxVal,
+        value: this.temSetVal
+      });
     }
   }
 };

@@ -22,8 +22,7 @@ function customizeDataObject(_dataObject) {
 
 // 封装发送指令代码
 function sendControl({ state, commit, dispatch }, dataMap) {
-  if (state.dataObject.functype) return;
-  commit(types.SET_STATE, { ableSend: true });
+  if (state.dataObject.functype || !state.ableSend) return;
   setData = { ...setData, ...dataMap };
   _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
@@ -265,31 +264,6 @@ export default {
       // 更新本地数据
       dataObject && dispatch(types.UPDATE_DATAOBJECT, dataObject);
       deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState });
-
-      /*
-       * 现架构，mqtt服需3分钟以上才能判断设备在线离线，故支持mqtt的设备还需保留原有8秒主动查询逻辑，进行离线在线判断
-       * 判断 mqtt 是否可用。不可用的情况：服务器有问题  网络有问题（不能联网的局域网）
-       * status 为 false 时 启动定时轮询
-       * status 为 true  时 清除定时轮询
-       */
-      // switch (status) {
-      //   case false:
-      //     // 获取设备信息
-      //     dispatch(types.GET_DEVICE_INFO);
-      //     // 查询一包数据
-      //     dispatch(types.GET_DEVICE_DATA);
-      //     // 定时轮询 - 获取设备所有状态数据
-      //     dispatch(types.TIMER_GET_ALL_DEVICE_STATES);
-      //     break;
-
-      //   case true:
-      //     // 清除定时器
-      //     timer && clearInterval(timer);
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     } catch (e) {
       console.error(e);
     }
