@@ -6,8 +6,8 @@ export default {
   },
   // 模式的定义
   modDefine: (state, getters) => {
-    const funcDefine_inertia = getters['machine/funcDefine_inertia'];
-    return funcDefine_inertia.find(model => model.type === `inertia-${state.modKey}`);
+    const models = getModelsByType({ getters }, 'inertia', state.modKey);
+    return models.length && models[0];
   },
   // 模式的id
   modIdentifier: (state, getters) => {
@@ -21,7 +21,8 @@ export default {
   },
   // 风速的定义
   fanDefine: (state, getters) => {
-    return getters['machine/funcDefine_inertia'].find(model => model.type === `inertia-${state.fanKey}`);
+    const models = getAllModelsByType({ getters }, 'inertia', state.fanKey);
+    return models.length && models[0];
   },
   // 风速的id
   fanIdentifier: (state, getters) => {
@@ -45,17 +46,15 @@ export default {
   },
   // 高级功能按钮的定义
   buttonDefine: (state, getters) => {
-    return getters['machine/funcDefine_active'].filter(model => model.type === 'active-button');
+    return getAllModelsByType({ getters }, 'active', state.buttonKey);
   },
   // 主页按钮的定义
   popupDefine: (state, getters) => {
-    return getters['machine/funcDefine_active'].filter(model => model.type === `active-${state.popupsKey}`);
+    return getAllModelsByType({ getters }, 'active', state.popupsKey);
   },
   // 显示插槽1, 隐藏的状态被禁用就显示
   imshowSlot1: (state, getters) => {
-    const models = getters['machine/funcDefine_inertia']
-      .filter(model => model.type === 'inertia-imshowSlot1')
-      .filter(model => getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
+    const models = getHideModelsByType({ getters }, 'inertia', state.imshowSlot1);
     // 存在多个的情况时，只取第一个，其他不处理
     if (models.length) {
       const json = models[0].json;
@@ -78,9 +77,7 @@ export default {
   },
   // 显示插槽2, 隐藏的状态被禁用就显示
   imshowSlot2: (state, getters) => {
-    const models = getters['machine/funcDefine_inertia']
-      .filter(model => model.type === 'inertia-imshowSlot2')
-      .filter(model => getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
+    const models = getHideModelsByType({ getters }, 'inertia', state.imshowSlot2);
     // 存在多个的情况时，只取第一个，其他不处理
     if (models.length) {
       const json = models[0].json;
@@ -103,35 +100,73 @@ export default {
   },
   // 温度设定
   temSetJson: (state, getters) => {
-    const models = getters['machine/funcDefine_inertia']
-      .filter(model => model.type === `inertia-${state.temKey}`)
-      .filter(model => !getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
-    // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
-    return models.length && models[0].json; // 默认字段
+    const models = getModelsByType({ getters }, 'inertia', state.temKey);
+    return models.length && models[0].json;
   },
   // 温度显示值
   temSetVal: (state, getters) => {
-    return getters.temSetJson && getters.inputMap[getters.temSetJson];
+    return getters.temSetJson && getTem({ getters, state });
   },
   // 温度最小值设定
   temMinVal: (state, getters) => {
-    const models = getters['machine/funcDefine_inertia']
-      .filter(model => model.type === `inertia-${state.temMinKey}`)
-      .filter(model => !getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
-    // 如果存在检测字段，则使用（存在多个的情况时，只取第一个，其他不处理）
+    const models = getModelsByType({ getters }, 'inertia', state.temMinKey);
     if (models.length) return getters.inputMap[models[0].json];
     return 16; // 默认温度最小值
   },
   // 温度最大值设定
   temMaxVal: (state, getters) => {
-    const modules = getters['machine/funcDefine_inertia']
-      .filter(model => model.type === `inertia-${state.temMaxKey}`)
-      .filter(model => !getters['machine/hideStateNameArr'].some(stateName => stateName.includes(`${model.identifier}_`)));
-    if (modules.length) return getters.inputMap[modules[0].json];
+    const models = getModelsByType({ getters }, 'inertia', state.temMaxKey);
+    if (models.length) return getters.inputMap[models[0].json];
     return 30; // 默认温度最大值
   },
   // 温度间隔
-  temStep: state => {
-    return state.machine.baseData.moreOption.temStep;
+  temStep: (state, getters) => {
+    return getters.temSetJson === 'SetTem' ? Number(state.machine.baseData.moreOption.temStep) : 5;
+  },
+  // 温度调节是否可用
+  temAbleSet: (state, getters) => {
+    return getters.temSetJson && getters.temMinVal < getters.temMaxVal;
   }
 };
+
+// 找到未被隐藏的功能
+function getModelsByType({ getters }, mainType, secondType) {
+  return getAllModelsByType({ getters }, mainType, secondType).filter(
+    model => !getters['machine/hideStateNameArr'].some(stateName => checkReg(stateName, model.identifier))
+  );
+}
+
+// 找到被隐藏的功能
+function getHideModelsByType({ getters }, mainType, secondType) {
+  return getAllModelsByType({ getters }, mainType, secondType).filter(model =>
+    getters['machine/hideStateNameArr'].some(stateName => checkReg(stateName, model.identifier))
+  );
+}
+
+// 找到所有功能，不管是否被隐藏
+function getAllModelsByType({ getters }, mainType, secondType) {
+  return getters[`machine/funcDefine_${mainType}`].filter(model => model.type === `${mainType}-${secondType}`);
+}
+
+// 检查type
+function checkReg(str, checkStr) {
+  const reg = new RegExp(`^${checkStr}_`);
+  return reg.test(str);
+}
+
+// 获取温度
+function getTem({ getters, state }) {
+  const temInt = getters.inputMap[getters.temSetJson];
+  let temDeci = 0;
+  if (getters.temStep === 0.5) {
+    const temJson05 = state.jsonArr.tem05;
+    temDeci = (temJson05 && getters.inputMap[temJson05] * 5) || 0;
+  } else if (getters.temStep === 0.1) {
+    const temJson05 = state.jsonArr.tem05;
+    const temJson01 = state.jsonArr.tem01;
+    temDeci05 = (temJson05 && getters.inputMap[temJson05] * 5) || 0;
+    temDeci01 = (temJson01 && getters.inputMap[temJson01]) || 0;
+    temDeci = temDeci01 || temDeci05;
+  }
+  return temInt + temDeci / 10;
+}

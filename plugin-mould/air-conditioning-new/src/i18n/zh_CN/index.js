@@ -19,7 +19,8 @@ module.exports = {
   slot1: {
     OutWtTem: '实时出水温度 {{%s-40}}℃',
     IndoorTem: '实时室内温度 %s℃',
-    TemSen: '室温 %s℃'
+    TemSen: '室温 %s℃',
+    CleanTime: '自清洁剩余{{%s-100}}分钟'
   },
   slot2: {
     AutoImshow: '自动调温'
@@ -85,6 +86,8 @@ module.exports = {
     Follow: '风随',
     Avoid: '风避',
     Air: '新风',
+    CleanState: '自清洁',
+    Ventilation: '换气',
     Air_智能: '智能新风',
     NobodySave: '无人节能',
     FbidBloPer: '防直吹',
@@ -116,6 +119,10 @@ module.exports = {
   },
   noise: {
     title: '室内噪音',
+    text: '请设置噪声大小'
+  },
+  svst: {
+    title: '节能',
     text: '请设置噪声大小'
   },
   area: {
