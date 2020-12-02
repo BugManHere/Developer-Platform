@@ -175,7 +175,7 @@ export default {
     return result;
   },
   /**
-   * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
+   * @description 根据identifier获取当前状态的更多信息，没有经过隐藏状态处理
    * @return Object: {identifier: {statusName, stateName, status}}
    */
   fakeStatusMap: (state, getters, rootState, rootGetters) => {
