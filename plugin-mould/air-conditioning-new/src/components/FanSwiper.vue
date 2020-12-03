@@ -120,15 +120,21 @@ export default {
     },
     // 亮起当前滑动项
     imshowSelect(index) {
-      this.swiper.slides.forEach((slide, slideIndex) => {
-        let className = this.swiper.slides[slideIndex].className;
+      const length = this.swiper.slides.length;
+      if (!length) return;
+      // 兼容低版本swiper，对象转数组
+      const slidesArr = Array.from({ length }, (v, i) => {
+        return this.swiper.slides[i];
+      });
+      slidesArr.forEach((slide, slideIndex) => {
+        let className = slidesArr[slideIndex].className;
         if (slideIndex === index) {
           className = className.replace(' slide-select', '');
           className += ' slide-select';
         } else {
           className = className.replace(' slide-select', '');
         }
-        this.swiper.slides[slideIndex].className = className;
+        slidesArr[slideIndex].className = className;
       });
     },
     clearTouch() {
