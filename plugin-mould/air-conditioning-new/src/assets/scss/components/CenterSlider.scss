@@ -83,11 +83,12 @@
         font-family: 'Roboto-Light';
         font-weight: 500;
         &.unit-tem {
+          position: relative;
           &::before {
             content: '°';
             position: absolute;
-            top: 60px;
-            right: 8px;
+            top: 40px;
+            right: -14px;
             bottom: 0;
             left: auto;
             font-size: 46px;
@@ -97,8 +98,8 @@
           &::after {
             content: 'C';
             position: absolute;
-            top: 54px;
-            right: -40px;
+            top: 30px;
+            right: -54px;
             bottom: 0;
             left: auto;
             font-size: 66px;
@@ -109,16 +110,6 @@
             position: relative;
             left: -40px;
             font-size: 200px;
-            &::before {
-              position: absolute;
-              top: 40px;
-              right: -14px;
-            }
-            &::after {
-              position: absolute;
-              top: 30px;
-              right: -54px;
-            }
           }
         }
         &.unit-wet {
