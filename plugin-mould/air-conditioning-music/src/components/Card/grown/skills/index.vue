@@ -111,7 +111,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       mac: state => state.mac
     })
   },

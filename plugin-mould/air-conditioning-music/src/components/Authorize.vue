@@ -24,12 +24,12 @@ export default {
     [Overlay.name]: Overlay
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       authDialog: state => state.musicData.authDialog
     })
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
     authCancel() {

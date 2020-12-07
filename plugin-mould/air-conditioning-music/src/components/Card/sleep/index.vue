@@ -34,6 +34,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import { Switch, List, Item } from 'gree-ui';
 import Curve from '@/components/card/sleep/Curve';
 import SleepHeader from '@/components/card/sleep/Header';
+import { types } from '@/store/types';
 
 export default {
   name: 'sleep-card',
@@ -70,7 +71,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Mod: state => state.dataObject.Mod,
       SwhSlp: state => state.dataObject.SwhSlp,
       SlpMod: state => state.dataObject.SlpMod,
@@ -114,12 +115,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setMusicData: 'SET_MUSIC_DATA',
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+      setMusicData: types.SET_MUSIC_DATA,
+      setDataObject: types.SET_DATA_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: types.SEND_CTRL
     }),
     changeData(map) {
       this.setState({ watchLock: false, ableSend: true });

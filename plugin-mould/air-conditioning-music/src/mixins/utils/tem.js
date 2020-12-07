@@ -1,4 +1,5 @@
 import { mapState, mapMutations, mapActions } from 'vuex';
+import { types } from '@/store/types';
 
 const temConfig = {
   data() {
@@ -9,7 +10,7 @@ const temConfig = {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       SetTem: state => state.dataObject.SetTem,
       add01: state => state.dataObject['Add0.1'],
       add05: state => state.dataObject['Add0.5'],
@@ -38,13 +39,13 @@ const temConfig = {
   },
   methods: {
     ...mapMutations({
-      setMusicData: 'SET_MUSIC_DATA',
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
+      setMusicData: types.SET_MUSIC_DATA,
+      setDataObject: types.SET_DATA_OBJECT,
+      setCheckObject: types.SET_CHECK_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: types.SEND_CTRL
     }),
     changeData(val) {
       this.setState({ watchLock: false, ableSend: true });

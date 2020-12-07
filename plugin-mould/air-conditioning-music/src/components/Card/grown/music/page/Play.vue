@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { Header, Icon } from 'gree-ui';
 
 export default {
@@ -111,15 +111,13 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       musicPlaying: state => state.musicData.musicPlaying,
       songId: state => state.musicData.songId,
       songUrl: state => state.musicData.songUrl,
-      albumImg: state => state.musicData.albumImg,
-      currentPlaylist: (state, getters) => getters.currentPlaylist,
-      currentSongInfo: (state, getters) => getters.currentSongInfo,
-      lyric: (state, getters) => getters.lyric
+      albumImg: state => state.musicData.albumImg
     }),
+    ...mapGetters('control', ['currentPlaylist', 'currentSongInfo', 'lyric']),
     listLen() {
       if (!this.currentPlaylist) return 0;
       return this.currentPlaylist.length;
@@ -346,10 +344,10 @@ export default {
     next();
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       musicControl: 'MUSIC_CONTROL'
     }),
     changeData() {},

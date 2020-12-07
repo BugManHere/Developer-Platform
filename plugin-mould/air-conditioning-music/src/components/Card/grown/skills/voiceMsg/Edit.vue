@@ -4,7 +4,7 @@
       <gree-header style="background-color: #fff;">
         <!-- 语音留言簿 -->
         <a slot="overwrite-left" @click="goBack">取消</a>
-        已选择{{selectedNum}}条
+        已选择{{ selectedNum }}条
         <a slot="right" @click="selectAll" v-show="!isEmpty">全选</a>
       </gree-header>
       <div class="page-main">
@@ -83,11 +83,11 @@ export default {
       selectedRecords: [], // 选中需要删除的留言
       isLoadFailed: false, // 列表是否加载失败
       selectedNum: 0,
-      selectedArg:[]
+      selectedArg: []
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       mac: state => state.mac
     })
   },
@@ -96,13 +96,13 @@ export default {
     this.getMessageList();
   },
   mounted() {
-    if(window.history && window.history.pushState){
-      history.pushState(null,null,document.URL);
-      window.addEventListener('popstate',this.goBack,false);
+    if (window.history && window.history.pushState) {
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.goBack, false);
     }
   },
-  destroyed(){
-    window.removeEventListener('popstate',this.goBack,false);
+  destroyed() {
+    window.removeEventListener('popstate', this.goBack, false);
   },
   // 监听物理返回键，执行goBack(replace到index)方法。
   methods: {
@@ -148,13 +148,13 @@ export default {
     selectAll() {
       this.unreadList.forEach(x => {
         x.selected = true; // eslint-disable-line
-        if(!this.selectedArg.includes(x.guid)){
-          this.selectedArg.push(x.guid)
+        if (!this.selectedArg.includes(x.guid)) {
+          this.selectedArg.push(x.guid);
         }
       });
       this.readList.forEach(x => {
         x.selected = true; // eslint-disable-line
-        if(!this.selectedArg.includes(x.guid)){
+        if (!this.selectedArg.includes(x.guid)) {
           this.selectedArg.push(x.guid);
         }
       });
@@ -162,12 +162,12 @@ export default {
       // 全选功能：将未选中的语音添加进selectedArg当中
     },
     setState(item) {
-      item.selected = !item.selected; // eslint-disable-line   
-      if(this.selectedArg.includes(item.guid)){
+      item.selected = !item.selected; // eslint-disable-line
+      if (this.selectedArg.includes(item.guid)) {
         let index = this.selectedArg.indexOf(item.guid);
-        this.selectedArg.splice(index,1);
+        this.selectedArg.splice(index, 1);
         this.selectedNum = this.selectedArg.length;
-      }else{
+      } else {
         this.selectedArg.push(item.guid);
         this.selectedNum = this.selectedArg.length;
       }
@@ -214,7 +214,7 @@ export default {
         this.dialogOption.open = true;
       }
     },
-    goBack(){
+    goBack() {
       this.$router.replace('/VoiceMessage/index');
     }
   }
@@ -282,7 +282,7 @@ export default {
           width: 963px;
           height: 747px;
         }
-        .placeholder_text{
+        .placeholder_text {
           font-size: 42px;
           color: #989898;
         }

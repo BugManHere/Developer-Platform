@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       authReasult: state => state.musicData.authReasult,
       playMap: state => state.musicData.playMap,
       groupsUnfold: state => state.musicData.groupsUnfold,
@@ -166,10 +166,10 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
-    ...mapActions({
+    ...mapActions('control', {
       getCategory: 'GET_CATEGORY',
       getAwesome: 'GET_AWESOME'
     }),

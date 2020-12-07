@@ -41,6 +41,7 @@
 import { Header, SweepSelect, Toast } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -79,7 +80,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       SwingLfRig: state => state.dataObject.SwingLfRig,
       SwUpDn: state => state.dataObject.SwUpDn,
       Pow: state => state.dataObject.Pow,
@@ -141,11 +142,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+      setDataObject: types.SET_DATA_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: types.SEND_CTRL
     }),
     turnBack() {
       this.$router.push({ name: 'Home' }).catch(err => {

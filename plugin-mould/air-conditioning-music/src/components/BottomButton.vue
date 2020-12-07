@@ -1,7 +1,7 @@
 <template>
   <div class="bottom-button" :style="{ 'background-color': skinConfig.color, 'background-image': `url(${skinConfig.bottomBg})` }">
-    <div class="item" v-for="(item, index) in skinConfig.bottomBtnList" :key="index">
-      <img :src="item.url" @click="footerFunction(item.key)" />
+    <div class="item" v-for="(item, index) in skinConfig.bottomBtnList" :key="index" @touchstart="footerFunction(item.key)">
+      <img :src="item.url" />
       <span v-text="item.name" />
       <div class="img-select" v-show="item.key === selectKey" />
     </div>
@@ -9,22 +9,23 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapState({
-      skinConfig: (state, getters) => getters.skinConfig,
+    ...mapState('control', {
       skinIndex: state => state.skinIndex,
       selectKey: state => state.selectKey
-    })
+    }),
+    ...mapGetters('control', ['skinConfig'])
   },
   methods: {
     ...mapMutations({
-      setState: 'SET_STATE'
+      setState: types.CONTROL_SET_STATE
     }),
     footerFunction(key) {
       this.setState({ selectKey: key });

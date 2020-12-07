@@ -9,30 +9,30 @@ class Storage {
   }
   // 初始化
   initRun() {
-    this.source[store.state.mac] || window.localStorage.setItem(store.state.mac, '{}');
+    this.source[store.state.control.mac] || window.localStorage.setItem(store.state.control.mac, '{}');
   }
   // 设置数据
-  set(key, value, mac = store.state.mac) {
-    const data = JSON.parse(this.source[mac]);
+  set(key, value, mac = store.state.control.mac) {
+    const data = JSON.parse(this.source[mac] || '{}');
     data[key] = value;
     window.localStorage.setItem(mac, JSON.stringify(data));
     return value;
   }
   // 获取数据
-  get(key, mac = store.state.mac) {
+  get(key, mac = store.state.control.mac) {
     const data = JSON.parse(this.source[mac] || '{}');
     return data[key];
   }
   // 删除操作
-  remove(key, mac = store.state.mac) {
-    const data = JSON.parse(this.source[mac]);
+  remove(key, mac = store.state.control.mac) {
+    const data = JSON.parse(this.source[mac] || '{}');
     const value = data[key];
     delete data[key];
     window.localStorage.setItem(mac, JSON.stringify(data));
     return value;
   }
   // 清除操作
-  clear(mac = store.state.mac) {
+  clear(mac = store.state.control.mac) {
     window.localStorage.setItem(mac, '{}');
     return {};
   }

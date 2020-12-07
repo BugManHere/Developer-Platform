@@ -7,12 +7,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
-import WorkLogic from '@logic/work';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import BtnContent from './btn/index';
+import { types } from '@/store/types';
 
 export default {
-  mixins: [WorkLogic],
   components: {
     'btn-content': BtnContent
   },
@@ -26,9 +25,9 @@ export default {
     return {
       contentHeight: 0,
       isMounted: false,
-      modStatusList: [], // 模式的顺序
-      currentStatus: '', // 当前状态
-      lastStatus: '' // 上一个状态,
+      modStatusNameList: [], // 模式的顺序
+      currentStatusName: '', // 当前状态
+      lastStatusName: '' // 上一个状态
     };
   },
   mounted() {
@@ -39,160 +38,73 @@ export default {
         this.isMounted = true;
       }
     }, 20);
+    this.updateStatusNameList();
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow
     }),
-    currentModName() {
-      const defined = this.btnList.find(fan => fan.key === this.currentStatus);
-      const result = defined && defined.name;
-      return result;
-    },
+    ...mapGetters(['modDefine', 'modIdentifier', 'modCurrentStatusName']),
+    ...mapGetters('machine', ['fakeStatusLoop', 'hideStateNameArr']),
     // 按钮列表
     btnList() {
-      const result = this.modStatusList.map(modStatus => {
+      const result = this.modStatusNameList.map(modStatusName => {
         // status定义
-        const statusDefine = this.work_modDefine.statusDefine[modStatus];
-        // 定义key
-        const key = modStatus;
+        const status = this.modDefine.statusDefine[modStatusName];
         // 名称
-        const statusName = statusDefine.name;
-        const stateName = `${this.work_modIdentifier}_${statusName}`;
+        const statusName = status.name;
+        const stateName = `${this.modIdentifier}_${statusName}`;
         const name = this.$language(`mod.${stateName}`);
         // 图标
         const icon = {
-          key: statusDefine.icon.key,
-          type: this.currentStatus === modStatus ? 'on' : 'off'
+          key: status.icon.key,
+          type: this.currentStatusName === modStatusName ? 'on' : 'off'
         };
         // 是否置灰
-        const gray = !this.Pow;
+        const gray = this.hideStateNameArr.includes(`${this.modIdentifier}_${modStatusName}`);
         // 是否隐藏
         const hide = false;
         // 跳转页面
         const page = false;
         // 执行的函数
-        const func = (modStatus, disable = false) => {
-          this.changeStatus(modStatus, disable || this.currentStatus === modStatus);
+        const func = (modStatusName, disable = false) => {
+          disable || this.$stateMachine.toStatus(this.modIdentifier, modStatusName);
         };
-        return { key, name, icon, gray, hide, page, func };
+        return { key: modStatusName, name, icon, gray, hide, page, func };
       });
       return result;
     }
   },
   watch: {
-    g_statusLoop: {
+    modCurrentStatusName: {
       handler(newVal) {
-        const startStatus = 'default';
-        if (!this.work_modDefine) return;
-        const id = this.work_modIdentifier;
-        const modLoop = newVal[id];
-        if (modLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[id]));
-          const length = result.length;
-          let i = 0;
-          while (result[0] !== startStatus && i < length) {
-            result.push(result.shift());
-            i += 1;
-          }
-          this.modStatusList = result;
+        if (newVal && this.currentStatusName !== newVal) {
+          this.lastStatusName = this.currentStatusName;
+          this.currentStatusName = newVal;
         }
-      },
-      deep: true,
-      immediate: true
-    },
-    g_statusMap: {
-      handler(newVal) {
-        const statusMap = newVal[this.work_modIdentifier];
-        if (statusMap && this.currentStatus !== statusMap.status) {
-          this.lastStatus = this.currentStatus;
-          this.currentStatus = statusMap.status;
-        }
-      },
-      immediate: true,
-      deep: true
-    },
-    currentModName: {
-      handler(newVal) {
-        this.$emit('modName', newVal);
       },
       immediate: true
     }
   },
   methods: {
     ...mapMutations({
-      setMusicData: 'SET_MUSIC_DATA',
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+      setDataObject: types.SET_DATA_OBJECT
     }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    // 发送指令
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
-    changeStatus(status, isGray) {
-      if (isGray) return;
-      const funcDefine = this.work_modDefine;
-      const statusDefine = funcDefine.statusDefine[status];
-      const identifier = funcDefine.identifier;
-      const currentStatus = this.currentStatus;
-      const customize = statusDefine.customize;
-      // 执行自定义函数 'before'
-      switch (customize) {
-        case 'replace':
-          this.customizeFunc(identifier, currentStatus, status);
-          return;
-        case 'before':
-          this.customizeFunc(identifier, currentStatus, status);
-          break;
-        case 'after':
-          setTimeout(() => {
-            this.customizeFunc(identifier, currentStatus, status);
-          }, 0);
-          break;
-        default:
-          break;
-      }
-      const moreCommand = statusDefine.moreCommand;
-      const json = funcDefine.json;
-      const value = statusDefine.value;
-      let setData = moreCommand || {};
-      setData[json] = value;
-      // 发送指令前缓存数据
-      const dataObject = JSON.parse(JSON.stringify(this.dataObject));
-      // 发送指令
-      this.changeData(setData);
-      this.cacheData(dataObject);
-    },
-    cacheData(dataObject) {
-      const isCacheTem = this.g_moreOption.temCache;
-      const isCacheFan = this.g_moreOption.fanCache;
-      const storage = window.storage;
-      const cache = (able, storageKey, jsons) => {
-        if (able) {
-          const data = storage.get(storageKey) || {};
-          const sendData = data[this.currentStatus] || {};
-          const lastData = {};
-          jsons.forEach(json => {
-            lastData[json] = dataObject[json] || 0;
-          });
-          data[this.lastStatus] = lastData;
-          storage.set(storageKey, data);
-          this.changeData(sendData);
+    updateStatusNameList() {
+      const startStatusName = 'default';
+      if (!this.modDefine) return;
+      const identifier = this.modIdentifier;
+      const modLoop = this.fakeStatusLoop[identifier];
+      if (modLoop) {
+        const result = JSON.parse(JSON.stringify(this.fakeStatusLoop[identifier]));
+        const length = result.length;
+        let i = 0;
+        while (result[0] !== startStatusName && i < length) {
+          result.push(result.shift());
+          i += 1;
         }
-      };
-      setTimeout(() => {
-        this.$nextTick(() => {
-          // 此处作了特殊处理，应该去掉感叹号
-          cache(!isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
-          cache(!isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
-        });
-      }, 0);
+        this.modStatusNameList = result;
+      }
     }
   }
 };

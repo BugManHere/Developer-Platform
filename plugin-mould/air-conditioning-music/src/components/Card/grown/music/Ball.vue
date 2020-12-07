@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 export default {
   data() {
@@ -25,14 +25,14 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       musicPlaying: state => state.musicData.musicPlaying,
       songId: state => state.musicData.songId,
       songInfosMap: state => state.musicData.songInfosMap,
       showBall: state => state.musicData.showBall,
-      albumImg: state => state.musicData.albumImg,
-      currentSongInfo: (state, getters) => getters.currentSongInfo
+      albumImg: state => state.musicData.albumImg
     }),
+    ...mapGetters('control', ['currentSongInfo']),
     dragStyle() {
       return {
         transform: `translate(${this.movePos[0]}px,${this.movePos[1]}px)`

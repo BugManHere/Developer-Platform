@@ -43,7 +43,7 @@ export default {
     });
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       devname: state => state.deviceInfo.name,
       isOffline: state => state.deviceInfo.deviceState
     })

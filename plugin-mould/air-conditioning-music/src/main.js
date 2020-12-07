@@ -1,18 +1,22 @@
-import 'jquery';
-
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 
+// 引入第三方
 import { Page, View, Lazyload } from 'gree-ui';
-import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
-import App from './App';
-
+import axios from 'axios';
+import IotfeComponents from 'iotfe-components';
+import 'iotfe-components/dist/iotfeComponents.css';
+import 'jquery';
 import 'round-slider';
 import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
 
+// 引入内部文件
+import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { types } from '@/store/types';
+import App from './App';
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
 import scrollThrough from '@/directives/scrollThrough';
@@ -20,15 +24,10 @@ import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage'; // 对i18n的封装
-import axios from 'axios';
-import { SET_STATE } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
-
-import IotfeComponents from 'iotfe-components';
-import 'iotfe-components/dist/iotfeComponents.css';
 
 // 安装插件
 Vue.use(VueI18n);
@@ -83,7 +82,7 @@ async function createVue() {
     // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
       // 更新mac
-      vm.$store.commit(SET_STATE, { mac: id });
+      vm.$store.commit(types.CONTROL_SET_STATE, { mac: id });
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
@@ -100,13 +99,12 @@ async function createVue() {
       // 取出缓存的配置
       let oldId = localStorage.getItem('device_config_id');
       // 更新mac
-      vm.$store.commit(SET_STATE, { mac: oldId });
+      vm.$store.commit(types.CONTROL_SET_STATE, { mac: oldId });
     }
   }
   // 挂载到#app上
   vm.$mount('#app');
-  const userAgeInfo = localStorage.getItem('userAgeInfo');
-  console.log(userAgeInfo);
+  const userAgeInfo = window.storage.get('userAgeInfo');
   if (userAgeInfo) {
     vm.$router.push('Home').catch(e => console.log(e));
   } else {
@@ -144,10 +142,10 @@ window.backButton = function backButton() {
  */
 window.onReFocus = function onReFocus(msg) {
   msg;
-  getInfo(store.state.mac)
+  getInfo(store.state.control.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.$store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.commit(types.SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;
@@ -159,10 +157,10 @@ window.onReFocus = function onReFocus(msg) {
  */
 window.onResume = function onResume(msg) {
   msg;
-  getInfo(store.state.mac)
+  getInfo(store.state.control.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.commit('SET_DEVICE_INFO', deviceInfo);
+      store.commit(types.SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;

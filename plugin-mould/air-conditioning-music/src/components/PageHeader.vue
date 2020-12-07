@@ -1,9 +1,9 @@
 <template>
   <div class="page-header">
     <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
-      <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="setPow" />
+      <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="switchPow" />
       <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo" />
-      <div v-if="isCenterTop && Mod && Pow" class="title-tem-control">
+      <div v-if="isCenterTop && Mod && Pow && selectKey === 'control-card'" class="title-tem-control">
         <gree-icon name="move" size="md" @click="setTem(-1)" />
         <div class="title-tem-control-value">
           <gree-animated-number :value="currentTem" :precision="1" :duration="200" transition />
@@ -39,7 +39,8 @@ export default {
     [Icon.name]: Icon
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
+      selectKey: state => state.selectKey,
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
@@ -54,8 +55,8 @@ export default {
     goBack() {
       closePage();
     },
-    setPow() {
-      this.changeData({ Pow: Number(!this.Pow) });
+    switchPow() {
+      this.$stateMachine.nextStatus('Pow');
     },
     /**
      * @description 编辑设备名称

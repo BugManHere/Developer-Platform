@@ -36,7 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       SwhSlp: state => state.dataObject.SwhSlp
     })
   },

@@ -24,7 +24,7 @@ export default {
     [SleepCard.name]: SleepCard
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       selectKey: state => state.selectKey
     })
   }

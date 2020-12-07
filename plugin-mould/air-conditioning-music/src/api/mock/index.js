@@ -37,37 +37,7 @@
   }
 
   navigator.PluginInterface = {
-    showToast(msg, type) {
-      let toast = document.createElement('span');
-      toast.innerText = msg;
-      const toastStyle = {
-        position: 'fixed',
-        'background-color': 'rgba(0, 0, 0, 0.6)',
-        color: '#fff',
-        'font-size': '16px',
-        'text-align': 'center',
-        padding: '8px 16px',
-        bottom: '120px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        'border-radius': '5px',
-        'z-index': 999
-      };
-      toast.style.cssText = Object.keys(toastStyle).reduce((acc, cur) => {
-        acc = acc + `${cur}: ${toastStyle[cur]};`;
-        return acc;
-      }, '');
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        document.body.removeChild(toast);
-      }, 1000);
-    },
-    showLoading() {
-      console.log('showLoading......');
-    },
-    hideLoading() {
-      console.log('hideLoading......');
-    },
+    ...navigator.PluginInterface,
     voiceACgetSkillSearch(mac, keyword, callback) {
       const allSkillList = [];
       MockSkillList.forEach(x => {

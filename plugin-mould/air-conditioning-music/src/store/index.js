@@ -1,17 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import getters from './getters';
-import actions from './actions';
-import mutations from './mutations';
+import controlMoudle from './control/index';
+import machineMoudle from './machine/index';
 import state from './state';
+import actions from './actions';
+import getters from './getters';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state,
-  getters,
   actions,
-  mutations,
-  modules: {},
-  strict: process.env.NODE_ENV !== 'production'
+  getters,
+  modules: {
+    control: controlMoudle, // 业务模块
+    machine: machineMoudle // 状态机模块
+  }
 });
