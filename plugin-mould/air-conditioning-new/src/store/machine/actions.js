@@ -1,5 +1,4 @@
-import * as types from './types';
-import * as rootTypes from '../types';
+import { types, defineTypes } from '../types';
 
 import Vue from 'vue';
 
@@ -9,7 +8,7 @@ export default {
   /**
    * @param {Object} context Vuex的context对象
    */
-  [types.INIT](context) {
+  [defineTypes.MACHINE_INIT](context) {
     // 获取配置
     const baseData = getConfig();
     // 更新配置到vuex
@@ -25,7 +24,7 @@ export default {
    * @param {Object} context Vuex的context对象
    * @param {Array} stateQueue 事件队列
    */
-  [types.RUN_EVENT](context, stateQueue) {
+  [defineTypes.RUN_EVENT](context, stateQueue) {
     // 队列没有事件，退出
     if (!stateQueue.length) return;
     const { getters, dispatch } = context;
@@ -56,7 +55,7 @@ export default {
       } else {
         // 将状态发送值输出
         dispatch(
-          rootTypes.STATE_MACHINE_INTERFACE,
+          types.STATE_MACHINE_INTERFACE,
           { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName },
           { root: true }
         ).then(() => {
@@ -68,7 +67,7 @@ export default {
       checkLogic(context, identifier, nextStatusName);
     }
     // 执行下一事件
-    dispatch(types.RUN_EVENT, stateQueue);
+    dispatch(types.RUN_EVENT, stateQueue, { root: true });
   }
 };
 
@@ -107,7 +106,7 @@ class stateMachine {
           checkTime += 1;
           oldList = result;
           this.updateState;
-          commit(types.SET_BASEDATA, { funcDefine: state.baseData.funcDefine });
+          commit(types.SET_BASEDATA, { funcDefine: state.baseData.funcDefine }, { root: true });
         }
         return true;
       },
@@ -183,17 +182,21 @@ function updateConfig({ commit, dispatch }, baseData) {
   // 转换指令
   str2NumMap(baseData.funcDefine);
   // 更新到vuex
-  commit(types.SET_BASEDATA, baseData);
-  commit(types.SET_STATE, {
-    devOptions: {
-      pluginVer: baseData.moreOption.pluginVer,
-      mid: baseData.productModel,
-      statueJson: JSON.stringify(baseData.moreOption.statueJson),
-      statueJson2: JSON.stringify(baseData.moreOption.statueJson2)
-    }
-  });
+  commit(types.SET_BASEDATA, baseData, { root: true });
+  commit(
+    types.MACHINE_SET_STATE,
+    {
+      devOptions: {
+        pluginVer: baseData.moreOption.pluginVer,
+        mid: baseData.productModel,
+        statueJson: JSON.stringify(baseData.moreOption.statueJson),
+        statueJson2: JSON.stringify(baseData.moreOption.statueJson2)
+      }
+    },
+    { root: true }
+  );
   // 提交设备名变更
-  dispatch(rootTypes.UPDATE_DEVICENAME, { data: { deviceName: baseData.deviceName }, type: 'deviceName' }, { root: true });
+  dispatch(types.UPDATE_DEVICENAME, { data: { deviceName: baseData.deviceName }, type: 'deviceName' }, { root: true });
 }
 
 // 转换指令中的字符串（不重要，可以不看）
@@ -252,7 +255,7 @@ function creatQueue({ dispatch }) {
       // setTimeout把方法放到下一个宏任务，保证队列更新
       setTimeout(() => {
         // 如果队列中存在事件，则执行
-        queue.length && dispatch(types.RUN_EVENT, queue);
+        queue.length && dispatch(types.RUN_EVENT, queue, { root: true });
       }, 0);
       return queue;
     },

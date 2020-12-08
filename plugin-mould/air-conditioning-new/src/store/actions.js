@@ -1,38 +1,38 @@
-import * as types from './types';
+import { types, defineTypes } from './types';
 const dev = process.env.NODE_ENV === 'development';
 
 const { cacheDataMap } = require('./userdef');
 
 export default {
   // 处理状态机初始化数据
-  [types.STATE_MACHINE_INITDATA]({ commit }, { data }) {
-    // 只有在development才使用初始化数据
+  [defineTypes.STATE_MACHINE_INITDATA]({ commit }, { data }) {
+    // 只有在development才使用初始化数据，虚拟体验需要注释return
     if (!dev) return;
-    commit('control/SET_DATA_OBJECT', data);
-    commit('control/SET_CHECK_OBJECT', data);
+    commit(types.SET_DATA_OBJECT, data);
+    commit(types.SET_CHECK_OBJECT, data);
   },
   // 处理状态机接口数据
-  [types.STATE_MACHINE_INTERFACE]({ dispatch, getters }, { data, identifier, from, to }) {
+  [defineTypes.STATE_MACHINE_INTERFACE]({ dispatch, getters }, { data, identifier, from, to }) {
     // 获取需要缓存的数据
     const cacheData = getCache(getters.inputMap, identifier, `${identifier}_${from}`, `${identifier}_${to}`);
     // 更新并发送
     dispatch(types.SEND_DATA, { ...data, ...cacheData });
   },
   // 发送数据接口
-  [types.SEND_DATA](context, data) {
+  [defineTypes.SEND_DATA](context, data) {
     const { commit, dispatch } = context;
     const sendData = dataHandle(context, data);
     // 更新并发送
-    commit('control/SET_DATA_OBJECT', sendData);
-    commit('control/SET_STATE', { ableSend: true });
-    dispatch('control/SEND_CTRL', sendData);
+    commit(types.SET_DATA_OBJECT, sendData);
+    commit(types.CONTROL_SET_STATE, { ableSend: true });
+    dispatch(types.SEND_CTRL, sendData);
   },
   // 处理状态机设备名变更
-  [types.UPDATE_DEVICENAME]({ commit, state }, { data }) {
+  [defineTypes.UPDATE_DEVICENAME]({ commit, state }, { data }) {
     // 只有在development才使用状态机设备名
     if (!dev) return;
     const deviceInfo = state.control.deviceInfo;
-    commit('control/SET_DEVICE_INFO', { ...deviceInfo, name: data.deviceName });
+    commit(types.SET_DEVICE_INFO, { ...deviceInfo, name: data.deviceName });
   }
 };
 

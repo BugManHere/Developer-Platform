@@ -9,8 +9,7 @@ export default {
     Mod: 1,
     SetTem: 25,
     WdSpd: 5,
-    Quiet: 0,
-    Tur: 0
+    Quiet: 0
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
@@ -19,7 +18,7 @@ export default {
     fullstatueJson: '', // config.xml里对应的查询字段
     deviceState: 2, // 设备在线状态，-1离线，2在线
     lang: 'zh_CN', // 语言
-    name: 'default'
+    name: '分体机'
   },
   devOptions: {
     mid: '',

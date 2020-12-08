@@ -6,8 +6,9 @@
 
 <script>
 import { Popup } from 'gree-ui';
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import BtnPopup from './index';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -99,45 +100,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions('control', {
-      sendCtrl: 'SEND_CTRL'
-    }),
-    // 发送指令
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
-    cacheData(dataObject) {
-      const isCacheTem = this.state_moreOption.temCache;
-      const isCacheFan = this.state_moreOption.fanCache;
-      const storage = window.storage;
-      const cache = (able, storageKey, jsons) => {
-        if (able) {
-          const data = storage.get(storageKey) || {};
-          const sendData = data[this.currentStatusName] || {};
-          const lastData = {};
-          jsons.forEach(json => {
-            lastData[json] = dataObject[json] || 0;
-          });
-          data[this.lastStatusName] = lastData;
-          storage.set(storageKey, data);
-          this.changeData(sendData);
-        }
-      };
-      setTimeout(() => {
-        this.$nextTick(() => {
-          // 此处作了特殊处理，应该去掉感叹号
-          cache(!isCacheTem, 'temSetting', ['SetTem', 'Add0.5', 'Add0.1']);
-          cache(!isCacheFan, 'fanSetting', ['WdSpd', 'Tur', 'Quiet']);
-        });
-      }, 0);
-    }
+    ...mapMutations({
+      setDataObject: types.SET_DATA_OBJECT
+    })
   }
 };
 </script>

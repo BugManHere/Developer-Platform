@@ -16,6 +16,7 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
+import { types } from '@/store/types';
 
 export default {
   name: 'UDFanPort',
@@ -74,12 +75,12 @@ export default {
     this.isActive = this.UDFanPort !== 1;
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+    ...mapMutations({
+      setDataObject: types.SET_DATA_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
-    ...mapActions('control', {
-      sendCtrl: 'SEND_CTRL'
+    ...mapActions({
+      sendCtrl: types.SEND_CTRL
     }),
     switchUDFanPort(active) {
       const setData = { UDFanPort: active + 1 };

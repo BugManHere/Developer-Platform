@@ -9,6 +9,7 @@ import { Popup } from 'gree-ui';
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
 import BtnPopup from './index';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -68,8 +69,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT'
+    ...mapMutations({
+      setDataObject: types.SET_DATA_OBJECT
     })
   },
   destroyed() {

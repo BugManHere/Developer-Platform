@@ -13,7 +13,7 @@ class Storage {
   }
   // 设置数据
   set(key, value, mac = store.state.control.mac) {
-    const data = JSON.parse(this.source[mac]);
+    const data = JSON.parse(this.source[mac] || '{}');
     data[key] = value;
     window.localStorage.setItem(mac, JSON.stringify(data));
     return value;
@@ -25,7 +25,7 @@ class Storage {
   }
   // 删除操作
   remove(key, mac = store.state.control.mac) {
-    const data = JSON.parse(this.source[mac]);
+    const data = JSON.parse(this.source[mac] || '{}');
     const value = data[key];
     delete data[key];
     window.localStorage.setItem(mac, JSON.stringify(data));

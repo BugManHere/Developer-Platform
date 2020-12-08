@@ -13,7 +13,7 @@ export default new Vuex.Store({
   actions,
   getters,
   modules: {
-    control: controlMoudle,
-    machine: machineMoudle
+    control: controlMoudle, // 业务模块
+    machine: machineMoudle // 状态机模块
   }
 });

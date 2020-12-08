@@ -45,6 +45,7 @@
 <script>
 import { Block, AnimatedNumber } from 'gree-ui';
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -157,15 +158,6 @@ export default {
       },
       immediate: true
     },
-    // 圆环字段
-    temSetJson: {
-      handler(newVal) {
-        this.temChange = true;
-        const value = this.inputMap[newVal];
-        this.throttle(value, 'value');
-      },
-      immediate: true
-    },
     // 圆环最小值
     temMinVal: {
       handler(newVal) {
@@ -183,7 +175,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      sendData: 'SEND_DATA'
+      sendData: types.SEND_DATA
     }),
     // 温度设置方法
     temSetMethod(value) {

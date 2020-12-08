@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { Header, List, Item, Row, Col, Button } from 'gree-ui';
+import { Header } from 'gree-ui';
 import { mapState, mapGetters } from 'vuex';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import BottomBtn from '@/components/BottomBtn';
@@ -45,11 +45,6 @@ import { closePage, editDevice, getCurrentMode, getCCcmd } from '@PluginInterfac
 export default {
   components: {
     [Header.name]: Header,
-    [List.name]: List,
-    [Item.name]: Item,
-    [Row.name]: Row,
-    [Col.name]: Col,
-    [Button.name]: Button,
     BottomBtn,
     FuncPopup,
     ModPopup,
@@ -61,16 +56,32 @@ export default {
       onTestFlag: 0
     };
   },
+  watch: {
+    // 虚拟体验用
+    'dataObject.Pow': {
+      handler(newVal) {
+        sessionStorage.setItem(`isRun_${process.env.VUE_APP_MID}`, newVal);
+      },
+      immediate: true
+    },
+    // 虚拟体验用
+    'dataObject.Mod': {
+      handler(newVal) {
+        sessionStorage.setItem(`mode_${process.env.VUE_APP_MID}`, newVal);
+      },
+      immediate: true
+    }
+  },
   computed: {
     ...mapState('control', {
-      statueJson2: state => state.devOptions.statueJson2,
       dataObject: state => state.dataObject,
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac
     }),
     ...mapState('machine', {
-      baseData: state => state.baseData
+      baseData: state => state.baseData,
+      statueJson2: state => state.devOptions.statueJson2
     }),
     ...mapGetters('machine', ['funcDefine_active', 'statusMap']),
     iconClassList() {
@@ -106,7 +117,7 @@ export default {
     // 场景模式保存按钮
     sceneSave() {
       const remarks = '...';
-      const opt = JSON.parse(this.devOptions.statueJson2);
+      const opt = JSON.parse(this.statueJson2);
       const p = opt.map(item => {
         return this.dataObject[item] === undefined ? 0 : this.dataObject[item];
       });
@@ -115,26 +126,13 @@ export default {
     },
     // 点击10次进入调试模式
     onTest() {
-      // const testUrl = () => {
-      //   const isIos = Boolean(navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/));
-      //   const statueJson2 = JSON.parse(this.statueJson2);
-      //   let data = '%5B';
-      //   statueJson2.forEach(json => {
-      //     data += `${this.dataObject[json] || 0},`;
-      //   });
-      //   data = data.replace(/.$/, '%5D');
-      //   const url = `http://192.168.31.94:8081/?mac=${this.mac}&data=${data}&functype=0#/Home`;
-      //   isIos ? (window.location.href = url) : newPage(url);
-      // };
       getCurrentMode().then(res => {
         if (res === '0' || res === 0) {
           this.onTestFlag += 1;
           this.onTestFlag === 5 && new VConsole();
-          // this.onTestFlag === 10 && this.$router.push('Test');
           if (this.onTestFlag === 10) {
             this.onTestFlag = 0;
             this.$router.push('Test');
-            // testUrl();
           }
         }
       });

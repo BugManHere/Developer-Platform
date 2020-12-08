@@ -16,6 +16,7 @@ import { Popup } from 'gree-ui';
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapMutations, mapGetters } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -97,8 +98,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT'
+    ...mapMutations({
+      setDataObject: types.SET_DATA_OBJECT
     }),
     init() {
       this.updateStatusNameList();

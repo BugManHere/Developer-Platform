@@ -1,6 +1,7 @@
 // 根据实际业务修改
 import { mapActions } from 'vuex';
 import updateStatus from './updateStatus';
+import { types } from '@/store/types';
 
 const mixin = {
   mixins: [updateStatus], // 该mixin自定义初始化时检测故障等功能，需更改
@@ -12,11 +13,9 @@ const mixin = {
     this.machineInit();
   },
   methods: {
-    ...mapActions('control', {
-      controlInit: 'INIT'
-    }),
-    ...mapActions('machine', {
-      machineInit: 'INIT'
+    ...mapActions({
+      controlInit: types.CONTROL_INIT,
+      machineInit: types.MACHINE_INIT
     })
   }
 };
