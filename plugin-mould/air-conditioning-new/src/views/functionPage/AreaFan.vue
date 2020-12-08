@@ -43,6 +43,7 @@
 <script>
 import { Header, RadioList, List, Switch, Item, Slider, Block } from 'gree-ui';
 import { mapActions, mapMutations, mapState, mapGetters } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -201,13 +202,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('control', {
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+    ...mapMutations({
+      setDataObject: types.SET_DATA_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
-    ...mapActions('control', {
-      sendCtrl: 'SEND_CTRL',
-      updateDataObject: 'UPDATE_DATAOBJECT'
+    ...mapActions({
+      sendCtrl: types.SEND_CTRL,
+      updateDataObject: types.UPDATE_DATAOBJECT
     }),
     // 返回按钮
     turnBack() {

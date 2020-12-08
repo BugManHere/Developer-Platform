@@ -64,8 +64,8 @@
         <div class="info-icon-select">
           <span v-text="'状态图标'" class="text-label" />
           <i
-            class="iconfont iconfont-undefined"
-            :class="`iconfont-${currentStatus.miniIcon ? currentStatus.miniIcon.key : 'undefined'}`"
+            class="iconfont"
+            :class="`iconfont-${currentStatus.miniIcon && iconArr.includes(currentStatus.miniIcon.key) ? currentStatus.miniIcon.key : 'undefined'}`"
             title="更改图标设置"
             @click="
               btnIconSelectType = false;

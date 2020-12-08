@@ -27,7 +27,7 @@ export const customizeFunction = {
     const storage = window.storage;
     const funcData = storage.get('funcData') || {};
     if (funcData.ConstUD) {
-      dispatch('STATE_MACHINE_INTERFACE', { SwUpDn: funcData.ConstUD }, { root: true });
+      dispatch('STATE_MACHINE_INTERFACE', { data: { SwUpDn: funcData.ConstUD } }, { root: true });
     } else goSweep(2);
   },
   ConstLR: ({ dispatch }, currentStatusName) => {
@@ -44,7 +44,7 @@ export const customizeFunction = {
     const storage = window.storage;
     const funcData = storage.get('funcData') || {};
     if (funcData.ConstLR) {
-      dispatch('STATE_MACHINE_INTERFACE', { SwingLfRig: funcData.ConstLR }, { root: true });
+      dispatch('STATE_MACHINE_INTERFACE', { data: { SwingLfRig: funcData.ConstLR } }, { root: true });
     } else goSweep(1);
   },
   Elc: () => {
@@ -159,7 +159,7 @@ export const cacheDataMap = {
  */
 async function runPageMethod({ commit }, routerName) {
   // 加载对应页面
-  commit('control/SET_STATE', { hiddenComponent: routerName }, { root: true });
+  commit(types.CONTROL_SET_STATE, { hiddenComponent: routerName }, { root: true });
   // 获取对应组件内容
   const hiddenComponent = window.myvm.$children[0].$refs.hiddenComponent;
   // 获取需要执行的方法

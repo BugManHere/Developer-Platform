@@ -1,10 +1,10 @@
-import * as types from './types';
+import { defineTypes } from '../types';
 
 export default {
-  [types.SET_BASEDATA](state, map) {
+  [defineTypes.SET_BASEDATA](state, map) {
     state.baseData = { ...state.baseData, ...map };
   },
-  [types.SET_STATE](state, obj) {
+  [defineTypes.MACHINE_SET_STATE](state, obj) {
     Object.keys(obj).forEach(key => {
       state[key] = obj[key];
     });

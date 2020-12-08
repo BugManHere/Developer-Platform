@@ -1,3 +1,4 @@
+// 一些模板常量
 export default {
   fanKey: 'fan', // 风档type
   modKey: 'mod', // 模式type

@@ -232,7 +232,7 @@ export default {
         result.push(...state.baseData.hideMap[stateName]);
       }
     });
-    window.myvm.$set(state.deriveData, 'hideStateNameJson', JSON.stringify(result));
+    state.deriveData.hideStateNameJson = JSON.stringify(result);
     return result;
   },
   /**

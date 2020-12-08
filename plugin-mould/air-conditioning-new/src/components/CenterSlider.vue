@@ -22,19 +22,15 @@
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>
         <!-- 显示插槽2 -->
-        <h3 v-if="imshowSlot2" class="auto-span" v-text="imshowSlot2" />
+        <h3 v-if="imshowSlot2" class="slider-slot-1" v-text="imshowSlot2" />
         <!-- <h3 v-else class="tem" v-text="circleVal" /> -->
-        <gree-animated-number
-          v-else
-          class="tem-value"
-          :class="{ 'deci-tem': temStep < 1, 'unit-tem': temSetJson === 'SetTem', 'unit-wet': temSetJson === 'SetCoolHumi' }"
-          :value="circleVal"
-          :precision="Number(temStep < 1)"
-          :duration="200"
-          transition
-        />
+        <!-- 温度调节 -->
+        <div v-else class="tem-value" :class="{ 'deci-tem': temStep < 1 }">
+          <gree-animated-number :value="circleVal" :precision="Number(temStep < 1)" :duration="200" transition />
+          <span :class="{ 'unit-tem': temSetJson === 'SetTem' }" v-text="'℃'" />
+        </div>
         <!-- 显示插槽1 -->
-        <div v-if="imshowSlot1" class="room-tem-text">
+        <div v-if="imshowSlot1" class="slider-slot-2">
           <span v-text="imshowSlot1" />
         </div>
       </article>
@@ -49,6 +45,7 @@
 <script>
 import { Block, AnimatedNumber } from 'gree-ui';
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   components: {
@@ -161,15 +158,6 @@ export default {
       },
       immediate: true
     },
-    // 圆环字段
-    temSetJson: {
-      handler(newVal) {
-        this.temChange = true;
-        const value = this.inputMap[newVal];
-        this.throttle(value, 'value');
-      },
-      immediate: true
-    },
     // 圆环最小值
     temMinVal: {
       handler(newVal) {
@@ -187,7 +175,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      sendData: 'SEND_DATA'
+      sendData: types.SEND_DATA
     }),
     // 温度设置方法
     temSetMethod(value) {

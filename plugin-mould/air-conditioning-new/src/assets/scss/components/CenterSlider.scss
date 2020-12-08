@@ -65,6 +65,7 @@
       }
     }
     article {
+      $textHeight: 330px;
       position: absolute;
       left: 50%;
       top: 44%;
@@ -80,61 +81,46 @@
         top: 5px;
       }
       .tem-value {
-        font-family: 'Roboto-Light';
+        $temSetWidth: 600px;
+        $unitSize: 64px;
+        position: relative;
+        height: $textHeight;
+        line-height: $textHeight;
+        width: $temSetWidth;
         font-weight: 500;
-        &.unit-tem {
+        transform: translateX(-$temSetWidth / 4 + $unitSize / 2);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        .numerical {
+          font-family: 'Roboto-Light';
+          font-size: 233px;
+        }
+        .unit-tem {
           position: relative;
-          &::before {
-            content: '°';
-            position: absolute;
-            top: 40px;
-            right: -14px;
-            bottom: 0;
-            left: auto;
-            font-size: 46px;
-            font-weight: 300;
-            text-align: left;
-          }
-          &::after {
-            content: 'C';
-            position: absolute;
-            top: 30px;
-            right: -54px;
-            bottom: 0;
-            left: auto;
-            font-size: 66px;
-            font-weight: 100;
-            text-align: left;
-          }
-          &.deci-tem {
-            position: relative;
-            left: -40px;
+          top: -50px;
+          font-size: $unitSize;
+          font-weight: 100;
+        }
+        &.deci-tem {
+          .numerical {
             font-size: 200px;
           }
-        }
-        &.unit-wet {
-          &::after {
-            content: '%';
-            position: relative;
-            top: -10px;
-            right: -20px;
-            bottom: 0;
-            left: auto;
-            font-size: 100px;
-            font-weight: 100;
-            text-align: left;
+          .unit-tem {
+            top: -40px;
           }
         }
       }
-      .auto-span {
+      .slider-slot-1 {
         position: relative;
         left: -20px;
         font-size: 94px;
         white-space: nowrap;
         text-align: center;
-        line-height: 330px;
+        height: $textHeight;
+        line-height: $textHeight;
       }
-      .room-tem-text {
+      .slider-slot-2 {
         position: absolute;
         white-space: nowrap;
         left: 50%;

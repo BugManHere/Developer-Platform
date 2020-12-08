@@ -1,6 +1,6 @@
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
-import * as types from './types';
+import { types, defineTypes } from '../types';
 
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback } from '@PluginInterface'; // 主体接口
 import { getQueryStringByName, isMqtt } from '../../utils/index';
 
 let _timer = null; // 轮询定时器
@@ -26,7 +26,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
   setData = { ...setData, ...dataMap };
   _timer2 && clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
-    commit(types.SET_STATE, { ableSend: false });
+    commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
     const setOpt = [];
     const setP = [];
     Object.keys(setData).forEach(key => {
@@ -56,10 +56,10 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     await sendDataToDevice(mac, json, false);
     // 3秒后重启轮询
     if (_timer) {
-      dispatch(types.SET_POLLING, false);
+      dispatch(types.SET_POLLING, false, { root: true });
       clearTimeout(_timer3);
       _timer3 = setTimeout(() => {
-        dispatch(types.SET_POLLING, true);
+        dispatch(types.SET_POLLING, true, { root: true });
       }, 3000);
     }
   }, 350);
@@ -69,20 +69,20 @@ export default {
   /**
    * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  async [types.INIT]({ dispatch, state }) {
+  async [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      dispatch(types.INIT_DEVICE_DATA);
+      dispatch(types.INIT_DEVICE_DATA, { root: true });
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO);
+      dispatch(types.GET_DEVICE_INFO, { root: true });
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA);
+      hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
       // 定时轮询 - 获取设备所有状态数据
-      dispatch(types.SET_POLLING, true);
+      dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
       hasMqtt &&
         setMqttStatusCallback(state.mac, data => {
-          dispatch(types.MQTT_CALLBACK, data);
+          dispatch(types.MQTT_CALLBACK, data, { root: true });
         });
     } catch (e) {
       console.warn(e);
@@ -96,18 +96,18 @@ export default {
   /**
    * @description 初始化设备数据
    */
-  async [types.INIT_DEVICE_DATA]({ dispatch, commit }) {
+  async [defineTypes.INIT_DEVICE_DATA]({ dispatch, commit }) {
     try {
       // 获取mac
       const mac = getQueryStringByName('mac');
       console.log('[url] mac:', mac);
-      commit(types.SET_MAC, mac);
+      commit(types.SET_MAC, mac, { root: true });
 
       // 获取小卡片提供第一包设备数据
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -117,7 +117,7 @@ export default {
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
-      dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
     } catch (e) {
       console.error(e);
     }
@@ -127,7 +127,7 @@ export default {
    * @description 解析设备数据
    * @param {String} data
    */
-  [types.PARSE_DATA_BY_COLS](context, payload) {
+  [defineTypes.PARSE_DATA_BY_COLS](context, payload) {
     const dataObject = {};
     if (!payload) return dataObject;
     try {
@@ -147,13 +147,13 @@ export default {
   /**
    * @description 获取设备信息
    */
-  [types.GET_DEVICE_INFO]({ commit, state }) {
+  [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
     try {
       const { mac } = state;
       getInfo(mac)
         .then(res => {
           const deviceInfo = JSON.parse(res);
-          commit(types.SET_DEVICE_INFO, deviceInfo);
+          commit(types.SET_DEVICE_INFO, deviceInfo, { root: true });
         })
         .catch(e => console.error(e));
     } catch (e) {
@@ -163,7 +163,7 @@ export default {
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
-  async [types.GET_DEVICE_DATA]({ state, dispatch }) {
+  async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }) {
     // dispatch(types.SET_POLLING, true);
     try {
       // 集中控制时数据不查询
@@ -185,11 +185,11 @@ export default {
       }
       _firstCallback = false;
 
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
-      dispatch(types.UPDATE_DATAOBJECT, dataObject);
+      dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
     } catch (e) {
       console.error(e);
     }
@@ -198,13 +198,13 @@ export default {
   /**
    * @description 开启/关闭轮询
    */
-  async [types.SET_POLLING]({ dispatch }, boolean) {
+  async [defineTypes.SET_POLLING]({ dispatch }, boolean) {
     clearTimeout(_timer3);
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          hasMqtt || dispatch(types.GET_DEVICE_DATA);
-          hasMqtt || dispatch(types.GET_DEVICE_INFO);
+          hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_INFO, { root: true });
         }, 5000);
       }
     } else {
@@ -216,7 +216,7 @@ export default {
   /**
    * @description 发送控制指令
    */
-  async [types.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
+  async [defineTypes.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
@@ -227,12 +227,12 @@ export default {
         const val = DataObject[key] || 0;
         opt.push(key);
         p.push(val);
-        commit(types.SET_CHECK_OBJECT, { [key]: val });
+        commit(types.SET_CHECK_OBJECT, { [key]: val }, { root: true });
         dataMap[key] = val;
       }
     });
     if (p.length === 0) {
-      _timer2 || commit(types.SET_STATE, { ableSend: false });
+      _timer2 || commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
     } else {
       sendControl({ state, commit, dispatch }, dataMap);
     }
@@ -241,10 +241,10 @@ export default {
   /**
    * @description 更新本地数据
    */
-  [types.UPDATE_DATAOBJECT]({ commit, state }, dataObject) {
+  [defineTypes.UPDATE_DATAOBJECT]({ commit, state }, dataObject) {
     if (!state.dataObject.functype && !state.ableSend && dataObject) {
-      commit(types.SET_DATA_OBJECT, dataObject);
-      commit(types.SET_CHECK_OBJECT, dataObject);
+      commit(types.SET_DATA_OBJECT, dataObject, { root: true });
+      commit(types.SET_CHECK_OBJECT, dataObject, { root: true });
     }
   },
 
@@ -252,7 +252,7 @@ export default {
    * @description 原生调用插件的mqtt回调方法
    * @param { {data: Object, status: Boolean} } payload data: 设备数据  status: mqtt连接是否可用
    */
-  [types.MQTT_CALLBACK]({ state, dispatch, commit }, payload) {
+  [defineTypes.MQTT_CALLBACK]({ state, dispatch, commit }, payload) {
     let dataObject = {};
     try {
       const res = JSON.parse(payload);
@@ -262,8 +262,8 @@ export default {
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(data);
       // 更新本地数据
-      dataObject && dispatch(types.UPDATE_DATAOBJECT, dataObject);
-      deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState });
+      dataObject && dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
+      deviceState === undefined || commit(types.SET_DEVICE_INFO, { ...state.deviceInfo, deviceState }, { root: true });
     } catch (e) {
       console.error(e);
     }

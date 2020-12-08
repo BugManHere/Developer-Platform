@@ -1,25 +1,26 @@
-import 'jquery';
-
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
 
+// 引入第三方
 import { Page, View } from 'gree-ui';
-import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
-import App from './App';
-
+import axios from 'axios';
+import 'jquery';
 import 'round-slider';
 import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
 
+// 引入内部文件
+import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { types } from '@/store/types';
+import App from './App';
 import debugMixin from './mixins/debug'; // 开发环境初始化
 import initMixin from './mixins/init'; // 生产环境初始化
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
-import axios from 'axios';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
@@ -79,7 +80,7 @@ async function createVue() {
     // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
       // 更新mac
-      vm.$store.commit('control/SET_STATE', { mac: id });
+      vm.$store.commit(types.CONTROL_SET_STATE, { mac: id });
       // 去服务器请求设备配置
       const res = await axios.get('/plugin/config', {
         params: {
@@ -96,7 +97,7 @@ async function createVue() {
       // 取出缓存的配置
       let oldId = localStorage.getItem('device_config_id');
       // 更新mac
-      vm.$store.commit('control/SET_STATE', { mac: oldId });
+      vm.$store.commit(types.CONTROL_SET_STATE, { mac: oldId });
     }
   }
   // 挂载到#app上
@@ -125,16 +126,15 @@ window.backButton = function backButton() {
     router.back(-1);
   }
 };
-
 /**
  * @description APP从后台切回来之后同步数据 - iOS
  */
 window.onReFocus = function onReFocus(msg) {
   msg;
-  getInfo(store.state.mac)
+  getInfo(store.state.control.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.$store.commit('control/SET_DEVICE_INFO', deviceInfo);
+      store.commit(types.SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;
@@ -146,10 +146,10 @@ window.onReFocus = function onReFocus(msg) {
  */
 window.onResume = function onResume(msg) {
   msg;
-  getInfo(store.state.mac)
+  getInfo(store.state.control.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.commit('control/SET_DEVICE_INFO', deviceInfo);
+      store.commit(types.SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;
