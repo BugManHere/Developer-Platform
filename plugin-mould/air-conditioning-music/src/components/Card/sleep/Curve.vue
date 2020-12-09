@@ -5,6 +5,7 @@
 <script>
 import echarts from 'echarts';
 import { mapState, mapActions, mapMutations } from 'vuex';
+import { types } from '@/store/types';
 
 export default {
   props: {
@@ -59,7 +60,7 @@ export default {
     );
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       dataObject: state => state.dataObject
     }),
     // 图表ref
@@ -263,12 +264,12 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setCheckObject: 'SET_CHECK_OBJECT',
-      setState: 'SET_STATE'
+      setDataObject: types.SET_DATA_OBJECT,
+      setCheckObject: types.SET_CHECK_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: types.SEND_CTRL
     }),
     changeData(val) {
       this.setState({ watchLock: false, ableSend: true });

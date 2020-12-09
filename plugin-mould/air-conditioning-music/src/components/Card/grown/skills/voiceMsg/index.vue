@@ -1,9 +1,7 @@
 <template>
   <gree-view bg-color="#ffffff">
     <gree-page class="page-voice-message">
-      <gree-header style="background-color: #fff;" 
-                  :left-options="{preventGoBack: true}" 
-                  @on-click-back="clickBack">
+      <gree-header style="background-color: #fff;" :left-options="{ preventGoBack: true }" @on-click-back="clickBack">
         语音留言簿
         <a slot="right" @click="gotoEdit" v-show="!isEmpty">编辑</a>
       </gree-header>
@@ -118,7 +116,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       mac: state => state.mac
     })
   },
@@ -181,13 +179,13 @@ export default {
     }, 8 * 1000);
   },
   mounted() {
-    if(window.history && window.history.pushState){
-      history.pushState(null,null,document.URL);
-      window.addEventListener('popstate',this.clickBack,false);
+    if (window.history && window.history.pushState) {
+      history.pushState(null, null, document.URL);
+      window.addEventListener('popstate', this.clickBack, false);
     }
   },
-  destroyed(){
-    window.removeEventListener('popstate',this.clickBack,false);
+  destroyed() {
+    window.removeEventListener('popstate', this.clickBack, false);
   },
   // mounted与destory共同监听物理返回键
   methods: {
@@ -435,7 +433,7 @@ export default {
         gTimerForGetAudioStatus = setInterval(() => {
           voiceSkillMsgAudioControl(this.mac, 'getStatus').then(data => {
             const result = JSON.parse(data);
-            console.log('radio data:',result);
+            console.log('radio data:', result);
             // if (result.status === 'playing') {
             //   this.isPlaying = true;
             // } else {
@@ -445,12 +443,12 @@ export default {
             // 在第一次播放语音的时候，主体会先传好几个个stop过来
             // 这几个stop会影响实际的播放状态的判断
             // if(result.status === 'stop' && StopTime < 3 && !haveMetStop){
-            if(result.status === 'stop' && !haveMetStop){
+            if (result.status === 'stop' && !haveMetStop) {
               // StopTime++;
-              console.log('stop------->')
+              console.log('stop------->');
               return;
             }
-            if(result.status === 'playing' || result.status === ''){
+            if (result.status === 'playing' || result.status === '') {
               this.isPlaying = true;
               haveMetStop = true;
               return;
@@ -465,7 +463,7 @@ export default {
         showToast('留言播放失败！', 0);
       }
     },
-    clickBack(){
+    clickBack() {
       this.$router.replace('/Home');
     }
   }
@@ -591,7 +589,7 @@ export default {
           width: 963px;
           height: 747px;
         }
-        .placeholder_text{
+        .placeholder_text {
           font-size: 42px;
           color: #989898;
         }

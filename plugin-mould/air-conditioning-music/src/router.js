@@ -3,16 +3,18 @@ import Router from 'vue-router';
 import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
 const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
+const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidden');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
 const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'ErrorWarning');
 
 // 高级功能倒三角进入
-const Test = r => require.ensure([], () => r(require('./views/functionPage/Test')));
-const SweepConst = r => require.ensure([], () => r(require('./views/functionPage/Sweep-const')));
-const Electric = r => require.ensure([], () => r(require('./views/functionPage/Electric')));
-const Noise = r => require.ensure([], () => r(require('./views/functionPage/Noise.vue')));
-const AssHt = r => require.ensure([], () => r(require('./views/functionPage/AssHt')));
-const UDFanPort = r => require.ensure([], () => r(require('./views/functionPage/UDFanPort')));
+export const functionPage = {
+  Test: r => require.ensure([], () => r(require('./views/functionPage/Test'))),
+  SweepConst: r => require.ensure([], () => r(require('./views/functionPage/SweepConst'))),
+  AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
+  UserAgeInfo: r => require.ensure([], () => r(require('./views/functionPage/UserAgeInfo')))
+};
+
 const MusicCollect = r => require.ensure([], () => r(require('@components/card/grown/music/page/Collect.vue')));
 const MusicDetail = r => require.ensure([], () => r(require('@components/card/grown/music/page/Detail.vue')));
 const MusicPlay = r => require.ensure([], () => r(require('@components/card/grown/music/page/Play.vue')));
@@ -21,7 +23,6 @@ const SkillSearchIndex = r => require.ensure([], () => r(require('@components/ca
 const SkillSearchResult = r => require.ensure([], () => r(require('@components/card/grown/skills/search/Result.vue')));
 const VoiceMessageIndex = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/index.vue')));
 const VoiceMessageEdit = r => require.ensure([], () => r(require('@components/card/grown/skills/voiceMsg/Edit.vue')));
-const UserAgeInfo = r => require.ensure([], () => r(require('./views/functionPage/UserAgeInfo')));
 
 Vue.use(Router);
 
@@ -36,7 +37,10 @@ const router = new Router({
     {
       path: '/Home',
       name: 'Home',
-      component: Home,
+      components: {
+        default: Home,
+        hidden: Hidden
+      },
       meta: {
         keepAlive: true
       }
@@ -54,37 +58,22 @@ const router = new Router({
     {
       path: '/Test',
       name: 'Test',
-      component: Test
+      component: functionPage.Test
     },
     {
       path: '/SweepConst',
       name: 'SweepConst',
-      component: SweepConst
-    },
-    {
-      path: '/Electric',
-      name: 'Electric',
-      component: Electric
-    },
-    {
-      path: '/Noise',
-      name: 'Noise',
-      component: Noise
+      component: functionPage.SweepConst
     },
     {
       path: '/AssHt',
       name: 'AssHt',
-      component: AssHt
-    },
-    {
-      path: '/UDFanPort',
-      name: 'UDFanPort',
-      component: UDFanPort
+      component: functionPage.AssHt
     },
     {
       path: '/UserAgeInfo',
       name: 'UserAgeInfo',
-      component: UserAgeInfo
+      component: functionPage.UserAgeInfo
     },
     {
       path: '/MusicCollect',

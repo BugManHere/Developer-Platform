@@ -43,7 +43,7 @@ export default {
       SwhSlp: state => state.dataObject.SwhSlp
     }),
     ...mapGetters(['popupDefine']),
-    ...mapGetters('machine', ['statusMap', 'noDirectionModelArr']),
+    ...mapGetters('machine', ['statusMap', 'blindModelArr']),
     btnList() {
       if (!Object.keys(this.statusMap).length) return [];
       const result = this.popupDefine.map(model => {
@@ -59,16 +59,16 @@ export default {
         const status = this.statusMap[identifier].status;
         // 取名称
         const defaultNameKey = `btn.${identifier}`;
-        const statusName = status.name;
-        const stateName = `${defaultNameKey}_${statusName}`;
-        const name = stateName === this.$language(stateName) ? this.$language(defaultNameKey) : this.$language(stateName);
+        const statusNameText = status.name;
+        const stateNameText = `${defaultNameKey}_${statusNameText}`;
+        const name = stateNameText === this.$language(stateNameText) ? this.$language(defaultNameKey) : this.$language(stateNameText);
         // 图标
         const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         // 是否置灰
-        const gray = this.noDirectionModelArr.includes(identifier);
+        const gray = this.blindModelArr.includes(identifier);
         // 是否隐藏
         const hide = status.icon.key === 'disable';
-        // 执行的函数
+        // 执行的方法
         const func = (identifier, disable = false) => {
           disable || this.$stateMachine.nextStatus(identifier);
         };

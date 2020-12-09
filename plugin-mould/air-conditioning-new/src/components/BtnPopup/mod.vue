@@ -24,20 +24,7 @@ export default {
     };
   },
   mounted() {
-    const startStatusName = 'default';
-    if (!this.modDefine) return;
-    const identifier = this.modIdentifier;
-    const modLoop = this.statusLoop[identifier];
-    if (modLoop) {
-      const modStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[identifier]));
-      const length = modStatusNameList.length;
-      let i = 0;
-      while (modStatusNameList[0] !== startStatusName && i < length) {
-        modStatusNameList.push(modStatusNameList.shift());
-        i += 1;
-      }
-      this.modStatusNameList = modStatusNameList;
-    }
+    this.getLoop();
   },
   computed: {
     ...mapState('control', {
@@ -53,9 +40,8 @@ export default {
         // status定义
         const status = this.modDefine.statusDefine[modStatusName];
         // 名称
-        const statusName = status.name;
-        const stateName = `${this.modIdentifier}_${statusName}`;
-        const name = this.$language(`mod.${stateName}`);
+        const statusNameText = status.name;
+        const stateNameText = this.$language(`mod.${this.modIdentifier}_${statusNameText}`);
         // 图标
         const icon = {
           key: status.icon.key,
@@ -71,7 +57,7 @@ export default {
         const func = (modStatusName, disable = false) => {
           disable || this.$stateMachine.toStatus(this.modIdentifier, modStatusName);
         };
-        return { key: modStatusName, name, icon, gray, hide, page, func };
+        return { key: modStatusName, name: stateNameText, icon, gray, hide, page, func };
       });
       return result;
     }
@@ -102,7 +88,23 @@ export default {
   methods: {
     ...mapMutations({
       setDataObject: types.SET_DATA_OBJECT
-    })
+    }),
+    getLoop() {
+      const startStatusName = 'default';
+      if (!this.modDefine) return;
+      const identifier = this.modIdentifier;
+      const modLoop = this.statusLoop[identifier];
+      if (modLoop) {
+        const modStatusNameList = JSON.parse(JSON.stringify(this.statusLoop[identifier]));
+        const length = modStatusNameList.length;
+        let i = 0;
+        while (modStatusNameList[0] !== startStatusName && i < length) {
+          modStatusNameList.push(modStatusNameList.shift());
+          i += 1;
+        }
+        this.modStatusNameList = modStatusNameList;
+      }
+    }
   }
 };
 </script>

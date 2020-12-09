@@ -28,7 +28,7 @@ export default {
     [AnimatedNumber.name]: AnimatedNumber
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod
     })

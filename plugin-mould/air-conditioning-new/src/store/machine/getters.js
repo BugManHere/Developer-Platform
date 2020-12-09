@@ -293,7 +293,7 @@ export default {
    * @description 获取没有指向的model数组
    * @return Array: [identifier]
    */
-  noDirectionModelArr: (state, getters) => {
+  blindModelArr: (state, getters) => {
     const result = getters.identifierArr.filter(identifier => {
       // 当前statusName
       const statusName = getters.statusMap[identifier].statusName;
@@ -310,7 +310,7 @@ export default {
   //  */
   // hideByStateNameMap: (state, getters) => {
   //   const result = {};
-  //   getters.noDirectionModelArr.forEach(identifier => {
+  //   getters.blindModelArr.forEach(identifier => {
   //     const statusNameArr = getters.statusLoop[identifier]; // 获取status指向数组
   //     result[identifier] = {};
   //     if (statusNameArr.length >= 1) {

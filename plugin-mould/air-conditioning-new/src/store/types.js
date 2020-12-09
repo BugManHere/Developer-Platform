@@ -14,20 +14,20 @@ const typesMap = {
   GET_STATUS_NAME: 'machine',
 
   /** control actions */
-  CONTROL_INIT: 'control',
-  INIT_DEVICE_DATA: 'control',
-  GET_DEVICE_INFO: 'control',
-  GET_DEVICE_DATA: 'control',
-  PARSE_DATA_BY_COLS: 'control',
-  SET_POLLING: 'control',
-  SEND_CTRL: 'control',
-  UPDATE_DATAOBJECT: 'control',
-  MQTT_CALLBACK: 'control',
+  CONTROL_INIT: 'control', // 初始化
+  INIT_DEVICE_DATA: 'control', // 初始化设备数据
+  GET_DEVICE_INFO: 'control', // 获取设备信息
+  GET_DEVICE_DATA: 'control', // 查询一包数据
+  PARSE_DATA_BY_COLS: 'control', // 解析设备数据
+  SET_POLLING: 'control', // 开启轮询
+  SEND_CTRL: 'control', // 发送控制指令
+  UPDATE_DATAOBJECT: 'control', // 更新本地数据
+  MQTT_CALLBACK: 'control', // 原生调用插件的mqtt回调方法
   /** control mutations */
-  SET_DEVICE_INFO: 'control',
-  SET_MAC: 'control',
-  SET_DATA_OBJECT: 'control',
-  SET_CHECK_OBJECT: 'control',
+  SET_DEVICE_INFO: 'control', // 设置deviceInfo
+  SET_MAC: 'control', // 设置mac
+  SET_DATA_OBJECT: 'control', // 设备的各种状态
+  SET_CHECK_OBJECT: 'control', // 用于检查的状态
   CONTROL_SET_STATE: 'control'
 };
 

@@ -37,7 +37,7 @@ export default {
   // 风速调节是否可用
   fanAbleSet: (state, getters) => {
     const hideStateNameArr = getters['machine/hideStateNameArr'];
-    return hideStateNameArr.every(state => !state.includes('FanPopup'));
+    return hideStateNameArr.every(stateName => !stateName.includes('FanPopup'));
   },
   // 风速的状态指向循环
   fanLoop: (state, getters) => {

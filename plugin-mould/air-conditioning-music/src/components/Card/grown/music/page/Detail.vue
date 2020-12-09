@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import { Header } from 'gree-ui';
 
 export default {
@@ -62,11 +62,11 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       playlistId: state => state.musicData.playlistId,
-      listInfo: state => state.musicData.listInfo,
-      currentPlaylist: (state, getters) => getters.currentPlaylist
+      listInfo: state => state.musicData.listInfo
     }),
+    ...mapGetters('control', ['currentPlaylist']),
     listLen() {
       if (!this.currentPlaylist) return 0;
       return this.currentPlaylist.length;
@@ -116,7 +116,7 @@ export default {
     next();
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
     /**

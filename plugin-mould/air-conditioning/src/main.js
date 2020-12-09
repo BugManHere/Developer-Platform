@@ -108,7 +108,7 @@ class Storage {
   }
   // 设置数据
   set(key, value, mac = store.state.mac) {
-    const data = JSON.parse(this.source[mac]);
+    const data = JSON.parse(this.source[mac] || '{}');
     data[key] = value;
     window.localStorage.setItem(mac, JSON.stringify(data));
     return value;
@@ -120,7 +120,7 @@ class Storage {
   }
   // 删除操作
   remove(key, mac = store.state.mac) {
-    const data = JSON.parse(this.source[mac]);
+    const data = JSON.parse(this.source[mac] || '{}');
     const value = data[key];
     delete data[key];
     window.localStorage.setItem(mac, JSON.stringify(data));
@@ -168,7 +168,7 @@ window.onReFocus = function onReFocus(msg) {
   getInfo(store.state.mac)
     .then(res => {
       const deviceInfo = JSON.parse(res);
-      store.$store.commit(SET_DEVICE_INFO, deviceInfo);
+      store.commit(SET_DEVICE_INFO, deviceInfo);
     })
     .catch(err => {
       err;

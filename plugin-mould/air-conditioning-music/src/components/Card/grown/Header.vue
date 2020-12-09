@@ -25,14 +25,14 @@ export default {
     CardHeader
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       mac: state => state.mac,
       authReasult: state => state.musicData.authReasult,
       imshowType: state => state.musicData.imshowType
     })
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
     changeImshow(type) {

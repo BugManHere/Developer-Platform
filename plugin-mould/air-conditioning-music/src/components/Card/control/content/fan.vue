@@ -1,10 +1,16 @@
 <template>
   <div class="fan-content">
     <div class="fan-content-header" v-text="'风速'" />
-    <div class="fan-content-main" :class="{ 'set-gray': !this.Pow }">
+    <div class="fan-content-main" :class="{ 'set-gray': isGray }">
       <!-- 圆环 -->
       <div class="fan-content-main-circle">
-        <div v-for="(fan, index) in fanData" :key="`circle_${index}`" :class="{ select: currentStatus === fan.key }" class="circle" @click="setFan(index)" />
+        <div
+          v-for="(fan, index) in fanData"
+          :key="`circle_${index}`"
+          :class="{ select: !isGray && fan.type }"
+          class="circle"
+          @click="fan.func(fan.key, isGray)"
+        />
         <div class="line" />
       </div>
       <!-- 文字 -->
@@ -12,10 +18,10 @@
         <div
           v-for="(fan, index) in fanData"
           :key="`txt_${index}`"
-          :class="{ select: currentStatus === fan.key }"
+          :class="{ select: !isGray && fan.type }"
           class="txt"
           v-text="fan.text"
-          @click="setFan(index)"
+          @click="fan.func(fan.key, isGray)"
         />
       </div>
     </div>
@@ -23,108 +29,74 @@
 </template>
 
 <script>
-import { mapMutations, mapActions, mapState } from 'vuex';
-import WorkLogic from '@logic/work';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
-  mixins: [WorkLogic],
   data() {
     return {
-      fanStatusList: [], // 风档的顺序
-      currentStatus: '' // 当前状态
+      fanStatusNameList: [] // 风档的顺序
     };
   },
+  mounted() {
+    this.updateStatusNameList();
+  },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow
     }),
+    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'fanLoop']),
     fanData() {
-      const result = this.fanStatusList.map((fanStatus, value) => {
+      const result = this.fanStatusNameList.map(fanStatusName => {
         // status定义
-        const statusDefine = this.work_fanDefine.statusDefine[fanStatus];
+        const statusDefine = this.fanDefine.statusDefine[fanStatusName];
         // 定义key
-        const key = fanStatus;
+        const key = fanStatusName;
+        // 开关图标
+        const type = this.fanCurrentStatusName === fanStatusName;
         // 名称
         const statusName = statusDefine.name;
-        const stateName = `${this.work_fanIdentifier}_${statusName}`;
+        const stateName = `${this.fanIdentifier}_${statusName}`;
         const text = this.$language(`fan.${stateName}`);
-        return { text, key, value };
+        // 执行的函数
+        const func = (fanStatusName, disable = false) => {
+          disable || this.$stateMachine.toStatus(this.fanIdentifier, fanStatusName);
+        };
+        return { text, key, func, type };
       });
       return result;
+    },
+    isGray() {
+      return !this.Pow;
     }
   },
   watch: {
-    g_statusLoop: {
-      handler(newVal) {
-        const startStatus = 'default';
-        const fanLoop = newVal[this.work_fanIdentifier];
-        if (fanLoop) {
-          const result = JSON.parse(JSON.stringify(newVal[this.work_fanIdentifier]));
-          const length = result.length;
-          let i = 0;
-          while (result[0] !== startStatus && i < length) {
-            result.push(result.shift());
-            i += 1;
-          }
-          this.fanStatusList = result;
-        }
-      },
-      deep: true,
-      immediate: true
+    fanLoop() {
+      this.updateStatusNameList();
     },
-    g_statusMap: {
-      handler(newVal) {
-        const statusMap = newVal[this.work_fanIdentifier];
-        if (statusMap) this.currentStatus = statusMap.status;
-      },
-      immediate: true,
-      deep: true
+    fanCurrentStatusName() {
+      this.updateStatusNameList();
     }
   },
   methods: {
-    ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
-    }),
-    ...mapActions({
-      sendCtrl: 'SEND_CTRL'
-    }),
-    changeData(map) {
-      this.setState({ watchLock: false });
-      this.setState({ ableSend: true });
-      this.setDataObject(map);
-      this.sendCtrl(map);
-    },
-    setFan(index) {
-      if (!this.Pow) return;
-      const status = this.fanData[index].key;
-      const funcDefine = this.work_fanDefine;
-      const statusDefine = funcDefine.statusDefine[status];
-      const identifier = funcDefine.identifier;
-      const currentStatus = this.currentStatus;
-      const customize = statusDefine.customize;
-      // 执行自定义函数 'before'
-      switch (customize) {
-        case 'replace':
-          this.customizeFunc(identifier, currentStatus, status);
-          return;
-        case 'before':
-          this.customizeFunc(identifier, currentStatus, status);
-          break;
-        case 'after':
-          setTimeout(() => {
-            this.customizeFunc(identifier, currentStatus, status);
-          }, 0);
-          break;
-        default:
-          break;
+    // 给风挡排序
+    updateStatusNameList() {
+      let startStatus = 'default';
+      if (this.fanLoop) {
+        const result = [...this.fanLoop];
+        if (!result.includes(startStatus)) {
+          result.sort((statusNameA, statusNameB) => {
+            return statusNameA[statusNameA.length - 1] - statusNameB[statusNameB.length - 1];
+          });
+          startStatus = result[0];
+        }
+        const length = result.length;
+        let i = 0;
+        while (result[0] !== startStatus && i < length) {
+          result.push(result.shift());
+          i += 1;
+        }
+        this.fanStatusNameList = result;
       }
-      const moreCommand = statusDefine.moreCommand;
-      const json = funcDefine.json;
-      const value = statusDefine.value;
-      let setData = moreCommand || {};
-      setData[json] = value;
-      this.changeData(setData);
     }
   }
 };

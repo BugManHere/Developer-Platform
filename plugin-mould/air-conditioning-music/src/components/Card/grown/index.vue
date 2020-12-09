@@ -23,7 +23,7 @@ export default {
     SkillContent
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       selectKey: state => state.selectKey,
       imshowType: state => state.musicData.imshowType,
       playMap: state => state.musicData.playMap,
@@ -40,7 +40,7 @@ export default {
     this.initWebSocket();
   },
   methods: {
-    ...mapMutations({
+    ...mapMutations('control', {
       setMusicData: 'SET_MUSIC_DATA'
     }),
     // 初始化weosocket

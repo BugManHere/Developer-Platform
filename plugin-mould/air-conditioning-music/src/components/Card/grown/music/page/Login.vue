@@ -24,7 +24,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       mac: state => state.mac,
       authReasult: state => state.musicData.authReasult,
       authDialog: state => state.musicData.authDialog

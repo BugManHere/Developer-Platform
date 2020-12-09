@@ -7,14 +7,14 @@ const mixin = {
   mixins: [updateStatus],
   computed: {
     ...mapState('control', {
-      dataObject: state => state.dataObject,
-      checkObject: state => state.checkObject
+      dataObject: state => state.dataObject
     })
   },
   mounted() {
     this.setCheckObject(this.dataObject);
     this.machineInit();
-    navigator.PluginInterface = navigator.PluginInterface || {
+    navigator.PluginInterface = {
+      ...navigator.PluginInterface,
       // 弹出确认对话框
       showConfirm: (title, content, callback) => {
         const onConfirm = () => {
@@ -46,11 +46,37 @@ const mixin = {
       getInfo: () => {
         // console.log('获取设备查询字段以及查看设备是否在线', { mac });
       },
-      showLoading: () => {},
-      hideLoading: () => {},
+      showLoading() {
+        console.log('showLoading......');
+      },
+      hideLoading() {
+        console.log('hideLoading......');
+      },
       // Toast提示
-      showToast: (msg, type) => {
-        console.log('Toast提示', { msg, type });
+      showToast(msg) {
+        let toast = document.createElement('span');
+        toast.innerText = msg;
+        const toastStyle = {
+          position: 'fixed',
+          'background-color': 'rgba(0, 0, 0, 0.6)',
+          color: '#fff',
+          'font-size': '16px',
+          'text-align': 'center',
+          padding: '8px 16px',
+          bottom: '120px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          'border-radius': '5px',
+          'z-index': 999
+        };
+        toast.style.cssText = Object.keys(toastStyle).reduce((acc, cur) => {
+          acc = acc + `${cur}: ${toastStyle[cur]};`;
+          return acc;
+        }, '');
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 1000);
       },
       // 调用主体场景功能
       getCCcmd: (mac, cmd, remarks, dat) => {

@@ -11,7 +11,7 @@
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import { showToast, hideLoading } from '@PluginInterface';
-import LogicDefine from '@/logic/define';
+import { types } from '@/store/types';
 
 export default {
   name: 'AssHt',
@@ -24,12 +24,11 @@ export default {
     [Item.name]: Item,
     [Toast.name]: Toast
   },
-  mixins: [LogicDefine],
   data() {
     return {};
   },
   computed: {
-    ...mapState({
+    ...mapState('control', {
       Pow: state => state.dataObject.Pow,
       AssHt: state => state.dataObject.AssHt,
       mid: state => state.devOptions.mid
@@ -74,11 +73,11 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setDataObject: 'SET_DATA_OBJECT',
-      setState: 'SET_STATE'
+      setDataObject: types.SET_DATA_OBJECT,
+      setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: 'SEND_CTRL'
+      sendCtrl: types.SEND_CTRL
     }),
     setAssHt(option) {
       this.setState(['ableSend', true]);

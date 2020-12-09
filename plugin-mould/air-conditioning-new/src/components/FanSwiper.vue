@@ -4,7 +4,7 @@
       <div v-text="title" class="swiper-title" />
       <swiper ref="fanSwiper" :options="swiperOption" class="fan-swiper-main" @slideChange="setFan" @touchMove="moveTouch" @touchEnd="clearTouch">
         <swiper-slide v-for="(fan, index) in fanData" :key="index">
-          <div v-text="fan.text" class="slide-text" />
+          <div v-text="fan.name" class="slide-text" />
         </swiper-slide>
       </swiper>
     </div>
@@ -53,16 +53,13 @@ export default {
       return this.$refs.fanSwiper.$swiper;
     },
     fanData() {
-      const result = this.fanStatusNameList.map((fanStatus, value) => {
+      const result = this.fanStatusNameList.map(fanStatusName => {
         // status定义
-        const statusDefine = this.fanDefine.statusDefine[fanStatus];
-        // 定义key
-        const key = fanStatus;
+        const status = this.fanDefine.statusDefine[fanStatusName];
         // 名称
-        const statusName = statusDefine.name;
-        const stateName = `${this.fanIdentifier}_${statusName}`;
-        const text = this.$language(`fan.${stateName}`);
-        return { text, key, value };
+        const statusNameText = status.name;
+        const stateNameText = this.$language(`fan.${this.fanIdentifier}_${statusNameText}`);
+        return { name: stateNameText, stautsName: fanStatusName };
       });
       return result;
     }
@@ -109,14 +106,14 @@ export default {
     updateIndex() {
       // 已显示picker且没有在滑动
       if (this.showSwiper && this.swiper) {
-        const index = this.fanData.findIndex(fan => fan.key === this.fanCurrentStatusName);
+        const index = this.fanData.findIndex(fan => fan.stautsName === this.fanCurrentStatusName);
         this.swiper.slideTo(index, 500);
         this.imshowSelect(-1);
       }
     },
     setFan() {
       if (!this.isTouch) return;
-      const statusName = this.fanData[this.swiper.activeIndex].key;
+      const statusName = this.fanData[this.swiper.activeIndex].stautsName;
       this.$stateMachine.toStatus(this.fanIdentifier, statusName);
     },
     // 亮起当前滑动项

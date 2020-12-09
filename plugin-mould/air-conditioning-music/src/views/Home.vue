@@ -8,7 +8,7 @@
     <page-header :is-center-top="isCenterTop" />
     <gree-page no-navbar class="page-home">
       <!-- 主要内容 -->
-      <div class="page-main" @touchend="getContentType">
+      <div class="page-main" @touchend="getContentType(500)">
         <!-- 温度调节 -->
         <TemSetting />
         <!-- 卡片 -->
@@ -23,14 +23,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { changeBarColor } from '@PluginInterface';
 import BottomButton from '@/components/BottomButton';
 import TemSetting from '@/components/TemSetting';
 import Authorize from '@/components/Authorize';
 import PageHeader from '@/components/PageHeader';
 import GrownCard from '@/components/card/index';
-import LogicWatch from '@logic/watch';
 
 export default {
   components: {
@@ -40,7 +39,6 @@ export default {
     Authorize,
     BottomButton
   },
-  mixins: [LogicWatch],
   data() {
     return {
       isCenterTop: false,
@@ -50,9 +48,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      skinConfig: (state, getters) => getters.skinConfig
-    })
+    ...mapState('control', {
+      selectKey: state => state.selectKey
+    }),
+    ...mapGetters('control', ['skinConfig'])
   },
   mounted() {
     // 背景自适应
@@ -65,11 +64,20 @@ export default {
         newVal && changeBarColor(newVal.barColor);
       },
       immediate: true
+    },
+    selectKey: {
+      handler(newVal) {
+        if (newVal) {
+          this.isCenterTop = false;
+          this.getContentType(0);
+        }
+      },
+      immediate: true
     }
   },
 
   methods: {
-    getContentType() {
+    getContentType(delay = 500) {
       setTimeout(() => {
         const target = document.getElementsByClassName('page-content')[0];
         const minDistance = this.bgHeight / 50; // 容错距离
@@ -79,10 +87,7 @@ export default {
         } else {
           this.isCenterTop = false;
         }
-      }, 500);
-      //  else if (Math.abs(scrollHeight - clientHeight - scrollTop) < minDistance) {
-      //   console.log('top');
-      // }
+      }, delay);
     }
   }
 };
