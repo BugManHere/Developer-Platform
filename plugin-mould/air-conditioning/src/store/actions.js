@@ -96,7 +96,6 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 
 // 查询云定时
 function getCloudTimer({ state, commit }) {
-  console.log('------------getCloudTimer-------');
   getCloudTimerByMac(state.mac).then(res => {
     const { timerTasks } = JSON.parse(res);
     let result = false;
@@ -190,7 +189,6 @@ export default {
       cols.forEach((json, index) => {
         dataObject[json] = res[index];
       });
-      console.log('dataObject:', JSON.stringify(dataObject));
     } catch (e) {
       console.error(e);
     }

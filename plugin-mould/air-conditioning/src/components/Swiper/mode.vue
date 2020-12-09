@@ -184,20 +184,25 @@ export default {
     swiperChange(index) {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
-      // const sendData = {Mod: this.imshowList[toIndex].value, Emod: 0, UDFanPort: 0};
-      // 缓存温度
-      const temSetting = this.ableSend ? window.storage.get('temSetting') || {} : {};
+      const value = this.imshowList[toIndex].value;
       let sendData = {
-        ...temSetting[toIndex],
-        Mod: this.imshowList[toIndex].value,
+        Mod: value,
         Emod: 0
       };
-      temSetting[this.dataObject.Mod] = {
-        SetTem: this.dataObject.SetTem,
-        'Add0.5': this.dataObject['Add0.5'],
-        'Add0.1': this.dataObject['Add0.1']
-      };
-      window.storage.set('temSetting', temSetting);
+      // 缓存温度
+      if (this.ableSend) {
+        const temSetting = window.storage.get('temSetting') || {};
+        sendData = {
+          ...sendData,
+          ...temSetting[value]
+        };
+        temSetting[this.dataObject.Mod] = {
+          SetTem: this.dataObject.SetTem,
+          'Add0.5': this.dataObject['Add0.5'],
+          'Add0.1': this.dataObject['Add0.1']
+        };
+        window.storage.set('temSetting', temSetting);
+      }
 
       // 自动模式需要发送温度
       toIndex || (sendData = { ...sendData, SetTem: 25, 'Add0.5': 0, 'Add0.1': 0 });
@@ -206,7 +211,6 @@ export default {
       if (sendData.Mod === 4 && this.devOptions.identifierArr.includes('AssHt(Auto)')) {
         sendData.AssHt = 0;
       }
-
       this.changeData(sendData);
       this.updateList(index);
     },
