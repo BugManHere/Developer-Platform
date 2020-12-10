@@ -13,6 +13,7 @@
 <script>
 import CardHeader from '@/components/card/CardHeader';
 import { Icon } from 'gree-ui';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -30,10 +31,24 @@ export default {
       isUnfold: true
     };
   },
+  computed: {
+    ...mapGetters(['modAbleSet'])
+  },
+  watch: {
+    modAbleSet: {
+      handler(newVal) {
+        this.setUnfold(newVal);
+      },
+      immediate: true
+    }
+  },
   methods: {
     viewMod() {
-      this.isUnfold = !this.isUnfold;
-      this.$emit('modUnfold', this.isUnfold);
+      this.setUnfold(!this.isUnfold);
+    },
+    setUnfold(val) {
+      this.isUnfold = val;
+      this.$emit('modUnfold', val);
     }
   }
 };

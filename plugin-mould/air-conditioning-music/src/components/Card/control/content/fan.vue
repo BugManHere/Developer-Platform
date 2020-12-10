@@ -1,5 +1,5 @@
 <template>
-  <div class="fan-content">
+  <div class="fan-content" v-unfold="fanAbleSet">
     <div class="fan-content-header" v-text="'风速'" />
     <div class="fan-content-main" :class="{ 'set-gray': isGray }">
       <!-- 圆环 -->
@@ -110,6 +110,7 @@ $fontSize: 44px;
   background-color: #fff;
   font-size: $fontSize;
   padding: 0 66px;
+  overflow: hidden;
   &-header {
     padding: 52px 0px 0 8px;
     border-top: 1px solid rgba(238, 238, 238, 1);
@@ -117,6 +118,7 @@ $fontSize: 44px;
     font-size: 48px;
   }
   &-main {
+    position: relative;
     &.set-gray {
       opacity: 0.4;
     }
@@ -128,6 +130,7 @@ $fontSize: 44px;
       flex-wrap: nowrap;
       width: auto;
       .circle {
+        position: relative;
         height: 40px;
         width: 40px;
         border-radius: 100%;
