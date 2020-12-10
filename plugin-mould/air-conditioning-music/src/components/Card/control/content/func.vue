@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     ...mapGetters(['buttonDefine']),
-    ...mapGetters('machine', ['statusMap', 'noDirectionModelArr']),
+    ...mapGetters('machine', ['statusMap', 'blindModelArr']),
     // 按钮列表
     btnList() {
       const result = this.buttonDefine.map(model => {
@@ -36,7 +36,7 @@ export default {
         // 图标
         const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         // 是否置灰
-        const gray = this.noDirectionModelArr.includes(identifier);
+        const gray = this.blindModelArr.includes(identifier);
         // 是否隐藏
         const hide = status.icon.key === 'disable';
         // 跳转页面

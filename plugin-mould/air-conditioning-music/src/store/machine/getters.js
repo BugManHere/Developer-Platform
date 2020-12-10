@@ -128,37 +128,6 @@ export default {
     return result;
   },
   /**
-   * @description 根据identifier获取当前状态的更多信息，没有经过隐藏状态处理
-   * @return Object: {identifier: {statusName, stateName, status}}
-   * TODO: 此处需要修改，后续优化
-   */
-  // statusMap: (state, getters, rootState, rootGetters) => {
-  //   const result = {};
-  //   // 根据字段值，返回当前状态信息
-  //   state.baseData.funcDefine.forEach(model => {
-  //     const identifier = model.identifier;
-  //     const json = model.json;
-  //     // 字段值
-  //     const currentVal = rootGetters.inputMap[json];
-  //     // 当前statusName
-  //     let statusName = getters.valToStatusName[identifier][currentVal];
-  //     let status = model.statusDefine[statusName];
-  //     // 如果statusName不存在，返回'undefined'
-  //     if (!status) {
-  //       statusName = 'undefined';
-  //       status = model.statusDefine.undefined;
-  //     }
-  //     // 当前stateName
-  //     const stateName = `${identifier}_${statusName}`;
-  //     result[identifier] = {
-  //       statusName,
-  //       stateName,
-  //       status
-  //     };
-  //   });
-  //   return result;
-  // },
-  /**
    * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
    * @return Object: {identifier: {statusName, stateName, status}}
    */
@@ -344,7 +313,7 @@ export default {
    * @description 获取没有指向的model数组
    * @return Array: [identifier]
    */
-  noDirectionModelArr: (state, getters) => {
+  blindModelArr: (state, getters) => {
     const result = getters.identifierArr.filter(identifier => {
       // 当前statusName
       const statusName = getters.statusMap[identifier].statusName;
@@ -361,7 +330,7 @@ export default {
   //  */
   // hideByStateNameMap: (state, getters) => {
   //   const result = {};
-  //   getters.noDirectionModelArr.forEach(identifier => {
+  //   getters.blindModelArr.forEach(identifier => {
   //     const statusNameArr = getters.statusLoop[identifier]; // 获取status指向数组
   //     result[identifier] = {};
   //     if (statusNameArr.length >= 1) {
