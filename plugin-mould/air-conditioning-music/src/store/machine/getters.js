@@ -79,7 +79,7 @@ export default {
     const result = {};
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;
-      result[identifier] = Object.keys(model.statusDefine);
+      result[identifier] = Object.keys(model.statusDefine).filter(statusName => statusName !== 'undefined');
     });
     return result;
   },
@@ -87,11 +87,11 @@ export default {
    * @description 根据identifier获取stateName列表
    * @return Object: {identifier: [stateName]}
    */
-  stateNameMap: state => {
+  stateNameMap: (state, getters) => {
     const result = {};
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;
-      result[identifier] = Object.keys(model.statusDefine).map(statusNmae => {
+      result[identifier] = getters.statusNameMap[identifier].map(statusNmae => {
         return `${identifier}_${statusNmae}`;
       });
     });

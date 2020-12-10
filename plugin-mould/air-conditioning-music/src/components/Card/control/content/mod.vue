@@ -1,6 +1,7 @@
 <template>
   <div class="mod-content">
-    <div class="mod-content-box" ref="content" :style="isMounted && { height: modUnfold ? `${contentHeight}px` : 0 }">
+    <!-- <div class="mod-content-box" ref="content" :style="isMounted && { height: modUnfold ? `${contentHeight}px` : 0 }"> -->
+    <div class="mod-content-box" ref="content" v-unfold="modUnfold">
       <btn-content :btn-list="btnList" />
     </div>
   </div>
@@ -114,10 +115,8 @@ export default {
 $fontSize: 44px;
 .mod-content {
   position: relative;
-  transition: all 0.5s;
   &-box {
     position: relative;
-    transition: all 0.5s;
     bottom: 0;
     background-color: #fff;
     font-size: $fontSize;

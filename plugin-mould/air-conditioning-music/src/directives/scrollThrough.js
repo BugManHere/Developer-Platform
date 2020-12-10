@@ -1,4 +1,5 @@
-const scrollThrough = {
+// 滑动穿透
+const scrollThroughEvent = {
   bind(el) {
     el.addEventListener('touchstart', e => {
       const target = document.getElementsByClassName('page-content')[0];
@@ -29,4 +30,4 @@ const scrollThrough = {
   }
 };
 
-export default scrollThrough;
+export default scrollThroughEvent;
