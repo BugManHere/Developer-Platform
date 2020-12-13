@@ -117,11 +117,11 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO);
+      hasMqtt || dispatch(types.GET_DEVICE_INFO);
       // 查询云定时
       dispatch(types.GET_CLOUD_TIMER);
       // 查询一包数据
-      dispatch(types.GET_DEVICE_DATA);
+      hasMqtt || dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
@@ -253,18 +253,15 @@ export default {
    * @description 开启/关闭轮询
    */
   async [types.SET_POLLING]({ state, commit, dispatch }, boolean) {
+    if (hasMqtt) return;
+    clearInterval(_timer);
+    _timer = null;
     if (boolean) {
-      if (!_timer) {
-        clearInterval(_timer);
-        _timer = setInterval(() => {
-          getCloudTimer({ state, commit });
-          dispatch(types.GET_DEVICE_DATA);
-          dispatch(types.GET_DEVICE_INFO);
-        }, 5000);
-      }
-    } else {
-      clearInterval(_timer);
-      _timer = null;
+      _timer = setInterval(() => {
+        getCloudTimer({ state, commit });
+        dispatch(types.GET_DEVICE_DATA);
+        dispatch(types.GET_DEVICE_INFO);
+      }, 5000);
     }
   },
 
