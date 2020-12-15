@@ -37,6 +37,7 @@
   }
 
   navigator.PluginInterface = {
+    ...navigator.PluginInterface,
     showToast(msg, type) {
       let toast = document.createElement('span');
       toast.innerText = msg;
