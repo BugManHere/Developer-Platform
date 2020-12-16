@@ -46,6 +46,7 @@
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { Header, List, Switch, Item, Picker } from 'gree-ui';
 import { mapActions, mapMutations, mapState, mapGetters } from 'vuex';
+import { showToast } from '@PluginInterface';
 import { types } from '@/store/types';
 
 export default {
@@ -218,7 +219,9 @@ export default {
     },
     // 保存按钮
     saveBtn() {
+      showToast('保存成功');
       this.switchStatus(true);
+      this.turnBack();
     },
     // 开关
     switchStatus(boolean = !this.isActive) {
