@@ -13,7 +13,7 @@
 
 <script>
 import { Popup } from 'gree-ui';
-import 'swiper/swiper-bundle.css';
+import 'swiper/swiper-bundle.min.css';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapMutations, mapGetters } from 'vuex';
 import { types } from '@/store/types';

@@ -25,14 +25,12 @@
 </template>
 
 <script>
-import { Row, Col, Popup } from 'gree-ui';
-import { showLoading } from '@PluginInterface';
+import { Row, Col } from 'gree-ui';
 
 export default {
   components: {
     [Row.name]: Row,
-    [Col.name]: Col,
-    [Popup.name]: Popup
+    [Col.name]: Col
   },
   props: {
     title: {
@@ -67,11 +65,6 @@ export default {
     goPage(page, isGray) {
       if (isGray || !page) return;
       const { routerName, params } = page;
-      try {
-        showLoading();
-      } catch {
-        console.log('showLoading');
-      }
       this.$router
         .push({
           name: routerName,

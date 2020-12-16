@@ -45,7 +45,12 @@ export default {
       // 定义自定义函数执行函数
       const runCustomizeFunction = identifier => {
         // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
-        customizeFunction[identifier] && customizeFunction[identifier](context, currentStatusName, nextStatusInfo.statusName);
+        const fn = customizeFunction[identifier];
+        if (fn) {
+          fn(context, currentStatusName, nextStatusName);
+        } else {
+          console.info('找不到自定义函数', { identifier });
+        }
       };
       // 如果自定义函数接入方式为'before'，在返回输出前执行动作
       customize === 'before' && runCustomizeFunction(identifier);

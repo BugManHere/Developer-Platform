@@ -7,9 +7,3 @@
     <router-view name="hidden" v-show="false" ref="hiddenComponent" />
   </div>
 </template>
-
-<script>
-export default {
-  name: 'App'
-};
-</script>

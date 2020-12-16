@@ -79,7 +79,21 @@ export default {
     const result = {};
     state.baseData.funcDefine.forEach(model => {
       const identifier = model.identifier;
-      result[identifier] = Object.keys(model.statusDefine);
+      result[identifier] = Object.keys(model.statusDefine).filter(statusName => statusName !== 'undefined');
+    });
+    return result;
+  },
+  /**
+   * @description 根据identifier获取stateName列表
+   * @return Object: {identifier: [stateName]}
+   */
+  stateNameMap: (state, getters) => {
+    const result = {};
+    state.baseData.funcDefine.forEach(model => {
+      const identifier = model.identifier;
+      result[identifier] = getters.statusNameMap[identifier].map(statusNmae => {
+        return `${identifier}_${statusNmae}`;
+      });
     });
     return result;
   },
@@ -113,37 +127,6 @@ export default {
     });
     return result;
   },
-  /**
-   * @description 根据identifier获取当前状态的更多信息，没有经过隐藏状态处理
-   * @return Object: {identifier: {statusName, stateName, status}}
-   * TODO: 此处需要修改，后续优化
-   */
-  // statusMap: (state, getters, rootState, rootGetters) => {
-  //   const result = {};
-  //   // 根据字段值，返回当前状态信息
-  //   state.baseData.funcDefine.forEach(model => {
-  //     const identifier = model.identifier;
-  //     const json = model.json;
-  //     // 字段值
-  //     const currentVal = rootGetters.inputMap[json];
-  //     // 当前statusName
-  //     let statusName = getters.valToStatusName[identifier][currentVal];
-  //     let status = model.statusDefine[statusName];
-  //     // 如果statusName不存在，返回'undefined'
-  //     if (!status) {
-  //       statusName = 'undefined';
-  //       status = model.statusDefine.undefined;
-  //     }
-  //     // 当前stateName
-  //     const stateName = `${identifier}_${statusName}`;
-  //     result[identifier] = {
-  //       statusName,
-  //       stateName,
-  //       status
-  //     };
-  //   });
-  //   return result;
-  // },
   /**
    * @description 根据identifier获取当前状态的更多信息，经过一层隐藏状态处理
    * @return Object: {identifier: {statusName, stateName, status}}

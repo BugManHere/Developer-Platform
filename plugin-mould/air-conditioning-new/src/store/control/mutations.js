@@ -1,8 +1,9 @@
 import { defineTypes } from '@/store/types';
 // 同步操作放这里
 export default {
-  [defineTypes.SET_MAC](state, mac) {
+  [defineTypes.SET_MAC](state, { mac, mainMac }) {
     state.mac = mac;
+    state.mainMac = mainMac;
   },
   [defineTypes.SET_DEVICE_INFO](state, deviceInfo) {
     state.deviceInfo = deviceInfo;

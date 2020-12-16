@@ -3,7 +3,8 @@
     <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
       <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="switchPow" />
       <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo" />
-      <div v-if="isCenterTop && Mod && Pow && selectKey === 'control-card'" class="title-tem-control">
+      <!-- <div v-if="isCenterTop && Mod && Pow && selectKey === 'control-card'" class="title-tem-control"> -->
+      <div v-if="false" class="title-tem-control">
         <gree-icon name="move" size="md" @click="setTem(-1)" />
         <div class="title-tem-control-value">
           <gree-animated-number :value="currentTem" :precision="1" :duration="200" transition />

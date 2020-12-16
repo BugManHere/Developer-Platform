@@ -4,6 +4,13 @@ export default {
   inputMap: state => {
     return state.control.dataObject;
   },
+  powStatusName: (state, getters) => {
+    const statusMap = getters['machine/statusMap'];
+    return statusMap.Pow && statusMap.Pow.statusName;
+  },
+  powType: (state, getters) => {
+    return getters.powStatusName === 'status_1';
+  },
   // 模式的定义
   modDefine: (state, getters) => {
     const models = getModelsByType({ getters }, 'inertia', state.modKey);
@@ -158,14 +165,11 @@ function checkReg(str, checkStr) {
 function getTem({ getters, state }) {
   const temInt = getters.inputMap[getters.temSetJson];
   let temDeci = 0;
-  if (getters.temStep === 0.5) {
-    const temJson05 = state.jsonArr.tem05;
-    temDeci = (temJson05 && getters.inputMap[temJson05] * 5) || 0;
-  } else if (getters.temStep === 0.1) {
+  if (getters.temStep < 1) {
     const temJson05 = state.jsonArr.tem05;
     const temJson01 = state.jsonArr.tem01;
-    temDeci05 = (temJson05 && getters.inputMap[temJson05] * 5) || 0;
-    temDeci01 = (temJson01 && getters.inputMap[temJson01]) || 0;
+    const temDeci05 = (temJson05 && getters.inputMap[temJson05] * 5) || 0;
+    const temDeci01 = (temJson01 && getters.inputMap[temJson01]) || 0;
     temDeci = temDeci01 || temDeci05;
   }
   return temInt + temDeci / 10;

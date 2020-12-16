@@ -9,8 +9,8 @@ const mixin = {
     /**
      *  @description 初始化，并将小卡片传进来的值赋予 state
      */
-    this.controlInit();
     this.machineInit();
+    this.controlInit();
   },
   methods: {
     ...mapActions({

@@ -28,8 +28,6 @@ export default {
   },
   computed: {
     ...mapState('control', {
-      dataObject: state => state.dataObject,
-      value: state => state.dataObject.Mod,
       ModPopup: state => state.dataObject.ModPopup
     }),
     ...mapGetters(['modDefine', 'modIdentifier', 'modCurrentStatusName']),
