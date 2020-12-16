@@ -1,5 +1,6 @@
 export default {
   mac: '', // 设备mac
+  mainMac: '', // 设备主mac
   hiddenComponent: '',
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
