@@ -257,6 +257,43 @@ export default {
     return result;
   },
   /**
+   * @description 根据identifier获取statusName指向关系
+   * @return Object: {identifier: [statusName]}
+   */
+  fakeStatusLoop: (state, getters) => {
+    const result = {};
+    // 遍历功能，提取status关系
+    state.baseData.funcDefine.forEach(model => {
+      const identifier = model.identifier;
+      // 指向关系
+      const map = model.map;
+      // 当前statusName
+      let statusName = getters.$_statusMap[identifier].statusName;
+      // 存放statusName用
+      const statusNameArr = [];
+      // 存放已检查的statusName用
+      const checkStatusNameArr = [];
+      if (map) {
+        // status指向
+        let directionStatusName = String(map[statusName]);
+        // 再次指向原点时推出，形成闭环
+        while (!checkStatusNameArr.includes(directionStatusName)) {
+          // 下一个statusName
+          statusName = directionStatusName;
+          // 按顺序存入数组
+          statusNameArr.push(directionStatusName);
+          checkStatusNameArr.push(directionStatusName);
+          // 更新指向
+          directionStatusName = String(map[statusName]);
+        }
+      }
+      // 无意义的指向改为'undefined'
+      statusNameArr.length === 0 && statusNameArr.push('undefined');
+      result[identifier] = statusNameArr;
+    });
+    return result;
+  },
+  /**
    * @description model的当前指向statusName
    * @return Object: {identifier: statusName}
    */

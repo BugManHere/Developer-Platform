@@ -4,10 +4,12 @@ export default {
   inputMap: state => {
     return state.control.dataObject;
   },
+  // 开关机的statusName
   powStatusName: (state, getters) => {
     const statusMap = getters['machine/statusMap'];
     return statusMap.Pow && statusMap.Pow.statusName;
   },
+  // 开关机的定义
   powType: (state, getters) => {
     return getters.powStatusName === 'status_1';
   },
