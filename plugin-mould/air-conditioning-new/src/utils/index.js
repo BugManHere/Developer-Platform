@@ -61,19 +61,16 @@ const UA = navigator.userAgent;
  * 判读模块是否 MQTT 协议
  */
 export const isMqtt = () => {
-  let reg = /upper_device_protocol_version\/(.+)/g;
-  let ver = reg.exec(UA);
-  console.log(UA);
-  try {
-    if (ver === null) return false;
+  let reg = /upper_device_protocol_version\/V*(\d*)/; // 匹配固件版本
+  let ver = UA.match(reg);
+  if (!ver) return 0;
 
-    let version = ver[1]; // 模块传的值 "V3.0"
-    if (Number(version.split('V')[1].split('.')[0]) >= 3) {
-      return true;
-    }
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-  return false;
+  let version = ver[1]; // 模块传的值 "V3.0+"
+  if (Number(version) < 3) return 0;
+
+  reg = /mqttfunction\/V*(\d*)/; // 匹配影子设备版本
+  ver = UA.match(reg);
+  // 至少为一期
+  if (!ver) return 1;
+  return Number(ver[1]) || 1;
 };
