@@ -20,7 +20,7 @@
           :key="`txt_${index}`"
           :class="{ select: !isGray && fan.type }"
           class="txt"
-          v-text="fan.text"
+          v-text="fan.name"
           @click="fan.func(fan.key, isGray)"
         />
       </div>
@@ -48,20 +48,19 @@ export default {
     fanData() {
       const result = this.fanStatusNameList.map(fanStatusName => {
         // status定义
-        const statusDefine = this.fanDefine.statusDefine[fanStatusName];
+        const status = this.fanDefine.statusDefine[fanStatusName];
         // 定义key
         const key = fanStatusName;
         // 开关图标
         const type = this.fanCurrentStatusName === fanStatusName;
         // 名称
-        const statusName = statusDefine.name;
-        const stateName = `${this.fanIdentifier}_${statusName}`;
-        const text = this.$language(`fan.${stateName}`);
+        const statusNameText = status.name;
+        const stateNameText = this.$language(`fan.${this.fanIdentifier}_${statusNameText}`);
         // 执行的函数
         const func = (fanStatusName, disable = false) => {
           disable || this.$stateMachine.toStatus(this.fanIdentifier, fanStatusName);
         };
-        return { text, key, func, type };
+        return { name: stateNameText, key, func, type };
       });
       return result;
     },

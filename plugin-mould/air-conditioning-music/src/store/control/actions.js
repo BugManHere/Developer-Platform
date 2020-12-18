@@ -69,16 +69,16 @@ export default {
   /**
    * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  async [types.INIT]({ dispatch, state }) {
+  async [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      dispatch(types.INIT_DEVICE_DATA, { root: true });
+      dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取授权信息
-      dispatch(types.GET_AUTH_TYPE, { root: true });
+      dispatch(types.GET_AUTH_TYPE, null, { root: true });
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO, { root: true });
+      dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
+      hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
@@ -152,6 +152,8 @@ export default {
   [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
     try {
       const { mac } = state;
+      console.log('------------GET_DEVICE_INFO');
+      console.log(mac);
       getInfo(mac)
         .then(res => {
           const deviceInfo = JSON.parse(res);
@@ -205,8 +207,8 @@ export default {
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          hasMqtt || dispatch(types.GET_DEVICE_DATA, { root: true });
-          hasMqtt || dispatch(types.GET_DEVICE_INFO, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_INFO, null, { root: true });
         }, 5000);
       }
     } else {

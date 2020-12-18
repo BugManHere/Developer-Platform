@@ -3,11 +3,6 @@
 @import 'offline';
 @import 'drawer';
 
-@font-face {
-  font-family: 'FZShaoEr';
-  src: url('../../../public/static/font/FZShaoEr-M11S.woff');
-}
-
 #app {
   font-family: 'FZLTHJ';
   position: relative;
@@ -16,4 +11,8 @@
 .hidden {
   // display: none !important;
   opacity: 0;
+}
+
+.gray {
+  opacity: 0.4;
 }

@@ -23,13 +23,6 @@
             <div id="cloud">
               <img src="@/assets/img/userAge/cloud.png" />
             </div>
-            <!-- 文字 -->
-            <div id="text">
-              <span>
-                <p v-text="'让我了解您的宝宝'" />
-                <p v-text="'为您推荐更合适的内容吧'" />
-              </span>
-            </div>
           </div>
           <!-- 标题1 -->
           <div class="content-box-title" v-text="'您的宝宝是'" />
@@ -63,23 +56,43 @@
           </div>
         </div>
       </div>
+      <!-- 隐私政策弹框 -->
+      <div class="privacy-popup" v-if="popupShow">
+        <gree-dialog class="privacy-popup-dialog" :btns="popupBtnList" title="儿童隐私政策" v-model="popupShow">
+          <p>
+            我们依据最新法律要求及软件功能，特制定
+            <a v-text="'《格力+儿童个人信息保护规则及监护人须知》'" @click="goRulesPage" />
+            ，为保障您的合法权益，请您务必仔细阅读并充分理解协议内容，如果您不同意相关条款，将导致改设备无法运行；如果您同意相关协议内容，请点击“同意”，开始接受我们的服务。
+          </p>
+        </gree-dialog>
+        <gree-overlay :absolute="true" z-index="1000" />
+      </div>
     </gree-page>
   </gree-view>
 </template>
 
 <script>
 import { closePage, editDevice } from '@PluginInterface';
-import { Header, Button } from 'gree-ui';
+import { Header, Button, Overlay, Dialog } from 'gree-ui';
 import { mapState } from 'vuex';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/swiper-bundle.css';
 
 export default {
+  components: {
+    [Header.name]: Header,
+    [Button.name]: Button,
+    [Overlay.name]: Overlay,
+    [Dialog.name]: Dialog,
+    Swiper,
+    SwiperSlide
+  },
   data() {
     const nowDate = new Date();
     const year = nowDate.getFullYear();
     const month = nowDate.getMonth();
     return {
+      popupShow: false, // 是否显示儿童隐私政策弹框
       imshowYear: 20,
       currentYear: year,
       currentMonth: month,
@@ -107,12 +120,6 @@ export default {
       }
     };
   },
-  components: {
-    [Header.name]: Header,
-    [Button.name]: Button,
-    Swiper,
-    SwiperSlide
-  },
   computed: {
     ...mapState('control', {
       devname: state => state.deviceInfo.name
@@ -137,9 +144,33 @@ export default {
     // swiper-月
     monthSwiper() {
       return this.$refs.monthSwiper.$swiper;
+    },
+    // 儿童隐私政策弹框按钮
+    popupBtnList() {
+      return [
+        {
+          text: '取消',
+          handler: () => {
+            console.log(navigator.PluginInterface);
+            closePage();
+            this.popupShow = false;
+          }
+        },
+        {
+          text: '同意',
+          handler: () => {
+            window.storage.set('userAgeInfo', {
+              agreePrivacy: true
+            });
+            this.popupShow = false;
+          }
+        }
+      ];
     }
   },
   mounted() {
+    const userAgeInfo = window.storage.get('userAgeInfo');
+    (userAgeInfo && userAgeInfo.agreePrivacy) || (this.popupShow = true);
     this.updateSwiperPos();
   },
   methods: {
@@ -180,12 +211,16 @@ export default {
         gender: this.selectGender
       });
       this.$router.push('Home');
+    },
+    // 隐私政策页面
+    goRulesPage() {
+      this.$router.push('ChildProtectRules');
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .user-info-page {
   position: relative;
   height: 100vh;
@@ -275,16 +310,6 @@ export default {
             height: 100%;
           }
         }
-        #text {
-          > span {
-            position: relative;
-            top: 110px;
-            font-size: 40px;
-            color: rgba(102, 199, 244, 1);
-            text-align: center;
-            font-family: 'FZShaoEr';
-          }
-        }
       }
       &-title {
         position: relative;
@@ -341,6 +366,21 @@ export default {
           border-radius: 100px;
         }
       }
+    }
+  }
+}
+.privacy-popup-dialog {
+  .gree-dialog-content {
+    width: 910px;
+    p {
+      text-indent: 2em;
+      font-size: 48px;
+      a {
+        text-decoration: underline;
+      }
+    }
+    .gree-dialog-body {
+      padding: 70px;
     }
   }
 }

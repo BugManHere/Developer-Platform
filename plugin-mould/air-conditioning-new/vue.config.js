@@ -114,11 +114,7 @@ module.exports = {
     ]
   },
   chainWebpack: config => {
-    if (isProduction) {
-      if (process.env.VUE_APP_MODE === 'debug') {
-        config.optimization.minimize(false);
-      }
-    }
+    isProduction && process.env.VUE_APP_MODE === 'debug' && config.optimization.minimize(false);
     config.module.noParse(deleteConfigList.map(config => resolve(`../../output/${config}`))); // 按需打包配置
     config.module
       .rule('images')
@@ -141,6 +137,5 @@ module.exports = {
     proxy: '',
     before: () => {},
     disableHostCheck: true
-  },
-  pluginOptions: {}
+  }
 };

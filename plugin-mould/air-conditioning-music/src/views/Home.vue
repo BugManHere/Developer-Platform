@@ -12,7 +12,7 @@
         <!-- 温度调节 -->
         <TemSetting />
         <!-- 卡片 -->
-        <GrownCard />
+        <BottmCard />
       </div>
     </gree-page>
     <!-- 尾部 -->
@@ -29,12 +29,12 @@ import BottomButton from '@/components/BottomButton';
 import TemSetting from '@/components/TemSetting';
 import Authorize from '@/components/Authorize';
 import PageHeader from '@/components/PageHeader';
-import GrownCard from '@/components/card/index';
+import BottmCard from '@/components/card/index';
 
 export default {
   components: {
     [PageHeader.name]: PageHeader,
-    GrownCard,
+    BottmCard,
     TemSetting,
     Authorize,
     BottomButton

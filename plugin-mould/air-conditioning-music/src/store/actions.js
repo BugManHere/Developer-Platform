@@ -6,21 +6,22 @@ const { cacheDataMap } = require('./userdef');
 export default {
   // 处理状态机初始化数据
   [defineTypes.STATE_MACHINE_INITDATA]({ commit }, { data }) {
-    // 只有在development才使用初始化数据，虚拟体验需要注释return
-    if (!dev) return;
     commit(types.SET_DATA_OBJECT, data);
     commit(types.SET_CHECK_OBJECT, data);
   },
   // 处理状态机接口数据
   [defineTypes.STATE_MACHINE_INTERFACE]({ dispatch, getters }, { data, identifier, from, to }) {
     // 获取需要缓存的数据
-    const cacheData = getCache(getters.inputMap, identifier, `${identifier}_${from}`, `${identifier}_${to}`);
+    const fromStateName = `${identifier}_${from}`;
+    const toStateName = `${identifier}_${to}`;
+    const cacheData = getCache(getters.inputMap, identifier, fromStateName, toStateName);
     // 更新并发送
     dispatch(types.SEND_DATA, { ...data, ...cacheData });
   },
   // 发送数据接口
   [defineTypes.SEND_DATA](context, data) {
     const { commit, dispatch } = context;
+    // 处理需要发送的数据
     const sendData = dataHandle(context, data);
     // 更新并发送
     commit(types.SET_DATA_OBJECT, sendData);

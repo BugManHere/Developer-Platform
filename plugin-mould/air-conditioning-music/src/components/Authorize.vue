@@ -3,7 +3,7 @@
     <gree-overlay :absolute="true" v-show="authDialog === 1" z-index="1000" />
     <div class="login-dialog" v-show="authDialog === 1">
       <div class="login-dialog-box">
-        <div v-text="'智慧鸟需要你的云小微和酷狗账号授权，才能给您带来更丰富的内容'" class="login-dialog-box-msg" />
+        <div v-text="'智慧鸟需要您的云小微和酷狗账号授权，才能给您带来更丰富的内容'" class="login-dialog-box-msg" />
         <div v-text="'跳过，暂不授权 >'" class="login-dialog-box-cancel" @click="authCancel" />
         <gree-button round v-text="'去授权'" size="small" class="login-dialog-box-confirm" @click="authConfirm" />
       </div>

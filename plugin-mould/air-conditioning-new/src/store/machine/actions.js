@@ -184,6 +184,7 @@ function getConfig() {
  * @param {Object} baseData 从json获取的配置
  */
 function updateConfig({ commit, dispatch }, baseData) {
+  if (!baseData) return;
   // 转换指令
   str2NumMap(baseData.funcDefine);
   // 更新到vuex

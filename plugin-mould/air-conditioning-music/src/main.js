@@ -4,12 +4,6 @@ import Vuex from 'vuex';
 
 // 引入第三方
 import { Page, View, Lazyload } from 'gree-ui';
-import axios from 'axios';
-import IotfeComponents from 'iotfe-components';
-import 'iotfe-components/dist/iotfeComponents.css';
-import 'jquery';
-import 'round-slider';
-import '../node_modules/round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
 
@@ -26,10 +20,6 @@ import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage'; // 对i18n的封装
 
-axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
-axios.defaults.timeout = 5000; // 响应时间
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
-
 // 安装插件
 Vue.use(VueI18n);
 Vue.use(language);
@@ -38,7 +28,6 @@ Vue.use(Vuex);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
-Vue.use(IotfeComponents);
 Vue.directive('unfold', unfoldEvent);
 Vue.directive('scroll-through', scrollThroughEvent);
 
@@ -83,6 +72,10 @@ async function createVue() {
     const storage = window.storage;
     // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
+      axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
+      axios.defaults.timeout = 5000; // 响应时间
+      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 配置请求头
+
       // 更新mac
       vm.$store.commit(types.CONTROL_SET_STATE, { mac: id });
       // 去服务器请求设备配置
@@ -107,10 +100,10 @@ async function createVue() {
   // 挂载到#app上
   vm.$mount('#app');
   const userAgeInfo = window.storage.get('userAgeInfo');
-  if (userAgeInfo) {
-    vm.$router.push('Home').catch(e => console.log(e));
+  if (userAgeInfo && userAgeInfo.year) {
+    router.push('Home').catch(e => console.log(e));
   } else {
-    vm.$router.push('UserAgeInfo').catch(e => console.log(e));
+    router.push('UserAgeInfo').catch(e => console.log(e));
   }
 }
 

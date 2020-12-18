@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const xml2js = require('xml2js');
@@ -8,28 +9,32 @@ const resolve = dir => {
   return path.join(__dirname, dir);
 };
 
-// eslint-disable-next-line func-names
-(function() {
-  const { key } = require('./plugin.id.json');
-  const { productModel, moreOption } = require(`../../output/${key}.json`);
-  const statueJson = moreOption.statueJson;
-  const statueJson2 = moreOption.statueJson2;
-  process.env.VUE_APP_VER = moreOption.pluginVer;
-  process.env.VUE_APP_MID = productModel;
-  process.env.VUE_APP_JSON = JSON.stringify(statueJson);
-  process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
-})();
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
+
+const { key } = require('./plugin.id.json');
+const { productModel, moreOption } = require(`../../output/${key}.json`);
+const statueJson = moreOption.statueJson;
+const statueJson2 = moreOption.statueJson2;
+
+process.env.VUE_APP_VER = moreOption.pluginVer;
+process.env.VUE_APP_MID = productModel;
+process.env.VUE_APP_JSON = JSON.stringify(statueJson);
+process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
+
+const configList = fs.readdirSync(resolve('../../output'));
+const deleteConfigList = configList.filter(config => !config.includes(key));
 
 module.exports = {
   publicPath: '',
   outputDir: `dist/plugins/Plugins/${process.env.VUE_APP_MID}`,
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: isDevelopment,
   productionSourceMap: false,
   pages: {
     index: {
       entry: 'src/main.js',
       template: 'public/index.html',
-      filename: process.env.NODE_ENV !== 'production' ? 'index.html' : 'control.html'
+      filename: isProduction ? 'control.html' : 'index.html'
     },
     notify: {
       entry: 'src/main.js',
@@ -109,11 +114,8 @@ module.exports = {
     ]
   },
   chainWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      if (process.env.VUE_APP_MODE === 'debug') {
-        config.optimization.minimize(false);
-      }
-    }
+    isProduction && process.env.VUE_APP_MODE === 'debug' && config.optimization.minimize(false);
+    config.module.noParse(deleteConfigList.map(config => resolve(`../../output/${config}`))); // 按需打包配置
     config.module
       .rule('images')
       .use('url-loader')
@@ -122,20 +124,6 @@ module.exports = {
         options.limit = 10000;
         return options;
       });
-    config.module.rules.delete('svg');
-    config.module
-      .rule('svg-sprite-loader')
-      .test(/\.svg$/)
-      .include.add(resolve('src/assets/icons'))
-      .end()
-      .use('svg-sprite-loader')
-      .loader('svg-sprite-loader')
-      .options({
-        symbolId: '[name]'
-      });
-    if (process.env.npm_config_report) {
-      config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin);
-    }
     const oneOfsMap = config.module.rule('scss').oneOfs.store;
     oneOfsMap.forEach(item => {
       item
@@ -147,6 +135,9 @@ module.exports = {
         })
         .end();
     });
+    if (process.env.npm_config_report) {
+      config.plugin('webpack-bundle-analyzer').use(BundleAnalyzerPlugin);
+    }
   },
   devServer: {
     open: process.platform === 'darwin',

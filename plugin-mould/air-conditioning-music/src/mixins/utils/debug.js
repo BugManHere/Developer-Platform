@@ -12,8 +12,8 @@ const mixin = {
     })
   },
   mounted() {
-    this.setCheckObject(this.dataObject);
     this.machineInit();
+    this.setCheckObject(this.dataObject);
     navigator.PluginInterface = {
       ...navigator.PluginInterface,
       // 弹出确认对话框
@@ -82,6 +82,15 @@ const mixin = {
       // 调用主体场景功能
       getCCcmd: (mac, cmd, remarks, dat) => {
         console.log('调用主体场景接口', { mac, cmd, remarks, dat });
+      },
+      closePage: () => {
+        console.log('关闭插件页');
+      },
+      toVoicePage: () => {
+        console.log('跳转语音相关页面');
+      },
+      editDevice: () => {
+        console.log('设备编辑页');
       }
     };
   },

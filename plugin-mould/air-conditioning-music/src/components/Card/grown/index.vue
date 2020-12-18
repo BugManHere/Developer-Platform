@@ -45,14 +45,14 @@ export default {
     }),
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'ws://192.168.31.94:9999';
-      this.websock = new WebSocket(wsuri);
-      this.websock.onmessage = this.websocketonmessage;
-      this.websock.onopen = this.websocketonopen;
-      this.websock.onerror = this.websocketonerror;
-      this.websock.onclose = this.websocketclose;
-      this.websock.onsend = this.websocketsend;
-      window.websock = this.websock;
+      // const wsuri = 'ws://192.168.31.94:9999';
+      // this.websock = new WebSocket(wsuri);
+      // this.websock.onmessage = this.websocketonmessage;
+      // this.websock.onopen = this.websocketonopen;
+      // this.websock.onerror = this.websocketonerror;
+      // this.websock.onclose = this.websocketclose;
+      // this.websock.onsend = this.websocketsend;
+      // window.websock = this.websock;
     },
     // 连接建立之后执行send方法发送数据
     websocketonopen() {},

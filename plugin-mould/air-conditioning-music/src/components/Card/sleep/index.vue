@@ -7,7 +7,13 @@
       <!-- 选择体质 -->
       <div class="sleep-content-body">
         <div class="body-btn-box">
-          <div v-for="(btn, index) in bodyBtnList" :key="index" class="body-btn" :class="{ select: selectBody === btn.value }" @click="changeBody(btn.value)">
+          <div
+            v-for="(btn, index) in bodyBtnList"
+            :key="index"
+            class="body-btn"
+            :class="{ select: selectBody === btn.value, gray: !powType }"
+            @click="changeBody(btn.value, !powType)"
+          >
             <span v-text="btn.text" />
           </div>
         </div>
@@ -19,10 +25,10 @@
       <!-- 功能开关 -->
       <gree-list>
         <gree-list-item title="防直吹" style="font-size: 18px" footer="防止风直接吹人">
-          <gree-switch :disabled="Mod !== 1" slot="after" class="blue" v-model="blowActive" @change="switchBlow(blowActive)" />
+          <gree-switch :disabled="blowAble" slot="after" class="blue" v-model="blowActive" @change="switchBlow" />
         </gree-list-item>
         <gree-list-item title="自动灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
-          <gree-switch slot="after" class="blue" v-model="ligActive" @change="switchLig(ligActive)" />
+          <gree-switch slot="after" class="blue" v-model="ligActive" @change="switchLig" />
         </gree-list-item>
       </gree-list>
     </div>
@@ -30,7 +36,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { Switch, List, Item } from 'gree-ui';
 import Curve from '@/components/card/sleep/Curve';
 import SleepHeader from '@/components/card/sleep/Header';
@@ -72,13 +78,12 @@ export default {
   },
   computed: {
     ...mapState('control', {
-      Mod: state => state.dataObject.Mod,
       SwhSlp: state => state.dataObject.SwhSlp,
       SlpMod: state => state.dataObject.SlpMod,
-      SmartSlpMod: state => state.dataObject.SmartSlpMod,
-      AntiDirectBlow: state => state.dataObject.AntiDirectBlow,
-      Lig: state => state.dataObject.Lig
+      SmartSlpMod: state => state.dataObject.SmartSlpMod
     }),
+    ...mapGetters('machine', ['statusMap', 'blindModelArr']),
+    ...mapGetters(['powType']),
     // 当前体质
     bodyType() {
       if (this.SlpMod === 3 && this.SmartSlpMod === 0) {
@@ -91,6 +96,27 @@ export default {
     // 是否显示曲线
     imshowCurve() {
       return Boolean(this.SwhSlp && this.SlpMod === 3 && this.SmartSlpMod === 0);
+    },
+    // 防直吹
+    blowStatusName() {
+      const statusMap = this.statusMap;
+      return statusMap.AntiDirectBlow && statusMap.AntiDirectBlow.statusName;
+    },
+    // 防直吹
+    blowType() {
+      return this.blowStatusName === 'status_1';
+    },
+    blowAble() {
+      return this.blindModelArr.includes('AntiDirectBlow');
+    },
+    // 自动灯光
+    ligStatusName() {
+      const statusMap = this.statusMap;
+      return statusMap.Lig && statusMap.Lig.statusName;
+    },
+    // 自动灯光
+    ligType() {
+      return this.ligStatusName === 'status_1';
     }
   },
   watch: {
@@ -100,15 +126,15 @@ export default {
       },
       immediate: true
     },
-    AntiDirectBlow: {
+    blowType: {
       handler(newVal) {
-        this.blowActive = Boolean(newVal);
+        this.blowActive = newVal;
       },
       immediate: true
     },
-    Lig: {
+    ligType: {
       handler(newVal) {
-        this.ligActive = Boolean(newVal);
+        this.ligActive = newVal;
       },
       immediate: true
     }
@@ -128,7 +154,8 @@ export default {
       this.sendCtrl(map);
     },
     // 选择体质
-    changeBody(value) {
+    changeBody(value, disable) {
+      if (disable) return;
       const sendData = {
         SwhSlp: 1,
         SlpMod: value ? 2 : 3, // DIY模式发送3
@@ -151,15 +178,11 @@ export default {
     },
     // 开关防直吹
     switchBlow(value) {
-      this.changeData({
-        AntiDirectBlow: Number(value)
-      });
+      this.$stateMachine.toStatus('AntiDirectBlow', value ? 'status_1' : 'default');
     },
     // 开关灯光
-    switchLig(value) {
-      this.changeData({
-        Lig: Number(value)
-      });
+    switchLig() {
+      this.$stateMachine.nextStatus('Lig');
     },
     // 开关静音
     openQuiet() {
@@ -198,6 +221,7 @@ $sleepMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
     height: 100%;
     max-height: $cardContentHeight;
     min-height: $sleepMainHeight;
+    padding-bottom: 50px;
     background-color: #fff;
     overflow-y: auto;
     &-body {

@@ -55,6 +55,8 @@ export const throttle = (fn, interval) => {
   };
 };
 
+const UA = navigator.userAgent;
+
 /**
  * 判读模块是否 MQTT 协议
  */
@@ -69,11 +71,9 @@ export const isMqtt = () => {
     if (Number(version.split('V')[1].split('.')[0]) >= 3) {
       return true;
     }
-    return false;
   } catch (e) {
     console.error(e);
     return false;
   }
+  return false;
 };
-
-const UA = navigator.userAgent;

@@ -2,17 +2,17 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
 
-const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
+import Home from './views/Home';
+import UserAgeInfo from './views/functionPage/UserAgeInfo';
 const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidden');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
-const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'ErrorWarning');
 
 // 高级功能倒三角进入
 export const functionPage = {
   Test: r => require.ensure([], () => r(require('./views/functionPage/Test'))),
   SweepConst: r => require.ensure([], () => r(require('./views/functionPage/SweepConst'))),
   AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
-  UserAgeInfo: r => require.ensure([], () => r(require('./views/functionPage/UserAgeInfo')))
+  ChildProtectRules: r => require.ensure([], () => r(require('./views/functionPage/ChildProtectRules')))
 };
 
 const MusicCollect = r => require.ensure([], () => r(require('@components/card/grown/music/page/Collect.vue')));
@@ -51,11 +51,6 @@ const router = new Router({
       component: Offline
     },
     {
-      path: '/ErrorWarning',
-      name: 'ErrorWarning',
-      component: ErrorWarning
-    },
-    {
       path: '/Test',
       name: 'Test',
       component: functionPage.Test
@@ -73,7 +68,12 @@ const router = new Router({
     {
       path: '/UserAgeInfo',
       name: 'UserAgeInfo',
-      component: functionPage.UserAgeInfo
+      component: UserAgeInfo
+    },
+    {
+      path: '/ChildProtectRules',
+      name: 'ChildProtectRules',
+      component: functionPage.ChildProtectRules
     },
     {
       path: '/MusicCollect',
@@ -158,4 +158,12 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+router.onError(error => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  const targetPath = router.history.pending.fullPath;
+  if (isChunkLoadFailed) {
+    router.replace(targetPath);
+  }
+});
 export default router;
