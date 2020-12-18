@@ -3,15 +3,7 @@
     <gree-header theme="transparent" :left-options="{ preventGoBack: true }" :right-options="{ showMore: false }" @on-click-back="goBack">
       <gree-icon name="power" size="lg" class="header-pow" slot="right" @click="switchPow" />
       <gree-icon name="more" size="lg" class="header-more" slot="right" @click="moreInfo" />
-      <!-- <div v-if="isCenterTop && Mod && Pow && selectKey === 'control-card'" class="title-tem-control"> -->
-      <div v-if="false" class="title-tem-control">
-        <gree-icon name="move" size="md" @click="setTem(-1)" />
-        <div class="title-tem-control-value">
-          <gree-animated-number :value="currentTem" :precision="1" :duration="200" transition />
-        </div>
-        <gree-icon name="add" size="md" @click="setTem(1)" />
-      </div>
-      <span v-text="devname" @click="onTest" v-else />
+      <span v-text="devname" @click="onTest" />
       <a class="save" slot="right" v-if="functype" @click="sceneSave">
         保存
       </a>
@@ -20,14 +12,12 @@
 </template>
 
 <script>
-import { Header, Icon, AnimatedNumber } from 'gree-ui';
+import { Header, Icon } from 'gree-ui';
 import { mapState } from 'vuex';
 import { closePage, editDevice, getCCcmd, getCurrentMode } from '@PluginInterface';
-import temConfig from '@/mixins/utils/tem';
 
 export default {
   name: 'page-header',
-  mixins: [temConfig],
   props: {
     isCenterTop: {
       type: Boolean,
@@ -36,17 +26,13 @@ export default {
   },
   components: {
     [Header.name]: Header,
-    [AnimatedNumber.name]: AnimatedNumber,
     [Icon.name]: Icon
   },
   computed: {
     ...mapState('control', {
-      selectKey: state => state.selectKey,
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
-      mac: state => state.mac,
-      Pow: state => state.dataObject.Pow,
-      Mod: state => state.dataObject.Mod
+      mac: state => state.mac
     })
   },
   methods: {

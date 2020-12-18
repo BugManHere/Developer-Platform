@@ -1,5 +1,5 @@
 const state = {
-  mac: '', // 设备mac
+  mac: 'test', // 设备mac
   skinIndex: 0, // 皮肤编号
   selectKey: 'grown-card',
   watchLock: true, // 互斥锁
@@ -36,7 +36,7 @@ const state = {
   musicData: {
     authDialog: 2, // 授权弹框 0不弹框 1弹框 2待确定
     authReasult: 0, // 0未授权 1授权云小微 2授权云小微与音乐
-    imshowType: 1, // 0点播 1技能
+    imshowType: 0, // 0点播 1技能
     // 分组、分类
     groups: [], // 分组
     groupsUnfold: [], // 分组的展开

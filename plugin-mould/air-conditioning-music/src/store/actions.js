@@ -6,7 +6,6 @@ const { cacheDataMap } = require('./userdef');
 export default {
   // 处理状态机初始化数据
   [defineTypes.STATE_MACHINE_INITDATA]({ commit }, { data }) {
-    if (!dev) return;
     commit(types.SET_DATA_OBJECT, data);
     commit(types.SET_CHECK_OBJECT, data);
   },

@@ -56,7 +56,7 @@ module.exports = {
     'SwingLR(new)': '左右扫风',
     Health: '健康',
     AutoLig: '自动灯光',
-    Lig: '灯光',
+    Lig: '自动灯光',
     'Lig(Auto)': '灯光',
     StHt: '8℃制热',
     VocCtl: '空调语音',

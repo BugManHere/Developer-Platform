@@ -4,6 +4,24 @@ export default {
   inputMap: state => {
     return state.control.dataObject;
   },
+  // 开关机的statusName
+  powStatusName: (state, getters) => {
+    const statusMap = getters['machine/statusMap'];
+    return statusMap.Pow && statusMap.Pow.statusName;
+  },
+  // 开关机的定义
+  powType: (state, getters) => {
+    return getters.powStatusName === 'status_1';
+  },
+  // 睡眠的statusName
+  slpStatusName: (state, getters) => {
+    const statusMap = getters['machine/statusMap'];
+    return statusMap.Pow && statusMap.Pow.statusName;
+  },
+  // 睡眠的定义
+  slpType: (state, getters) => {
+    return getters.powStatusName === 'status_1';
+  },
   // 模式的定义
   modDefine: (state, getters) => {
     const models = getAllModelsByType({ getters }, 'inertia', state.modKey);
@@ -23,7 +41,7 @@ export default {
   modAbleSet: (state, getters) => {
     const hideStateNameArr = getters['machine/hideStateNameArr'];
     const modStateNameArr = getters['machine/stateNameMap'][getters.modIdentifier];
-    return modStateNameArr.some(stateName => !hideStateNameArr.includes(stateName));
+    return modStateNameArr && modStateNameArr.some(stateName => !hideStateNameArr.includes(stateName));
   },
   // 风速的定义
   fanDefine: (state, getters) => {
