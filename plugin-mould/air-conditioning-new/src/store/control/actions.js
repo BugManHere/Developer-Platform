@@ -1,17 +1,16 @@
 import { types, defineTypes } from '@/store/types';
-
+import { getConfig } from '@/utils/getConfig';
+import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
-import { getQueryStringByName, isMqtt } from '../../utils/index';
 
 let _timer = null; // 轮询定时器
 let _timer2 = null; // 延时发送指令定时器
 let _timer3 = null; // 重启轮询定时器
 let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
-let hasMqtt = isMqtt();
+let mqttVer = isMqtt();
 
-const { key } = require('@/../plugin.id.json');
-const { moreOption } = require(`@/../../../output/${key}.json`);
+const { moreOption } = getConfig({ isLocal: true });
 const statueJson2 = moreOption.statueJson2;
 
 // 自定义数据，根据业务更改
@@ -76,13 +75,13 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO, null, { root: true });
+      mqttVer <= 1 || dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
+      mqttVer <= 1 || dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
-      hasMqtt &&
+      mqttVer &&
         setMqttStatusCallback(state.mac, data => {
           dispatch(types.MQTT_CALLBACK, data, { root: true });
         });
@@ -203,12 +202,13 @@ export default {
    * @description 开启/关闭轮询
    */
   async [defineTypes.SET_POLLING]({ dispatch }, boolean) {
+    if (!(mqttVer <= 1)) return;
     clearTimeout(_timer3);
     if (boolean) {
       if (!_timer) {
         _timer = setInterval(() => {
-          hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
-          hasMqtt || dispatch(types.GET_DEVICE_INFO, null, { root: true });
+          dispatch(types.GET_DEVICE_DATA, null, { root: true });
+          dispatch(types.GET_DEVICE_INFO, null, { root: true });
         }, 5000);
       }
     } else {

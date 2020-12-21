@@ -56,7 +56,7 @@
         <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen" />
         <!-- 风档滑轮 -->
         <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-name="modeName" />
-        <!-- <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper"/> -->
+        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">

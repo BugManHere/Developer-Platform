@@ -143,7 +143,6 @@ export default {
       pluginVer: '1.0',
       voiceSkill: false, // 是否有'语音技能'
       temStep: '0.5', // 温度间隔
-      fanRange: '7', // 多少档风
       statueJson: [], // 小卡片字段
       statueJson2: [], // 插件字段
       cardBlur: true,
@@ -158,8 +157,7 @@ export default {
     // 初始化数据，从服务器获取
     this.pluginVer = this.moreOption.pluginVer;
     this.voiceSkill = this.moreOption.voiceSkill;
-    this.temStep = this.moreOption.temStep;
-    this.fanRange = this.moreOption.fanRange;
+    this.temStep = this.moreOption.temStep || '1';
     this.statueJson = this.moreOption.statueJson;
     this.statueJson2 = this.moreOption.statueJson2;
     // 如果之前没有定义字段，自动生成
@@ -192,7 +190,6 @@ export default {
         pluginVer: this.pluginVer,
         voiceSkill: this.voiceSkill,
         temStep: this.temStep,
-        fanRange: this.fanRange,
         statueJson: this.statueJson,
         statueJson2: this.statueJson2
       };

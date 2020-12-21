@@ -8,7 +8,7 @@ let _timer2 = null;
 let _timer3 = null; // 重启轮询定时器
 let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
-let hasMqtt = isMqtt();
+let mqttVer = isMqtt();
 const { key } = require('@/../plugin.id.json');
 
 const { moreOption } = require(`@/../../../output/${key}.json`);
@@ -117,15 +117,15 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
-      hasMqtt || dispatch(types.GET_DEVICE_INFO);
+      mqttVer <= 1 || dispatch(types.GET_DEVICE_INFO);
       // 查询云定时
       dispatch(types.GET_CLOUD_TIMER);
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA);
+      mqttVer <= 1 || dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
-      hasMqtt &&
+      mqttVer &&
         setMqttStatusCallback(state.mac, data => {
           dispatch(types.MQTT_CALLBACK, data);
         });
@@ -253,7 +253,7 @@ export default {
    * @description 开启/关闭轮询
    */
   async [types.SET_POLLING]({ state, commit, dispatch }, boolean) {
-    if (hasMqtt) return;
+    if (!(mqttVer <= 1)) return;
     clearInterval(_timer);
     _timer = null;
     if (boolean) {
