@@ -1,7 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const browserslist = require('./package.json').browserslist;
 const xml2js = require('xml2js');
 
@@ -30,8 +29,7 @@ module.exports = {
     index: {
       entry: 'src/main.js',
       template: 'public/index.html',
-      filename:
-        process.env.NODE_ENV !== 'production' ? 'index.html' : 'control.html'
+      filename: process.env.NODE_ENV !== 'production' ? 'index.html' : 'control.html'
     },
     notify: {
       entry: 'src/main.js',
@@ -69,10 +67,7 @@ module.exports = {
       new CopyWebpackPlugin([
         {
           from: path.resolve(__dirname, './src/config/config.xml'),
-          to: path.resolve(
-            __dirname,
-            `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/config.xml`
-          ),
+          to: path.resolve(__dirname, `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/config.xml`),
           transform(content, contentPath) {
             if (contentPath.indexOf('config.xml') !== -1) {
               let xml;
@@ -98,10 +93,7 @@ module.exports = {
         },
         {
           from: path.resolve(__dirname, '../static/lib/cordovainit.js'),
-          to: path.resolve(
-            __dirname,
-            `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/js/`
-          )
+          to: path.resolve(__dirname, `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/js/`)
         }
       ])
     ]
