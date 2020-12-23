@@ -114,8 +114,10 @@ module.exports = {
     ]
   },
   chainWebpack: config => {
-    isProduction && process.env.VUE_APP_MODE === 'debug' && config.optimization.minimize(false);
-    config.module.noParse([/^(vue|vue-router|vuex|vuex-router-sync)$/, ...deleteConfigList.map(str => new RegExp(str))]); // 按需打包配置
+    if (isProduction) {
+      process.env.VUE_APP_MODE === 'debug' && config.optimization.minimize(false);
+      config.module.noParse([/^(vue|vue-router|vuex|vuex-router-sync)$/, ...deleteConfigList.map(str => new RegExp(str))]); // 按需打包配置
+    }
     config.module
       .rule('images')
       .use('url-loader')
