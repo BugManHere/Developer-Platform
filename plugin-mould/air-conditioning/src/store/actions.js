@@ -53,7 +53,11 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       setP.push(Number(setData[key]));
     });
     setData = {};
-    if (!setOpt.length) return;
+    if (!setOpt.length) {
+      commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
+      commit(types.SET_STATE, ['ableSend', false]);
+      return;
+    }
     const mac = state.mac;
     const t = 'cmd';
     const opt = setOpt;
