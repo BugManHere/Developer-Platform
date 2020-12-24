@@ -149,11 +149,10 @@ export default {
       sendCtrl: 'SEND_CTRL'
     }),
     textShowToast() {
-      console.log('-------自动模式下不可滑动---------');
-      showToast('自动模式下不可滑动', 1);
+      const toast = this.$language(`ban.${this.banSwiping.txt}.toast`);
+      showToast(toast, 1);
     },
     swiperShowDisable() {
-      console.log('-------故障下不可滑动---------');
       showToast('故障下不可滑动', 1);
     },
     changeData(val) {
@@ -338,9 +337,7 @@ export default {
     ableSwiping() {
       const ref = this.$refs[this.ref];
       if (this.banSwiping) {
-        this.banSwiping.value
-          ? ref.showText(true, this.banSwiping.value, this.banSwiping.isNumber)
-          : ref.showText(true, this.$language(`ban.${this.banSwiping.txt}`), this.banSwiping.isNumber);
+        ref.showText(true, this.$language(`ban.${this.banSwiping.txt}.text`), this.banSwiping.isNumber);
       } else {
         ref.showText(false);
       }
