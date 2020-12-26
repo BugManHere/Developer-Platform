@@ -1,5 +1,5 @@
 import { types, defineTypes } from '@/store/types';
-import { getConfig } from '@/utils/fsm';
+import { getConfig } from '@/utils/getConfig';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
 

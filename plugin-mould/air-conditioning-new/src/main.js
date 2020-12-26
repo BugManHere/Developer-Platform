@@ -4,7 +4,6 @@ import Vuex from 'vuex';
 
 // 引入第三方
 import { Page, View } from 'gree-ui';
-import fsmVue from 'fsm-vue';
 import 'round-slider/dist/roundslider.min.js';
 import 'round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
@@ -20,8 +19,6 @@ import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
-import { getConfig, getState } from './utils/fsm';
-const customize = require('@/store/userdef');
 
 // 安装插件
 Vue.use(VueI18n);
@@ -95,17 +92,9 @@ async function createVue() {
       vm.$store.commit(types.CONTROL_SET_STATE, { mac: oldId });
     }
   }
-  vm.$router.replace('Home').catch(e => console.log(e));
-  // 给状态机传入配置
-  console.log(vm.$store.state.control.dataObject);
-  Vue.use(fsmVue, {
-    config: getConfig({ storage: window.storage }),
-    input: vm.$store.state.control.dataObject,
-    output: getState,
-    customize
-  });
   // 挂载到#app上
   vm.$mount('#app');
+  vm.$router.replace('Home').catch(e => console.log(e));
 }
 
 /* 启用页面调试器 */
