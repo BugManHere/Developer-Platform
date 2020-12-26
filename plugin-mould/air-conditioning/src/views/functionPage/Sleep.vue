@@ -164,36 +164,37 @@ export default {
           [8, 26]
         ]
       },
-      slpModExJson: [
-        'SwhSlp',
-        'SlpMod',
-        'SmartSlpMod',
-        'SmartSlpModEx',
-        'StSlp1C',
-        'StSlp1CInc',
-        'StSlp1CSp',
-        'StSlp1H',
-        'StSlp1HInc',
-        'StSlp1HSp',
-        'StSlp2C',
-        'StSlp2CInc',
-        'StSlp2CSp',
-        'StSlp2H',
-        'StSlp2HInc',
-        'StSlp2HSp',
-        'StSlp3C',
-        'StSlp3CInc',
-        'StSlp3CSp',
-        'StSlp3H',
-        'StSlp3HInc',
-        'StSlp3HSp',
-        'StSlp4C',
-        'StSlp4CInc',
-        'StSlp4CSp',
-        'StSlp4H',
-        'StSlp4HInc',
-        'StSlp4HSp'
-      ],
+      // slpModExJson: [
+      //   'SwhSlp',
+      //   'SlpMod',
+      //   'SmartSlpMod',
+      //   'SmartSlpModEx',
+      //   'StSlp1C',
+      //   'StSlp1CInc',
+      //   'StSlp1CSp',
+      //   'StSlp1H',
+      //   'StSlp1HInc',
+      //   'StSlp1HSp',
+      //   'StSlp2C',
+      //   'StSlp2CInc',
+      //   'StSlp2CSp',
+      //   'StSlp2H',
+      //   'StSlp2HInc',
+      //   'StSlp2HSp',
+      //   'StSlp3C',
+      //   'StSlp3CInc',
+      //   'StSlp3CSp',
+      //   'StSlp3H',
+      //   'StSlp3HInc',
+      //   'StSlp3HSp',
+      //   'StSlp4C',
+      //   'StSlp4CInc',
+      //   'StSlp4CSp',
+      //   'StSlp4H',
+      //   'StSlp4HInc',
+      //   'StSlp4HSp'
+      // ],
+      slpModExJson: ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx'],
       slpModExVal: [
         [1, 2, 4, 1, 1, 131, 1, 1, 131, 1, 120, 0, 6, 120, 0, 6, 300, 8, 6, 300, 8, 6, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 2, 1, 133, 1, 1, 133, 1, 120, 0, 6, 120, 0, 6, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1],
@@ -244,8 +245,9 @@ export default {
     },
     currentAge() {
       if ([1, 4].includes(this.SlpMod)) return 4;
-      if (this.SmartSlpModEx === 0) return 1;
+      if (this.SlpMod === 3) return 3;
       if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
+      if (this.SmartSlpModEx === 0) return 1;
       return Math.ceil(this.SmartSlpModEx / 3) - 1;
     },
     currentBody() {
@@ -618,11 +620,7 @@ export default {
         hasToast && showToast(hasToast, 1);
         return;
       }
-      console.log('---------------------sendDataToDevice---start-');
-      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const res = await sendDataToDevice(this.mac, json, false);
-      console.log('---------------------sendDataToDevice---end-');
-      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       const { r } = JSON.parse(res);
       if (r === 200 && hasToast) {
         showToast(hasToast, 1);
@@ -675,8 +673,6 @@ export default {
       });
 
       if (this.disableUpdate || !this.getSlpTimer || this.waitCallBack) return;
-      console.log('---------------------updateLocal----');
-      console.log(new Date().getMinutes(), new Date().getSeconds(), new Date().getMilliseconds());
       this.updateLocal(dataObject);
       this.updateDataObject(dataObject);
     },
@@ -842,16 +838,22 @@ export default {
       });
     },
     saveSlp() {
-      const setData = {
+      let setData = {
         SwhSlp: 1,
         SlpMod: 3
       };
+      const slpDiy = {};
       this.temArr.forEach((item, index) => {
         const keyL = `Slp1L${index + 1}`;
         const keyH = `Slp1H${index + 1}`;
         const opt = this.temToVal[this.temArr[index]];
-        [setData[keyL], setData[keyH]] = opt;
+        [slpDiy[keyL], slpDiy[keyH]] = opt;
       });
+      window.storage.set('slpDiy', slpDiy);
+      setData = {
+        ...setData,
+        ...slpDiy
+      };
       this.changeDataObject(setData, '保存成功');
     },
     selectStyle(key, type) {
@@ -955,9 +957,9 @@ export default {
         SlpMod: 3,
         SmartSlpMod: 0
       };
-      if (!this.$store.state.dataObject.Slp1L1) {
-        setData = {
-          ...setData,
+      let slpDiy = window.storage.get('slpDiy');
+      if (!slpDiy) {
+        slpDiy = {
           Slp1L1: 250,
           Slp1H1: 0,
           Slp1L2: 4,
@@ -976,6 +978,11 @@ export default {
           Slp1H8: 1
         };
       }
+      setData = {
+        ...setData,
+        ...slpDiy
+      };
+      window.storage.set('slpDiy', slpDiy);
       this.changeDataObject(setData);
       this.$nextTick(() => {
         this.updateEchart();

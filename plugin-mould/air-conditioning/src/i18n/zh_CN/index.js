@@ -15,9 +15,18 @@ module.exports = {
     Electric: '电量查询'
   },
   ban: {
-    Auto: '自动',
-    StHt_C: '8',
-    StHt_F: '46'
+    Auto: {
+      text: '自动',
+      toast: '自动模式下不可设置温度'
+    },
+    StHt_C: {
+      text: '8',
+      toast: '8℃制热下不可设置温度'
+    },
+    StHt_F: {
+      text: '46',
+      toast: '46℉制热下不可设置温度'
+    }
   },
   error: {
     notify_fault_title: '故障通知',

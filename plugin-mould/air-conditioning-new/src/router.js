@@ -7,17 +7,30 @@ const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidd
 // const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
 
-// 高级功能倒三角进入
-export const functionPage = {
-  Test: r => require.ensure([], () => r(require('./views/functionPage/Test'))),
-  SweepConst: r => require.ensure([], () => r(require('./views/functionPage/SweepConst'))),
-  // Electric: r => require.ensure([], () => r(require('./views/functionPage/Electric'))),
-  Noise: r => require.ensure([], () => r(require('./views/functionPage/Noise'))),
-  AssHt: r => require.ensure([], () => r(require('./views/functionPage/AssHt'))),
-  UDFanPort: r => require.ensure([], () => r(require('./views/functionPage/UDFanPort'))),
-  AreaFan: r => require.ensure([], () => r(require('./views/functionPage/AreaFan'))),
-  SvSt: r => require.ensure([], () => r(require('./views/functionPage/SvSt')))
+const componentList = ['Test', 'SweepConst', 'Noise', 'AssHt', 'UDFanPort', 'AreaFan', 'SvSt'];
+
+// 引入component
+const requireComponents = componentNames => {
+  const result = {};
+  componentNames.forEach(componentName => {
+    result[componentName] = r => require.ensure([], () => r(require(`@/views/functionPage/${componentName}`)));
+  });
+  return result;
 };
+
+// 注册component
+const registerRoute = componentNames => {
+  return componentNames.map(componentName => {
+    return {
+      path: `/${componentName}`,
+      name: componentName,
+      component: functionPage[componentName]
+    };
+  });
+};
+
+// 高级功能二级页面
+export const functionPage = requireComponents(componentList);
 
 Vue.use(Router);
 
@@ -25,6 +38,7 @@ const router = new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
+    ...registerRoute(componentList),
     {
       path: '/',
       redirect: '/Home'
@@ -49,54 +63,12 @@ const router = new Router({
       path: '/Hidden',
       name: 'Hidden',
       component: Hidden
-    },
+    }
     // {
     //   path: '/ErrorWarning',
     //   name: 'ErrorWarning',
     //   component: ErrorWarning
-    // },
-    {
-      path: '/Test',
-      name: 'Test',
-      component: functionPage.Test
-    },
-    {
-      path: '/SweepConst',
-      name: 'SweepConst',
-      component: functionPage.SweepConst
-    },
-    // {
-    //   path: '/Electric',
-    //   name: 'Electric',
-    //   component: functionPage.Electric
-    // },
-    {
-      path: '/Noise',
-      name: 'Noise',
-      components: {
-        default: functionPage.Noise
-      }
-    },
-    {
-      path: '/AssHt',
-      name: 'AssHt',
-      component: functionPage.AssHt
-    },
-    {
-      path: '/UDFanPort',
-      name: 'UDFanPort',
-      component: functionPage.UDFanPort
-    },
-    {
-      path: '/SvSt',
-      name: 'SvSt',
-      component: functionPage.SvSt
-    },
-    {
-      path: '/AreaFan',
-      name: 'AreaFan',
-      component: functionPage.AreaFan
-    }
+    // }
   ]
 });
 // 路由守卫

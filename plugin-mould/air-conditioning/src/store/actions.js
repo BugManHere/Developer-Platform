@@ -53,7 +53,11 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       setP.push(Number(setData[key]));
     });
     setData = {};
-    if (!setOpt.length) return;
+    if (!setOpt.length) {
+      commit(types.SET_STATE, ['watchLock', true]); // 互斥锁
+      commit(types.SET_STATE, ['ableSend', false]);
+      return;
+    }
     const mac = state.mac;
     const t = 'cmd';
     const opt = setOpt;
@@ -117,11 +121,12 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
-      mqttVer <= 1 || dispatch(types.GET_DEVICE_INFO);
+      console.log(mqttVer);
+      mqttVer <= 1 && dispatch(types.GET_DEVICE_INFO);
       // 查询云定时
       dispatch(types.GET_CLOUD_TIMER);
       // 查询一包数据
-      mqttVer <= 1 || dispatch(types.GET_DEVICE_DATA);
+      mqttVer <= 1 && dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true);
       // 初始化 原生调用插件的mqtt回调方法
@@ -253,7 +258,7 @@ export default {
    * @description 开启/关闭轮询
    */
   async [types.SET_POLLING]({ state, commit, dispatch }, boolean) {
-    if (!(mqttVer <= 1)) return;
+    if (mqttVer > 1) return;
     clearInterval(_timer);
     _timer = null;
     if (boolean) {
