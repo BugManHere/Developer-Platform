@@ -121,8 +121,7 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA);
       // 获取设备信息
-      console.log(mqttVer);
-      mqttVer <= 1 && dispatch(types.GET_DEVICE_INFO);
+      dispatch(types.GET_DEVICE_INFO);
       // 查询云定时
       dispatch(types.GET_CLOUD_TIMER);
       // 查询一包数据

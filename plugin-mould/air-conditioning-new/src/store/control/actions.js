@@ -75,9 +75,9 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
-      mqttVer <= 1 || dispatch(types.GET_DEVICE_INFO);
+      dispatch(types.GET_DEVICE_INFO);
       // 查询一包数据
-      mqttVer <= 1 || dispatch(types.GET_DEVICE_DATA);
+      mqttVer <= 1 && dispatch(types.GET_DEVICE_DATA);
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
@@ -202,7 +202,7 @@ export default {
    * @description 开启/关闭轮询
    */
   async [defineTypes.SET_POLLING]({ dispatch }, boolean) {
-    if (!(mqttVer <= 1)) return;
+    if (mqttVer > 1) return;
     clearTimeout(_timer3);
     if (boolean) {
       if (!_timer) {
