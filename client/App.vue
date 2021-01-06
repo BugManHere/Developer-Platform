@@ -2,9 +2,9 @@
   <div id="app">
     <Header />
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"></router-view>
+      <router-view v-if="$route.meta.keepAlive" v-gotop />
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <router-view v-if="!$route.meta.keepAlive" v-gotop />
   </div>
 </template>
 
