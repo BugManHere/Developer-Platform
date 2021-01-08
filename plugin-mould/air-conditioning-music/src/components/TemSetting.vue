@@ -59,6 +59,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 6;
     }
     .gree-icon {
       font-weight: bolder;

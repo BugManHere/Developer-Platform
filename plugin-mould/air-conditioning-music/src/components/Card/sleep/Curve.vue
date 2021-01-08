@@ -1,5 +1,5 @@
 <template>
-  <div class="body-chart" ref="mychart" :style="{ height: `${clientHeight * 0.55}px` }" @touchstart="isMoving = true" @touchend="isMoving = false" />
+  <div class="body-chart" ref="mychart" :style="{ height: `${clientHeight * 0.55}px` }" />
 </template>
 
 <script>
@@ -16,7 +16,6 @@ export default {
   },
   data() {
     return {
-      isMoving: false,
       clientHeight: 0,
       position: [],
       chartData: [
@@ -51,13 +50,6 @@ export default {
   },
   created() {
     this.clientHeight = document.body.clientHeight;
-    document.getElementsByClassName('page-content')[0].addEventListener(
-      'touchmove',
-      event => {
-        this.isMoving && event.preventDefault();
-      },
-      { passive: false }
-    );
   },
   computed: {
     ...mapState('control', {
@@ -308,6 +300,9 @@ export default {
             },
             invisible: true,
             draggable: true,
+            onmousedown: () => {
+              event.preventDefault();
+            },
             ondrag: echarts.util.curry(this.onPointDragging, dataIndex),
             onmousemove: echarts.util.curry(this.showTooltip, dataIndex),
             onmouseout: echarts.util.curry(this.hideTooltip, dataIndex),

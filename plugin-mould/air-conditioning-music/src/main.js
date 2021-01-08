@@ -13,7 +13,6 @@ import { types } from '@/store/types';
 import App from './App';
 import debugMixin from './mixins/utils/debug'; // 开发环境初始化
 import initMixin from './mixins/utils/init'; // 生产环境初始化
-import scrollThroughEvent from '@/directives/scrollThrough';
 import unfoldEvent from '@/directives/unfold';
 import router from './router';
 import store from './store';
@@ -29,7 +28,6 @@ Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
 Vue.directive('unfold', unfoldEvent);
-Vue.directive('scroll-through', scrollThroughEvent);
 
 // 使用语言包
 const i18n = new VueI18n({
@@ -99,12 +97,7 @@ async function createVue() {
   }
   // 挂载到#app上
   vm.$mount('#app');
-  const userAgeInfo = window.storage.get('userAgeInfo');
-  if (userAgeInfo && userAgeInfo.year) {
-    router.push('Home').catch(e => console.log(e));
-  } else {
-    router.push('UserAgeInfo').catch(e => console.log(e));
-  }
+  router.replace('Home').catch(e => console.log(e));
 }
 
 /* 启用页面调试器 */

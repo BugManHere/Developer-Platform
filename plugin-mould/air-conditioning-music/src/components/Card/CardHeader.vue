@@ -1,5 +1,5 @@
 <template>
-  <div ref="header-box">
+  <div ref="header-box" class="card-header-box">
     <div class="card-header" :ref="headerId" :id="headerId">
       <!-- 左边插槽 -->
       <div class="left">
@@ -27,16 +27,23 @@ export default {
 <style lang="scss">
 $cardHeaderHeight: 142px;
 $fontSize: 44px;
-.card-header {
-  position: relative;
+.card-header-box {
+  position: sticky;
   top: 0;
-  max-height: $cardHeaderHeight;
-  min-height: $cardHeaderHeight;
-  display: flex;
-  background: #fff;
-  border-radius: 100px 100px 0 0;
-  width: 100%;
-  justify-content: space-between;
-  font-size: $fontSize;
+  z-index: 999;
+  height: $cardHeaderHeight;
+  .card-header {
+    position: relative;
+    top: 0;
+    height: $cardHeaderHeight;
+    max-height: $cardHeaderHeight;
+    // min-height: $cardHeaderHeight;
+    display: flex;
+    background: #fff;
+    border-radius: 100px 100px 0 0;
+    width: 100%;
+    justify-content: space-between;
+    font-size: $fontSize;
+  }
 }
 </style>

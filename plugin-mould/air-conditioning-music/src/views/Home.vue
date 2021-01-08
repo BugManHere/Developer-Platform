@@ -6,8 +6,18 @@
   >
     <!-- 头部 -->
     <page-header :is-center-top="isCenterTop" />
+    <!-- 主要内容 -->
     <gree-page no-navbar class="page-home">
-      <!-- 主要内容 -->
+      <!-- 头部遮罩层  -->
+      <div
+        class="page-bg-mask"
+        :style="{
+          'background-size': `100% ${bgHeight}px`,
+          'background-image': `url(${skinConfig.homeBg})`,
+          height: `${headerHeight}px`
+        }"
+      />
+      <!-- 内容 -->
       <div class="page-main" @touchend="getContentType(500)">
         <!-- 温度调节 -->
         <TemSetting />
@@ -44,7 +54,8 @@ export default {
       isCenterTop: false,
       onTestFlag: 0,
       bgWidth: 0,
-      bgHeight: 0
+      bgHeight: 0,
+      headerHeight: 0
     };
   },
   computed: {
@@ -57,6 +68,10 @@ export default {
     // 背景自适应
     this.bgWidth = document.body.clientWidth;
     this.bgHeight = this.bgWidth / 0.5625;
+    // 获取卡片栏高度
+    setTimeout(() => {
+      this.headerHeight = document.getElementsByClassName('card-header-box')[0].clientHeight;
+    }, 200);
   },
   watch: {
     skinConfig: {
@@ -75,7 +90,6 @@ export default {
       immediate: true
     }
   },
-
   methods: {
     getContentType(delay = 500) {
       setTimeout(() => {
