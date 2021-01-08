@@ -1,7 +1,7 @@
-.template {
+.gdp-template {
   position: relative;
   top: 0px;
-  > div {
+  &-box {
     width: 1084px;
     margin: 70px auto 84px auto;
     > div {
@@ -35,20 +35,20 @@
           font-size: 12px;
           line-height: 22px;
           border-width: 1px;
-          color: #469DFF;
+          color: #469dff;
           border-style: solid;
           background-color: transparent;
-          border-color: #469DFF;
+          border-color: #469dff;
           &:hover {
-            color: #FFFFFF;
-            background-color: #469DFF;
-            border-color: #469DFF;
+            color: #ffffff;
+            background-color: #469dff;
+            border-color: #469dff;
             text-decoration: none;
           }
         }
       }
     }
-    >.panel-body {
+    > .panel-body {
       margin: 0 auto;
       border-radius: 4px;
       margin-top: 16px;
@@ -96,9 +96,9 @@
               font-weight: lighter;
               font-size: 16px;
               font-family: 'Glyphicons Halflings';
-              content: "\e023"
+              content: '\e023';
             }
-            &.done { 
+            &.done {
               :before {
                 content: '\e089';
               }
