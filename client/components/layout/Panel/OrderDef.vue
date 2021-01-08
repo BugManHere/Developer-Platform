@@ -152,7 +152,7 @@
 
 <script>
 import echarts from 'echarts';
-import { deepCopy, randomKey } from '@/utils';
+import { deepCopy, randomKey } from '@utils';
 import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {

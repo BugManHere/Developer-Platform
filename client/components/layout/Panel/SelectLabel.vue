@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { deepCopy } from '@/utils';
+import { deepCopy } from '@utils';
 import { mapMutations, mapState } from 'vuex';
 
 export default {

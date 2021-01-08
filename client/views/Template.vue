@@ -1,6 +1,6 @@
 <template>
-  <div class="template">
-    <div>
+  <div class="gdp-template">
+    <div class="gdp-template-box">
       <!-- 顶部信息栏 -->
       <div class="message">
         <!-- 头部 -->
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { randomKey } from '@/utils';
+import { randomKey } from '@utils';
 import ActiveTable from '@components/layout/Table/ActiveFunc';
 import InertiaTable from '@components/layout/Table/InertiaFunc';
 import LogicTable from '@components/layout/Table/Logic';
