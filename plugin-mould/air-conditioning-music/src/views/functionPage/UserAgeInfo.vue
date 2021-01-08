@@ -93,7 +93,7 @@ export default {
     const month = nowDate.getMonth();
     return {
       popupShow: false, // 是否显示儿童隐私政策弹框
-      imshowYear: 20,
+      imshowYear: 15,
       currentYear: year,
       currentMonth: month,
       selectYear: year,

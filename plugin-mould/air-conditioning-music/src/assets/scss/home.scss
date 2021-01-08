@@ -10,18 +10,29 @@
     height: auto;
     margin-top: calc(env(safe-area-inset-top));
   }
-}
-.page-home {
-  position: relative !important;
-  top: 0;
-  background-color: transparent !important;
-  .page-content {
-    padding-top: 0 !important;
-  }
-  .page-main {
-    position: relative;
+
+  .page-home {
+    position: relative !important;
+    left: 0;
     top: 0;
-    overflow: auto;
+    background-color: transparent !important;
+    .page-bg-mask {
+      position: fixed;
+      right: 0;
+      height: 0;
+      width: 100%;
+      padding-top: 124px;
+      top: -$pageHeaderHeight;
+      z-index: 5;
+    }
+    .page-content {
+      padding-top: 0 !important;
+    }
+    .page-main {
+      position: relative;
+      top: 0;
+      // overflow: auto;
+    }
   }
 }
 .page-header {
