@@ -54,13 +54,13 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import horizontalFrom from '@components/form/horizontal';
+import horizontalForm from '@components/form/horizontal';
 import https from '../https';
 
 export default {
   name: 'add-dev-dialog',
   components: {
-    [horizontalFrom.name]: horizontalFrom
+    [horizontalForm.name]: horizontalForm
   },
   data() {
     return {
