@@ -6,6 +6,7 @@ import {
   GET_PRODUCT_TYPE_LIST, // 获取产品类别列表
   GET_USERDEVICE_LIST, // 获取用户设备列表
   GET_TEMPLATES, // 获取模板信息
+  INHERIT_DEV, // 派生设备
   DEL_DEV,
   SAVE_TEMP_FUNC,
   EDIT_TEMP_FUNC,
@@ -57,7 +58,6 @@ export default {
   async [GET_TEMPLATES]({ state, commit }) {
     if (state.tempModule.templates.length) return true;
     const res = await https.fetchGet('/template');
-    console.log(res);
     const status = res.status === 200;
     status && commit(SET_TEMP_MODULE, { templates: res.data });
     return status;
@@ -104,7 +104,6 @@ export default {
       insertMap: JSON.stringify(insertMap),
       tempID: state.tempModule.tempID
     });
-    console.log(res);
     const status = res.status === 200;
     status && commit(CHANGE_TEMPLATE, res.data);
     return status;
@@ -132,8 +131,20 @@ export default {
     status && window.myvm.$toast.info('保存成功');
     return status;
   },
+  // 派生设备
+  async [INHERIT_DEV]({ state, commit }, { id, productModel, deviceName }) {
+    const res = await https.fetchPost('/userDevice/inheritDevice', {
+      admin: state.userModule.admin,
+      id,
+      productModel,
+      deviceName
+    });
+    const status = res.status === 200;
+    status && window.myvm.$toast.info('派生设备成功') && commit(SET_DEV_MODULE, { userDeviceList: res.data });
+    return status;
+  },
   // 删除设备
-  async [DEL_DEV]({ state, commit }, id) {
+  async [DEL_DEV]({ state, commit }, { id }) {
     const res = await https.fetchPost('/userDevice/delDevice', {
       admin: state.userModule.admin,
       id
@@ -143,7 +154,7 @@ export default {
     return status;
   },
   // 设备删除功能
-  async [DEL_DEV_FUNC]({ state, commit, getters }, index) {
+  async [DEL_DEV_FUNC]({ state, commit, getters }, { index }) {
     const funcId = getters.funcImport[index];
     const res = await https.fetchPost('/userDevice/delFunc', {
       admin: state.userModule.admin,

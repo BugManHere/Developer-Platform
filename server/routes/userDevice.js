@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
@@ -66,27 +67,29 @@ router.post('/create', async function(req, res) {
     statueJson: [],
     statueJson2: []
   };
-  // 默认功能
-  deviceInfo.productName === '立柜式空调' &&
-    (deviceInfo.funcImport = [
-      '5e54a3abbf4af11b3c07b747',
-      '5e660a3de2e36024789d8718',
-      '5e54a3abbf4af11b3c07b746',
-      '5e5771a1aad6f324b4089969',
-      '5e5771a1aad6f324b4089968',
-      '5e5771a1aad6f324b4089967',
-      '5e5771a1aad6f324b4089966',
-      '5e66093ee2e36024789d8653',
-      '5e53827abf4af11b3c07b5ca',
-      '5e53827abf4af11b3c07b5c9',
-      '5e53827abf4af11b3c07b5c8',
-      '5e53827abf4af11b3c07b5c7',
-      '5e53827abf4af11b3c07b5c6',
-      '5e53827abf4af11b3c07b5c5',
-      '5e53827abf4af11b3c07b5c4',
-      '5e53827abf4af11b3c07b5c3'
-    ]);
 
+  userDeviceList.push(deviceInfo);
+  await userDevice.save();
+  res.json(userDeviceList);
+});
+
+router.post('/inheritDevice', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 2))) {
+    res.status(401).send('没有此权限');
+    return;
+  }
+  const { admin } = req.body;
+  const { id, productModel, deviceName } = req.body;
+  const userDevice = await getAdminDevice(admin);
+  const userDeviceList = userDevice.userDeviceList;
+  const device = await userDeviceList.id(id);
+
+  const deviceInfo = JSON.parse(JSON.stringify(device));
+  deviceInfo._id = new mongoose.Types.ObjectId();
+  deviceInfo.productModel = productModel;
+  deviceInfo.deviceName = deviceName;
+  deviceInfo.createTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
+  deviceInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   userDeviceList.push(deviceInfo);
   await userDevice.save();
   res.json(userDeviceList);
