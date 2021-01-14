@@ -18,3 +18,7 @@ export const getConfig = (param = {}) => {
   // 本地模式下优先获取本地配置
   return getLocalConfig() || getServeConfig();
 };
+
+export const getState = result => {
+  console.log('------------getState', result);
+};

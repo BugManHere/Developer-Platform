@@ -46,6 +46,7 @@ const mixin = {
       getInfo: () => {
         // console.log('获取设备查询字段以及查看设备是否在线', { mac });
       },
+      editDevice: () => {},
       showLoading() {
         console.log('showLoading......');
       },

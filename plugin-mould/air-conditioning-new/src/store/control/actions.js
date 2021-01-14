@@ -1,5 +1,5 @@
 import { types, defineTypes } from '@/store/types';
-import { getConfig } from '@/utils/getConfig';
+import { getConfig } from '@/utils/fsm';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
 
@@ -75,9 +75,9 @@ export default {
       // 初始化设备数据
       dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
-      dispatch(types.GET_DEVICE_INFO);
+      dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
-      mqttVer <= 1 && dispatch(types.GET_DEVICE_DATA);
+      mqttVer <= 1 && dispatch(types.GET_DEVICE_DATA, null, { root: true });
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
