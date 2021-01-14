@@ -4,7 +4,7 @@
       <span v-text="'模式'" />
     </template>
     <template v-slot:right>
-      <span v-text="headerTxt" @click="viewMod" />
+      <span v-text="headerText" @click="viewMod" />
       <gree-icon name="arrow-down" size="lg" @click="viewMod" :class="{ unfold: isUnfold }" />
     </template>
   </CardHeader>
@@ -21,7 +21,7 @@ export default {
     [Icon.name]: Icon
   },
   props: {
-    headerTxt: {
+    headerText: {
       type: String,
       default: ''
     }
@@ -56,6 +56,7 @@ export default {
 
 <style lang="scss">
 #control-card-header {
+  border: 1px solid #f2f2f2;
   .left {
     padding-left: 74px;
     display: flex;

@@ -3,9 +3,11 @@
     <div class="panel">
       <p class="title">热门搜索</p>
       <div class="tags">
-        <gree-tag v-for="(item, index) in hot" :key="index" size="small" shape="circle" type="fill" fill-color="#F2F2F2">
-          {{ item }}
-        </gree-tag>
+        <div v-for="(item, index) in hot" :key="index" @click="searchTag(item)">
+          <gree-tag size="small" shape="circle" type="fill" fill-color="#F2F2F2">
+            <span v-text="item" />
+          </gree-tag>
+        </div>
       </div>
     </div>
     <div class="panel">
@@ -13,10 +15,13 @@
         <span>历史记录</span>
         <img class="icon-del" @click="showDialog" src="@assets/img/skill/gr_delete_icon.png" />
       </div>
+
       <div class="tags">
-        <gree-tag v-for="(item, index) in history" :key="index" size="small" shape="circle" type="fill" fill-color="#F2F2F2">
-          {{ item }}
-        </gree-tag>
+        <div v-for="(item, index) in hot" :key="index" @click="searchTag(item)">
+          <gree-tag size="small" shape="circle" type="fill" fill-color="#F2F2F2">
+            <span v-text="item" />
+          </gree-tag>
+        </div>
       </div>
     </div>
     <gree-dialog v-model="dialogOption.open" :btns="dialogOption.btns">
@@ -76,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.setHistoryAndHotItems();
+    this.isLoadFailed || this.setHistoryAndHotItems();
   },
   methods: {
     async setHistoryAndHotItems() {
@@ -104,6 +109,10 @@ export default {
     },
     onSearch() {
       this.$router.push(`/SkillSearch/Result?keyword=${this.keyword}`);
+    },
+    searchTag(tag) {
+      this.keyword = tag;
+      this.onSearch();
     },
     showDialog() {
       this.dialogOption.open = true;

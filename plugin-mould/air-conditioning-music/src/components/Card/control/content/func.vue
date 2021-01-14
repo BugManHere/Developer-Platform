@@ -61,7 +61,7 @@ $padding: 66px;
   height: auto;
   background-color: #fff;
   font-size: $fontSize;
-  padding: 0 $padding calc(#{$footerHeight} + #{$padding}) $padding;
+  padding: 0 $padding calc(#{$footerHeight} + #{$padding} + env(safe-area-inset-bottom)) $padding;
   &-header {
     padding: 52px 0px 0 8px;
     border-top: 1px solid rgba(238, 238, 238, 1);

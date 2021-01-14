@@ -7,8 +7,7 @@ const mixin = {
   mixins: [updateStatus],
   computed: {
     ...mapState('control', {
-      dataObject: state => state.dataObject,
-      checkObject: state => state.checkObject
+      dataObject: state => state.dataObject
     })
   },
   mounted() {
@@ -91,7 +90,8 @@ const mixin = {
       },
       editDevice: () => {
         console.log('设备编辑页');
-      }
+      },
+      getCurrentMode: () => {}
     };
   },
   methods: {

@@ -228,21 +228,35 @@ export default {
   background-image: url('../../assets/img/userAge/bg.png');
   background-size: 100% 100%;
   &-content {
-    position: absolute;
-    bottom: 0;
-    height: auto;
-    width: calc(100% - 120px);
-    padding: 0 60px 180px 60px;
+    position: relative;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    // position: absolute;
+    // bottom: 0;
+    // height: auto;
+    // width: calc(100% - 120px);
+    // padding: 0 60px 180px 60px;
     .content-box {
       position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      flex-wrap: wrap;
       left: 0;
-      height: auto;
-      width: 100%;
+      top: 320px;
+      height: calc(100% - 320px);
+      min-height: 1200px;
+      width: calc(100% - 120px);
       border-radius: 40px;
       background-color: #fff;
       &-swiper {
         display: flex;
         justify-content: space-between;
+        width: 100%;
         padding: 0 46px 10px 46px;
         .swiper-container {
           height: 286px;
@@ -328,7 +342,7 @@ export default {
         height: auto;
         text-align: center;
         color: rgba(64, 70, 87, 1);
-        font-size: 40px;
+        font-size: 48px;
       }
       &-avatar {
         position: relative;

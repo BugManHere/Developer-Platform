@@ -3,9 +3,11 @@ import { types, defineTypes } from '@/store/types';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, getAuthResult } from '@PluginInterface'; // 主体接口
 import { getQueryStringByName, isMqtt } from '@/utils/index';
 
-let _timer = null; // 轮询定时器
-let _timer2 = null; // 延时发送指令定时器
-let _timer3 = null; // 重启轮询定时器
+const _timers = {
+  _polling: null,
+  _throttle: null,
+  restartPolling: null
+};
 let _firstCallback = true; // 是否第一次查询设备状态
 let setData = {};
 let hasMqtt = isMqtt();
@@ -24,8 +26,8 @@ function customizeDataObject(_dataObject) {
 function sendControl({ state, commit, dispatch }, dataMap) {
   if (state.dataObject.functype || !state.ableSend) return;
   setData = { ...setData, ...dataMap };
-  _timer2 && clearTimeout(_timer2);
-  _timer2 = setTimeout(async () => {
+  _timers._throttle && clearTimeout(_timers._throttle);
+  _timers._throttle = setTimeout(async () => {
     commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
     const setOpt = [];
     const setP = [];
@@ -55,10 +57,10 @@ function sendControl({ state, commit, dispatch }, dataMap) {
 
     await sendDataToDevice(mac, json, false);
     // 3秒后重启轮询
-    if (_timer) {
+    if (_timers._polling) {
       dispatch(types.SET_POLLING, false, { root: true });
-      clearTimeout(_timer3);
-      _timer3 = setTimeout(() => {
+      clearTimeout(_timers._restartPolling);
+      _timers._restartPolling = setTimeout(() => {
         dispatch(types.SET_POLLING, true, { root: true });
       }, 3000);
     }
@@ -78,7 +80,7 @@ export default {
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
-      hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
+      hasMqtt || dispatch(types.GET_DEVICE_DATA, statueJson2, { root: true });
       // 定时轮询 - 获取设备所有状态数据
       dispatch(types.SET_POLLING, true, { root: true });
       // 初始化 原生调用插件的mqtt回调方法
@@ -109,7 +111,7 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data }, { root: true });
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -129,12 +131,11 @@ export default {
    * @description 解析设备数据
    * @param {String} data
    */
-  [defineTypes.PARSE_DATA_BY_COLS](context, payload) {
+  [defineTypes.PARSE_DATA_BY_COLS](context, { data, cols = statueJson2 }) {
     const dataObject = {};
-    if (!payload) return dataObject;
+    if (!data) return dataObject;
     try {
-      const cols = statueJson2;
-      const res = JSON.parse(payload);
+      const res = JSON.parse(data);
       // 遍历查询到的数据
       cols.forEach((json, index) => {
         dataObject[json] = res[index];
@@ -152,8 +153,6 @@ export default {
   [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
     try {
       const { mac } = state;
-      console.log('------------GET_DEVICE_INFO');
-      console.log(mac);
       getInfo(mac)
         .then(res => {
           const deviceInfo = JSON.parse(res);
@@ -167,8 +166,7 @@ export default {
   /**
    * @description 获取设备全部状态,插件初始化时立刻查询一次，成功加载数据后finishLoad，然后5秒一次轮询
    */
-  async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }) {
-    // dispatch(types.SET_POLLING, true);
+  async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }, cols = statueJson2) {
     try {
       // 集中控制时数据不查询
       if (state.functype) return;
@@ -176,10 +174,9 @@ export default {
       const { mac } = state;
 
       // 采用本地 SEARCH_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
-      const cols = statueJson2;
+      // const cols = statueJson2;
       const t = 'status';
       const SEARCH_JSON = JSON.stringify({ cols, mac, t });
-
       const data = await sendDataToDevice(mac, SEARCH_JSON, false);
 
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
@@ -189,7 +186,7 @@ export default {
       }
       _firstCallback = false;
 
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
+      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data, cols }, { root: true });
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
@@ -203,17 +200,39 @@ export default {
    * @description 开启/关闭轮询
    */
   async [defineTypes.SET_POLLING]({ dispatch }, boolean) {
-    clearTimeout(_timer3);
+    clearTimeout(_timers._restartPolling);
     if (boolean) {
-      if (!_timer) {
-        _timer = setInterval(() => {
-          hasMqtt || dispatch(types.GET_DEVICE_DATA, null, { root: true });
-          hasMqtt || dispatch(types.GET_DEVICE_INFO, null, { root: true });
+      if (!_timers._polling) {
+        _timers._polling = setInterval(() => {
+          hasMqtt || dispatch(types.GET_DEVICE_DATA, statueJson2, { root: true });
+          hasMqtt || dispatch(types.GET_DEVICE_INFO, statueJson2, { root: true });
         }, 5000);
       }
     } else {
-      clearInterval(_timer);
-      _timer = null;
+      clearInterval(_timers._polling);
+      _timers._polling = null;
+    }
+  },
+
+  /**
+   * @description 新增轮询
+   */
+  async [defineTypes.ADD_POLLING]({ dispatch }, { jsons, key, delay = 5000, immediate = false }) {
+    if (jsons && jsons.length && key && !_timers[key]) {
+      immediate && dispatch(types.GET_DEVICE_DATA, jsons, { root: true });
+      _timers[key] = setInterval(() => {
+        dispatch(types.GET_DEVICE_DATA, jsons, { root: true });
+      }, delay);
+    }
+  },
+
+  /**
+   * @description 删除轮询
+   */
+  async [defineTypes.DEL_POLLING](_, key) {
+    if (key && _timers[key]) {
+      clearInterval(_timers[key]);
+      _timers[key] = null;
     }
   },
 
@@ -236,7 +255,7 @@ export default {
       }
     });
     if (p.length === 0) {
-      _timer2 || commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
+      _timers._throttle || commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
     } else {
       sendControl({ state, commit, dispatch }, dataMap);
     }
@@ -273,6 +292,10 @@ export default {
     }
     return dataObject;
   },
+
+  /**
+   * @description 获取授权状态
+   */
   [defineTypes.GET_AUTH_TYPE]({ state, commit }) {
     getAuthResult(state.mac).then(res => {
       const authReasult = Number(res);

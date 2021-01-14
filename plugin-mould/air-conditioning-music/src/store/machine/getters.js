@@ -320,7 +320,7 @@ export default {
       // 指向statusName
       const directionStatusName = getters.statusDirectionMap[identifier];
       // 如果指向statusName为'undefined'或当前statusName，则认为指向无效
-      return [statusName, directionStatusName].includes('undefined') || directionStatusName === statusName;
+      return directionStatusName === 'undefined' || directionStatusName === statusName;
     });
     return result;
   },

@@ -16,7 +16,24 @@ const state = {
     SetTem: 25,
     WdSpd: 5,
     Quiet: 0,
-    Tur: 0
+    Tur: 0,
+    // 睡眠测试数据
+    Slp1H1: 1,
+    Slp1L1: 4,
+    Slp1H2: 1,
+    Slp1L2: 14,
+    Slp1H3: 1,
+    Slp1L3: 24,
+    Slp1H4: 1,
+    Slp1L4: 24,
+    Slp1H5: 1,
+    Slp1L5: 24,
+    Slp1H6: 1,
+    Slp1L6: 24,
+    Slp1H7: 1,
+    Slp1L7: 4,
+    Slp1H8: 1,
+    Slp1L8: 4
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

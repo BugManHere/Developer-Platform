@@ -3,7 +3,7 @@
     <template v-slot:left>
       <gree-list>
         <gree-list-item title="睡眠" style="font-size: 18px">
-          <gree-switch slot="after" class="blue" v-model="sleepActive" size="28" @change="switchSleep(sleepActive)" :disabled="!powType" />
+          <gree-switch slot="after" class="blue" v-model="sleepActive" size="28" @change="switchSleep(sleepActive)" :disabled="disableSleep" />
         </gree-list-item>
       </gree-list>
     </template>
@@ -39,7 +39,10 @@ export default {
     ...mapState('control', {
       SwhSlp: state => state.dataObject.SwhSlp
     }),
-    ...mapGetters(['powType'])
+    ...mapGetters('machine', ['blindModelArr']),
+    disableSleep() {
+      return this.blindModelArr.includes('Sleep');
+    }
   },
   watch: {
     SwhSlp: {

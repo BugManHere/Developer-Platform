@@ -56,7 +56,7 @@ module.exports = {
     'SwingLR(new)': '左右扫风',
     Health: '健康',
     AutoLig: '自动灯光',
-    Lig: '自动灯光',
+    Lig: '灯光',
     'Lig(Auto)': '灯光',
     StHt: '8℃制热',
     VocCtl: '空调语音',
@@ -108,10 +108,11 @@ module.exports = {
     advance_updown: '上下定格',
     advance_leftright: '左右定格',
     sweep_ud_tips: '不支持此区域扫风。',
-    sweep_ud_tips2: '上下定格只支持定格扫。',
-    sweep_lr_tips: '左右定格只支持定格扫。',
+    sweep_ud_tips2: '上下定格只支持定格扫',
+    sweep_lr_tips: '左右定格只支持定格扫',
     sweep_powoff_tips: '空调已被关闭，自动退出扫风设置。',
     Stage_tips: '提示:',
+    sweep_cancel: '已取消定格设置',
     sweep_txt2: '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。'
   },
   noise: {

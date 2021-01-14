@@ -11,7 +11,7 @@
       <span v-text="'已关机'" class="power-off-txt" />
     </div>
     <div class="power-off" v-else-if="!Mod">
-      <span v-text="'自动调温'" class="power-off-txt" />
+      <span v-text="'自动调温'" class="power-off-txt" @click="onTest" />
     </div>
   </div>
 </template>
@@ -19,6 +19,8 @@
 <script>
 import { mapState } from 'vuex';
 import { Icon, AnimatedNumber } from 'gree-ui';
+import { getCurrentMode } from '@PluginInterface';
+import VConsole from 'vconsole/dist/vconsole.min.js';
 import temConfig from '@/mixins/utils/tem';
 
 export default {
@@ -32,6 +34,23 @@ export default {
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod
     })
+  },
+  methods: {
+    onTest() {
+      getCurrentMode().then(res => {
+        if (res === '0' || res === 0) {
+          this.onTestFlag += 1;
+          this.onTestFlag === 5 && new VConsole();
+          if (this.onTestFlag === 10) {
+            this.onTestFlag = 0;
+            this.$router.push('Test');
+          }
+          setTimeout(() => {
+            this.onTestFlag = 0;
+          }, 2000);
+        }
+      });
+    }
   }
 };
 </script>
