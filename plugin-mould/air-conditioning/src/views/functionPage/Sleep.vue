@@ -164,37 +164,37 @@ export default {
           [8, 26]
         ]
       },
-      // slpModExJson: [
-      //   'SwhSlp',
-      //   'SlpMod',
-      //   'SmartSlpMod',
-      //   'SmartSlpModEx',
-      //   'StSlp1C',
-      //   'StSlp1CInc',
-      //   'StSlp1CSp',
-      //   'StSlp1H',
-      //   'StSlp1HInc',
-      //   'StSlp1HSp',
-      //   'StSlp2C',
-      //   'StSlp2CInc',
-      //   'StSlp2CSp',
-      //   'StSlp2H',
-      //   'StSlp2HInc',
-      //   'StSlp2HSp',
-      //   'StSlp3C',
-      //   'StSlp3CInc',
-      //   'StSlp3CSp',
-      //   'StSlp3H',
-      //   'StSlp3HInc',
-      //   'StSlp3HSp',
-      //   'StSlp4C',
-      //   'StSlp4CInc',
-      //   'StSlp4CSp',
-      //   'StSlp4H',
-      //   'StSlp4HInc',
-      //   'StSlp4HSp'
-      // ],
-      slpModExJson: ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx'],
+      slpModExJson: [
+        'SwhSlp',
+        'SlpMod',
+        'SmartSlpMod',
+        'SmartSlpModEx',
+        'StSlp1C',
+        'StSlp1CInc',
+        'StSlp1CSp',
+        'StSlp1H',
+        'StSlp1HInc',
+        'StSlp1HSp',
+        'StSlp2C',
+        'StSlp2CInc',
+        'StSlp2CSp',
+        'StSlp2H',
+        'StSlp2HInc',
+        'StSlp2HSp',
+        'StSlp3C',
+        'StSlp3CInc',
+        'StSlp3CSp',
+        'StSlp3H',
+        'StSlp3HInc',
+        'StSlp3HSp',
+        'StSlp4C',
+        'StSlp4CInc',
+        'StSlp4CSp',
+        'StSlp4H',
+        'StSlp4HInc',
+        'StSlp4HSp'
+      ],
+      // slpModExJson: ['SwhSlp', 'SlpMod', 'SmartSlpMod', 'SmartSlpModEx'],
       slpModExVal: [
         [1, 2, 4, 1, 1, 131, 1, 1, 131, 1, 120, 0, 6, 120, 0, 6, 300, 8, 6, 300, 8, 6, 0, 0, 1, 0, 0, 1],
         [1, 2, 4, 2, 1, 133, 1, 1, 133, 1, 120, 0, 6, 120, 0, 6, 300, 5, 6, 300, 5, 6, 0, 0, 1, 0, 0, 1],
@@ -993,6 +993,11 @@ export default {
     },
     sendSlpModEx() {
       const index = this.selectRadio * 3 + this.selectBody;
+      const len = this.slpModExVal.length;
+      if (index >= len) {
+        this.setDiy();
+        return;
+      }
       const opt = this.slpModExJson;
       const p = this.slpModExVal[index];
       const setData = {};

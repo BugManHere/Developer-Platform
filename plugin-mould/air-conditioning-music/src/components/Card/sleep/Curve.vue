@@ -45,11 +45,48 @@ export default {
         29: [34, 1],
         30: [44, 1]
       },
+      updatedTimer: null,
       disableUpdate: false
     };
   },
   created() {
     this.clientHeight = document.body.clientHeight;
+  },
+  activated() {
+    // 增加更新
+    clearInterval(this.updatedTimer);
+    this.updatedTimer = setInterval(() => {
+      this.imshowChart && this.updateLocal(this.dataObject);
+    }, 5000);
+
+    // 增加轮询
+    this.addPolling({
+      jsons: [
+        'SmartSlpMod',
+        'Slp1L1',
+        'Slp1H1',
+        'Slp1L2',
+        'Slp1H2',
+        'Slp1L3',
+        'Slp1H3',
+        'Slp1L4',
+        'Slp1H4',
+        'Slp1L5',
+        'Slp1H5',
+        'Slp1L6',
+        'Slp1H6',
+        'Slp1L7',
+        'Slp1H7',
+        'Slp1L8',
+        'Slp1H8'
+      ],
+      key: 'SlpCurve',
+      immediate: true
+    });
+  },
+  deactivated() {
+    clearInterval(this.updatedTimer);
+    this.delPolling('SlpCurve');
   },
   computed: {
     ...mapState('control', {
@@ -261,7 +298,9 @@ export default {
       setState: types.CONTROL_SET_STATE
     }),
     ...mapActions({
-      sendCtrl: types.SEND_CTRL
+      sendCtrl: types.SEND_CTRL,
+      addPolling: types.ADD_POLLING,
+      delPolling: types.DEL_POLLING
     }),
     changeData(val) {
       this.setState({ watchLock: false, ableSend: true });
@@ -272,6 +311,7 @@ export default {
       return (value * this.clientHeight) / 736;
     },
     updateLocal(dataObject) {
+      if (this.disableUpdate) return;
       for (let i = 1; i <= 8; i += 1) {
         const typeKey = `Slp1H${i}`;
         const valueKey = `Slp1L${i}`;
@@ -301,7 +341,13 @@ export default {
             invisible: true,
             draggable: true,
             onmousedown: () => {
+              this.disableUpdate = true;
               event.preventDefault();
+            },
+            onmouseup: () => {
+              this.disableUpdate = false;
+              this.saveSlp();
+              this.hideTooltip();
             },
             ondrag: echarts.util.curry(this.onPointDragging, dataIndex),
             onmousemove: echarts.util.curry(this.showTooltip, dataIndex),
@@ -352,6 +398,8 @@ export default {
       data > 30 && (data = 30);
       data < 16 && (data = 16);
 
+      if (data === this.chartData[dataIndex][1]) return;
+
       this.$set(this.chartData[dataIndex], 1, data);
 
       this.position[dataIndex] = this.myChart.convertToPixel('grid', this.chartData[dataIndex]);
@@ -380,9 +428,6 @@ export default {
       });
 
       this.updatePosition();
-      this.disableUpdate = true;
-
-      this.saveSlp();
     },
     showTooltip(dataIndex) {
       this.myChart.dispatchAction({

@@ -126,7 +126,10 @@ export default {
     changeData(map) {
       this.setState(['watchLock', false]);
       this.setDataObject(map);
-      this.sendCtrl(map);
+      this.sendCtrl({
+        ...map,
+        Emod: 0
+      });
     },
     // 给滑轮赋予初始区间
     setList() {
@@ -185,10 +188,7 @@ export default {
       if (index === this.leftLen) return;
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
       const value = this.imshowList[toIndex].value;
-      let sendData = {
-        Mod: value,
-        Emod: 0
-      };
+      let sendData = { Mod: value };
       // 缓存温度
       if (this.ableSend) {
         const temSetting = window.storage.get('temSetting') || {};

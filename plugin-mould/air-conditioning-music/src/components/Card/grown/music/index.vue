@@ -2,7 +2,10 @@
   <!-- 内容 -->
   <div class="song-list">
     <!-- 没登录的时候显示 -->
-    <MusicLogic v-if="authReasult !== 2" />
+    <div v-if="authDialog === 2" class="song-list-skeleton">
+      <gree-skeleton title :row="6" />
+    </div>
+    <MusicLogic v-else-if="authReasult !== 2" />
     <!-- 已登录显示 -->
     <!-- <div v-else class="list-main">
       <gree-search-bar
@@ -40,13 +43,14 @@
 </template>
 
 <script>
-import { SearchBar, Icon } from 'gree-ui';
+import { SearchBar, Icon, Skeleton } from 'gree-ui';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import MusicLogic from './page/Login';
 
 export default {
   components: {
     [SearchBar.name]: SearchBar,
+    [Skeleton.name]: Skeleton,
     [Icon.name]: Icon,
     MusicLogic
   },
@@ -69,6 +73,7 @@ export default {
   computed: {
     ...mapState('control', {
       authReasult: state => state.musicData.authReasult,
+      authDialog: state => state.musicData.authDialog,
       playMap: state => state.musicData.playMap,
       groupsUnfold: state => state.musicData.groupsUnfold,
       groups: state => state.musicData.groups
@@ -208,7 +213,10 @@ export default {
   min-height: $musicMainHeight;
   height: 100%;
   background-color: #fff;
-
+  &-skeleton {
+    height: 100%;
+    padding: 100px 60px 0 60px;
+  }
   .list-main {
     height: 100%;
     display: flex;

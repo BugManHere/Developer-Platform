@@ -25,6 +25,7 @@
 import { List, Item } from 'gree-ui';
 import Share from './Share';
 import { showLoading, hideLoading, voiceACgetSkillSearch } from '@PluginInterface';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -40,6 +41,11 @@ export default {
       tips: '',
       isLoadFailed: false
     };
+  },
+  computed: {
+    ...mapState('control', {
+      mac: state => state.mac
+    })
   },
   beforeRouteEnter(to, from, next) {
     console.log(from);

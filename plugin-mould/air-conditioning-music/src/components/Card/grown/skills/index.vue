@@ -31,6 +31,7 @@
               link
               :title="item.name"
               :footer="item.illustrate | format"
+              :style="{ opacity: isLoading ? 0.01 : 1 }"
               no-hairlines
               media-item
               @click.native="gotoDetail(item)"
@@ -105,7 +106,7 @@ export default {
       isLoading: true,
       isLoadFailed: false,
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 10,
       hasNextPage: false,
       currentRequestId: 0 // 当前请求ID
     };
@@ -116,41 +117,9 @@ export default {
     })
   },
   mounted() {
-    const mountedTimer = setInterval(() => {
-      const listHeight = this.$refs && this.$refs.skillList.clientHeight;
-      if (listHeight) {
-        this.pageInit();
-        clearInterval(mountedTimer);
-      }
-    }, 20);
+    this.loadSkillList(1);
   },
   methods: {
-    pageInit() {
-      try {
-        let self = this;
-        // setTimeout(() => {
-        let listHeight = this.$refs.skillList.clientHeight;
-        let pageContent = document.querySelector('.page-content');
-        // 赋予初始高度
-        self.$refs.skillList.style.height = `${listHeight + pageContent.scrollTop}px`;
-        self.$refs.sidebar.style.height = `${listHeight + pageContent.scrollTop}px`;
-        // eslint-disable-next-line
-        function scrollHandler(ev) {
-          let scrollTop = this.scrollTop;
-          self.$refs.skillList.style.height = `${scrollTop + listHeight}px`;
-          self.$refs.sidebar.style.height = `${scrollTop + listHeight}px`;
-        }
-        pageContent.addEventListener('scroll', scrollHandler, false);
-        this.$once('hook:beforeDestroy', () => {
-          pageContent.removeEventListener('scroll', scrollHandler, false);
-        });
-
-        this.loadSkillList(1);
-        // }, 0);
-      } catch (error) {
-        console.log(error);
-      }
-    },
     async onChangeDomain(index) {
       let domain = this.sidebarItems.find(x => x.index === index);
       if (domain) {
@@ -165,7 +134,7 @@ export default {
         args.getPic = true;
         args.pageSize = this.pageSize;
         if (this.pageNum === 1) {
-          this.skillItems.splice(0, this.skillItems.length);
+          // this.skillItems.splice(0, this.skillItems.length);
           this.hasNextPage = false;
         }
         this.isLoading = true;
@@ -197,7 +166,6 @@ export default {
 
         let total = result.total;
         if (total > this.pageNum * this.pageSize) {
-          console.log('hasNextPage');
           this.hasNextPage = true;
         } else {
           this.hasNextPage = false;
@@ -270,21 +238,25 @@ export default {
   $skillMainHeight: calc(100vh - #{$pageHeaderHeight} - #{$cardHeaderHeight} - env(safe-area-inset-top));
   $toolbar: 317px;
   $sidebarWidth: 270px;
-  $skillContentHeight: calc(#{$skillMainHeight} - #{$temEditHeight} - #{$toolbar} - #{$footerHeight});
+  // $skillContentHeight: calc(#{$skillMainHeight} - #{$temEditHeight} - #{$toolbar} - #{$footerHeight});
   $bgColor: #fafafa;
   $contentColor: #f5f5f5;
-  overflow: hidden;
+  $skillContenHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$temEditHeight} - #{$footerHeight} - env(safe-area-inset-top));
+  // overflow: hidden;
   width: 100%;
-  // height: 100%;
-  height: $skillMainHeight;
+  height: auto;
+  min-height: $skillMainHeight;
+  // height: $skillMainHeight;
   display: flex;
   flex-direction: column;
+  background-color: $contentColor;
   .toolbar {
-    position: relative;
-    top: 0;
+    position: sticky;
+    top: $cardHeaderHeight;
     height: auto;
     padding: 29px 38px 80px 30px;
     background-color: $bgColor;
+    z-index: 5;
     max-height: $toolbar;
     .content {
       height: calc(#{$toolbar} - 29px - 80px);
@@ -329,12 +301,16 @@ export default {
     }
   }
   > .content {
-    flex: 1;
-    // padding-bottom: $footerHeight !important;
-    display: flex;
+    background-color: $contentColor;
+    min-height: $skillContenHeight;
+    height: auto;
     .sidebar {
+      position: sticky;
+      top: calc(#{$toolbar} + #{$cardHeaderHeight});
       width: $sidebarWidth;
       background-color: $contentColor;
+      float: left;
+      height: auto;
       .gree-sidebar {
         width: 100%;
         .gree-sidebar-item {
@@ -358,14 +334,16 @@ export default {
       }
     }
     .main {
-      // border: 1px solid red;
       position: relative;
+      float: left;
       background-color: $bgColor;
       width: calc(100% - #{$sidebarWidth});
-      height: $skillContentHeight;
+      height: auto;
+      min-height: calc(#{$skillMainHeight} - #{$toolbar} - #{$footerHeight});
+      padding-bottom: calc(#{$footerHeight} + env(safe-area-inset-bottom));
       .list {
         height: 100%;
-        overflow-y: auto;
+        // overflow-y: auto;
         margin: 0;
         ul {
           &::after,
@@ -407,6 +385,7 @@ export default {
           text-align: center;
           padding: 30px 0px;
           font-size: 40px;
+          height: 60px;
           a {
             text-decoration: none;
             color: #ffd800;
@@ -428,23 +407,31 @@ export default {
         position: relative;
         &::before {
           @include commonPart(120px, '../../../../assets/img/skill/share_icon_logo.png');
+          top: 20%;
         }
         &::after {
           @include commonPart(160px, '../../../../assets/img/skill/share_icon_loading_rotate.png');
           animation: loading-rotate 1s linear infinite;
+          top: 20%;
         }
       }
       .error-msg-block {
-        position: absolute;
-        top: 0px;
+        position: relative;
+        top: 0;
         left: 0;
         height: 100%;
         width: 100%;
         .content {
-          @include commonPart(500px, '../../../../assets/img/skill/share_reload_new.png');
+          // @include commonPart(500px, '../../../../assets/img/skill/share_reload_new.png');
+          background-image: url('../../../../assets/img/skill/share_reload_new.png');
+          background-size: 500px 500px;
+          background-repeat: no-repeat;
+          background-position: center;
           display: flex;
           flex-direction: column;
           align-items: center;
+          height: 500px;
+          width: 100%;
           span {
             &:first-child {
               font-size: 42px;

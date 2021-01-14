@@ -55,7 +55,8 @@ export default {
       onTestFlag: 0,
       bgWidth: 0,
       bgHeight: 0,
-      headerHeight: 0
+      headerHeight: 0,
+      contentScrollTop: 0
     };
   },
   computed: {
@@ -63,6 +64,16 @@ export default {
       selectKey: state => state.selectKey
     }),
     ...mapGetters('control', ['skinConfig'])
+  },
+  activated() {
+    const target = document.getElementsByClassName('page-content')[0];
+    target.scrollTo(0, this.contentScrollTop);
+  },
+  beforeRouteLeave(to, from, next) {
+    const target = document.getElementsByClassName('page-content')[0];
+    const { scrollTop } = target;
+    this.contentScrollTop = scrollTop;
+    next();
   },
   mounted() {
     // 背景自适应

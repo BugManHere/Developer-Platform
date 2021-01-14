@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { deepCopy } from '@/utils';
+import { deepCopy } from '@utils';
 import { mapMutations, mapState, mapActions } from 'vuex';
 import Panel from '@components/layout/Panel/index';
 import https from '@/https';
@@ -315,7 +315,7 @@ export default {
       if (this.developType === 1) {
         this.delTempFunc(this.realIndex[index]);
       } else {
-        this.delDevFunc(index);
+        this.delDevFunc({ index });
       }
     },
     // 点击状态简要后跳转到该状态的设置

@@ -23,10 +23,12 @@
       width: 100%;
       padding-top: 124px;
       top: -$pageHeaderHeight;
+      background-position: 0 calc(0px - env(safe-area-inset-top));
       z-index: 5;
     }
     .page-content {
       padding-top: 0 !important;
+      overflow-x: hidden;
     }
     .page-main {
       position: relative;

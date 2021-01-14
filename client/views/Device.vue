@@ -1,13 +1,13 @@
 <template>
-  <div class="template">
-    <div>
+  <div class="gdp-template">
+    <div class="gdp-template-box">
       <!-- 顶部信息栏 -->
       <div class="message">
         <!-- 头部 -->
         <div class="frame-header">
           <!-- 标题 -->
           <span v-text="'设备信息'" />
-          <!-- 按钮 -->
+          <!-- 右上角按钮 -->
           <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default" v-text="'修改'" />
           </div>
@@ -248,10 +248,10 @@ export default {
       return {
         设备品类: this.currentDevice.productName,
         创建时间: this.currentDevice.createTime,
-        产品型号: this.currentDevice.productModel,
-        通讯协议: this.currentDevice.protocol,
+        MID: this.currentDevice.productModel,
+        产品名称: this.currentDevice.deviceName,
         修改时间: this.currentDevice.editTime,
-        产品名称: this.currentDevice.deviceName
+        细分码: [undefined, ''].includes(this.currentDevice.midType) ? '无' : this.currentDevice.midType
       };
     }
   },

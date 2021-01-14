@@ -6,7 +6,7 @@
     <div
       class="edit-box"
       :class="options.class"
-      v-fade:show="options.show"
+      v-lift:show="options.show"
       :style="{ top: `${documentHeight - { big: 100, medium: 75, undefined: 0 }[options.class]}px` }"
     >
       <div class="panel panel-default" v-if="panelShow">
