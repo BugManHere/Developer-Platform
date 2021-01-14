@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <ControlHeader @modUnfold="getModUnfold" :headerTxt="headerTxt" />
     <!-- 内容 -->
-    <div class="card-content" v-scroll-through>
+    <div class="card-content">
       <div class="card-content-box">
         <ModContent @modName="getModName" :modUnfold="modUnfold" />
         <FanContent />
@@ -51,15 +51,15 @@ $cardHeight: calc(100vh - #{$pageHeaderHeight} - env(safe-area-inset-top));
 $cardContentHeight: calc(100vh - #{$pageHeaderHeight} - #{$cardHeaderHeight} - env(safe-area-inset-top));
 $musicMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$temEditHeight} - #{$footerHeight} - env(safe-area-inset-top));
 .control-card {
-  max-height: $cardHeight;
-  overflow: hidden;
+  // max-height: $cardHeight;
+  // overflow: hidden;
   .card-content {
     position: relative;
     height: 100%;
-    max-height: $cardContentHeight;
+    // max-height: $cardContentHeight;
     min-height: $musicMainHeight;
     background-color: #fff;
-    overflow-y: auto;
+    overflow: hidden;
     &-box {
       height: auto;
     }

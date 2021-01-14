@@ -1,6 +1,6 @@
 <template>
   <div class="gr-toast">
-    <div v-fade:show="show" :class="type">
+    <div v-lift:show="show" :class="type">
       <span v-text="text" />
     </div>
   </div>

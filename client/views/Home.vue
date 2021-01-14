@@ -31,12 +31,15 @@
           <div class="body">
             <div class="message-top">
               <img :src="require(`@public/img/product/${item.imgPath}`)" />
-              <div>
+              <div class="message-top-center">
                 <span v-text="item.deviceName" />
                 <span>创建时间：{{ item.createTime }}</span>
               </div>
-              <i class="iconfont iconfont-disable" v-show="developType === 0" @click.stop="delDevice(item.id1)" title="删除设备" />
-              <i class="iconfont iconfont-preview" v-show="developType === 0" @click.stop="showPlugin(index)" title="预览效果" />
+              <div class="message-top-icons">
+                <i class="iconfont iconfont-inherit" v-show="developType === 0" @click.stop="clickInherit(item.id1)" title="派生设备" />
+                <i class="iconfont iconfont-disable" v-show="developType === 0" @click.stop="clickDel(item.id1)" title="删除设备" />
+                <i class="iconfont iconfont-preview" v-show="developType === 0" @click.stop="clickIPreview(index)" title="预览效果" />
+              </div>
             </div>
             <div class="message-bottom">
               <div v-for="(val, key) in item.productImshow" :key="key">
@@ -49,23 +52,25 @@
       </div>
     </div>
     <div class="overlay-backdrop" v-show="isShowDialog" />
-    <Dialog @hideDialog="setDialogType" v-fade:show="isShowDialog" />
+    <add-dev-dialog @hideDialog="setDialogType" v-lift:show="isShowDialog" />
   </div>
 </template>
 
 <script>
-import Dialog from '@components/Dialog';
+import AddDevDialog from '@components/AddDevDialog';
 import { mapState, mapActions } from 'vuex';
 import mouldConfig from '@plugin/mould-config.json';
 
 export default {
   name: 'home',
   components: {
-    Dialog
+    [AddDevDialog.name]: AddDevDialog
   },
   data() {
     return {
-      isShowDialog: false
+      isShowDialog: false,
+      inheritDevName: '',
+      inheritMID: ''
     };
   },
   computed: {
@@ -126,6 +131,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      inheritDev: 'INHERIT_DEV',
       delDev: 'DEL_DEV',
       getProductTypeList: 'GET_PRODUCT_TYPE_LIST', // 获取产品类别列表
       getUserDeviceList: 'GET_USERDEVICE_LIST', // 获取用户设备列表
@@ -163,7 +169,7 @@ export default {
         result = {
           产品品牌: item.brand,
           产品品类: item.productName,
-          产品型号: item.productModel,
+          MID: item.productModel,
           通信协议: item.protocol
         };
       } else if (this.developType === 1) {
@@ -177,17 +183,59 @@ export default {
       }
       return result;
     },
-    // 删除设备
-    delDevice(id) {
-      this.$confirm.show({
-        contnet: '确认删除',
+    // 派生设备
+    clickInherit(id) {
+      console.log(id);
+      this.$input.show({
+        title: '派生设备',
+        inputForm: [
+          {
+            type: 'input',
+            title: '产品名称',
+            placeholder: '请输入产品名称，如：贝塔柜机',
+            required: true,
+            method: val => {
+              if (val && val.target) {
+                this.inheritDevName = val.target.value;
+              }
+            }
+          },
+          {
+            type: 'input',
+            title: 'MID',
+            placeholder: '请输入MID，如：11005',
+            required: true,
+            method: val => {
+              if (val && val.target) {
+                this.inheritMID = val.target.value;
+              }
+            }
+          }
+        ],
+        onCancel: () => {
+          this.$input.hide();
+        },
         onConfirm: () => {
-          this.delDev(id);
+          this.inheritDev({
+            id,
+            productModel: this.inheritMID,
+            deviceName: this.inheritDevName
+          });
+          this.$input.hide();
+        }
+      });
+    },
+    // 删除设备
+    clickDel(id) {
+      this.$confirm.show({
+        content: '确认删除',
+        onConfirm: () => {
+          this.delDev({ id });
         }
       });
     },
     // 预览插件效果
-    showPlugin(index) {
+    clickIPreview(index) {
       const { modelPath, id1: devKey } = this.deviceInfoList[index];
       const port = mouldConfig[modelPath];
       const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${devKey}&admin=${this.admin}`;

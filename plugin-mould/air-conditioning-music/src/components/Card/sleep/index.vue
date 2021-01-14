@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <SleepHeader :switch-sleep="switchSleep" />
     <!-- 内容 -->
-    <div class="sleep-content" v-scroll-through>
+    <div class="sleep-content">
       <!-- 选择体质 -->
       <div class="sleep-content-body">
         <div class="body-btn-box">
@@ -24,8 +24,8 @@
       </keep-alive>
       <!-- 功能开关 -->
       <gree-list>
-        <gree-list-item title="防直吹" style="font-size: 18px" footer="防止风直接吹人">
-          <gree-switch :disabled="blowAble" slot="after" class="blue" v-model="blowActive" @change="switchBlow" />
+        <gree-list-item title="防直吹" style="font-size: 18px" :class="{ gray: disableBlow }" footer="防止风直接吹人">
+          <gree-switch :disabled="disableBlow" slot="after" class="blue" v-model="blowActive" @change="switchBlow" />
         </gree-list-item>
         <gree-list-item title="自动灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
           <gree-switch slot="after" class="blue" v-model="ligActive" @change="switchLig" />
@@ -73,7 +73,8 @@ export default {
       ],
       selectBody: 1,
       blowActive: false,
-      ligActive: false
+      ligActive: false,
+      blowId: 'AntiDirectBlow'
     };
   },
   computed: {
@@ -100,14 +101,14 @@ export default {
     // 防直吹
     blowStatusName() {
       const statusMap = this.statusMap;
-      return statusMap.AntiDirectBlow && statusMap.AntiDirectBlow.statusName;
+      return statusMap[this.blowId] && statusMap[this.blowId].statusName;
     },
     // 防直吹
     blowType() {
-      return this.blowStatusName === 'status_1';
+      return this.blowStatusName === 'status_1' && !this.disableBlow;
     },
-    blowAble() {
-      return this.blindModelArr.includes('AntiDirectBlow');
+    disableBlow() {
+      return this.blindModelArr.includes(this.blowId);
     },
     // 自动灯光
     ligStatusName() {
@@ -178,7 +179,7 @@ export default {
     },
     // 开关防直吹
     switchBlow(value) {
-      this.$stateMachine.toStatus('AntiDirectBlow', value ? 'status_1' : 'default');
+      this.$stateMachine.toStatus(this.blowId, value ? 'status_1' : 'default');
     },
     // 开关灯光
     switchLig() {
@@ -215,11 +216,11 @@ $cardContentHeight: calc(100vh - #{$pageHeaderHeight} - #{$cardHeaderHeight} - e
 $sleepMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$temEditHeight} - #{$footerHeight} - env(safe-area-inset-top));
 .sleep-card {
   max-height: $cardHeight;
-  overflow: hidden;
+  // overflow: hidden;
   .sleep-content {
     position: relative;
     height: 100%;
-    max-height: $cardContentHeight;
+    // max-height: $cardContentHeight;
     min-height: $sleepMainHeight;
     padding-bottom: 50px;
     background-color: #fff;

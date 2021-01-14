@@ -144,10 +144,6 @@ const router = new Router({
 });
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  // 如果点击了“预览效果”，就刷新页面
-  if (from.name && to.path === '/Loading') {
-    router.go(0);
-  }
   if (to.name === 'UserAgeInfo') {
     changeBarColor('#36b6df');
   } else if (to.name !== 'Home') {
@@ -156,6 +152,18 @@ router.beforeEach((to, from, next) => {
     changeBarColor(color);
   }
   next();
+});
+
+router.afterEach((to, from) => {
+  // 如果点击了“预览效果”，就刷新页面
+  if (from.name && to.path === '/Loading') {
+    router.go(0);
+  }
+  if (to.name === 'Home') {
+    // 跳转到用户信息页
+    const userAgeInfo = window.storage.get('userAgeInfo');
+    (!userAgeInfo || !userAgeInfo.year) && router.push('UserAgeInfo');
+  }
 });
 
 router.onError(error => {

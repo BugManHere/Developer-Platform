@@ -39,11 +39,32 @@
             height: 25px;
           }
           .message-top {
+            position: relative;
             height: 128px;
             width: 100%;
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
+            &-icons {
+              position: absolute;
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+              top: 10px;
+              right: 20px;
+              width: 100%;
+              > .iconfont {
+                color: #404657;
+                font-size: 22px;
+                height: 16px;
+                padding-right: 10px;
+                opacity: 0.8;
+                z-index: 1;
+                &:hover {
+                  color: #49abff;
+                }
+              }
+            }
             img {
               width: 86px;
               height: 86px;
@@ -51,7 +72,7 @@
               background-color: #fafafa;
               border: 1px #ddd solid;
             }
-            div {
+            &-center {
               display: flex;
               flex-wrap: wrap;
               width: 350px;
@@ -65,17 +86,6 @@
                 &:nth-child(2) {
                   font-size: 12px;
                 }
-              }
-            }
-            > .iconfont {
-              color: #404657;
-              font-size: 22px;
-              height: 16px;
-              align-self: flex-start;
-              margin: 22px 0 0 10px;
-              z-index: 1;
-              &:hover {
-                color: #49ABFF;
               }
             }
           }

@@ -22,7 +22,7 @@
           @mousedown="dragStart"
           @click.stop="commit"
         >
-          <span v-text="contnet" />
+          <span v-text="content" />
           <div class="right">
             <span />
             <span />

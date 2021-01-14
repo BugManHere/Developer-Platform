@@ -29,7 +29,9 @@ module.exports = {
     config.resolve.merge({
       alias: {
         '@': resolve('client'),
+        '@utils': resolve('utils'),
         '@components': resolve('client/components'),
+        '@globalComponents': resolve('client/globalComponents'),
         '@assets': resolve('client/assets'),
         '@public': resolve('public'),
         '@plugin': resolve('plugin-mould'),

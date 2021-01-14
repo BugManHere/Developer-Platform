@@ -38,53 +38,7 @@
           <img :src="selectModelName" />
         </div>
         <!-- 输入信息 -->
-        <div class="next-table" v-if="currentStatus === 1">
-          <form class="form-horizontal">
-            <div class="form-group">
-              <label class="col-sm-2 control-label">品类</label>
-              <div class="col-sm-10 ">
-                <span class="form-control-static" v-text="selectDeviceInfo.name" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label">品牌</label>
-              <div class="col-sm-10">
-                <span>格力</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label main">产品名称</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputText" placeholder="请输入产品名称，如贝塔柜机" @change="setDeviceName" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label main">产品id</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputText" placeholder="请输入产品id，如11005" @change="setProductModel" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label">选择模板</label>
-              <div class="col-sm-10">
-                <select class="select-medium form-control" v-model="mouldKey">
-                  <option v-for="(optionValue, optionKey) in selectProductInfo.plugin" :key="optionKey" :value="optionKey" v-text="optionValue.name" />
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="col-sm-2 control-label">通信协议</label>
-              <div class="col-sm-10">
-                <label class="radio-inline">
-                  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" @click="deviceInfo.protocol = 'WiFi'" checked /> WiFi
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" @click="deviceInfo.protocol = '蓝牙'" /> 蓝牙
-                </label>
-              </div>
-            </div>
-          </form>
-        </div>
+        <horizontal-form :formList="formList" v-if="currentStatus === 1" />
       </div>
       <div class="btn-group" role="group" aria-label="..." v-show="currentStatus === 0">
         <button type="button" class="btn btn-primary" @click="goState(1)" v-show="developType === 0">下一步</button>
@@ -100,11 +54,13 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import horizontalForm from '@components/form/horizontal';
 import https from '../https';
 
 export default {
+  name: 'add-dev-dialog',
   components: {
-    // [Icon.name]: Icon
+    [horizontalForm.name]: horizontalForm
   },
   data() {
     return {
@@ -115,6 +71,7 @@ export default {
         brand: '格力',
         deviceName: '',
         productModel: '',
+        midType: '',
         protocol: 'WiFi',
         modelPath: ''
       },
@@ -128,6 +85,65 @@ export default {
       developType: state => state.pulicModule.developType,
       userDeviceList: state => state.devModule.userDeviceList
     }),
+    // 表单内容
+    formList() {
+      return [
+        {
+          type: 'text',
+          title: '品类',
+          value: this.selectDeviceInfo && this.selectDeviceInfo.name
+        },
+        {
+          type: 'text',
+          title: '品牌',
+          value: '格力'
+        },
+        {
+          type: 'input',
+          title: '产品名称',
+          placeholder: '请输入产品名称，如：贝塔柜机',
+          required: true,
+          change: val => {
+            if (val && val.target) {
+              this.deviceInfo.deviceName = val.target.value;
+            }
+          }
+        },
+        {
+          type: 'input',
+          title: 'MID',
+          placeholder: '请输入MID，如：11005',
+          required: true,
+          change: val => {
+            if (val && val.target) {
+              this.deviceInfo.productModel = val.target.value;
+            }
+          }
+        },
+        {
+          type: 'input',
+          title: '细分码',
+          default: this.deviceInfo && this.deviceInfo.midType,
+          placeholder: '请输入细分码，如：7e000002',
+          change: val => {
+            if (val && val.target) {
+              this.deviceInfo.midType = val.target.value;
+            }
+          }
+        },
+        {
+          type: 'select',
+          title: '选择模板',
+          options: this.selectProductInfo && this.selectProductInfo.plugin,
+          default: 'default',
+          change: val => {
+            if (val && val.target) {
+              this.mouldKey = val.target.value;
+            }
+          }
+        }
+      ];
+    },
     // 当前被选中的产品信息
     selectProductInfo() {
       if (!this.productTypeList.length) return {};
@@ -145,7 +161,6 @@ export default {
     },
     // 当前模板图片
     selectModelName() {
-      console.log(this.deviceInfo.modelPath);
       try {
         return require(`@public/img/model/${this.deviceInfo.modelPath}.png`);
       } catch (e) {

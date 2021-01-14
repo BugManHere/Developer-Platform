@@ -150,7 +150,7 @@ export default {
         status = model.statusDefine[statusName];
       }
       result[identifier] = {
-        statusName,
+        statusName: String(statusName),
         stateName,
         status
       };
@@ -320,7 +320,7 @@ export default {
       // 指向statusName
       const directionStatusName = getters.statusDirectionMap[identifier];
       // 如果指向statusName为'undefined'或当前statusName，则认为指向无效
-      return directionStatusName === 'undefined' || directionStatusName === statusName;
+      return [statusName, directionStatusName].includes('undefined') || directionStatusName === statusName;
     });
     return result;
   },
@@ -392,7 +392,7 @@ export default {
       let setData = moreCommand || {};
       setData[json] = status.value;
       result[identifier] = {
-        statusName,
+        statusName: String(statusName),
         status,
         json,
         setData,

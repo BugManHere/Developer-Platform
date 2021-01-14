@@ -73,7 +73,7 @@ $padding: 66px;
     width: calc(100vw - #{$boxPadding * 2});
     position: relative;
     left: -$padding;
-    padding: 0 32px;
+    padding: 0 $boxPadding;
   }
 }
 </style>
