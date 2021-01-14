@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { deepCopy } from '@/utils';
+import { deepCopy } from '@utils';
 import { mapState, mapMutations } from 'vuex';
 import Panel from '@components/layout/Panel/index';
 

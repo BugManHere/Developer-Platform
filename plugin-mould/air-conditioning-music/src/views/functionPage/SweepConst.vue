@@ -2,10 +2,12 @@
   <!-- 扫风页 -->
   <gree-view bg-color="#F4F4F4">
     <gree-page class="page-sweep">
-      <gree-header>
-        {{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}
-        <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="turnBack" />
-      </gree-header>
+      <div @click.stop>
+        <gree-header>
+          <span v-text="$language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`)" @click.stop />
+          <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="turnBack" />
+        </gree-header>
+      </div>
       <div class="sweep-body">
         <gree-sweep-select
           :canvas-id="canvasId1"
@@ -86,12 +88,12 @@ export default {
       Pow: state => state.dataObject.Pow,
       selectSwingLfRig: state => {
         const swingLfRig = state.dataObject.SwingLfRig;
-        const swingLfRigMap = [[], [], ['1'], ['2'], ['3'], ['4'], ['5']];
+        const swingLfRigMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swingLfRigMap[swingLfRig];
       },
       selectSwUpDn: state => {
         const swUpDn = state.dataObject.SwUpDn;
-        const swUpDnMap = [[], [], ['1'], ['2'], ['3'], ['4'], ['5']];
+        const swUpDnMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
         return swUpDnMap[swUpDn];
       }
     }),
@@ -139,6 +141,9 @@ export default {
   },
   mounted() {
     hideLoading();
+    document.getElementsByClassName('page-sweep')[0].addEventListener('click', () => {
+      this.cancelSweep();
+    });
   },
   methods: {
     ...mapMutations({
@@ -159,8 +164,12 @@ export default {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
-        if (val2.length === 1) {
+        const len = val2.length;
+        if (len === 1) {
           this._setSweep({ SwingLfRig: Number(val2[0]) + 1, SmartWind: 0 });
+        } else if (!len) {
+          this._setSweep({ SwingLfRig: 0 });
+          showToast(this.$language('sweep.sweep_cancel'), 0);
         } else {
           // 刷新扇叶
           this.selectDefault = this.selectSwingLfRig;
@@ -180,8 +189,12 @@ export default {
         val2.indexOf(item) === -1 ? val2.push(item) : '';
       });
       if (val2) {
-        if (val2.length === 1) {
+        const len = val2.length;
+        if (len === 1) {
           this._setSweep({ SwUpDn: Number(val2[0]) + 1, SmartWind: 0 });
+        } else if (!len) {
+          this._setSweep({ SwUpDn: 0 });
+          showToast(this.$language('sweep.sweep_cancel'), 0);
         } else {
           // 刷新扇叶
           this.selectDefault = this.selectSwUpDn;
@@ -215,6 +228,13 @@ export default {
         this.sendCtrl({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
         funcData.ConstUD = data.SwUpDn;
         storage.set('funcData', funcData);
+      }
+    },
+    cancelSweep() {
+      if (this.touchId === 1) {
+        this.sweepLrChangeHandler([]);
+      } else if (this.touchId === 2) {
+        this.sweepUdChangeHandler([]);
       }
     }
   }

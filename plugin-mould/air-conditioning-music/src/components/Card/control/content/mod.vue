@@ -1,7 +1,7 @@
 <template>
   <div class="mod-content">
     <!-- <div class="mod-content-box" ref="content" :style="isMounted && { height: modUnfold ? `${contentHeight}px` : 0 }"> -->
-    <div class="mod-content-box" ref="content" v-unfold="modUnfold">
+    <div class="mod-content-box" ref="content" v-unfold="!isMounted || modUnfold">
       <btn-content :btn-list="btnList" />
     </div>
   </div>
@@ -40,6 +40,7 @@ export default {
       }
     }, 20);
     this.updateStatusNameList();
+    this.emitModText();
   },
   computed: {
     ...mapState('control', {
@@ -83,6 +84,7 @@ export default {
           this.lastStatusName = this.currentStatusName;
           this.currentStatusName = newVal;
         }
+        this.emitModText();
       },
       immediate: true
     }
@@ -105,6 +107,14 @@ export default {
           i += 1;
         }
         this.modStatusNameList = result;
+      }
+    },
+    emitModText() {
+      try {
+        const modInfo = this.btnList.find(item => item.key === this.modCurrentStatusName);
+        this.$emit('modName', modInfo.name);
+      } catch (e) {
+        e;
       }
     }
   }

@@ -5,16 +5,17 @@ import router from './router';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.css';
 
-import vToast from '@components/tools/Toast/index';
-import vLoading from '@components/tools/Loading/index';
-import vConfirm from '@components/tools/Confirm/index';
 import './assets/scss/global.scss';
 import store from './store';
 
-import transitionFade from './directives/transition-fade';
-import transitionSlow from './directives/transition-slow';
-import focus from './directives/focus';
-import './directives/transition-fade';
+import vToast from '@globalComponents/Toast/index';
+import vLoading from '@globalComponents/Loading/index';
+import vConfirm from '@globalComponents/Confirm/index';
+import vInput from '@globalComponents/Input/index';
+import vTop from './directives/Top/index';
+import vLift from './directives/lift';
+import vShuttle from './directives/shuttle';
+import vFocus from './directives/focus';
 
 import VueClipboard from 'vue-clipboard2';
 
@@ -22,11 +23,13 @@ Vue.use(Vuex);
 Vue.use(vToast);
 Vue.use(vLoading);
 Vue.use(vConfirm);
+Vue.use(vInput);
 Vue.use(VueClipboard);
 // 注册全局指令
-Vue.directive('fade', transitionFade);
-Vue.directive('slow', transitionSlow);
-Vue.directive('focus', focus);
+Vue.directive('lift', vLift);
+Vue.directive('shuttle', vShuttle);
+Vue.directive('focus', vFocus);
+Vue.directive('gotop', vTop);
 
 Vue.config.productionTip = false;
 

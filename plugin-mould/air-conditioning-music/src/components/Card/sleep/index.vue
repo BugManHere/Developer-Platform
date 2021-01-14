@@ -5,14 +5,14 @@
     <!-- 内容 -->
     <div class="sleep-content">
       <!-- 选择体质 -->
-      <div class="sleep-content-body">
+      <div class="sleep-content-body" :class="{ gray: disableSleep }">
         <div class="body-btn-box">
           <div
             v-for="(btn, index) in bodyBtnList"
             :key="index"
             class="body-btn"
-            :class="{ select: selectBody === btn.value, gray: !powType }"
-            @click="changeBody(btn.value, !powType)"
+            :class="{ select: selectBody === btn.value }"
+            @click="changeBody(btn.value, disableSleep)"
           >
             <span v-text="btn.text" />
           </div>
@@ -27,7 +27,7 @@
         <gree-list-item title="防直吹" style="font-size: 18px" :class="{ gray: disableBlow }" footer="防止风直接吹人">
           <gree-switch :disabled="disableBlow" slot="after" class="blue" v-model="blowActive" @change="switchBlow" />
         </gree-list-item>
-        <gree-list-item title="自动灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
+        <gree-list-item title="灯光" style="font-size: 18px" footer="夜间自动关闭灯光">
           <gree-switch slot="after" class="blue" v-model="ligActive" @change="switchLig" />
         </gree-list-item>
       </gree-list>
@@ -79,12 +79,12 @@ export default {
   },
   computed: {
     ...mapState('control', {
+      Mod: state => state.dataObject.Mod,
       SwhSlp: state => state.dataObject.SwhSlp,
       SlpMod: state => state.dataObject.SlpMod,
       SmartSlpMod: state => state.dataObject.SmartSlpMod
     }),
     ...mapGetters('machine', ['statusMap', 'blindModelArr']),
-    ...mapGetters(['powType']),
     // 当前体质
     bodyType() {
       if (this.SlpMod === 3 && this.SmartSlpMod === 0) {
@@ -109,6 +109,9 @@ export default {
     },
     disableBlow() {
       return this.blindModelArr.includes(this.blowId);
+    },
+    disableSleep() {
+      return this.blindModelArr.includes('Sleep');
     },
     // 自动灯光
     ligStatusName() {
@@ -172,7 +175,7 @@ export default {
         const { SmartSlpMod, SlpMod } = this.getCacheData();
         sendData.SmartSlpMod = SmartSlpMod;
         sendData.SlpMod = SlpMod;
-        this.switchBlow(true); // 打开防直吹
+        this.Mod === 1 && this.switchBlow(true); // 打开防直吹
         this.openQuiet(); // 打开静音
       }
       this.changeData(sendData);
@@ -255,7 +258,7 @@ $sleepMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
       }
     }
     > .list {
-      margin-bottom: calc(#{$footerHeight} + 80px);
+      padding-bottom: calc(#{$footerHeight} + 80px + env(safe-area-inset-bottom));
     }
   }
 }

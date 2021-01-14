@@ -17,6 +17,7 @@ export const DEL_TEMP_FUNC = 'DEL_TEMP_FUNC'; //
 export const SET_TEMP_DONE = 'SET_TEMP_DONE'; //
 
 // 设备相关接口
+export const INHERIT_DEV = 'INHERIT_DEV'; // 派生设备
 export const DEL_DEV = 'DEL_DEV'; //
 export const DEL_DEV_FUNC = 'DEL_DEV_FUNC'; //
 export const SET_DEV_DONE = 'SET_DEV_DONE'; //

@@ -117,6 +117,18 @@ export const customizeFunction = {
       sweepSetting.SwingLR = 1;
       storage.set('sweepSetting', sweepSetting);
     }
+  },
+  TemStep: ({ commit }, currentStatusName, nextStatusName) => {
+    switch (nextStatusName) {
+      case 'default':
+        commit('control/SET_DATA_OBJECT', { has05: 1, has01: 0 }, { root: true });
+        break;
+      case 'status_1':
+        commit('control/SET_DATA_OBJECT', { has05: 0, has01: 1 }, { root: true });
+        break;
+      default:
+        break;
+    }
   }
 };
 

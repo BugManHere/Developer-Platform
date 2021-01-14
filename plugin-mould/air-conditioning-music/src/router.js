@@ -118,7 +118,10 @@ const router = new Router({
           path: 'Result',
           component: SkillSearchResult
         }
-      ]
+      ],
+      mate: {
+        keepAlive: true
+      }
     },
     {
       path: '/VoiceMessage',
@@ -142,6 +145,7 @@ const router = new Router({
     }
   ]
 });
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
   if (to.name === 'UserAgeInfo') {

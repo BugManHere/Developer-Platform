@@ -20,6 +20,8 @@ const typesMap = {
   GET_DEVICE_DATA: 'control', // 查询一包数据
   PARSE_DATA_BY_COLS: 'control', // 解析设备数据
   SET_POLLING: 'control', // 开启轮询
+  ADD_POLLING: 'control', // 新增轮询
+  DEL_POLLING: 'control', // 删除轮询
   SEND_CTRL: 'control', // 发送控制指令
   UPDATE_DATAOBJECT: 'control', // 更新本地数据
   MQTT_CALLBACK: 'control', // 原生调用插件的mqtt回调方法

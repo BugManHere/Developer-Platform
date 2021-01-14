@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import { types, defineTypes } from '@/store/types';
-import { getConfig } from '@/utils/getConfig';
+import { getConfig } from '@/utils/fsm';
 const { customizeFunction, customizeInit } = require('@/store/userdef');
 
 export default {

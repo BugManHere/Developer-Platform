@@ -45,16 +45,16 @@
           <!-- 根据筛选条件的首字母排序 -->
           <div class="frame" v-for="(indexArr, letter) in filterContentList.sortMap" :key="letter">
             <!-- 首字母 -->
-            <div class="letter" v-text="letter" v-slow="!hideLetter.includes(letter)" />
+            <div class="letter" v-text="letter" v-shuttle="!hideLetter.includes(letter)" />
             <!-- 显示内容 -->
-            <div class="content" v-slow="!hideLetter.includes(letter)" :key="letter + 0">
+            <div class="content" v-shuttle="!hideLetter.includes(letter)" :key="letter + 0">
               <!-- 根据sortMap定义的顺序显示 -->
               <div
                 class="list-col"
                 v-for="(funcIndex, index) in indexArr"
                 :key="`${funcIndex}_${index}`"
                 @click="selectFunc(funcIndex)"
-                v-slow="!hideContent.includes(funcIndex)"
+                v-shuttle="!hideContent.includes(funcIndex)"
               >
                 <!-- 筛选条件优先排列 -->
                 <div
@@ -94,7 +94,7 @@
 <script>
 import pinyin from 'js-pinyin';
 import https from '@/https';
-import { deepCopy } from '@/utils';
+import { deepCopy } from '@utils';
 import { mapState, mapMutations } from 'vuex';
 
 export default {

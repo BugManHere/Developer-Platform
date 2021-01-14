@@ -1,7 +1,7 @@
 <template>
   <div class="control-card">
     <!-- 头部 -->
-    <ControlHeader @modUnfold="getModUnfold" :headerTxt="headerTxt" />
+    <ControlHeader @modUnfold="getModUnfold" :headerText="headerText" />
     <!-- 内容 -->
     <div class="card-content">
       <div class="card-content-box">
@@ -25,7 +25,7 @@ export default {
     return {
       isCeiling: false,
       headerHeight: 0,
-      headerTxt: '',
+      headerText: '',
       modUnfold: true
     };
   },
@@ -40,7 +40,7 @@ export default {
       this.modUnfold = val;
     },
     getModName(val) {
-      this.headerTxt = val;
+      this.headerText = val;
     }
   }
 };

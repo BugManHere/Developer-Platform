@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { Header, Button, Icon } from 'gree-ui';
 import ErrorOverlay from '../ErrorOverlay';
 import { changeBarColor } from '@PluginInterface';
@@ -42,11 +41,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  computed: {
-    ...mapState('control', {
-      mac: state => state.mac
-    })
   },
   created() {
     changeBarColor('#fffffe');

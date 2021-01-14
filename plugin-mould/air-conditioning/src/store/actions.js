@@ -36,7 +36,7 @@ function customizeDataObject({ state }, _dataObject) {
  * @description 封装发送指令代码
  */
 function sendControl({ state, commit, dispatch }, dataMap) {
-  if (state.dataObject.functype || !state.ableSend) return;
+  if (!state.ableSend) return;
   setData = { ...setData, ...dataMap };
   clearTimeout(_timer2);
   _timer2 = setTimeout(async () => {
@@ -74,6 +74,8 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     }
 
     const json = JSON.stringify({ mac, t, opt, p });
+
+    if (state.dataObject.functype) return;
 
     try {
       const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
@@ -279,7 +281,7 @@ export default {
     const dataMap = {};
     keys.forEach(key => {
       // 组装指令，根据业务更改，温度值需要整套发送
-      if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) {
+      if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5', 'Emod'].includes(key)) {
         const val = DataObject[key] || 0;
         opt.push(key);
         p.push(val);
