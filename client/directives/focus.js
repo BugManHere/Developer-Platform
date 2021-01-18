@@ -1,6 +1,7 @@
 const focus = {
   update(el, bingding) {
     if (!bingding.value) return;
+    console.log(el);
     el.focus();
     try {
       const range = window.getSelection(); // 获取光标
