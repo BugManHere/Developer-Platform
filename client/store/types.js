@@ -15,9 +15,16 @@ export const EDIT_TEMP_FUNC = 'EDIT_TEMP_FUNC'; //
 export const ADD_TEMP_FUNC = 'ADD_TEMP_FUNC'; //
 export const DEL_TEMP_FUNC = 'DEL_TEMP_FUNC'; //
 export const SET_TEMP_DONE = 'SET_TEMP_DONE'; //
+export const TYPE_DEF_EDIT = 'TYPE_DEF_EDIT'; // 编辑类型定义
+export const ADD_JSON_DEFINE = 'ADD_JSON_DEFINE'; //新增字段类型定义
+export const DEL_JSON_DEFINE = 'DEL_JSON_DEFINE'; //删除字段类型定义
 
 // 设备相关接口
+export const GET_DEV = 'GET_DEV'; // 获取设备信息
+export const DEV_CREATE = 'DEV_CREATE'; // 创建设备
 export const INHERIT_DEV = 'INHERIT_DEV'; // 派生设备
+export const DEV_SAVE = 'DEV_SAVE'; // 保存设备更改
+export const DEV_ADD_MIDTYPE = 'DEV_ADD_MIDTYPE'; // 设备增加细分码
 export const DEL_DEV = 'DEL_DEV'; //
 export const DEL_DEV_FUNC = 'DEL_DEV_FUNC'; //
 export const SET_DEV_DONE = 'SET_DEV_DONE'; //
