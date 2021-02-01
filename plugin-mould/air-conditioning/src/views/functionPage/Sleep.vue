@@ -246,8 +246,8 @@ export default {
     currentAge() {
       if ([1, 4].includes(this.SlpMod)) return 4;
       if (this.SlpMod === 3) return 3;
-      if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
       if (this.SmartSlpModEx === 0) return 1;
+      if (this.SmartSlpMod === 0 && this.SlpMod !== 2) return 3;
       return Math.ceil(this.SmartSlpModEx / 3) - 1;
     },
     currentBody() {
@@ -483,6 +483,21 @@ export default {
     }
   },
   watch: {
+    Mod(newVal) {
+      if (![1, 4].includes(newVal)) {
+        this.$router.push({ name: 'Home' }).catch(err => {
+          err;
+        });
+        try {
+          showToast('空调切换模式，自动退出智眠设置。', 1);
+        } catch (e) {
+          Toast({
+            content: '空调切换模式，自动退出智眠设置。',
+            position: 'bottom'
+          });
+        }
+      }
+    },
     Pow(newVal) {
       if (!newVal) {
         this.$router.push({ name: 'Home' }).catch(err => {
@@ -526,6 +541,7 @@ export default {
     },
     currentAge: {
       handler(newVal) {
+        console.log(newVal);
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
       },
@@ -593,14 +609,11 @@ export default {
         if (obj.SwhSlp && this.Mod === 1) {
           control.AntiDirectBlow = 1;
           control.SwUpDn = 0;
-          control.Tur = 0;
-          control.Quiet = 2;
-          control.WdSpd = 1;
-        } else if (this.Mod === 4) {
-          control.Tur = 0;
-          control.Quiet = 2;
-          control.WdSpd = 1;
         }
+        control.Tur = 0;
+        control.Quiet = 2;
+        control.WdSpd = 1;
+        control.UnmanedShutDown = 0;
       }
       const sendData = { ...obj };
       sendData.StHt = 0;
@@ -794,6 +807,8 @@ export default {
 
       data > 30 && (data = 30);
       data < 16 && (data = 16);
+
+      if (data === this.data[dataIndex][1]) return;
 
       this.$set(this.data[dataIndex], 1, data);
 

@@ -1,4 +1,4 @@
-import { mapState } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 /**
  * @description 检测有没有故障，有没有掉线
  */
@@ -7,7 +7,8 @@ const updateStatus = {
     ...mapState('control', {
       isOffline: state => state.deviceInfo.deviceState,
       lang: state => state.deviceInfo.lang
-    })
+    }),
+    ...mapGetters(['errorMsgs'])
   },
   watch: {
     /**
@@ -26,6 +27,19 @@ const updateStatus = {
     lang: {
       handler(newVal) {
         this.$i18n.locale = newVal;
+      },
+      immediate: true
+    },
+    // 如果故障不可控
+    'errorMsgs.controlAble': {
+      handler(newVal) {
+        if (!newVal) {
+          setTimeout(() => {
+            this.$router.push('ErrorWarning');
+          }, 200);
+        } else if (this.$route.name === 'ErrorWarning') {
+          this.$router.push('Home');
+        }
       },
       immediate: true
     }

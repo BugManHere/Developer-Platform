@@ -213,6 +213,8 @@ export default {
   min-height: $musicMainHeight;
   height: 100%;
   background-color: #fff;
+  z-index: 1;
+  transform: translate3d(0, 0, 0);
   &-skeleton {
     height: 100%;
     padding: 100px 60px 0 60px;

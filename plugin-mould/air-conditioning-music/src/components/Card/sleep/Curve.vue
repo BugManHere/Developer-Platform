@@ -6,6 +6,7 @@
 import echarts from 'echarts';
 import { mapState, mapActions, mapMutations } from 'vuex';
 import { types } from '@/store/types';
+import { showLoading, hideLoading } from '@PluginInterface';
 
 export default {
   props: {
@@ -52,7 +53,8 @@ export default {
   created() {
     this.clientHeight = document.body.clientHeight;
   },
-  activated() {
+  async activated() {
+    showLoading();
     // 增加更新
     clearInterval(this.updatedTimer);
     this.updatedTimer = setInterval(() => {
@@ -60,7 +62,7 @@ export default {
     }, 5000);
 
     // 增加轮询
-    this.addPolling({
+    await this.addPolling({
       jsons: [
         'SmartSlpMod',
         'Slp1L1',
@@ -83,6 +85,9 @@ export default {
       key: 'SlpCurve',
       immediate: true
     });
+
+    this.imshowChart && this.updateLocal(this.dataObject);
+    hideLoading();
   },
   deactivated() {
     clearInterval(this.updatedTimer);

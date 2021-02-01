@@ -9,10 +9,11 @@ const state = {
   isStHt: false,
   cloudTimer: false,
   dataObject: {
+    vender: '', // 细分码
     Pow: 1,
-    Mod: 3,
-    SetTem: 18,
-    WdSpd: 1,
+    Mod: 0,
+    SetTem: 25,
+    WdSpd: 0,
     'Add0.5': 0,
     'Add0.1': 0,
     has05: 1,
@@ -21,9 +22,11 @@ const state = {
     functype: 0, // 0代表正常，1代表集中控制
     CO2: 401,
     SmartSlpModEx: 0,
+    SmartSlpMod: 0,
     SwhSlp: 1,
     TemSen: 65, // 室温
     FreshAirConditionState: 0,
+    UnmanedShutDown: 0,
     Humi: 0,
     LoopMod: 0,
     ErrCode1: 0,

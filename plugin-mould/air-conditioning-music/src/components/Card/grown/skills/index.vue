@@ -250,6 +250,8 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: $contentColor;
+  z-index: 1;
+  transform: translate3d(0, 0, 0);
   .toolbar {
     position: sticky;
     top: $cardHeaderHeight;

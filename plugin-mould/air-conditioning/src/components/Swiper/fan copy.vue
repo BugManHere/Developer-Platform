@@ -199,9 +199,14 @@ export default {
     // 初始化
     initSwiper() {
       this.$refs[this.ref].updateSwiper(this.leftLen);
-      this.removeAllSlide();
-      this.insertAllSlide();
-      this.setFanName();
+      setTimeout(() => {
+        this.removeAllSlide();
+        this.$nextTick(() => {
+          this.updateSwiper();
+          this.insertAllSlide();
+          this.setFanName();
+        });
+      }, 0);
     },
     // 给滑轮赋予初始区间
     setList() {
@@ -268,6 +273,13 @@ export default {
     },
     // 根据情况填充slide
     insertAllSlide() {
+      if (this.$refs[this.ref].$el.getElementsByClassName('swiper-slide').length) {
+        this.removeAllSlide();
+        setTimeout(() => {
+          this.insertAllSlide();
+        }, 10);
+        return;
+      }
       let swiperNum = this.$refs[this.ref].$el.getElementsByClassName('swiper-wrapper')[0].childNodes.length;
       if (swiperNum >= this.leftLen + this.rightLen + 1) return;
       for (let i = this.leftLen; i >= -this.rightLen; i -= 1) {

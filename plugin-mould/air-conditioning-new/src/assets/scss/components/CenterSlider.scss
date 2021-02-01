@@ -118,15 +118,6 @@
         }
       }
       .slider-slot-1 {
-        position: relative;
-        left: -20px;
-        font-size: 94px;
-        white-space: nowrap;
-        text-align: center;
-        height: $textHeight;
-        line-height: $textHeight;
-      }
-      .slider-slot-2 {
         position: absolute;
         white-space: nowrap;
         left: 50%;
@@ -137,6 +128,15 @@
           font-family: 'Roboto-Light';
           font-size: 44px;
         }
+      }
+      .slider-slot-2 {
+        position: relative;
+        left: -20px;
+        font-size: 94px;
+        white-space: nowrap;
+        text-align: center;
+        height: $textHeight;
+        line-height: $textHeight;
       }
       .block {
         position: relative;

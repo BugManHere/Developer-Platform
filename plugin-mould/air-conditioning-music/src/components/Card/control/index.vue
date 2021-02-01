@@ -2,6 +2,10 @@
   <div class="control-card">
     <!-- 头部 -->
     <ControlHeader @modUnfold="getModUnfold" :headerText="headerText" />
+    <!-- 头部遮罩层  -->
+    <template class="mask">
+      <slot name="mask" />
+    </template>
     <!-- 内容 -->
     <div class="card-content">
       <div class="card-content-box">
@@ -60,6 +64,8 @@ $musicMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
     min-height: $musicMainHeight;
     background-color: #fff;
     overflow: hidden;
+    z-index: 1;
+    transform: scale3d(1, 1, 1);
     &-box {
       height: auto;
     }

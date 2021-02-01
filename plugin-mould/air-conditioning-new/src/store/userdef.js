@@ -98,7 +98,7 @@ export const customizeFunction = {
     let res = true;
     nextStatusName === 'status_1' && (value = 1);
     value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
-    res && switchClean(value);
+    Number(res) && switchClean(value);
   },
   SwingUD: () => {
     const storage = window.storage;

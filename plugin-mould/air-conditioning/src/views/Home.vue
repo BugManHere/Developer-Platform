@@ -149,7 +149,7 @@ export default {
       Pow: state => state.dataObject.Pow,
       Mod: state => state.dataObject.Mod,
       SetTem: state => state.dataObject.SetTem,
-      TemUn: state => state.dataObject.TemUn,
+      TemUn: state => state.dataObject.TemUn && 0,
       TemSen: state => state.dataObject.TemSen,
       WdSpd: state => state.dataObject.WdSpd,
       Air: state => state.dataObject.Air,
@@ -355,7 +355,7 @@ export default {
           }
         });
       };
-      const removeArr = ['AppTimer'];
+      const removeArr = ['AppTimer', 'vender'];
       const remarks = '...';
       const opt = JSON.parse(this.devOptions.statueJson2);
       removeJson(opt, removeArr);

@@ -2,6 +2,10 @@
   <div class="sleep-card">
     <!-- 头部 -->
     <SleepHeader :switch-sleep="switchSleep" />
+    <!-- 头部遮罩层  -->
+    <template class="mask">
+      <slot name="mask" />
+    </template>
     <!-- 内容 -->
     <div class="sleep-content">
       <!-- 选择体质 -->
@@ -228,6 +232,8 @@ $sleepMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
     padding-bottom: 50px;
     background-color: #fff;
     overflow-y: auto;
+    z-index: 1;
+    transform: translate3d(0, 0, 0);
     &-body {
       height: auto;
       width: auto;

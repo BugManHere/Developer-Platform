@@ -37,7 +37,7 @@ export default {
     // 获取指向statusName
     const nextStatusName = nextStatusInfo.statusName;
     // 如果statusName为undefined，不输出状态值
-    if (nextStatusName && nextStatusName !== 'undefined') {
+    if (nextStatusName && nextStatusName !== 'undefined' && nextStatusName !== currentStatusName) {
       // 获取自定义函数接入方式
       const customize = nextStatusInfo.customize;
       // 获取需要发送的指令
@@ -99,7 +99,7 @@ class stateMachine {
     let oldList = '';
     Object.defineProperty(this, 'updateState', {
       get() {
-        const { getters, state, commit } = this.vuexContext;
+        const { getters, commit } = this.vuexContext;
         const result = JSON.stringify(
           getters.identifierArr.map(identifier => {
             return getters.statusMap[identifier].stateName;
@@ -111,7 +111,7 @@ class stateMachine {
           checkTime += 1;
           oldList = result;
           this.updateState;
-          commit(types.SET_BASEDATA, { funcDefine: state.baseData.funcDefine }, { root: true });
+          commit(types.SET_BASEDATA, { funcDefine: getters.funcDefine }, { root: true });
         }
         return true;
       },
@@ -162,10 +162,10 @@ function runCustomizeInit(context) {
  * @param {Object} { commit, dispatch } Vuex的context对象
  * @param {Object} baseData 从json获取的配置
  */
-function updateConfig({ commit, dispatch }, baseData) {
+function updateConfig({ commit, dispatch, getters }, baseData) {
   if (!baseData) return;
   // 转换指令
-  str2NumMap(baseData.funcDefine);
+  str2NumMap(getters.funcDefine);
   // 更新到vuex
   commit(types.SET_BASEDATA, baseData, { root: true });
   commit(
@@ -256,13 +256,13 @@ function creatQueue({ dispatch }) {
 }
 
 // 初始化数据
-function initData({ state, dispatch, rootGetters }) {
+function initData({ getters, dispatch, rootGetters }) {
   // 输出data
   const data = {};
   // 输入的数据
   const inputMap = rootGetters.inputMap;
   // 如果model在输入的数据中没有对应的json，则设置
-  state.baseData.funcDefine.forEach(model => {
+  getters.funcDefine.forEach(model => {
     // 获取model的json
     const json = model.json;
     // 如果json不在输入的数据里, 记录下来

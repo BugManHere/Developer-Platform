@@ -2,6 +2,10 @@
   <div class="grown-card">
     <!-- 头部 -->
     <GrownHeader />
+    <!-- 头部遮罩层  -->
+    <template class="mask">
+      <slot name="mask" />
+    </template>
     <!-- 内容 -->
     <keep-alive>
       <component :is="['MusicContent', 'SkillContent'][imshowType]" />

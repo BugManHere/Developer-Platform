@@ -4,7 +4,7 @@ import { changeBarColor } from '@PluginInterface'; // 主体接口：关闭插�
 
 const Home = r => require.ensure([], () => r(require('./views/Home')), 'home');
 const Hidden = r => require.ensure([], () => r(require('./views/Hidden')), 'hidden');
-// const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
+const ErrorWarning = r => require.ensure([], () => r(require('./views/ErrorWarning')), 'errorWarning');
 const Offline = r => require.ensure([], () => r(require('./views/Offline')), 'offline');
 
 const componentList = ['Test', 'SweepConst', 'Noise', 'AssHt', 'UDFanPort', 'AreaFan', 'SvSt'];
@@ -63,12 +63,12 @@ const router = new Router({
       path: '/Hidden',
       name: 'Hidden',
       component: Hidden
+    },
+    {
+      path: '/ErrorWarning',
+      name: 'ErrorWarning',
+      component: ErrorWarning
     }
-    // {
-    //   path: '/ErrorWarning',
-    //   name: 'ErrorWarning',
-    //   component: ErrorWarning
-    // }
   ]
 });
 // 路由守卫

@@ -27,6 +27,7 @@ Vue.use(Vuex);
 Vue.component(View.name, View);
 Vue.component(Page.name, Page);
 
+// 注册全局指令
 Vue.directive('unfold', unfoldEvent);
 
 // 使用语言包

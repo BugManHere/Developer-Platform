@@ -11,6 +11,9 @@ export default {
   [defineTypes.SET_DATA_OBJECT](state, obj) {
     const map = {};
     Object.keys(obj).forEach(key => {
+      // if (typeof obj[key] !== 'number') {
+      //   console.log(typeof obj[key], key);
+      // }
       map[key] = Number(obj[key]);
     });
     state.dataObject = { ...state.dataObject, ...map };

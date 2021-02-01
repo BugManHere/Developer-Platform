@@ -5,12 +5,21 @@ const LogicWatch = {
   mixins: [LogicDefine],
   computed: {
     ...mapState({
+      vender: state => state.dataObject.vender,
       watchLock: state => state.watchLock,
       deviceInfo: state => state.deviceInfo,
       devOptions: state => state.devOptions
     })
   },
   watch: {
+    vender: {
+      handler(newVal) {
+        if (this.g_midTypeFunc && this.g_midTypeFunc[newVal]) {
+          this.g_funcDefine = this.g_midTypeFunc[newVal].map(_id => this.all_funcDefine.find(item => item._id === _id));
+        }
+      },
+      immediate: true
+    },
     g_mid(newVal) {
       console.info(`Current Running mid: ${newVal}`);
     },
