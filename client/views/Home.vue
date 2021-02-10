@@ -36,8 +36,8 @@
                 <span>创建时间：{{ item.createTime }}</span>
               </div>
               <div class="message-top-icons">
-                <i class="iconfont iconfont-inherit" v-show="developType === 0" @click.stop="clickInherit(item.id1)" title="派生设备" />
                 <i class="iconfont iconfont-disable" v-show="developType === 0" @click.stop="clickDel(item.id1)" title="删除设备" />
+                <i class="iconfont iconfont-inherit" v-show="developType === 0" @click.stop="clickInherit(item.id1)" title="派生设备" />
                 <i class="iconfont iconfont-preview" v-show="developType === 0" @click.stop="clickIPreview(index)" title="预览效果" />
               </div>
             </div>
@@ -144,11 +144,11 @@ export default {
     goProductPage(id1, id2) {
       if (this.developType === 0) {
         this.$router.push({
-          path: `Device/${id1}`
+          path: `Define/Device/${id1}`
         });
       } else if (this.developType === 1) {
         this.$router.push({
-          path: `Template/${id1}&${id2}`
+          path: `Define/Template/${id1}&${id2}`
         });
       }
     },
@@ -185,10 +185,9 @@ export default {
     },
     // 派生设备
     clickInherit(id) {
-      console.log(id);
       this.$input.show({
         title: '派生设备',
-        inputForm: [
+        inputFormConfig: [
           {
             type: 'input',
             title: '产品名称',
@@ -228,7 +227,10 @@ export default {
     // 删除设备
     clickDel(id) {
       this.$confirm.show({
-        content: '确认删除',
+        content: `确定删除该设备吗？删除后将无法找回。`,
+        confirmText: '确定',
+        cancelText: '取消',
+        requiredText: '我已了解，确定删除此设备',
         onConfirm: () => {
           this.delDev({ id });
         }
@@ -236,6 +238,7 @@ export default {
     },
     // 预览插件效果
     clickIPreview(index) {
+      console.log(this.deviceInfoList[index]);
       const { modelPath, id1: devKey } = this.deviceInfoList[index];
       const port = mouldConfig[modelPath];
       const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${devKey}&admin=${this.admin}`;

@@ -1,5 +1,6 @@
 // 一些模板常量
 export default {
+  errorJsons: ['ErrType1', 'ErrType2'],
   fanKey: 'fan', // 风档type
   modKey: 'mod', // 模式type
   buttonKey: 'button', // 高级按钮type

@@ -82,6 +82,15 @@ const mixin = {
       // 调用主体场景功能
       getCCcmd: (mac, cmd, remarks, dat) => {
         console.log('调用主体场景接口', { mac, cmd, remarks, dat });
+      },
+      toWebPage(url) {
+        window.open(url);
+      },
+      callNumber(number) {
+        console.log('打电话:', number);
+      },
+      closePage() {
+        console.log('关闭webview');
       }
     };
   },

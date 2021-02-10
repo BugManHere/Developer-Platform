@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="gdp-input-group">
     <div class="overlay-backdrop" v-if="isShow" />
     <div class="gdp-input" v-lift:show="isShow">
       <div class="gdp-input-box">
@@ -14,22 +14,7 @@
           </button>
         </div>
         <!-- 内容 -->
-        <form class="gdp-input-content-box">
-          <div v-for="(fromInfo, index) in inputForm" :key="index" class="gdp-input-form-group">
-            <label :class="{ required: fromInfo.required }" class="gdp-input-form-group-label" v-text="fromInfo.title" />
-            <!-- 输入框，type：input -->
-            <span v-if="fromInfo.type === 'text'" v-text="fromInfo.value" class="form-control-static" />
-            <!-- 输入框，type：input -->
-            <input
-              v-else-if="fromInfo.type === 'input'"
-              type="text"
-              class="form-control"
-              :placeholder="fromInfo.placeholder"
-              :value="fromInfo.defalut"
-              @input="fromInfo.method"
-            />
-          </div>
-        </form>
+        <gpd-input-form :input-form-config="inputFormConfig" />
         <!-- 底部按钮 -->
         <div class="gdp-input-button">
           <div class="gdp-input-button-group" v-for="(btnInfo, index) in buttonList" :key="index" @click="btnInfo.method">
@@ -44,13 +29,15 @@
 </template>
 
 <script>
+import inputFrom from '@/gdp-ui/inputFrom';
+
 export default {
   props: {
     title: {
       type: String,
       default: '标题'
     },
-    inputForm: {
+    inputFormConfig: {
       type: Array,
       default: () => {
         return [
@@ -72,6 +59,25 @@ export default {
             method: val => {
               console.log(val);
             }
+          },
+          {
+            type: 'select',
+            title: '协议',
+            default: 2,
+            options: ['a', 'b', 'c'],
+            method: index => {
+              console.log(index);
+            }
+          },
+          {
+            type: 'switch',
+            title: '是否',
+            onText: 'ON',
+            offText: 'OFF',
+            default: false,
+            method: e => {
+              console.log(e);
+            }
           }
         ];
       }
@@ -79,13 +85,13 @@ export default {
     onConfirm: {
       type: Function,
       default: function() {
-        return () => {};
+        myvm.$input.hide();
       }
     },
     onCancel: {
       type: Function,
-      default: function() {
-        return () => {};
+      default: () => {
+        myvm.$input.hide();
       }
     },
     buttonList: {
@@ -117,11 +123,12 @@ export default {
       }
     }
   },
+  components: {
+    [inputFrom.name]: inputFrom
+  },
   data() {
     return {
-      isShow: false, // 是否显示
-      isConfirm: false, // 是否确认
-      isCancel: false // 是否取消
+      isShow: false // 是否显示
     };
   },
   watch: {
@@ -155,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .gdp-input {
   position: absolute;
   top: 0;
@@ -165,7 +172,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5;
+  z-index: 100;
   $titleHeight: 48px;
   &-box {
     position: relative;
@@ -202,39 +209,6 @@ export default {
         padding: 6px 8px;
         > span {
           cursor: pointer;
-        }
-      }
-    }
-    .gdp-input-content-box {
-      position: relative;
-      width: 100%;
-      height: auto;
-      padding: 10px 0;
-      border-bottom: 1px solid #e7e7e7;
-      .gdp-input-form-group {
-        height: auto;
-        min-height: 40px;
-        padding: 10px 0 10px 20px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        &-label {
-          margin: auto 0;
-          padding: 7px 0;
-          width: 100px;
-          &.required {
-            &::before {
-              content: '*';
-              position: relative;
-              font-family: SimSun;
-              right: 4px;
-              color: #ff3333;
-            }
-          }
-        }
-        > input {
-          width: auto;
-          min-width: 300px;
         }
       }
     }

@@ -2,27 +2,7 @@
   background-image: url(../img/bg.png);
   background-size: 100vw 100vh;
   background-position: bottom;
-  // background-color: rgb(219, 232, 237);
   .page-content {
-    // .gree-header {
-    //   display: flex;
-    //   align-items: center;
-    //   height: 120px;
-    //   // background-color: rgb(241, 246, 247);
-    //   background-color: transparent;
-    //   background-image: none;
-    //   .gree-header-right,
-    //   .gree-header-left {
-    //     top: 50%;
-    //     transform: translateY(-50%);
-    //     span {
-    //       font-size: 46px;
-    //     }
-    //   }
-    //   .iconfont {
-    //     font-size: 58px;
-    //   }
-    // }
     .page-main {
       position: relative;
       display: flex;
@@ -44,6 +24,23 @@
       }
     }
   }
+}
+.vender-text-box {
+  position: fixed;
+  top: 124px;
+  left: 10px;
+  background-color: #04be02;
+  height: 72px;
+  min-width: 240px;
+  width: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 0.61538462em rgb(0, 0, 0);
+  padding: 0 10px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 .icons {
   margin-top: 25px;

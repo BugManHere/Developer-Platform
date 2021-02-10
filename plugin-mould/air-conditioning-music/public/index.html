@@ -7,9 +7,9 @@
     <meta name="format-detection" content="telephone=no,address=no,email=no" />
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
     <title>iotfe</title>
+    <script async src="//172.28.4.33:8091/target.js"></script>
     <% if (NODE_ENV==='testing' ) { %>
     <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
-    <script src="//172.28.4.33:8091/target.js"></script>
     <script>
       function trigger() {
         var re = /OS ((\d{1,2})_\d{1,2}||(\d{1,2})_\d{1,2}_\d{1,2}) like Mac OS X/i;
@@ -119,7 +119,7 @@
     <% } %>
   </head>
 
-  <body>
+  <body ontouchstart="">
     <noscript>
       <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

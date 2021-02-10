@@ -11,6 +11,7 @@ const mixin = {
      */
     this.machineInit();
     this.controlInit();
+    this.$stateMachine.updateState;
   },
   methods: {
     ...mapActions({

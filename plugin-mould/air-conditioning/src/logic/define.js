@@ -1,4 +1,5 @@
 import { mapMutations } from 'vuex';
+import { deepCopy } from '../../../../utils';
 import LogicPort from './port';
 
 const LogicDefine = {
@@ -8,6 +9,7 @@ const LogicDefine = {
       g_moreOption: {},
       g_outputMap: {},
       g_funcDefine: [],
+      midTypeFunc: [],
       g_excludeMap: {},
       g_hideMap: {},
       g_hideState: '[]',
@@ -26,11 +28,32 @@ const LogicDefine = {
       return isServeConfig ? window.storage.get('config') : require(`@/../../../output/${key}.json`);
     };
 
-    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName } = getLocalConfig() || getServeConfig();
+    const { funcDefine, excludeMap, hideMap, moreOption, productModel, deviceName, midTypeFunc } = getLocalConfig() || getServeConfig();
 
+    let vender = (this.g_inputMap && this.g_inputMap.vender) || 'default';
+    midTypeFunc[vender] || (vender = 'default');
+    console.log('---------vender', vender);
+
+    // String转为Number
+    funcDefine.forEach((model, index) => {
+      const statusDefine = {};
+      Object.keys(model.statusDefine).forEach(statusName => {
+        statusDefine[statusName] = model.statusDefine[statusName];
+        statusDefine[statusName].value = Number(statusDefine[statusName].value);
+        if (model.statusDefine[statusName].moreCommand) {
+          Object.keys(model.statusDefine[statusName].moreCommand).forEach(json => {
+            statusDefine[statusName].moreCommand[json] = Number(statusDefine[statusName].moreCommand[json]);
+          });
+        }
+      });
+      funcDefine[index].statusDefine = statusDefine;
+    });
+
+    this.all_funcDefine = deepCopy(funcDefine);
     this.g_deviceName = deviceName; // 设备名称
     this.g_moreOption = moreOption;
-    this.g_funcDefine = funcDefine;
+    this.g_funcDefine = midTypeFunc[vender].map(_id => funcDefine.find(item => item._id === _id));
+    this.g_midTypeFunc = midTypeFunc;
     this.g_excludeMap = excludeMap;
     this.g_hideMap = hideMap;
     this.g_mid = productModel;

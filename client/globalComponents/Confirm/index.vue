@@ -1,32 +1,38 @@
 <template>
-  <div v-if="isShow">
-    <div class="overlay-backdrop" />
-    <div class="gr-confirm" @click="cancel" @mousemove="dragMove">
-      <div
-        class="row"
-        :class="{
-          dragging: isDrag,
-          drop: isDrop
-        }"
-      >
-        <div
-          class="confirm-panel"
-          :class="{
-            shake: !isDrag,
-            pass: isConfirm,
-            back: isCancel
-          }"
-          :style="{
-            left: isNaN(movePos) ? 0 : `${movePos}px`
-          }"
-          @mousedown="dragStart"
-          @click.stop="commit"
-        >
-          <span v-text="content" />
-          <div class="right">
-            <span />
-            <span />
-            <span />
+  <div class="gdp-confirm-group">
+    <div class="overlay-backdrop" v-if="isShow" />
+    <div class="gdp-confirm" v-lift:show="isShow">
+      <div class="gdp-confirm-box">
+        <!-- 标题栏按钮 -->
+        <div class="gdp-title-btn">
+          <button class="gdp-title-btn-group close" v-for="(btnInfo, index) in titleBtn" :key="index" @click="btnInfo.method">
+            <span v-html="btnInfo.text" />
+          </button>
+        </div>
+        <!-- 内容 -->
+        <div class="gdp-confirm-content">
+          <i class="gdp-confirm-content-icon iconfont" :class="`iconfont-${icon.type}`" :style="{ color: icon.color }" />
+          <div class="gdp-confirm-content-text" v-html="content" />
+        </div>
+        <!-- 勾选框 -->
+        <div class="gdp-confirm-required" v-if="requiredText !== ''">
+          <i v-if="isCheck" class="iconfont iconfont-check" @click="isCheck = !isCheck" />
+          <i v-else class="iconfont iconfont-uncheck" @click="isCheck = !isCheck" />
+          <span v-text="requiredText" />
+        </div>
+        <!-- 底部按钮 -->
+        <div class="gdp-confirm-button">
+          <div class="gdp-confirm-button-group ">
+            <!-- 确认按钮 -->
+            <button type="button" class="btn btn-default  confirm" @click="clickConfirm" :disabled="requiredText !== '' && !isCheck">
+              <span v-text="confirmText" />
+            </button>
+          </div>
+          <div class="gdp-confirm-button-group ">
+            <!-- 取消按钮 -->
+            <button type="button" class="btn btn-default cancel" @click="clickCancel">
+              <span v-text="cancelText" />
+            </button>
           </div>
         </div>
       </div>
@@ -37,299 +43,200 @@
 <script>
 export default {
   props: {
+    icon: {
+      type: Object,
+      default: () => {
+        return {
+          type: 'info',
+          color: 'rgb(128, 157, 225)'
+        };
+      }
+    },
     content: {
       type: String,
-      default: 'confirm'
+      default: '烹饪进行中，如果中途取消烹饪工作，会影响烹饪效果。是否确定取消烹饪？'
+    },
+    confirmText: {
+      type: String,
+      default: '确定'
+    },
+    cancelText: {
+      type: String,
+      default: '取消'
     },
     onConfirm: {
       type: Function,
       default: function() {
-        return {};
+        window.myvm.$confirm.hide();
       }
     },
     onCancel: {
       type: Function,
+      default: () => {
+        window.myvm.$confirm.hide();
+      }
+    },
+    requiredText: {
+      type: String,
+      default: '必须勾选才能继续'
+    },
+    titleBtn: {
+      type: Array,
       default: function() {
-        return {};
+        return [
+          {
+            text: '&times;',
+            method: this.onCancel
+          }
+        ];
       }
     }
   },
   data() {
     return {
-      isShow: true, // 是否显示
-      isConfirm: false, // 是否确认
-      isCancel: false, // 是否取消
-      isDrag: false, // 是否拖动
-      isDrop: false, // 是否拖动后放手
-      clientPos: NaN, // 初始点击位置
-      movePos: NaN // 拖动距离
+      isShow: false, // 是否显示
+      isCheck: false // 是否勾选
     };
   },
+  watch: {
+    isShow: {
+      handler(newVal) {
+        if (newVal) {
+          document.onkeydown = e => {
+            switch (e.keyCode) {
+              // Enter
+              case 13:
+                this.onConfirm();
+                break;
+              // Esc
+              case 27:
+                this.onCancel();
+                break;
+              default:
+                break;
+            }
+          };
+        } else {
+          document.onkeydown = () => {};
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted() {
+    this.isShow = true;
+  },
   methods: {
-    commit() {
-      if (isNaN(this.movePos) || this.movePos >= 0) {
-        // 【点击事件】或者【拖动距离为正数】，通过
-        this.onConfirm(); // 执行自定义事件
-        this.isConfirm = true;
-        setTimeout(() => {
-          this.isDrop = true;
-          setTimeout(() => {
-            this.isShow = false;
-          }, 200);
-        }, 400);
-      } else {
-        this.cancel();
-      }
+    clickConfirm() {
+      this.$confirm.hide();
+      this.onConfirm();
     },
-    cancel() {
-      if (isNaN(this.movePos) || this.movePos < 0) {
-        // 【点击事件】或者【拖动距离为负数】，不通过
-        this.onCancel(); // 执行自定义事件
-        this.isCancel = true;
-        this.isDrag && (this.isDrop = true);
-        setTimeout(() => {
-          this.isShow = false;
-        }, 600);
-      } else {
-        // 拖动距离为正数，通过
-        this.commit();
-      }
-    },
-    // 记录初始位置
-    dragStart(e) {
-      this.isDrag = true;
-      this.clientPos = e.clientX;
-    },
-    // 计算移动距离
-    dragMove(e) {
-      this.movePos = e.clientX - this.clientPos;
+    clickCancel() {
+      this.$confirm.hide();
+      this.onCancel();
     }
   }
 };
 </script>
 
-<style lang="scss">
-.gr-confirm {
+<style lang="scss" scoped>
+.gdp-confirm {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5;
-  user-select: none;
-  .row {
+  z-index: 100;
+  $titleHeight: 48px;
+  &-box {
     position: relative;
-    right: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    animation: halfRight 0.8s;
+    height: auto;
+    width: auto;
+    border-radius: 5px;
+    background-color: #fff;
     overflow: hidden;
-    .confirm-panel {
-      position: relative;
-      height: 60px;
-      width: 200px;
-      background-color: Ivory;
-      border-radius: 30px;
-      box-shadow: 0 0 20px 0 Silver;
+    .gdp-confirm-title {
+      height: auto;
+      min-height: 34px;
+      width: 100%;
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      font-size: 18px;
-      padding-left: 25px;
-      letter-spacing: 1px;
-      color: Silver;
-      overflow: hidden;
-      &.shake {
-        animation: littleRight 4s infinite linear;
-      }
-      .right {
-        position: absolute;
-        padding-right: 30px;
-        right: 5px;
-        width: 30%;
+      padding-left: 20px;
+      border-bottom: 1px solid #e7e7e7;
+      background-color: #f4f4f4;
+      span {
+        height: $titleHeight;
+        font-size: 18px;
         display: flex;
-        justify-content: flex-end;
-        // overflow: hidden;
-        span {
-          position: relative;
-          margin-right: 5px;
-          width: 10px;
-          display: flex;
-          align-items: center;
-          font-size: 25px;
-          // animation: slowRightHide 1.5s infinite;
-          &::before {
-            color: Gainsboro;
-            opacity: 0.6;
-            font-family: 'Glyphicons Halflings';
-            content: '\e258';
-          }
-          &:nth-child(1) {
-            opacity: 1;
-            animation: slowRightShow1 1.5s infinite linear;
-          }
-          &:nth-child(2) {
-            opacity: 0.7917;
-            animation: slowRightShow2 1.5s infinite linear;
-          }
-          &:nth-child(3) {
-            opacity: 0.583;
-            animation: slowRightShow3 1.5s infinite linear;
-          }
+        align-items: center;
+      }
+    }
+    .gdp-confirm-required {
+      width: 100%;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      font-size: 14px;
+      i {
+        font-size: 14px;
+        padding-right: 6px;
+        &.iconfont-check {
+          color: rgb(57, 155, 255);
         }
       }
     }
-    &.dragging {
-      height: 64px;
-      background-color: #eee;
-      animation: hold 0.4s linear;
+    .gdp-confirm-content {
+      font-size: 16px;
+      padding: 0 30px;
+      padding-top: 36px;
+      padding-bottom: 12px;
+      display: flex;
+      justify-content: space-around;
+      height: auto;
+      &-icon {
+        height: 100%;
+        font-size: 18px;
+        padding-right: 10px;
+      }
+      &-text {
+        max-width: 370px;
+        width: auto;
+        line-height: 25px;
+      }
     }
-    &.drop {
-      height: 0;
-      background-color: transparent;
-      animation: drop 0.2s linear;
+    .gdp-title-btn {
+      position: absolute;
+      top: 0;
+      right: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      &-group {
+        padding: 6px 8px;
+        > span {
+          cursor: pointer;
+        }
+      }
     }
-    .pass {
-      transform: translateX(60vw);
-      animation: pass 0.5s;
-    }
-    .back {
-      transform: translateX(-60vw);
-      animation: back 0.5s !important;
-    }
-  }
-  @keyframes slowRightShow1 {
-    0% {
-      transform: translateX(0%);
-      opacity: 1;
-    }
-    33% {
-      transform: translateX(240%);
-    }
-    66% {
-      transform: translateX(480%);
-    }
-    100% {
-      transform: translateX(720%);
-      opacity: 0;
-    }
-  }
-
-  @keyframes slowRightShow2 {
-    0% {
-      transform: translateX(0);
-      opacity: 0.7917‬;
-    }
-    79.17% {
-      transform: translateX(570%);
-      opacity: 0;
-    }
-    79.2% {
-      transform: translateX(-150%);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 0.7917;
-    }
-  }
-
-  @keyframes slowRightShow3 {
-    0% {
-      transform: translateX(0);
-      opacity: 0.583;
-    }
-    58.33% {
-      transform: translateX(420%);
-      opacity: 0;
-    }
-    58.4% {
-      transform: translateX(-300%);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 0.583;
-    }
-  }
-
-  @keyframes littleRight {
-    0% {
-      transform: translateX(0);
-    }
-    50% {
-      transform: translateX(0);
-    }
-    55% {
-      transform: translateX(15px);
-    }
-    60% {
-      transform: translateX(0);
-    }
-    70% {
-      transform: translateX(0);
-    }
-    75% {
-      transform: translateX(15px);
-    }
-    80% {
-      transform: translateX(0px);
-    }
-    100% {
-      transform: translateX(0px);
-    }
-  }
-
-  @keyframes halfRight {
-    0% {
-      transform: translateX(-60vw);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes pass {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(60vw);
-    }
-  }
-
-  @keyframes back {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-60vw);
-    }
-  }
-
-  @keyframes hold {
-    0% {
-      background-color: transparent;
-    }
-    100% {
-      background-color: #eee;
-    }
-  }
-
-  @keyframes drop {
-    0% {
-      background-color: #eee;
-      height: 64px;
-    }
-    100% {
-      background-color: transparent;
-      height: 0px;
+    .gdp-confirm-button {
+      width: 100%;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: nowrap;
+      padding-bottom: 16px;
+      &-group {
+        height: auto;
+        padding: 10px;
+        .confirm {
+          background-color: rgb(128, 157, 225);
+          color: #fff;
+        }
+      }
     }
   }
 }

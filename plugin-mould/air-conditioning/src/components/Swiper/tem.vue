@@ -41,7 +41,7 @@ export default {
     ...mapState({
       mac: state => state.mac,
       SetTem: state => state.dataObject.SetTem,
-      TemUn: state => state.dataObject.TemUn,
+      TemUn: state => state.dataObject.TemUn && 0,
       TemRec: state => state.dataObject.TemRec,
       Mod: state => state.dataObject.Mod,
       Pow: state => state.dataObject.Pow,

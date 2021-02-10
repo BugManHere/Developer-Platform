@@ -84,7 +84,7 @@ export default {
       HumiSvStTemMin: state => state.dataObject.HumiSvStTemMin || 18,
       HeatSvStTemMax: state => state.dataObject.HeatSvStTemMax || 18
     }),
-    ...mapGetters(['modIdentifier', 'temSetVal', 'temSetJson', 'temMinVal', 'temMaxVal']),
+    ...mapGetters(['modIdentifier', 'modCurrentStatusName', 'temSetVal', 'temSetJson', 'temMinVal', 'temMaxVal']),
     ...mapGetters('machine', ['statusMap']),
     swiper() {
       return this.$refs.svstSwiper.$swiper;
@@ -95,8 +95,8 @@ export default {
     },
     // 制热和制冷不一样的配置
     silderType() {
-      const value = this.modStatus ? this.modStatus.status.value : undefined;
-      let result;
+      const value = this.modStatus ? Number(this.modStatus.status.value) : undefined;
+      let result = {};
       if (value) {
         switch (value) {
           case this.coolMod:
@@ -145,6 +145,7 @@ export default {
     },
     // 文案
     svstText() {
+      if (this.modCurrentStatusName === 'status_1') return ['当前模式为', '，请选择', '温度上限'];
       return ['当前模式为', '，请选择', '温度下限'];
     },
     // 滑轮配置

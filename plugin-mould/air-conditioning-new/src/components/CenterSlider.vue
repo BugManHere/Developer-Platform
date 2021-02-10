@@ -22,7 +22,7 @@
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>
         <!-- 显示插槽2 -->
-        <h3 v-if="imshowSlot2" class="slider-slot-1" v-text="imshowSlot2" />
+        <h3 v-if="imshowSlot2" class="slider-slot-2" v-text="imshowSlot2" />
         <!-- 温度调节 -->
         <div v-else class="tem-value" :class="{ 'deci-tem': temStep < 1 }">
           <gree-animated-number :value="circleVal" :precision="Number(temStep < 1)" :duration="200" transition />
@@ -32,7 +32,7 @@
           />
         </div>
         <!-- 显示插槽1 -->
-        <div v-if="imshowSlot1" class="slider-slot-2">
+        <div v-if="imshowSlot1" class="slider-slot-1">
           <span v-text="imshowSlot1" />
         </div>
       </article>

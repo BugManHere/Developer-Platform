@@ -125,7 +125,7 @@ export default {
       devname: state => state.deviceInfo.name
     }),
     yearList() {
-      return Array.from({ length: 20 }, (v, i) => {
+      return Array.from({ length: this.imshowYear }, (v, i) => {
         const value = this.currentYear - i;
         return { text: `${value}年`, value };
       }).reverse();

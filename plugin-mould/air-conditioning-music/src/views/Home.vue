@@ -2,23 +2,23 @@
   <gree-view
     :bg-color="skinConfig && skinConfig.barColor"
     class="home-view"
-    :style="{ 'background-size': `${bgWidth}px ${bgHeight}px`, 'background-color': skinConfig.barColor, 'background-image': `url(${skinConfig.homeBg})` }"
+    :style="{ 'background-size': `${bgWidth}px ${bgHeight}px`, 'background-color': skinConfig.bgColor, 'background-image': `url(${skinConfig.homeBg})` }"
   >
     <!-- 头部 -->
     <page-header :is-center-top="isCenterTop" />
     <!-- 主要内容 -->
     <gree-page no-navbar class="page-home">
-      <!-- 头部遮罩层  -->
-      <div
-        class="page-bg-mask"
-        :style="{
-          'background-size': `100% ${bgHeight}px`,
-          'background-image': `url(${skinConfig.homeBg})`,
-          height: `${headerHeight}px`
-        }"
-      />
       <!-- 内容 -->
       <div class="page-main" @touchend="getContentType(500)">
+        <!-- 头部遮罩层  -->
+        <!-- <div
+          class="page-bg-mask"
+          :style="{
+            'background-size': `100% ${bgHeight}px`,
+            'background-image': `url(${skinConfig.homeBg})`,
+            height: `${headerHeight}px`
+          }"
+        /> -->
         <!-- 温度调节 -->
         <TemSetting />
         <!-- 卡片 -->
@@ -66,8 +66,12 @@ export default {
     ...mapGetters('control', ['skinConfig'])
   },
   activated() {
-    const target = document.getElementsByClassName('page-content')[0];
-    target.scrollTo(0, this.contentScrollTop);
+    try {
+      const target = document.getElementsByClassName('page-content')[0];
+      target.scrollTo(0, this.contentScrollTop);
+    } catch (e) {
+      e;
+    }
   },
   beforeRouteLeave(to, from, next) {
     const target = document.getElementsByClassName('page-content')[0];

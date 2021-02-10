@@ -10,26 +10,32 @@ import store from './store';
 
 import vToast from '@globalComponents/Toast/index';
 import vLoading from '@globalComponents/Loading/index';
-import vConfirm from '@globalComponents/Confirm/index';
+import vScrollConfirm from '@globalComponents/ScrollConfirm/index';
 import vInput from '@globalComponents/Input/index';
+import vConfirm from '@globalComponents/Confirm/index';
+import vPopup from '@globalComponents/Popup/index';
 import vTop from './directives/Top/index';
 import vLift from './directives/lift';
 import vShuttle from './directives/shuttle';
 import vFocus from './directives/focus';
+import vFade from './directives/fade';
 
 import VueClipboard from 'vue-clipboard2';
 
 Vue.use(Vuex);
 Vue.use(vToast);
 Vue.use(vLoading);
-Vue.use(vConfirm);
+Vue.use(vScrollConfirm);
 Vue.use(vInput);
+Vue.use(vConfirm);
+Vue.use(vPopup);
 Vue.use(VueClipboard);
 // 注册全局指令
 Vue.directive('lift', vLift);
 Vue.directive('shuttle', vShuttle);
 Vue.directive('focus', vFocus);
 Vue.directive('gotop', vTop);
+Vue.directive('fade', vFade);
 
 Vue.config.productionTip = false;
 

@@ -48,7 +48,7 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const json = JSON.stringify({ mac, t, opt, p });
 
     try {
-      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
+      const _p = statueJson2.map(json => state.dataObject[json] || 0);
       // 成功之后更新主体状态
       updateStates(state.mac, JSON.stringify(_p));
     } catch (err) {
@@ -177,20 +177,21 @@ export default {
       // const cols = statueJson2;
       const t = 'status';
       const SEARCH_JSON = JSON.stringify({ cols, mac, t });
-      const data = await sendDataToDevice(mac, SEARCH_JSON, false);
+      return sendDataToDevice(mac, SEARCH_JSON, false).then(async data => {
+        // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
+        if (_firstCallback && data === '') {
+          showToast('网络异常', 1);
+          closePage();
+        }
+        _firstCallback = false;
 
-      // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
-      if (_firstCallback && data === '') {
-        showToast('网络异常', 1);
-        closePage();
-      }
-      _firstCallback = false;
-
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data, cols }, { root: true });
-      // 自定义数据，根据业务更改
-      dataObject = customizeDataObject(dataObject);
-      // 更新本地数据
-      dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
+        let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data, cols }, { root: true });
+        // 自定义数据，根据业务更改
+        dataObject = customizeDataObject(dataObject);
+        // 更新本地数据
+        dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
+        return true;
+      });
     } catch (e) {
       console.error(e);
     }
@@ -219,7 +220,9 @@ export default {
    */
   async [defineTypes.ADD_POLLING]({ dispatch }, { jsons, key, delay = 5000, immediate = false }) {
     if (jsons && jsons.length && key && !_timers[key]) {
-      immediate && dispatch(types.GET_DEVICE_DATA, jsons, { root: true });
+      if (immediate) {
+        return dispatch(types.GET_DEVICE_DATA, jsons, { root: true });
+      }
       _timers[key] = setInterval(() => {
         dispatch(types.GET_DEVICE_DATA, jsons, { root: true });
       }, delay);

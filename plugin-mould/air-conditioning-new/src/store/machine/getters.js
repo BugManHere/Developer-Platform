@@ -1,33 +1,47 @@
 /** stateMachine */
 export default {
   /**
+   * @description 根据细分码区分的funcDefine
+   * @return Array [model]
+   */
+  funcDefine: (state, getters, rootState) => {
+    let { vender } = rootState.control.dataObject;
+    const { midTypeFunc, funcDefine } = state.baseData;
+    midTypeFunc[vender] || (vender = 'default');
+    const modelIds = midTypeFunc[vender];
+    if (modelIds && modelIds.length) {
+      return midTypeFunc[vender].map(_id => funcDefine.find(item => item._id === _id)).filter(v => v);
+    }
+    return [];
+  },
+  /**
    * @description 定义为显性功能的model合集
    * @return Array [model]
    */
-  funcDefine_active: state => {
-    return state.baseData.funcDefine.filter(model => model.type.includes('active'));
+  funcDefine_active: (state, getters) => {
+    return getters.funcDefine.filter(model => model.type.includes('active'));
   },
   /**
    * @description 定义为隐性功能的model合集
    * @return Array [model]
    */
-  funcDefine_inertia: state => {
-    return state.baseData.funcDefine.filter(model => model.type.includes('inertia'));
+  funcDefine_inertia: (state, getters) => {
+    return getters.funcDefine.filter(model => model.type.includes('inertia'));
   },
   /**
    * @description 所有model的identifier合集
    * @return Array [identifier]
    */
-  identifierArr: state => {
-    return state.baseData.funcDefine.map(model => model.identifier);
+  identifierArr: (state, getters) => {
+    return getters.funcDefine.map(model => model.identifier);
   },
   /**
    * @description funcDefine的map版本，根据identifier找到对应的model
    * @return Object {identifier: model}
    */
-  funcDefineMap: state => {
+  funcDefineMap: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       result[identifier] = model;
     });
@@ -53,7 +67,7 @@ export default {
    */
   valToStatusName: (state, getters, rootState, rootGetters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       result[identifier] = getStatusName({ state, getters, rootGetters }, model, true);
     });
@@ -65,7 +79,7 @@ export default {
    */
   valToFakeStatusName: (state, getters, rootState, rootGetters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       result[identifier] = getStatusName({ state, getters, rootGetters }, model, false);
     });
@@ -75,9 +89,9 @@ export default {
    * @description 根据identifier获取statusName列表
    * @return Object: {identifier: [statusName]}
    */
-  statusNameMap: state => {
+  statusNameMap: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       result[identifier] = Object.keys(model.statusDefine).filter(statusName => statusName !== 'undefined');
     });
@@ -89,7 +103,7 @@ export default {
    */
   stateNameMap: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       result[identifier] = getters.statusNameMap[identifier].map(statusNmae => {
         return `${identifier}_${statusNmae}`;
@@ -104,7 +118,7 @@ export default {
   $_statusMap: (state, getters, rootState, rootGetters) => {
     const result = {};
     // 根据字段值，返回当前状态信息
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       const json = model.json;
       // 字段值
@@ -136,7 +150,7 @@ export default {
     // 获取当前被隐藏的stateName
     const hideStateNameArr = getters.hideStateNameArr;
     // 根据被隐藏的stateName，重新获取当前状态信息
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       // 获取未经过隐藏状态处理的状态信息
       let { statusName, stateName, status } = getters.$_statusMap[identifier];
@@ -164,7 +178,7 @@ export default {
   fakeStatusMap: (state, getters, rootState, rootGetters) => {
     const result = {};
     // 根据字段值，返回当前状态信息
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       const json = model.json;
       // 字段值
@@ -193,7 +207,7 @@ export default {
    */
   stateNameToId: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       getters.statusNameMap[identifier].forEach(statusName => {
         const stateName = `${identifier}_${statusName}`;
@@ -225,7 +239,7 @@ export default {
   statusLoop: (state, getters) => {
     const result = {};
     // 遍历功能，提取status关系
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       // 指向关系
       const map = model.map;
@@ -263,7 +277,7 @@ export default {
   fakeStatusLoop: (state, getters) => {
     const result = {};
     // 遍历功能，提取status关系
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       // 指向关系
       const map = model.map;
@@ -350,7 +364,7 @@ export default {
    */
   statusInfoMap: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       const json = model.json;
       result[identifier] = {};
@@ -378,7 +392,7 @@ export default {
    */
   nextStatusInfoMap: (state, getters) => {
     const result = {};
-    state.baseData.funcDefine.forEach(model => {
+    getters.funcDefine.forEach(model => {
       const identifier = model.identifier;
       const json = model.json;
       let statusName = getters.statusDirectionMap[identifier]; // model的指向statusName
