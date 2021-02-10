@@ -6,7 +6,7 @@ const TOP = {
   vm: null,
   el: null,
   install() {
-    display();
+    // display();
 
     Vue.prototype.$goTop = {
       show() {
@@ -19,7 +19,8 @@ const TOP = {
   },
   bind: el => {
     setTimeout(() => {
-      display(el);
+      el;
+      // display(el);
     }, 0);
   },
   unbind: el => {
@@ -28,7 +29,7 @@ const TOP = {
 };
 
 function display(bindEl = document.body) {
-  console.log('display-------------', bindEl);
+  // console.log('display-------------', bindEl);
   TOP.vm && hidden();
   Vue.component('Top', Top);
   const VueTop = Vue.extend({
@@ -43,7 +44,7 @@ function display(bindEl = document.body) {
 }
 
 function hidden(bindEl = document.body) {
-  console.log('hidden-------------', bindEl);
+  // console.log('hidden-------------', bindEl);
   if (!TOP.vm) return;
   bindEl.removeChild(TOP.el);
   TOP.newTop.$destroy();

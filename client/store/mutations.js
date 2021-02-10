@@ -25,9 +25,11 @@ export default {
     const productID = state.tempModule.tempID.split('&')[0];
     const seriesID = state.tempModule.tempID.split('&')[1];
     const template = state.tempModule.templates.filter(item => item.productID === productID).find(item => item.seriesID === seriesID);
-    template.funcDefine = val.funcDefine;
+    val.funcDefine && (template.funcDefine = val.funcDefine);
     val.editTime && (template.editTime = val.editTime);
     val.editUser && (template.editUser = val.editUser);
+    val.typeDefine && (template.typeDefine = val.typeDefine);
+    val.jsonDefine && (template.jsonDefine = val.jsonDefine);
   },
   // 设置是否授权
   [type.SET_AUTHENTICATED](state, isAuthenticated) {
