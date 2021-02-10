@@ -1,0 +1,178 @@
+@import 'home';
+@import 'offline';
+@import 'iconfont';
+@import 'components/CenterSlider.scss';
+@import 'components/BtnPopup.scss';
+@import 'components/FanSwiper.scss';
+
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  font-family: 'FZLTHJ';
+}
+body {
+  top: 0;
+}
+.hidden {
+  display: none !important;
+}
+.set-gray {
+  opacity: 0.3;
+}
+.set-hide {
+  display: none;
+}
+
+.page-content {
+  overflow-x: hidden !important;
+}
+
+.gree-header {
+  display: flex;
+  height: 120px;
+  background-color: transparent;
+  &-right,
+  &-left {
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%);
+    span {
+      font-size: 46px;
+    }
+  }
+  &-title {
+    margin: 0 120px;
+  }
+  .iconfont {
+    font-size: 58px;
+  }
+}
+.page {
+  .list {
+    margin: 0;
+    ul {
+      li {
+        .item-content {
+          min-height: 122px;
+          padding-left: 0;
+          .item-inner {
+            min-height: 122px;
+            padding-left: 55px;
+            .item-title,
+            .item-after {
+              font-size: 42px;
+            }
+            .item-after {
+              color: #404657;
+            }
+          }
+        }
+        &.item-time-before {
+          .item-title {
+            flex-grow: 1;
+          }
+          .item-after {
+            flex-basis: 50%;
+            white-space: normal;
+          }
+        }
+      }
+    }
+    &.last {
+      margin-top: 280px;
+      ul {
+        li {
+          .item-content {
+            .item-inner {
+              .item-title {
+                width: 100%;
+                text-align: center;
+                span {
+                  color: #ff0101;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
