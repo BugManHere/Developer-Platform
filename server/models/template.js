@@ -12,6 +12,16 @@ const funcSchema = new mongoose.Schema({
   page: {}
 });
 
+// 创建子文档 funcDefine
+const jsonSchema = new mongoose.Schema({
+  name: String,
+  json: String,
+  type: String,
+  protocol: Number,
+  local: Boolean,
+  default: String
+});
+
 // 创建Schema
 const templateSchema = new mongoose.Schema({
   productID: String,
@@ -20,7 +30,9 @@ const templateSchema = new mongoose.Schema({
   editUser: String,
   editTime: String,
   useTime: Number,
-  funcDefine: [funcSchema]
+  funcDefine: [funcSchema],
+  jsonDefine: [jsonSchema],
+  typeDefine: {}
 });
 
 module.exports = mongoose.model('template', templateSchema);

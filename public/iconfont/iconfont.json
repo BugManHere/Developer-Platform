@@ -1,10 +1,171 @@
 {
   "id": "2032699",
-  "name": "空调插件图标（平台用）",
+  "name": "Plugin自动化开发平台图标",
   "font_family": "iconfont",
   "css_prefix_text": "iconfont-",
-  "description": "空调插件图标（平台用）",
+  "description": "Plugin自动化开发平台图标",
   "glyphs": [
+    {
+      "icon_id": "19740366",
+      "name": "未选中",
+      "font_class": "uncheck",
+      "unicode": "e6e1",
+      "unicode_decimal": 59105
+    },
+    {
+      "icon_id": "19463401",
+      "name": "完成 勾选 选中",
+      "font_class": "check",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "4550335",
+      "name": "警告",
+      "font_class": "info",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "4866956",
+      "name": "警告",
+      "font_class": "warning",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "4889687",
+      "name": "禁止",
+      "font_class": "ban",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "8652806",
+      "name": "成功",
+      "font_class": "success",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "4854336",
+      "name": "确定",
+      "font_class": "queding",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "12820381",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "4397832",
+      "name": "添加",
+      "font_class": "tianjia",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "8300821",
+      "name": "向上",
+      "font_class": "xiangshang",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "5663494",
+      "name": "继承字段",
+      "font_class": "inherit",
+      "unicode": "e787",
+      "unicode_decimal": 59271
+    },
+    {
+      "icon_id": "18618169",
+      "name": "智眠",
+      "font_class": "zhimian",
+      "unicode": "e6d2",
+      "unicode_decimal": 59090
+    },
+    {
+      "icon_id": "18618182",
+      "name": "自动清洁",
+      "font_class": "zidongqingjie1",
+      "unicode": "e6d3",
+      "unicode_decimal": 59091
+    },
+    {
+      "icon_id": "18618183",
+      "name": "凉感",
+      "font_class": "lianggan",
+      "unicode": "e6d4",
+      "unicode_decimal": 59092
+    },
+    {
+      "icon_id": "18486653",
+      "name": "-",
+      "font_class": "-",
+      "unicode": "e6d1",
+      "unicode_decimal": 59089
+    },
+    {
+      "icon_id": "18485033",
+      "name": "1",
+      "font_class": "1",
+      "unicode": "e6d0",
+      "unicode_decimal": 59088
+    },
+    {
+      "icon_id": "18484429",
+      "name": "01",
+      "font_class": "01",
+      "unicode": "e6ce",
+      "unicode_decimal": 59086
+    },
+    {
+      "icon_id": "18484445",
+      "name": "05",
+      "font_class": "05",
+      "unicode": "e6cf",
+      "unicode_decimal": 59087
+    },
+    {
+      "icon_id": "18200485",
+      "name": "外出",
+      "font_class": "waichu",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "18200397",
+      "name": "静音",
+      "font_class": "jingyin",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "3512024",
+      "name": "效果图",
+      "font_class": "preview",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "8554293",
+      "name": "详情",
+      "font_class": "more",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "554388",
+      "name": "页面",
+      "font_class": "page",
+      "unicode": "e6ea",
+      "unicode_decimal": 59114
+    },
     {
       "icon_id": "4933166",
       "name": "删除",

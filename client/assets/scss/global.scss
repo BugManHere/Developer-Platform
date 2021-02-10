@@ -1,19 +1,17 @@
 @import 'home';
-@import 'template';
 @import 'dialog';
 @import 'account';
 @import 'login';
 @import 'header';
 @import 'register';
-@import 'panel/index';
 @import 'table/index';
-@import 'mini/index';
+@import 'gdp-ui/index';
 
 #app {
-  background-color: #F1F5FC;
+  background-color: #f1f5fc;
   height: 100vh;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .hidden {
@@ -27,37 +25,83 @@
   top: 0;
   left: 0;
   background-color: #000 !important;
-  opacity: .2;
-  z-index: 2;
+  opacity: 0.2;
+  z-index: 10;
 }
 
 .img-box {
   height: 450px;
   width: 250px;
   margin: 20px 10px;
-  background-color: #CCCCCC;
-  border: 1px #CCCCCC solid;
+  background-color: #cccccc;
+  border: 1px #cccccc solid;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.white-box {
+  border: 1px #d6dee6 solid;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+@keyframes liftDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes liftUp {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes shuttleShow {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+    transform: translateX(50%);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shuttleHide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+    transform: translateX(50%);
+  }
+}
+
 @keyframes fadeShow {
-  from {opacity: 0; transform: translateY(-100%);}
-  to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeHide {
-  from {opacity: 1;}
-  to {opacity: 0; transform: translateY(-100%); display: none;}
-}
-
-@keyframes slowShow {
-  from {opacity: 0; transform: translateY(-100%); transform: translateX(50%);}
-  to {opacity: 1;}
-}
-
-@keyframes slowHide {
-  from {opacity: 1;}
-  to {opacity: 0; transform: translateY(-100%); transform: translateX(50%); display: none;}
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

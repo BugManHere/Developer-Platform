@@ -1,3 +1,5 @@
+import { deepCopy } from '../../utils';
+
 // 获取输出对象
 const templateFuncModel = require('../models/template');
 const keys = require('../config/keys');
@@ -29,8 +31,16 @@ export const getOutput = async (input, device = undefined) => {
   const { productID, seriesID, modelPath } = deviceInfo; // 获取产品id、分类id、模板目录地址
   const template = await templateFuncModel.findOne({ productID, seriesID }); // 寻找对应模板
 
+  const { funcImport, defaultFunc } = handlerMidType(deviceInfo);
+
+  const jsonDefine = template.jsonDefine || {};
+  const typeDefine = template.typeDefine || {};
+
+  const midTypeFunc = deviceInfo.midTypeFunc || {};
+  midTypeFunc.default = defaultFunc;
+
   // 根据功能id寻找功能信息
-  const funcDefine = deviceInfo.funcImport
+  const funcDefine = funcImport
     .map(key => {
       return template.funcDefine.id(key);
     })
@@ -50,6 +60,9 @@ export const getOutput = async (input, device = undefined) => {
     productModel: deviceInfo.productModel, // mid
     deviceName: deviceInfo.deviceName, // 系列名
     funcDefine, // 功能定义
+    jsonDefine, // 字段类型定义
+    typeDefine, // 类型定义
+    midTypeFunc, // 细分码
     moreOption: deviceInfo.moreOption // 更多配置项
   };
 
@@ -84,3 +97,15 @@ export const getOutput = async (input, device = undefined) => {
 
   return { output, deviceKey: key, modelPath };
 };
+
+function handlerMidType(deviceInfo) {
+  let { funcImport, midTypeFunc } = deviceInfo;
+  const defaultFunc = deepCopy(funcImport);
+  if (midTypeFunc) {
+    for (const func in midTypeFunc) {
+      funcImport.push(...midTypeFunc[func]);
+    }
+  }
+  funcImport = Array(...new Set(funcImport));
+  return { funcImport, defaultFunc };
+}
