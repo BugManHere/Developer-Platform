@@ -254,7 +254,7 @@ export default {
     }
     const port = mouldConfig[modelPath];
     window.myvm.$toast.info('请在新窗口预览效果');
-    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}`;
+    const targetUrl = `${process.env.VUE_APP_SERVE_URL}:${port}/#/Loading?id=${state.devModule.deviceKey}&admin=${state.userModule.admin}&MidType=${state.devModule.midType}`;
     newWin.location.href = targetUrl;
     return status;
   },

@@ -17,7 +17,7 @@ import './assets/js/flexible';
 import './assets/scss/global.scss';
 import language from './utils/language'; // 对i18n的封装
 
-import { SET_STATE, GET_CLOUD_TIMER, SET_DEVICE_INFO } from './store/types';
+import { SET_STATE, GET_CLOUD_TIMER, SET_DEVICE_INFO, SET_DATA_OBJECT } from './store/types';
 
 axios.defaults.baseURL = `${process.env.VUE_APP_SERVE_URL}:3000`; // 配置接口地址
 axios.defaults.timeout = 5000; // 响应时间
@@ -65,7 +65,7 @@ async function createVue() {
   // 如果是development环境且不处于localconfig模式，加载服务器/缓存配置
   if (isServeConfig && !isLocalConfig) {
     // 解析传入参数, id: 设备key, admin: 用户名
-    let { id, admin } = router.currentRoute.query;
+    let { id, admin, MidType } = router.currentRoute.query;
     const storage = window.storage;
     // 已有id，则去线上获取配置，没有则读取localstorage配置
     if (id) {
@@ -83,12 +83,16 @@ async function createVue() {
       // 缓存配置
       localStorage.setItem('device_config_id', id);
       storage.set('config', res.data);
+      storage.set('MidType', MidType);
     } else {
       // 取出缓存的配置
       let oldId = localStorage.getItem('device_config_id');
       // 更新mac
       vm.$store.commit(SET_STATE, ['mac', oldId]);
+      // 取出细分码
+      MidType = storage.get('MidType');
     }
+    vm.$store.commit(SET_DATA_OBJECT, { vender: MidType });
   }
   // 挂载到#app上
   vm.$mount('#app');
