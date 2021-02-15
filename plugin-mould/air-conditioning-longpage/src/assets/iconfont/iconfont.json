@@ -6,6 +6,104 @@
   "description": "Plugin自动化开发平台图标",
   "glyphs": [
     {
+      "icon_id": "20115660",
+      "name": "地暖-svg切图-01",
+      "font_class": "dinuan-svgqietu-01",
+      "unicode": "e6ed",
+      "unicode_decimal": 59117
+    },
+    {
+      "icon_id": "20115661",
+      "name": "3D供暖-svg切图-01",
+      "font_class": "3Dgongnuan-svgqietu-01",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
+      "icon_id": "20115662",
+      "name": "供暖-svg切图-01",
+      "font_class": "gongnuan-svgqietu-01",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
+    },
+    {
+      "icon_id": "19984811",
+      "name": "强劲-01",
+      "font_class": "qiangjin-01",
+      "unicode": "e6ec",
+      "unicode_decimal": 59116
+    },
+    {
+      "icon_id": "17777497",
+      "name": "e",
+      "font_class": "dingshi",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "19973935",
+      "name": "中低风-01",
+      "font_class": "zhongdifeng-01",
+      "unicode": "e6e2",
+      "unicode_decimal": 59106
+    },
+    {
+      "icon_id": "19973936",
+      "name": "上下扫风-01",
+      "font_class": "shangxiasaofeng-01",
+      "unicode": "e6e3",
+      "unicode_decimal": 59107
+    },
+    {
+      "icon_id": "19973937",
+      "name": "低风-01",
+      "font_class": "difeng-01",
+      "unicode": "e6e4",
+      "unicode_decimal": 59108
+    },
+    {
+      "icon_id": "19973938",
+      "name": "高风-01",
+      "font_class": "gaofeng-01",
+      "unicode": "e6e5",
+      "unicode_decimal": 59109
+    },
+    {
+      "icon_id": "19973939",
+      "name": "中高风-01",
+      "font_class": "zhonggaofeng-01",
+      "unicode": "e6e6",
+      "unicode_decimal": 59110
+    },
+    {
+      "icon_id": "19973940",
+      "name": "中风-01",
+      "font_class": "zhongfeng-01",
+      "unicode": "e6e7",
+      "unicode_decimal": 59111
+    },
+    {
+      "icon_id": "19973941",
+      "name": "自动风-01",
+      "font_class": "zidongfeng-01",
+      "unicode": "e6e8",
+      "unicode_decimal": 59112
+    },
+    {
+      "icon_id": "19973942",
+      "name": "左右扫风-01",
+      "font_class": "zuoyousaofeng-01",
+      "unicode": "e6e9",
+      "unicode_decimal": 59113
+    },
+    {
+      "icon_id": "19973943",
+      "name": "自清洁-01",
+      "font_class": "ziqingjie-01",
+      "unicode": "e6eb",
+      "unicode_decimal": 59115
+    },
+    {
       "icon_id": "15773681",
       "name": "进度查询",
       "font_class": "jinduchaxun",
