@@ -33,7 +33,7 @@ export default {
       });
     }
 
-    const isLocal = process.env.VUE_APP_SERVE_MOED === 'local';
+    const isLocal = process.env.VUE_APP_SERVE_MOED === 'local' && false;
     console.log(`运行模式：${isLocal ? '本地' : '线上'}`);
     if (isLocal) {
       const { glyphs } = require('@public/iconfont/iconfont.json');
