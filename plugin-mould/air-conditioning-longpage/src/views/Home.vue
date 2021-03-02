@@ -43,12 +43,13 @@ import { Header, InputItem, Dialog } from 'gree-ui';
 import { mapState, mapGetters } from 'vuex';
 import VConsole from 'vconsole/dist/vconsole.min.js';
 import MainBtn from '@/components/MainBtn';
-import FuncPopup from '@/components/BtnPopup/func';
-import ModPopup from '@/components/BtnPopup/mod';
-import FanSwiper from '@/components/FanSwiper';
+import AdvBtn from '@/components/AdvBtn';
+import Popups from '@/components/Popups';
+import CardList from '@/components/CardList';
 import CenterSlider from '@/components/CenterSlider';
 import { closePage, editDevice, getCurrentMode, getCCcmd } from '@PluginInterface';
 import { mapMutations } from 'vuex';
+import { changeThemeColor, warmColors, coldColors } from '@/utils/themeColorReplacer';
 
 export default {
   components: {
@@ -56,9 +57,9 @@ export default {
     [InputItem.name]: InputItem,
     [Dialog.name]: Dialog,
     [MainBtn.name]: MainBtn,
-    FuncPopup,
-    ModPopup,
-    FanSwiper,
+    [AdvBtn.name]: AdvBtn,
+    [Popups.name]: Popups,
+    [CardList.name]: CardList,
     CenterSlider
   },
   data() {
@@ -102,11 +103,77 @@ export default {
       const result = this.funcDefine.map(model => {
         const identifier = model.identifier;
         const statusName = this.statusMap[identifier].statusName;
+        // 取名称
+        const defaultNameKey = `btn.${identifier}`;
+        const status = this.statusMap[identifier].status;
+        const statusNameText = status.name;
+        const stateNameText = `${defaultNameKey}_${statusNameText}`;
+        const name = stateNameText === this.$language(stateNameText) ? this.$language(defaultNameKey) : this.$language(stateNameText);
         if (!this.statusMap[identifier] || !model.statusDefine[statusName]) return {};
         const miniIcon = model.statusDefine[statusName].miniIcon;
-        return miniIcon;
+        return { ...miniIcon, name };
       });
+      return result.filter(icon => {
+        return this.iconClassList.includes(icon.key) && icon.key !== 'undefined';
+      });
+    },
+    bgBlurStyle() {
+      return (
+        this.blurWeight && {
+          filter: `blur(${this.blurWeight}px)`
+        }
+      );
+    },
+    titleInfo() {
+      const temText = `${this.temSetVal}℃`;
+      const fanText = this.$language(`fan.${this.fanIdentifier}_${this.fanDefine.statusDefine[this.fanCurrentStatusName].name}`);
+      const modText = this.$language(this.modTextKey);
+      let result = `${temText}&nbsp;${modText}模式&nbsp;${fanText}`;
       return result;
+    },
+    roundBg() {
+      return this.modSwitchType === 'on' ? 1 : 0;
+    }
+  },
+  mounted() {
+    try {
+      const el = document.getElementsByClassName('page-content')[0];
+      const scrollEl = this.$refs['page-main-scroll'];
+      const guideEl = this.$refs['page-main-scroll-guide'];
+      const mainContent = document.getElementsByClassName('page-main')[0];
+
+      const { offsetTop: scrollOffsetTop } = scrollEl;
+      const { clientHeight: guideHeight } = guideEl;
+      const { clientHeight: mainContentHeight } = mainContent;
+      const targetHeight = scrollOffsetTop - mainContentHeight + guideHeight;
+
+      const maxBlurWeight = 23;
+
+      el.addEventListener('scroll', () => {
+        this.isScroll = el.scrollTop - 10 > 0;
+        const distance = el.scrollTop - targetHeight;
+        if (distance > 0) {
+          this.blurWeight = (distance / mainContentHeight) * maxBlurWeight;
+          this.isBlur = true;
+        } else {
+          this.blurWeight = 0;
+          this.isBlur = false;
+        }
+      });
+    } catch (e) {
+      e;
+    }
+  },
+  watch: {
+    modSwitchType: {
+      handler(newVal) {
+        if (newVal === 'on') {
+          changeThemeColor(warmColors);
+        } else {
+          changeThemeColor(coldColors);
+        }
+      },
+      immediate: true
     }
   },
   methods: {

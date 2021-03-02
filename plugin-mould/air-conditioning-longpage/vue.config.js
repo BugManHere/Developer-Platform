@@ -2,6 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ThemeColorReplacer = require('webpack-theme-color-replacer');
+const forElementUI = require('webpack-theme-color-replacer/forElementUI');
+
 const xml2js = require('xml2js');
 const webpack = require('webpack');
 
@@ -25,6 +28,8 @@ process.env.VUE_APP_JSON2 = JSON.stringify(statueJson2);
 const configList = fs.readdirSync(resolve('../../output'));
 const deleteConfigList = configList.filter(config => !config.includes(key));
 
+const { matchColors } = require('./src/utils/themeColorReplacer');
+// console.log([...forElementUI.getElementUISeries('#fffe11')]);
 module.exports = {
   publicPath: '',
   outputDir: `dist/plugins/Plugins/${process.env.VUE_APP_MID}`,
@@ -69,6 +74,7 @@ module.exports = {
         '@views': resolve('src/views'),
         '@logic': resolve('src/logic'),
         '@components': resolve('src/components'),
+        '@utils': resolve('src/utils'),
         '@PluginInterface': resolve('../static/lib/PluginInterface.promise')
       },
       extensions: ['.js', '.vue', '.json']
@@ -110,7 +116,13 @@ module.exports = {
           from: path.resolve(__dirname, '../static/lib/cordovainit.js'),
           to: path.resolve(__dirname, `./dist/plugins/Plugins/${process.env.VUE_APP_MID}/js/`)
         }
-      ])
+      ]),
+      new ThemeColorReplacer({
+        fileName: 'css/theme-colors.[contenthash:8].css',
+        matchColors,
+        changeSelector: forElementUI.changeSelector,
+        isJsUgly: process.env.NODE_ENV !== 'development'
+      })
     ]
   },
   chainWebpack: config => {
@@ -133,7 +145,7 @@ module.exports = {
   devServer: {
     open: process.platform === 'darwin',
     host: '0.0.0.0',
-    port: 8082,
+    port: 8084,
     https: false,
     hotOnly: false,
     proxy: '',
