@@ -27,22 +27,33 @@ module.exports = {
   },
   mod: {
     Mod_制冷模式: '制冷',
+    Mod_制冷: '制冷',
     CHMod_制冷模式: '制冷',
     Mod_除湿模式: '除湿',
+    Mod_除湿: '除湿',
     Mod_自动模式: '自动',
+    Mod_自动: '自动',
     Mod_送风模式: '送风',
+    Mod_送风: '送风',
     Mod_制热模式: '制热',
-    CHMod_制热模式: '制热'
+    Mod_制热: '制热',
+    CHMod_制热模式: '制热',
+    SpMod_地暖: '地暖',
+    SpMod_供暖: '供暖',
+    SpMod_3D供暖: '3D供暖'
   },
   fan: {
     Fan_自动风: '自动风',
+    Fan_自动: '自动风',
     Fan_低风: '低风',
     Fan_中低风: '中低风',
     Fan_中风: '中风',
     Fan_中高风: '中高风',
     Fan_高风: '高风',
     Fan_强劲风: '强劲风',
-    Fan_静音风: '静音风'
+    Fan_强劲: '强劲风',
+    Fan_静音风: '静音风',
+    Fan_静音: '静音风'
   },
   btn: {
     Elc: '电量查询',
@@ -105,7 +116,16 @@ module.exports = {
     Humi: '加湿',
     ParameterQuery: '参数查询',
     NoiseSet: '室内噪声',
-    Pow: '关机'
+    Pow: '关机',
+    TimerSet: '定时',
+    FanSet: '风速风向',
+    ModSet: '模式'
+  },
+  describe: {
+    SvSt: '制冷下限20℃'
+  },
+  footer: {
+    SvSt: '设置温度上下限'
   },
   sweep: {
     speedTitle: '扫风',
