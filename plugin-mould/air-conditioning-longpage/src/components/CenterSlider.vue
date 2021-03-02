@@ -2,15 +2,22 @@
   <div class="center-slider">
     <div v-show="powType" class="center-slider-main">
       <div id="slider" :style="`opacity: ${temAbleSet ? 1 : 0.01}`" />
-      <div class="layer" :style="{ width: lottieRadius / 1.5 + 'px', height: lottieRadius / 1.5 + 'px' }">
+      <div
+        class="layer"
+        :style="{
+          width: lottieRadius / 1.5 + 'px',
+          height: lottieRadius / 1.5 + 'px',
+          'background-position': `0 ${roundBg * 100}%`
+        }"
+      >
         <div class="rotate -one"></div>
         <div class="rotate -two"></div>
       </div>
       <article>
         <!-- 显示模式/风档 -->
-        <gree-block v-if="modName.length && fanName.length">
+        <gree-block v-if="modText.length && fanName.length">
           <div class="left">
-            <span v-text="modName" />
+            <span v-text="modText" />
           </div>
           <div class="bar" />
           <div class="right">
@@ -18,15 +25,16 @@
           </div>
         </gree-block>
         <gree-block v-else>
-          <span v-if="modName.length" v-text="modName" />
+          <span v-if="modText.length" v-text="modText" />
           <span v-if="fanName.length" v-text="fanName" />
         </gree-block>
         <!-- 显示插槽2 -->
         <h3 v-if="imshowSlot2" class="slider-slot-2" v-text="imshowSlot2" />
         <!-- 温度调节 -->
         <div v-else class="tem-value" :class="{ 'deci-tem': temStep < 1 }">
-          <gree-animated-number :value="circleVal" :precision="Number(temStep < 1)" :duration="200" transition />
-          <span
+          <gree-animated-number class="tem-value-int" :value="circleValInt" :precision="0" :duration="200" transition />
+          <gree-animated-number v-if="temStep < 1" class="tem-value-dec" :value="circleValDec * 10" :precision="0" :duration="200" transition />
+          <div
             :class="{ 'unit-tem': temSetJson === 'SetTem', 'unit-humi': temSetJson === 'SetCoolHumi' }"
             v-text="{ SetTem: '℃', SetCoolHumi: '%', undefined: '' }[temSetJson]"
           />

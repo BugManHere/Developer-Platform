@@ -1,33 +1,37 @@
 <template>
   <gree-view>
-    <gree-page class="page-home" bg-color="#F4F4F4">
+    <gree-page class="page-home" bg-color="#f3f7f8" :style="{ 'background-position': `0 ${roundBg * 100}%` }">
       <gree-header :left-options="{ showBack: false }" :right-options="{ showMore: false }">
-        <span v-text="devname" @click="onTest" />
+        <span v-if="!isBlur" v-text="devname" @click="onTest" />
+        <span v-else v-html="titleInfo" />
         <i class="iconfont iconfont-fanhui" slot="overwrite-left" @click="goBack" />
         <span v-if="functype" v-text="'保存'" slot="right" @click="sceneSave" />
         <i v-else class="iconfont iconfont-gengduo" slot="right" @click="moreInfo" />
       </gree-header>
-      <div class="page-main">
-        <!-- 小图标 -->
-        <div class="icons">
-          <div class="col">
-            <i
-              v-show="iconClassList.includes(miniIcon.key) && miniIcon.key !== 'undefined'"
-              class="iconfont mini-icon"
-              :class="`iconfont-${miniIcon.key}`"
-              v-for="(miniIcon, index) in miniIconList"
-              :key="index"
-            />
-          </div>
+      <!-- 小图标 -->
+      <div class="icons" v-show="miniIconList.length">
+        <div class="col" v-for="(miniIcon, index) in miniIconList" :key="index">
+          <i class="iconfont mini-icon" :class="`iconfont-${miniIcon.key}`" />
+          <span v-text="miniIcon.name" />
         </div>
-        <CenterSlider />
-        <main-btn-list />
+      </div>
+      <div class="page-main">
+        <!-- 圆环 -->
+        <CenterSlider :style="bgBlurStyle" :round-bg="roundBg" />
+        <div class="page-main-drawer" ref="page-main-scroll">
+          <!-- 引导箭头 -->
+          <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'iconfont-fanhui' : 'line'" />
+          <!-- 主要功能按钮 -->
+          <main-btn-group />
+          <!-- 弹出层 -->
+          <main-popup />
+          <!-- 高级功能按钮 -->
+          <adv-btn-group />
+          <!-- 功能卡片 -->
+          <card-list />
+        </div>
       </div>
     </gree-page>
-    <!-- 底部弹框 -->
-    <FuncPopup ref="FuncPopup" />
-    <ModPopup ref="ModPopup" />
-    <FanSwiper ref="FanPopup" />
     <!-- 细分码测试 -->
     <!-- <div class="vender-text-box" v-text="`当前细分码：${vender === '' ? 'default' : vender}`" draggable @click="changeVender" />
     <gree-dialog v-model="slotDialog.open" :btns="slotDialog.btns">
@@ -74,7 +78,10 @@ export default {
             handler: this.enterVender
           }
         ]
-      }
+      },
+      blurWeight: 0,
+      isBlur: false,
+      isScroll: false
     };
   },
   computed: {
@@ -93,6 +100,7 @@ export default {
       midTypeFunc: state => state.baseData.midTypeFunc
     }),
     ...mapGetters('machine', ['funcDefine', 'funcDefine_active', 'statusMap']),
+    ...mapGetters(['temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
     iconClassList() {
       const iconMsg = require('@assets/iconfont/iconfont.json');
       const result = iconMsg.glyphs.map(icon => icon.font_class);
