@@ -44,7 +44,7 @@
           <!-- 选项框 -->
           <div v-else-if="content.type === 'select'" class="select-type">
             <!-- 没有选项的情况下显示文本 -->
-            <span v-if="Object.keys(content.options).length <= 1 || !editAbleList[colIndex]" v-text="content.default" />
+            <span v-if="!Object.keys(content.options).length || !editAbleList[colIndex]" v-text="content.default" />
             <!-- 有选项的情况下显示选项 -->
             <select v-else v-model="content.select[content.key]" class="select-medium form-control" @change="content.method(rowIndex)">
               <option v-for="(optionValue, optionKey) in content.options" :key="optionKey" :value="optionKey" v-text="optionValue" />
