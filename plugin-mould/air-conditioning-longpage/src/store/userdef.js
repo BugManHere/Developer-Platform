@@ -1,93 +1,20 @@
-import { timerListDevice, showToast, showConfirm } from '@PluginInterface';
-
+import { showToast, showConfirm } from '@PluginInterface';
 /**
  * @description 自定义函数，根据status.customize的取值选择插入方式
  * @returns {Object} identifier对应的自定义函数
  */
 export const customizeFunction = {
-  AppTimer: ({ rootState }) => {
-    const mac = rootState.control.mac;
-    try {
-      timerListDevice(mac);
-    } catch (e) {
-      console.log('%c running timerListDevice()', 'color: blue');
-    }
+  TimerSet: ({ commit, rootState }) => {
+    const type = rootState.control.dataObject.MainPopupType === 'TimerSet';
+    commit('control/SET_DATA_OBJECT', { MainPopupType: type ? '' : 'TimerSet' }, { root: true });
   },
-  ConstUD: ({ dispatch }, currentStatusName) => {
-    const goSweep = id => {
-      window.myvm.$router.push({
-        name: 'SweepConst',
-        params: { id }
-      });
-    };
-    if (!['undefined', undefined].includes(currentStatusName)) {
-      goSweep(2);
-      return;
-    }
-    const storage = window.storage;
-    const funcData = storage.get('funcData') || {};
-    if (funcData.ConstUD) {
-      dispatch('STATE_MACHINE_INTERFACE', { data: { SwUpDn: funcData.ConstUD } }, { root: true });
-    } else goSweep(2);
+  FanSet: ({ commit, rootState }) => {
+    const type = rootState.control.dataObject.MainPopupType === 'FanSet';
+    commit('control/SET_DATA_OBJECT', { MainPopupType: type ? '' : 'FanSet' }, { root: true });
   },
-  ConstLR: ({ dispatch }, currentStatusName) => {
-    const goSweep = id => {
-      window.myvm.$router.push({
-        name: 'SweepConst',
-        params: { id }
-      });
-    };
-    if (!['undefined', undefined].includes(currentStatusName)) {
-      goSweep(1);
-      return;
-    }
-    const storage = window.storage;
-    const funcData = storage.get('funcData') || {};
-    if (funcData.ConstLR) {
-      dispatch('STATE_MACHINE_INTERFACE', { data: { SwingLfRig: funcData.ConstLR } }, { root: true });
-    } else goSweep(1);
-  },
-  Elc: () => {
-    window.myvm.$router.push('Electric');
-  },
-  ModPopup: ({ commit }) => {
-    commit('control/SET_DATA_OBJECT', { ModPopup: 1 }, { root: true });
-  },
-  FanPopup: ({ commit }) => {
-    commit('control/SET_DATA_OBJECT', { FanPopup: 1 }, { root: true });
-  },
-  FuncPopup: ({ commit }) => {
-    commit('control/SET_DATA_OBJECT', { FuncPopup: 1 }, { root: true });
-  },
-  BottomSleep: (_, currentStatusName) => {
-    switch (currentStatusName) {
-      case 'status_1':
-        showToast('睡眠已关闭', 0);
-        break;
-      case 'default':
-        showToast('睡眠已开启', 0);
-        break;
-      default:
-        break;
-    }
-  },
-  'BottomSleep(ordinary)': (_, currentStatusName) => {
-    switch (currentStatusName) {
-      case 'status_1':
-        showToast('睡眠已关闭', 0);
-        break;
-      case 'default':
-        showToast('睡眠已开启', 0);
-        break;
-      default:
-        break;
-    }
-  },
-  NoiseSet: ({ commit }) => {
-    runPageMethod({ commit }, 'Noise');
-  },
-  EnvAreaSt: ({ commit }) => {
-    runPageMethod({ commit }, 'AreaFan');
+  ModSet: ({ commit, rootState }) => {
+    const type = rootState.control.dataObject.MainPopupType === 'ModSet';
+    commit('control/SET_DATA_OBJECT', { MainPopupType: type ? '' : 'ModSet' }, { root: true });
   },
   CleanState: async ({ commit, dispatch }, currentStatusName, nextStatusName) => {
     const switchClean = value => {
@@ -97,7 +24,7 @@ export const customizeFunction = {
     let value = 0;
     let res = true;
     nextStatusName === 'status_1' && (value = 1);
-    value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
+    value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
     Number(res) && switchClean(value);
   },
   SwingUD: () => {
@@ -127,9 +54,6 @@ export const customizeFunction = {
 export const customizeInit = {
   Demo: () => {
     console.log('run Demo init');
-  },
-  AppTimer: () => {
-    // console.log('放开注释，执行自定义初始化函数，打印这句话');
   }
 };
 
@@ -157,7 +81,7 @@ export const cacheDataMap = {
  * @param {Object} { commit } Vuex的commit方法
  * @param {String} routerName 路由名称
  */
-async function runPageMethod({ commit }, routerName) {
+export async function runPageMethod({ commit }, routerName) {
   // 加载对应页面
   commit(types.CONTROL_SET_STATE, { hiddenComponent: routerName }, { root: true });
   // 获取对应组件内容

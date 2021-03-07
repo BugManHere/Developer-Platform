@@ -28,6 +28,7 @@ const typesMap = {
   SET_MAC: 'control', // 设置mac
   SET_DATA_OBJECT: 'control', // 设备的各种状态
   SET_CHECK_OBJECT: 'control', // 用于检查的状态
+  SET_POPUP: 'control', // 弹窗
   CONTROL_SET_STATE: 'control'
 };
 

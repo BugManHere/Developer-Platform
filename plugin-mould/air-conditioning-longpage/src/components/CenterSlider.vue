@@ -46,12 +46,11 @@
       </article>
     </div>
     <!-- 加减按钮 -->
-    <div class="center-slider-btn-group">
-      <div class="center-slider-btn-group-minus"></div>
-      <div class="center-slider-btn-group-plus"></div>
+    <div class="center-slider-btn-group" v-if="powType">
+      <div class="center-slider-btn-group-minus" @click="setTemByStep(-1)" />
+      <div class="center-slider-btn-group-plus" @click="setTemByStep(1)" />
     </div>
-    <div class="pow-off" v-show="!powType" :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
-      <img src="@assets/img/off_bg.png" />
+    <div class="pow-off" v-else :style="{ width: svgRadius + 63.5 + 'px', height: svgRadius + 63.5 + 'px' }">
       <h3 v-text="'已关机'" />
     </div>
   </div>
@@ -63,6 +62,12 @@ import { mapActions, mapGetters } from 'vuex';
 import { types } from '@/store/types';
 
 export default {
+  props: {
+    roundBg: {
+      type: Number,
+      default: 0
+    }
+  },
   components: {
     [Block.name]: Block,
     [AnimatedNumber.name]: AnimatedNumber
@@ -74,7 +79,6 @@ export default {
       circleVal: 26,
       temChange: false, // 轮询回来的温度改变flag
       fanName: '',
-      modName: '',
       circleObj: '',
       timer: null, // 节流函数用
       sliderValueMap: {} // 节流函数用
@@ -93,38 +97,53 @@ export default {
       'temMaxVal',
       'temStep',
       'temAbleSet',
-      'modDefine',
-      'modIdentifier',
       'fanIdentifier',
       'imshowSlot1',
       'imshowSlot2',
-      'powType'
+      'powType',
+      'modTextKey'
     ]),
-    ...mapGetters('machine', ['funcDefineMap', 'statusMap'])
+    ...mapGetters('machine', ['funcDefineMap', 'statusMap']),
+    modText() {
+      return this.$language(this.modTextKey);
+    },
+    circleValInt() {
+      return Math.floor(this.circleVal);
+    },
+    circleValDec() {
+      return this.circleVal % 1;
+    }
   },
   mounted() {
     this.circleVal = this.temSetVal;
     // init circular slider
     this.circleObj = $('#slider').roundSlider({
+      animation: false,
+      showTooltip: false,
       min: 16,
       max: 30,
       step: 0.1,
       value: this.circleVal,
       radius: this.svgRadius / 2 + 5,
-      width: 2,
-      handleSize: '+35',
+      width: 5,
+      handleSize: '+38',
       keyboardAction: false,
       startAngle: -45,
       endAngle: '+270',
       sliderType: 'min-range',
       circleShape: 'full',
       handleShape: 'dot',
+      svgMode: true,
+      borderWidth: 0,
+      borderColor: 'rgb(240, 240, 240)',
+      pathColor: 'rgb(240, 240, 240)',
+      rangeColor: '#ffffff',
       start: () => {
         this.temChange = false;
-        $('span.rs-block').css('padding', '2.7px');
+        // $('span.rs-block').css('padding', '2.7px');
       },
       stop: () => {
-        $('span.rs-block').css('padding', '2px');
+        // $('span.rs-block').css('padding', '2px');
       },
       drag: e => {
         const base = 1 / this.temStep;
@@ -154,10 +173,6 @@ export default {
         const fanStateName = this.getStateNameById(this.fanIdentifier);
         if (fanStateName) {
           this.fanName = this.$language(`fan.${fanStateName}`);
-        }
-        const modStateName = this.modDefine ? this.getStateNameById(this.modIdentifier) : '';
-        if (modStateName) {
-          this.modName = this.$language(`mod.${modStateName}`);
         }
       },
       immediate: true,
@@ -226,6 +241,11 @@ export default {
         max: this.temMaxVal,
         value: this.temSetVal
       });
+    },
+    // 根据间隔设置温度
+    setTemByStep(type) {
+      const step = this.temStep;
+      this.temSetMethod(this.circleVal + step * type);
     }
   }
 };

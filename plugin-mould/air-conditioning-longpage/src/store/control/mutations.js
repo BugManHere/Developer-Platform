@@ -1,4 +1,5 @@
 import { defineTypes } from '@/store/types';
+import { fixJsonType } from '@/utils/fsm';
 // 同步操作放这里
 export default {
   [defineTypes.SET_MAC](state, { mac, mainMac }) {
@@ -9,17 +10,15 @@ export default {
     state.deviceInfo = deviceInfo;
   },
   [defineTypes.SET_DATA_OBJECT](state, obj) {
-    const map = {};
-    Object.keys(obj).forEach(key => {
-      // if (typeof obj[key] !== 'number') {
-      //   console.log(typeof obj[key], key);
-      // }
-      map[key] = Number(obj[key]);
-    });
+    const { jsonDefine } = this.state.machine.baseData;
+    let map = fixJsonType(obj, jsonDefine);
     state.dataObject = { ...state.dataObject, ...map };
   },
   [defineTypes.SET_CHECK_OBJECT](state, obj) {
     state.checkObject = { ...state.checkObject, ...obj };
+  },
+  [defineTypes.SET_POPUP](state, obj) {
+    state.popup = { ...state.popup, ...obj };
   },
   [defineTypes.CONTROL_SET_STATE](state, obj) {
     Object.keys(obj).forEach(key => {

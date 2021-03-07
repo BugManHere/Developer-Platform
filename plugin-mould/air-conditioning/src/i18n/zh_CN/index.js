@@ -141,7 +141,11 @@ module.exports = {
   },
   offline: {
     prompt: '连接已断开，',
-    detail: '查看详情'
+    detail: '查看详情',
+    title: '离线检查',
+    content:
+      '1.&ensp;空调是否连接电源？<br>2. 空调是否关闭了WiFi功能？按遥控器上的“WiFi”按键打开。<br>3. 拔掉电源插头再插上试试看。<br>4. 路由器名称和密码是否有变动，若有变动则需要重新添加设备。',
+    confirmText: '取消'
   },
   mode: {
     cool: '制冷',
@@ -229,7 +233,8 @@ module.exports = {
     sweep_lr_turnoff_tips: '左右扫风已关闭。',
     sweep_powoff_tips: '空调已被关闭，自动退出扫风设置。',
     Stage_tips: '提示:',
-    sweep_txt2: '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。'
+    sweep_txt2: '1.点击扫风位置，可精确定格扫风。<br> 2.滑动整个区域，可区域扫风。<br> 3.点击空白处可取消扫风设置。',
+    opposite: '相向<br/>扫风'
   },
   air: {
     title: '新风',

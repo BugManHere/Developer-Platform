@@ -32,7 +32,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', function(req, res) {
-  templateFuncModel.find().then(params => {
+  templateFuncModel.find().then(async params => {
     // 生成icon
     // params.forEach(async template => {
     //   const funcDefineCopy = JSON.parse(JSON.stringify(template.funcDefine));
@@ -60,6 +60,20 @@ router.get('/', function(req, res) {
     //   template.funcDefine = funcDefineCopy;
     //   await template.save();
     // });
+    // 生成新模板
+    // const temp = JSON.parse(JSON.stringify(params[0]));
+    // const newTemp = new templateFuncModel({
+    //   productID: temp.productID,
+    //   seriesID: temp.seriesID,
+    //   createTime: temp.createTime,
+    //   editUser: temp.editUser,
+    //   editTime: temp.editTime,
+    //   useTime: temp.useTime,
+    //   funcDefine: [],
+    //   jsonDefine: [],
+    //   typeDefine: []
+    // });
+    // await newTemp.save();
     res.json(params);
   });
 });

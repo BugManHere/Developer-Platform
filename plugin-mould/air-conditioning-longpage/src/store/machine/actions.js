@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import { types, defineTypes } from '@/store/types';
-import { getConfig } from '@/utils/fsm';
+import { getConfig, fixJsonType } from '@/utils/fsm';
 const { customizeFunction, customizeInit } = require('@/store/userdef');
 
 export default {
@@ -162,10 +162,10 @@ function runCustomizeInit(context) {
  * @param {Object} { commit, dispatch } Vuex的context对象
  * @param {Object} baseData 从json获取的配置
  */
-function updateConfig({ commit, dispatch, getters }, baseData) {
+function updateConfig({ commit, dispatch }, baseData) {
   if (!baseData) return;
   // 转换指令
-  str2NumMap(getters.funcDefine);
+  modelFixType(baseData.funcDefine, baseData.jsonDefine);
   // 更新到vuex
   commit(types.SET_BASEDATA, baseData, { root: true });
   commit(
@@ -185,20 +185,17 @@ function updateConfig({ commit, dispatch, getters }, baseData) {
 }
 
 // 转换指令中的字符串（不重要，可以不看）
-function str2NumMap(funcDefine) {
+function modelFixType(funcDefine, jsonDefine) {
   // String转为Number
-  funcDefine.forEach((model, index) => {
-    const statusDefine = {};
+  funcDefine.forEach(model => {
     Object.keys(model.statusDefine).forEach(statusName => {
-      statusDefine[statusName] = model.statusDefine[statusName];
-      statusDefine[statusName].value = Number(statusDefine[statusName].value);
+      const { json } = model;
+      const { value } = model.statusDefine[statusName];
+      model.statusDefine[statusName].value = fixJsonType({ [json]: value }, jsonDefine)[json];
       if (model.statusDefine[statusName].moreCommand) {
-        Object.keys(model.statusDefine[statusName].moreCommand).forEach(json => {
-          statusDefine[statusName].moreCommand[json] = Number(statusDefine[statusName].moreCommand[json]);
-        });
+        model.statusDefine[statusName].moreCommand = fixJsonType(model.statusDefine[statusName].moreCommand, jsonDefine);
       }
     });
-    funcDefine[index].statusDefine = statusDefine;
   });
 }
 
@@ -256,9 +253,9 @@ function creatQueue({ dispatch }) {
 }
 
 // 初始化数据
-function initData({ getters, dispatch, rootGetters }) {
+function initData({ state, getters, dispatch, rootGetters }) {
   // 输出data
-  const data = {};
+  let data = {};
   // 输入的数据
   const inputMap = rootGetters.inputMap;
   // 如果model在输入的数据中没有对应的json，则设置
@@ -273,6 +270,13 @@ function initData({ getters, dispatch, rootGetters }) {
       data[json] = value;
     }
   });
+  const { jsonDefine } = state.baseData;
+  if (jsonDefine) {
+    jsonDefine.forEach(define => {
+      data[define.json] = define.default;
+    });
+  }
+  data = fixJsonType(data, jsonDefine);
   // 输出初始化数据
   dispatch(types.STATE_MACHINE_INITDATA, { data, type: 'init' }, { root: true });
 }

@@ -84,10 +84,9 @@ export default {
      */
     offlineDialog() {
       Dialog.alert({
-        title: '离线检查',
-        content:
-          '1.&ensp;空调是否连接电源？<br>2. 空调是否关闭了WiFi功能？按遥控器上的“WiFi”按键打开。<br>3. 拔掉电源插头再插上试试看。<br>4. 路由器名称和密码是否有变动，若有变动则需要重新添加设备。',
-        confirmText: '取消'
+        title: this.$language('offline.title'),
+        content: this.$language('offline.content'),
+        confirmText: this.$language('offline.confirmText')
       });
     }
   }

@@ -18,7 +18,6 @@ const typesMap = {
   INIT_DEVICE_DATA: 'control', // 初始化设备数据
   GET_DEVICE_INFO: 'control', // 获取设备信息
   GET_DEVICE_DATA: 'control', // 查询一包数据
-  PARSE_DATA_BY_COLS: 'control', // 解析设备数据
   SET_POLLING: 'control', // 开启轮询
   SEND_CTRL: 'control', // 发送控制指令
   UPDATE_DATAOBJECT: 'control', // 更新本地数据

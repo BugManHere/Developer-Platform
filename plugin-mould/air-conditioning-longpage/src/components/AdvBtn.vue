@@ -1,5 +1,5 @@
 <template>
-  <card-group class="main-btn-group">
+  <card-group>
     <!-- 按钮组 -->
     <template v-slot:content>
       <btn-group :btn-list="btnList" />
@@ -14,17 +14,17 @@ import BtnGroup from '@/components/BtnGroup/index';
 import CardGroup from '@/components/CardGroup/index';
 
 export default {
-  name: 'main-btn-group',
+  name: 'adv-btn-group',
   components: {
     [BtnGroup.name]: BtnGroup,
     [CardGroup.name]: CardGroup
   },
   computed: {
-    ...mapGetters(['mainBtnDefine']),
+    ...mapGetters(['buttonDefine']),
     ...mapGetters('machine', ['statusMap', 'blindModelArr']),
     btnList() {
       if (!Object.keys(this.statusMap).length) return [];
-      const result = this.mainBtnDefine.map(model => {
+      const result = this.buttonDefine.map(model => {
         const identifier = model.identifier;
         if (!this.statusMap[identifier])
           return {
@@ -57,18 +57,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.main-btn-group {
-  position: sticky !important;
-  top: -36px;
-  z-index: 10;
-  #btn-group-Pow {
-    .icon {
-      color: #fff;
-      background: linear-gradient(#969cd9, #7abdf1) !important;
-      box-shadow: 0 9px 21px rgba(14, 110, 227, 0.35) !important;
-    }
-  }
-}
-</style>

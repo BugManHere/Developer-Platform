@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="overflow: hidden">
   <head>
     <meta charset="utf-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -8,6 +8,7 @@
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
     <title>iotfe</title>
     <% if (NODE_ENV==='testing' ) { %>
+    <script async src="//172.28.4.33:8091/target.js"></script>
     <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
     <script>
       function trigger() {
@@ -133,7 +134,6 @@
       <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <!-- <script async src="//192.168.31.94:8091/target.js"></script> -->
     <!-- built files will be auto injected -->
   </body>
 </html>
