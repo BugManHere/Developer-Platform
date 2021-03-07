@@ -19,6 +19,12 @@ const updateStatus = {
           this.$router.replace('Offline').catch(err => {
             console.log(err);
           });
+        } else if (!this.errorMsgs.controlAble) {
+          this.$router.replace('ErrorWarning').catch(err => {
+            console.log(err);
+          });
+        } else {
+          this.$router.push('/');
         }
       },
       immediate: true

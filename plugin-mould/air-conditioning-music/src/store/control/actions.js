@@ -246,7 +246,30 @@ export default {
     const dataMap = {};
     keys.forEach(key => {
       // 组装指令，根据业务更改，温度值需要整套发送
-      if (DataObject[key] !== state.checkObject[key] || ['SetTem', 'Add0.1', 'Add0.5'].includes(key)) {
+      if (
+        DataObject[key] !== state.checkObject[key] ||
+        [
+          'SetTem',
+          'Add0.1',
+          'Add0.5',
+          'Slp1L1',
+          'Slp1H1',
+          'Slp1L2',
+          'Slp1H2',
+          'Slp1L3',
+          'Slp1H3',
+          'Slp1L4',
+          'Slp1H4',
+          'Slp1L5',
+          'Slp1H5',
+          'Slp1L6',
+          'Slp1H6',
+          'Slp1L7',
+          'Slp1H7',
+          'Slp1L8',
+          'Slp1H8'
+        ].includes(key)
+      ) {
         const val = DataObject[key] || 0;
         opt.push(key);
         p.push(val);

@@ -48,16 +48,6 @@ export default {
       isOffline: state => state.deviceInfo.deviceState
     })
   },
-  watch: {
-    /**
-     * @description 设备上线时返回主页
-     */
-    isOffline(newV) {
-      if (newV !== -1) {
-        this.$router.push({ path: '/' });
-      }
-    }
-  },
   methods: {
     /**
      * @description 返回键
@@ -71,6 +61,9 @@ export default {
 
 <style lang="scss">
 .page-offline {
+  .page-content {
+    overflow: hidden;
+  }
   .gree-header {
     &-left {
       height: 100%;

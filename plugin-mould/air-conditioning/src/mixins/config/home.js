@@ -25,7 +25,7 @@ const homeConfig = {
       const result = [
         {
           url: require('../../assets/img/pow.png'),
-          name: '开关',
+          name: this.$language('home.power'),
           key: 'Pow'
         }
       ];
@@ -33,7 +33,7 @@ const homeConfig = {
       this.g_funcDefine_btn.length &&
         result.push({
           url: require('../../assets/img/function.png'),
-          name: '功能',
+          name: this.$language('home.function'),
           key: 'Func'
         });
       // 如果1.不在场景模式 2.勾选了语音技能 就增加语音技能按钮
@@ -42,7 +42,7 @@ const homeConfig = {
         this.g_moreOption.voiceSkill &&
         result.push({
           url: require('../../assets/img/voiceSkill.png'),
-          name: '语音技能',
+          name: this.$language('home.voice'),
           key: 'Voice'
         });
       // 如果1.
@@ -51,7 +51,7 @@ const homeConfig = {
         this.$store.state.dataObject.ElcEn &&
         result.push({
           url: require('../../assets/img/Electric.png'),
-          name: '电量查询',
+          name: this.$language('home.Electric'),
           key: 'ElcEn'
         });
       return result;

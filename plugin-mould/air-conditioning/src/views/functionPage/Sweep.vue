@@ -3,6 +3,7 @@
   <gree-view :bg-color="`#404040`">
     <gree-page class="page-sweep">
       <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
+<<<<<<< HEAD
       <gree-sweep-select
         canvas-id="sweep-lr"
         :canvas-width="canvasWidth"
@@ -24,6 +25,36 @@
       <div class="point-text">
         <p>{{ $language('sweep.Stage_tips') }}</p>
         <p v-html="$language('sweep.sweep_txt2')"></p>
+=======
+      <div v-if="oppositeType.show" class="opposite" @touchend.prevent="clickOpposite" :class="oppositeType.type">
+        <span v-html="oppositeType.text" />
+        <!-- <img :src="oppositeType.img" v-if="oppositeType.show" /> -->
+      </div>
+      <div class="sweep-body">
+        <gree-sweep-select
+          canvas-id="sweep-lr"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          :origin="originLr"
+          :select-default="selectSwingLfRig"
+          @change="sweepLrChangeHandler"
+          v-if="touchId === 1"
+        >
+        </gree-sweep-select>
+        <gree-sweep-select
+          canvas-id="sweep-ud"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          :origin="originUd"
+          :select-default="selectSwUpDn"
+          @change="sweepUdChangeHandler"
+          v-else-if="touchId === 2"
+        ></gree-sweep-select>
+        <div class="point-text">
+          <p>{{ $language('sweep.Stage_tips') }}</p>
+          <p v-html="$language('sweep.sweep_txt2')"></p>
+        </div>
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
       </div>
     </gree-page>
   </gree-view>
@@ -80,6 +111,16 @@ export default {
     }),
     routeName() {
       return this.$route.name;
+<<<<<<< HEAD
+=======
+    },
+    oppositeType() {
+      return {
+        text: this.$language('sweep.opposite'),
+        type: this.SwingLfRig === 8 ? 'on' : 'off',
+        show: this.touchId === 1
+      };
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
     }
   },
   watch: {
@@ -210,3 +251,32 @@ export default {
   }
 };
 </script>
+<<<<<<< HEAD
+=======
+
+<style lang="scss" scoped>
+.sweep-body {
+  height: 100%;
+  width: 100%;
+}
+.opposite {
+  position: absolute;
+  height: 156px;
+  width: 156px;
+  top: 200px;
+  right: 100px;
+  z-index: 999;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #404657;
+  &.on {
+    background-color: rgb(35, 151, 243);
+    color: #fff;
+  }
+}
+</style>
+>>>>>>> 5a44fac... feat(all):  零零散散的更新

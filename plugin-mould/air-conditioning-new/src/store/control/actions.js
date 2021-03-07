@@ -1,7 +1,7 @@
 import { types, defineTypes } from '@/store/types';
 import { getConfig } from '@/utils/fsm';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast } from '@PluginInterface'; // 主体接口
 
 let _timer = null; // 轮询定时器
 let _timer2 = null; // 延时发送指令定时器
@@ -16,6 +16,22 @@ const statueJson2 = moreOption.statueJson2;
 // 自定义数据，根据业务更改
 function customizeDataObject(_dataObject) {
   const dataObject = _dataObject;
+  return dataObject;
+}
+
+function parseDataByCols({ data, opt }) {
+  const dataObject = {};
+  if (!data) return dataObject;
+  try {
+    const cols = (opt && opt.length && opt) || statueJson2;
+    const res = JSON.parse(data);
+    // 遍历查询到的数据
+    cols.forEach((json, index) => {
+      dataObject[json] = res[index];
+    });
+  } catch (e) {
+    console.error(e);
+  }
   return dataObject;
 }
 
@@ -70,10 +86,10 @@ export default {
   /**
    * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  [defineTypes.CONTROL_INIT]({ dispatch, state }) {
+  async [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      dispatch(types.INIT_DEVICE_DATA, null, { root: true });
+      await dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
@@ -109,7 +125,22 @@ export default {
       const data = getQueryStringByName('data');
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
+<<<<<<< HEAD
       let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
+=======
+
+      let opt = getQueryStringByName('opt') || '[]';
+
+      try {
+        // 获取opt
+        console.log('[url] opt:', opt);
+        opt = JSON.parse(opt);
+      } catch (e) {
+        console.log(e);
+      }
+
+      let dataObject = parseDataByCols({ data, opt });
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -126,6 +157,7 @@ export default {
   },
 
   /**
+<<<<<<< HEAD
    * @description 解析设备数据
    * @param {String} data
    */
@@ -147,12 +179,15 @@ export default {
   },
 
   /**
+=======
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
    * @description 获取设备信息
    */
   [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
     try {
-      const { mac } = state;
-      getInfo(mac)
+      const { mac, mainMac } = state;
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
+      getInfo(sendMac)
         .then(res => {
           const deviceInfo = JSON.parse(res);
           commit(types.SET_DEVICE_INFO, deviceInfo, { root: true });
@@ -169,7 +204,7 @@ export default {
   async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }) {
     try {
       // 集中控制时数据不查询
-      if (state.functype) return;
+      if (state.dataObject.functype) return;
 
       const { mac, mainMac } = state;
       const sendMac = mainMac.length ? mainMac : mac; // 查询包需要传入主mac及子mac
@@ -177,18 +212,26 @@ export default {
       // 采用本地 STATUS_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
       const cols = statueJson2;
       const t = 'status';
+<<<<<<< HEAD
       const STATUS_JSON = JSON.stringify({ cols, mac, t });
 
       const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
 
+=======
+      const STATUS_JSON = JSON.stringify({ cols, mac, t, sub: mac });
+      const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
         showToast('网络异常', 1);
-        closePage();
       }
       _firstCallback = false;
 
+<<<<<<< HEAD
       let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
+=======
+      let dataObject = parseDataByCols({ data });
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据

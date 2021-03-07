@@ -1,0 +1,759 @@
+{
+  "excludeMap": {},
+  "hideMap": {},
+  "productModel": "6400",
+  "deviceName": "新风空调一体控制器",
+  "funcDefine": [
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e19cc77fd9a0b08db50ab",
+      "name": "干燥",
+      "identifier": "Blo",
+      "json": "Blo",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "ganzao",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "ganzao",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "ganzao"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e19bd77fd9a0b08db50aa",
+      "name": "换气",
+      "identifier": "Ventilation",
+      "json": "Air",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "huanqi",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "huanqi",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "huanqi"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e1eea77fd9a0b08db5325",
+      "name": "开关机",
+      "identifier": "Pow",
+      "json": "Pow",
+      "type": "active-mainButton",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "kaiguan",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "kaiguan",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e19f777fd9a0b08db50b4",
+      "name": "自清洁",
+      "identifier": "CleanState",
+      "json": "CleanState",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "zidongqingjie",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "zidongqingjie",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "zidongqingjie"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e19e577fd9a0b08db50b0",
+      "name": "睡眠",
+      "identifier": "Sleep",
+      "json": "SwhSlp",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "Sleep",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Sleep",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "Sleep"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e1f3177fd9a0b08db5344",
+      "name": "定时设置",
+      "identifier": "TimerSet",
+      "json": "AppTimer",
+      "type": "active-mainButton",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e1f2277fd9a0b08db533c",
+      "name": "风速调节",
+      "identifier": "FanSet",
+      "json": "FanSet",
+      "type": "active-mainButton",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "fengsu",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "fengsu",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "602e1f0c77fd9a0b08db5335",
+      "name": "模式调节",
+      "identifier": "ModSet",
+      "json": "ModSet",
+      "type": "active-mainButton",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "moshi",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "moshi",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "602e29b312c40709047f8812",
+      "name": "风速档位",
+      "identifier": "Fan",
+      "json": "WdSpd",
+      "type": "inertia-fan",
+      "statusDefine": {
+        "default": {
+          "name": "低风",
+          "value": "1",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "zhixiang",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_2": {
+          "name": "中低风",
+          "value": "2",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Avoid",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_3": {
+          "name": "中风",
+          "value": "3",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "FanL",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_4": {
+          "name": "中高风",
+          "value": "4",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "zhileng",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_5": {
+          "name": "高风",
+          "value": "5",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Air",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_6": {
+          "name": "强劲",
+          "value": "6",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "lianggan",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "Fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_7": {
+          "name": "自动",
+          "value": "0",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "zidong",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "Fan"
+          },
+          "moreCommand": {
+            "Quiet": "0"
+          }
+        },
+        "status_8": {
+          "name": "静音",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "jingyin",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "Fan"
+          },
+          "moreCommand": {
+            "Quiet": "1"
+          }
+        }
+      },
+      "map": {
+        "default": "status_2",
+        "undefined": "default",
+        "status_2": "status_3",
+        "status_3": "status_4",
+        "status_4": "status_5",
+        "status_5": "undefined",
+        "status_6": "undefined",
+        "status_7": "status_8",
+        "status_8": "status_6"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5e5dfe9dd8f53e5484c443d7",
+      "name": "温度控制",
+      "identifier": "Tem",
+      "json": "SetTem",
+      "type": "inertia-tem",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "25",
+          "isCheck": true,
+          "customize": false,
+          "moreCommand": {
+            "Add0.1": 0,
+            "Add0.5": 0
+          },
+          "icon": {
+            "key": "Tem",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "Tem",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "undefined",
+        "undefined": "default"
+      }
+    }
+  ],
+  "jsonDefine": [
+    {
+      "_id": "601cfe7830b11250ec38c376",
+      "name": "细分码",
+      "json": "Vender",
+      "type": "String",
+      "protocol": 1,
+      "local": false,
+      "default": ""
+    },
+    {
+      "_id": "601cff3630b11250ec38c377",
+      "name": "预约",
+      "json": "AppTimer",
+      "type": "Number",
+      "protocol": 1,
+      "local": false,
+      "default": "0"
+    },
+    {
+      "_id": "601d00cd87ce01304077d6b5",
+      "name": "智享",
+      "json": "Emod",
+      "type": "Number",
+      "protocol": 1,
+      "local": false,
+      "default": "0"
+    },
+    {
+      "_id": "601d01d387ce01304077d6b6",
+      "name": "是否处于0.1度控温",
+      "json": "has01",
+      "type": "Number",
+      "protocol": 0,
+      "local": true,
+      "default": "0"
+    },
+    {
+      "_id": "601d01e587ce01304077d6b7",
+      "name": "是否处于0.5度控温",
+      "json": "has05",
+      "type": "Number",
+      "protocol": 0,
+      "local": true,
+      "default": "0"
+    }
+  ],
+  "typeDefine": {
+    "active-button": "高级按钮",
+    "_id": "60331c846ab409333cfc8a33",
+    "active-mainButton": "主要按钮",
+    "active": "默认",
+    "inertia": "默认",
+    "inertia-special-fan": "特殊风速",
+    "inertia-fan": "风速档位",
+    "inertia-tem": "温度设定"
+  },
+  "midTypeFunc": {
+    "default": [
+      "602e19cc77fd9a0b08db50ab",
+      "602e19bd77fd9a0b08db50aa",
+      "602e1eea77fd9a0b08db5325",
+      "602e19f777fd9a0b08db50b4",
+      "602e19e577fd9a0b08db50b0",
+      "602e1f3177fd9a0b08db5344",
+      "602e1f2277fd9a0b08db533c",
+      "602e1f0c77fd9a0b08db5335",
+      "602e29b312c40709047f8812",
+      "5e5dfe9dd8f53e5484c443d7"
+    ]
+  },
+  "moreOption": {
+    "statueJson": [
+      "AppTimer",
+      "FanSet",
+      "Blo",
+      "Air",
+      "ModSet",
+      "Pow",
+      "CleanState",
+      "SwhSlp"
+    ],
+    "statueJson2": [
+      "AppTimer",
+      "FanSet",
+      "Blo",
+      "Air",
+      "ModSet",
+      "Pow",
+      "CleanState",
+      "SwhSlp"
+    ],
+    "_id": "60331c986ab409333cfc8aa9",
+    "voiceSkill": false,
+    "temStep": "0.5",
+    "pluginVer": "1.0"
+  }
+}

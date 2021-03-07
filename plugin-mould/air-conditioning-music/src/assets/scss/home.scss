@@ -37,6 +37,20 @@
     }
   }
 }
+<<<<<<< HEAD
+=======
+.page-bg-mask {
+  position: fixed;
+  right: 0;
+  height: 0;
+  width: 100%;
+  padding-top: 124px;
+  top: -$pageHeaderHeight;
+  background-position: 100px calc(0px - env(safe-area-inset-top));
+  z-index: 5;
+  transform: translate3d(0, 0, 0) scale3d(1, 1, 1.1);
+}
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
 .page-header {
   position: relative;
   top: 0;
