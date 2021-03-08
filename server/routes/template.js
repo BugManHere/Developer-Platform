@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const dayjs = require('dayjs');
@@ -186,6 +187,61 @@ router.post('/done', async function(req, res) {
   productInfo.funcDefine = funcDefine;
   productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
   res.json(await productInfo.save());
+});
+
+router.post('/typeDefine/edit', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 1))) {
+    res.status(401).send('没有此权限');
+    return;
+  }
+  const productInfo = await getProductInfo(req.body.tempID);
+  const typeDefine = JSON.parse(req.body.typeDefine);
+  typeDefine._id = new mongoose.Types.ObjectId();
+  productInfo.typeDefine = typeDefine;
+  productInfo.editTime = dayjs().format('YYYY.MM.DD HH:mm:ss');
+  res.json(await productInfo.save());
+});
+
+router.post('/jsonDefine/add', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 1))) {
+    res.status(401).send('没有此权限');
+    return;
+  }
+  const productInfo = await getProductInfo(req.body.tempID);
+  const addJson = JSON.parse(req.body.addJson);
+  if (productInfo.jsonDefine) {
+    // 表单验证
+    if ([addJson.json, addJson.name].includes('') || productInfo.jsonDefine.find(item => item.json === addJson.json)) {
+      res.json(productInfo);
+      return;
+    }
+    productInfo.jsonDefine.push(addJson);
+  } else {
+    productInfo.jsonDefine = [addJson];
+  }
+  res.json(await productInfo.save());
+});
+
+router.post('/jsonDefine/del', async function(req, res) {
+  if (!(await permit(res, req.body.admin, 1))) {
+    res.status(401).send('没有此权限');
+    return;
+  }
+  const productInfo = await getProductInfo(req.body.tempID);
+  const { json } = req.body;
+
+  if (!productInfo.jsonDefine) {
+    res.json(productInfo);
+    return;
+  }
+
+  const delJson = productInfo.jsonDefine.find(item => item.json === json);
+  if (delJson) {
+    delJson.remove();
+    res.json(await productInfo.save());
+  } else {
+    res.json(productInfo);
+  }
 });
 
 async function getProductInfo(tempID) {

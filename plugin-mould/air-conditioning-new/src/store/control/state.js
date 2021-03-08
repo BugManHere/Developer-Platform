@@ -5,12 +5,15 @@ export default {
   watchLock: true, // 互斥锁
   ableSend: false, // 是否允许发送命令
   dataObject: {
+    vender: '', // 细分码
     functype: 0, // 0代表正常，1代表集中控制
     Pow: 1,
-    Mod: 1,
     SetTem: 25,
     WdSpd: 5,
-    Quiet: 0
+    Tur: 0,
+    Quiet: 0,
+    ErrType1: 0,
+    ErrType2: 0
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改

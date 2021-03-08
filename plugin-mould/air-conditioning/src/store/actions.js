@@ -1,4 +1,4 @@
-import { sendDataToDevice, getInfo, updateStates, setMqttStatusCallback, showToast, closePage, finishLoad, getCloudTimerByMac } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, setMqttStatusCallback, showToast, finishLoad, getCloudTimerByMac } from '@PluginInterface'; // 主体接口
 import * as types from './types';
 
 import { getQueryStringByName, isMqtt } from '../utils/index';
@@ -93,9 +93,9 @@ function sendControl({ state, commit, dispatch }, dataMap) {
       dispatch(types.SET_POLLING, true);
     }, 1000);
 
-    console.table([opt, p]);
-    console.log([opt, p]);
-
+    // console.table([opt, p]);
+    // console.log([opt, p]);
+    console.log(json);
     sendDataToDevice(mac, json, false);
   }, 350);
 }
@@ -165,6 +165,11 @@ export default {
       console.log('[url] functype:', functype);
       dataObject.functype = Number(functype);
 
+      // 获取vender
+      const vender = getQueryStringByName('vender') || 0;
+      console.log('[url] vender:', vender);
+      dataObject.vender = String(vender);
+
       // 设备状态页
       const FreshAirConditionState = getQueryStringByName('FreshAirConditionState') || 0;
       dataObject.FreshAirConditionState = Number(FreshAirConditionState);
@@ -187,7 +192,7 @@ export default {
    */
   [types.PARSE_DATA_BY_COLS](context, payload) {
     const dataObject = {};
-    if (!payload) return dataObject;
+    if (!payload || payload === '') return dataObject;
     try {
       const cols = statueJson2;
       const res = JSON.parse(payload);
@@ -238,9 +243,10 @@ export default {
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
         showToast('网络异常', 1);
-        closePage();
+        // closePage();
+      } else {
+        _firstCallback = false;
       }
-      _firstCallback = false;
 
       let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data);
       // 自定义数据，根据业务更改
@@ -322,7 +328,6 @@ export default {
       const res = JSON.parse(payload);
       console.log('[mqtt] result:', JSON.stringify(res));
       const { data, deviceState } = res;
-
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject({ state }, data);
       // 更新本地数据

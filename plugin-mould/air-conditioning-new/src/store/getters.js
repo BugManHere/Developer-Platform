@@ -1,7 +1,10 @@
+const { errorCode, codeParse } = require('@/mixins/error');
+
 /** 业务逻辑代码 */
 export default {
   // 用于状态机的map
   inputMap: state => {
+    console.log(window.myvm && window.myvm.$FsmTs);
     return state.control.dataObject;
   },
   // 开关机的statusName
@@ -136,6 +139,31 @@ export default {
   // 温度调节是否可用
   temAbleSet: (state, getters) => {
     return getters.temSetJson && getters.temMinVal < getters.temMaxVal;
+  },
+  // 查询协议解析出对应故障信息
+  errorMsgs: (state, getters) => {
+    const list = [];
+    const hasCodeMap = {};
+    let controlAble = true;
+    state.errorJsons.forEach(errorJson => {
+      const base = getters.inputMap[errorJson];
+      const errorList = parseErrorJson(base);
+      errorList.forEach((hasError, errorIndex) => {
+        if (hasError) {
+          const code = codeParse[errorJson][errorIndex];
+          const msg = errorCode[code];
+          if (hasCodeMap[code] || !msg) return;
+          controlAble = controlAble && msg.controlAble;
+          msg.code = code;
+          hasCodeMap[code] = true;
+          list.push(msg);
+        }
+      });
+    });
+    return {
+      list,
+      controlAble
+    };
   }
 };
 
@@ -176,4 +204,13 @@ function getTem({ getters, state }) {
     temDeci = temDeci01 || temDeci05;
   }
   return temInt + temDeci / 10;
+}
+
+// 解析故障字段
+function parseErrorJson(value) {
+  return value
+    .toString(2)
+    .split('')
+    .reverse()
+    .map(v => Number(v));
 }

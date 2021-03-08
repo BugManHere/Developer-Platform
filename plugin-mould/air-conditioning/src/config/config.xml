@@ -4,8 +4,8 @@
   <version>1.0</version>
   <iconpath>/images/icon.png</iconpath>
   <iconpath2>/images/iconGroup.png</iconpath2>
-  <statueJson>["Pow","Mod","TemUn","SetTem","Add0.5","Add0.1","PctCle","StHt"]</statueJson>
-  <statueJson2>["Pow","Mod","SetTem","Add0.5","Add0.1","SwUpDn","SwingLfRig","Health","SwhSlp","SlpMod","AssHt","Lig","WdSpd","Tur","Quiet","AppTimer","PctCle","StHt"]</statueJson2>
+  <statueJson></statueJson>
+  <statueJson2></statueJson2>
   <moduleVer>1</moduleVer>
   <pluginMqttVersion>1</pluginMqttVersion>
 </device>

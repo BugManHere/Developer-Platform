@@ -10,7 +10,7 @@ export default {
   [type.SET_DATA_OBJECT](state, obj) {
     const map = {};
     Object.keys(obj).forEach(key => {
-      map[key] = Number(obj[key]);
+      map[key] = obj[key];
     });
     state.dataObject = { ...state.dataObject, ...map };
   },

@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import horizontalForm from '@components/form/horizontal';
+import { mapState, mapMutations, mapActions } from 'vuex';
+import horizontalForm from '@/gdp-ui/form/horizontal';
 import https from '../https';
 
 export default {
@@ -71,7 +71,6 @@ export default {
         brand: '格力',
         deviceName: '',
         productModel: '',
-        midType: '',
         protocol: 'WiFi',
         modelPath: ''
       },
@@ -117,17 +116,6 @@ export default {
           change: val => {
             if (val && val.target) {
               this.deviceInfo.productModel = val.target.value;
-            }
-          }
-        },
-        {
-          type: 'input',
-          title: '细分码',
-          default: this.deviceInfo && this.deviceInfo.midType,
-          placeholder: '请输入细分码，如：7e000002',
-          change: val => {
-            if (val && val.target) {
-              this.deviceInfo.midType = val.target.value;
             }
           }
         },
@@ -190,6 +178,9 @@ export default {
       setTempModule: 'SET_TEMP_MODULE',
       setDevModule: 'SET_DEV_MODULE'
     }),
+    ...mapActions({
+      devCreate: 'DEV_CREATE'
+    }),
     hideDialog() {
       this.$emit('hideDialog', false);
     },
@@ -237,17 +228,9 @@ export default {
         });
     },
     // 创建设备
-    submit() {
+    async submit() {
       const deviceInfo = JSON.stringify(this.deviceInfo);
-      https
-        .fetchPost('/userDevice/create', { deviceInfo, admin: this.admin })
-        .then(data => {
-          const userDeviceList = data.data;
-          this.setDevModule({ userDeviceList });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      await this.devCreate({ deviceInfo });
       this.$emit('hideDialog', false);
     }
   }

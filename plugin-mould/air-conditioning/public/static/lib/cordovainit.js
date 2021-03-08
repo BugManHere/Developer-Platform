@@ -67,7 +67,6 @@ function onCallBack(result) {
   } else if (ret[0] == 'onBackPressed') {
     backButton();
   }
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>222:' + result);
 }
 
 try {

@@ -1,6 +1,6 @@
 const animationSecond = 0.5;
 
-const transitionSlow = {
+const shuttle = {
   bind: (el, bingding) => {
     el.dataset.shuttleTimer = 'false'; // 定时器
     el.dataset.shuttleDisplay = 'false'; // 是否显示
@@ -15,7 +15,7 @@ const transitionSlow = {
       if (el.dataset.shuttleDisplay !== 'false') {
         clearTimeout(el.dataset.shuttleTimer);
         el.style.display = el.dataset.shuttleDisplay;
-        el.style.animation = `slowShow ${animationSecond}s infinite`;
+        el.style.animation = `shuttleShow ${animationSecond}s infinite`;
         el.style['animation-iteration-count'] = '1';
       }
     } else {
@@ -25,10 +25,10 @@ const transitionSlow = {
         el.dataset.shuttleDisplay = el.style.display;
         el.style.display = 'none';
       }, animationSecond * 900);
-      el.style.animation = `slowHide ${animationSecond}s infinite`;
+      el.style.animation = `shuttleHide ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
     }
   }
 };
 
-export default transitionSlow;
+export default shuttle;

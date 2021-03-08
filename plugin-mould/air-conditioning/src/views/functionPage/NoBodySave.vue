@@ -100,6 +100,11 @@ export default {
       const setData = { UnmanedShutDown: Number(active) };
       if (active) {
         setData.UnmanedOffTime = 2;
+        setData.AntiDirectBlow = 0;
+        setData.SwUpDn = 0;
+        setData.SwingLfRig = 0;
+        setData.SwhSlp = 0;
+        setData.SlpMod = 0;
       }
       this.setState(['ableSend', true]);
       this.setDataObject(setData);

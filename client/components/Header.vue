@@ -89,12 +89,6 @@ export default {
       return this.user.name;
     }
   },
-  watch: {
-    '$route.name'(newVal, oldVal) {
-      (newVal === 'Template' || oldVal === 'Template') && this.setPulicModule({ developType: 1 });
-      (newVal === 'Device' || oldVal === 'Device') && this.setPulicModule({ setDevStep: 0 });
-    }
-  },
   methods: {
     ...mapMutations({
       setPulicModule: 'SET_PULIC_MODULE',

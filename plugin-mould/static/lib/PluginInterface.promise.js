@@ -1801,3 +1801,87 @@ export const toVoicePage = (mac, pageType, extra) => {
     }
   });
 };
+
+/**
+ * @description 透传写入云定时接口
+ * @type {object} timerDic
+ * @type {object} taskDic
+ */
+export const setCloudTimer = (timerDic, taskDic) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.setCloudTimer(timerDic, taskDic, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * @description 透传删除云定时接口
+ * @type {array} timerIDs
+ */
+export const deleteCloudTimer = timerIDs => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.deleteCloudTimer(timerIDs, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * @description 透传修改云定时接口
+ */
+/**
+ * @timerDic 格式eg:
+ * {
+    timeType: 2, // 类型，1单次，2循环,（必须）
+    weeks: ['1', '2', '3', '4', '5', '6', '7'], // 星期,（必须）
+    Etime: '10:10:10', // 时间,需要转为UTC时间,参数8为时区, 即当前时间需要-8（必须）
+    timeZone: 8, // 时区,（必须）
+    status: 1 // 状态，0关闭，1开启,（必须）
+   }
+  * @taskDic 格式eg:
+    {
+      mac: this.mac, // mac地址,（必须）
+      subId: '', // 子设备,（主体提供，不需要）
+      cmd:  JSON.stringify({ t: 'cmd', opt: ['Mod', 'ColWtSetTem'], p: [1, 15]}), // 控制命令包,（必须）
+      key: '', // 密钥,（主体提供，不需要）
+      remark: 'The start of cruise', // 描述，最多60字节,（必须）
+      dat: ['1'] // 控制命令数据，最多512字节,（必须）
+     }
+  * @type {number} timerID
+  */
+export const modifyCloudTimer = (timerDic, taskDic, timerID) => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.modifyCloudTimer(timerDic, taskDic, timerID, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+/**
+ * 透传获取云定时信息接口
+ * @param {number} timerID
+ */
+export const getCloudTimerInfo = timerID => {
+  return new Promise((resolve, reject) => {
+    try {
+      navigator.PluginInterface.getCloudTimerInfo(timerID, (...params) => {
+        resolve(...params);
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

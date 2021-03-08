@@ -8,24 +8,13 @@
   #blank-box {
     width: auto;
     height: auto;
-    margin-top: calc(env(safe-area-inset-top));
+    margin-top: env(safe-area-inset-top);
   }
-
   .page-home {
     position: relative !important;
     left: 0;
     top: 0;
     background-color: transparent !important;
-    .page-bg-mask {
-      position: fixed;
-      right: 0;
-      height: 0;
-      width: 100%;
-      padding-top: 124px;
-      top: -$pageHeaderHeight;
-      background-position: 0 calc(0px - env(safe-area-inset-top));
-      z-index: 5;
-    }
     .page-content {
       padding-top: 0 !important;
       overflow-x: hidden;
@@ -37,6 +26,14 @@
     }
   }
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> origin/master
+>>>>>>> 004b7ac... Merge remote-tracking branch 'origin/master'
 .page-bg-mask {
   position: fixed;
   right: 0;
@@ -48,10 +45,17 @@
   z-index: 5;
   transform: translate3d(0, 0, 0) scale3d(1, 1, 1.1);
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master
+>>>>>>> 004b7ac... Merge remote-tracking branch 'origin/master'
 .page-header {
   position: relative;
   top: 0;
-  margin-top: calc(env(safe-area-inset-top));
+  margin-top: env(safe-area-inset-top);
   width: 100%;
   height: $pageHeaderHeight;
   margin-bottom: 0;

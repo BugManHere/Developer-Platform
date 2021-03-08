@@ -6,8 +6,6 @@ const productTypeModel = require('../models/productType');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 
-let data;
-
 router.use(function(req, res, next) {
   // 拿取token 数据 按照自己传递方式写
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -29,8 +27,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', function(req, res) {
-  productTypeModel.find().then(params => {
-    data = params;
+  productTypeModel.find().then(data => {
     res.json(data);
     // const seriesList = data[0].seriesList;
     // seriesList.push({

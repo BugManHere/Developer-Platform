@@ -36,7 +36,7 @@ function parseDataByCols({ data, opt }) {
 }
 
 // 封装发送指令代码
-function sendControl({ state, commit, dispatch }, dataMap) {
+function sendControl({ state, commit, dispatch, rootState }, dataMap) {
   if (state.dataObject.functype || !state.ableSend) return;
   setData = { ...setData, ...dataMap };
   _timer2 && clearTimeout(_timer2);
@@ -51,12 +51,12 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     setData = {};
     if (!setOpt.length) return;
     const { mac, mainMac } = state;
-    const sendMac = mainMac.length ? mainMac : mac; // 查询包需要传入主mac及子mac
+    const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
 
     try {
-      const _p = JSON.parse(state.devOptions.statueJson).map(json => state.dataObject[json] || 0);
+      const _p = JSON.parse(rootState.machine.devOptions.statueJson).map(json => state.dataObject[json] || 0);
       // 成功之后更新主体状态
-      updateStates(mac, JSON.stringify(_p));
+      updateStates(sendMac, JSON.stringify(_p));
     } catch (err) {
       err;
     }
@@ -65,11 +65,11 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     const opt = setOpt;
     const p = setP;
 
-    console.table([opt, p]);
-    console.log([opt, p]);
+    // console.table([opt, p]);
+    // console.log([opt, p]);
 
     const CMD_JSON = JSON.stringify({ mac: sendMac, t, opt, p, sub: mac });
-
+    console.log(CMD_JSON);
     await sendDataToDevice(sendMac, CMD_JSON, false);
     // 3秒后重启轮询
     if (_timer) {
@@ -126,8 +126,11 @@ export default {
       console.log('[url] data:', data);
       // 根据设备信息解析第一包设备数据
 <<<<<<< HEAD
+<<<<<<< HEAD
       let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
 =======
+=======
+>>>>>>> origin/master
 
       let opt = getQueryStringByName('opt') || '[]';
 
@@ -140,12 +143,20 @@ export default {
       }
 
       let dataObject = parseDataByCols({ data, opt });
+<<<<<<< HEAD
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
       console.log('[url] functype:', functype);
       dataObject.functype = Number(functype);
+
+      // 获取vender
+      const vender = getQueryStringByName('vender') || 0;
+      console.log('[url] vender:', vender);
+      dataObject.vender = String(vender);
 
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
@@ -157,6 +168,7 @@ export default {
   },
 
   /**
+<<<<<<< HEAD
 <<<<<<< HEAD
    * @description 解析设备数据
    * @param {String} data
@@ -181,6 +193,8 @@ export default {
   /**
 =======
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master
    * @description 获取设备信息
    */
   [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
@@ -207,11 +221,12 @@ export default {
       if (state.dataObject.functype) return;
 
       const { mac, mainMac } = state;
-      const sendMac = mainMac.length ? mainMac : mac; // 查询包需要传入主mac及子mac
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
 
       // 采用本地 STATUS_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
       const cols = statueJson2;
       const t = 'status';
+<<<<<<< HEAD
 <<<<<<< HEAD
       const STATUS_JSON = JSON.stringify({ cols, mac, t });
 
@@ -221,6 +236,10 @@ export default {
       const STATUS_JSON = JSON.stringify({ cols, mac, t, sub: mac });
       const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+      const STATUS_JSON = JSON.stringify({ cols, mac, t, sub: mac });
+      const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
+>>>>>>> origin/master
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
         showToast('网络异常', 1);
@@ -228,10 +247,14 @@ export default {
       _firstCallback = false;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, data, { root: true });
 =======
       let dataObject = parseDataByCols({ data });
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+      let dataObject = parseDataByCols({ data });
+>>>>>>> origin/master
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
@@ -244,26 +267,22 @@ export default {
   /**
    * @description 开启/关闭轮询
    */
-  async [defineTypes.SET_POLLING]({ dispatch }, boolean) {
-    if (mqttVer > 1) return;
+  async [defineTypes.SET_POLLING]({ state, dispatch }, boolean) {
     clearTimeout(_timer3);
-    if (boolean) {
-      if (!_timer) {
-        _timer = setInterval(() => {
-          dispatch(types.GET_DEVICE_DATA, null, { root: true });
-          dispatch(types.GET_DEVICE_INFO, null, { root: true });
-        }, 5000);
-      }
-    } else {
-      clearInterval(_timer);
-      _timer = null;
+    clearInterval(_timer);
+    _timer = null;
+    if (boolean && mqttVer <= 1 && !state.dataObject.functype) {
+      _timer = setInterval(() => {
+        dispatch(types.GET_DEVICE_DATA, null, { root: true });
+        dispatch(types.GET_DEVICE_INFO, null, { root: true });
+      }, 5000);
     }
   },
 
   /**
    * @description 发送控制指令
    */
-  async [defineTypes.SEND_CTRL]({ state, commit, dispatch }, DataObject) {
+  async [defineTypes.SEND_CTRL]({ state, commit, dispatch, rootState }, DataObject) {
     const keys = Object.keys(DataObject);
     const opt = [];
     const p = [];
@@ -281,7 +300,7 @@ export default {
     if (p.length === 0) {
       _timer2 || commit(types.CONTROL_SET_STATE, { ableSend: false }, { root: true });
     } else {
-      sendControl({ state, commit, dispatch }, dataMap);
+      sendControl({ state, commit, dispatch, rootState }, dataMap);
     }
   },
 
@@ -292,6 +311,12 @@ export default {
     if (!state.dataObject.functype && !state.ableSend && dataObject) {
       commit(types.SET_DATA_OBJECT, dataObject, { root: true });
       commit(types.SET_CHECK_OBJECT, dataObject, { root: true });
+      try {
+        myvm.$stateMachine.updateState;
+      } catch (e) {
+        e;
+      }
+      console.log('dataObject1:', JSON.stringify(dataObject));
     }
   },
 

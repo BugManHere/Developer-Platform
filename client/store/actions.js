@@ -6,6 +6,11 @@ import {
   GET_PRODUCT_TYPE_LIST, // 获取产品类别列表
   GET_USERDEVICE_LIST, // 获取用户设备列表
   GET_TEMPLATES, // 获取模板信息
+  TYPE_DEF_EDIT, // 编辑类型定义
+  ADD_JSON_DEFINE, // 新增字段类型定义
+  DEL_JSON_DEFINE, // 删除字段类型定义
+  GET_DEV, // 获取设备信息
+  DEV_CREATE, // 创建设备
   INHERIT_DEV, // 派生设备
   DEL_DEV,
   SAVE_TEMP_FUNC,
@@ -13,6 +18,8 @@ import {
   ADD_TEMP_FUNC,
   DEL_TEMP_FUNC,
   SET_TEMP_DONE,
+  DEV_SAVE, // 保存设备更改
+  DEV_ADD_MIDTYPE, // 设备增加细分码
   DEL_DEV_FUNC,
   SET_DEV_DONE,
   DOWNLOAD_CONFIG // 下载配置
@@ -131,6 +138,58 @@ export default {
     status && window.myvm.$toast.info('保存成功');
     return status;
   },
+  // 编辑类型定义
+  async [TYPE_DEF_EDIT]({ state, commit }, { typeDefine }) {
+    const res = await https.fetchPost('/template/typeDefine/edit', {
+      admin: state.userModule.admin,
+      tempID: state.tempModule.tempID,
+      typeDefine: JSON.stringify(typeDefine)
+    });
+    commit(CHANGE_TEMPLATE, res.data);
+    const status = res.status === 200;
+    return status;
+  },
+  // 新增字段类型定义
+  async [ADD_JSON_DEFINE]({ state, commit }, { addJson }) {
+    const res = await https.fetchPost('/template/jsonDefine/add', {
+      admin: state.userModule.admin,
+      tempID: state.tempModule.tempID,
+      addJson: JSON.stringify(addJson)
+    });
+    commit(CHANGE_TEMPLATE, res.data);
+    const status = res.status === 200;
+    return status;
+  },
+  // 删除字段类型定义
+  async [DEL_JSON_DEFINE]({ state, commit }, { json }) {
+    const res = await https.fetchPost('/template/jsonDefine/del', {
+      admin: state.userModule.admin,
+      tempID: state.tempModule.tempID,
+      json
+    });
+    commit(CHANGE_TEMPLATE, res.data);
+    const status = res.status === 200;
+    return status;
+  },
+  // 获取设备信息
+  async [GET_DEV]({ state, commit }) {
+    const res = await https.fetchPost('/userDevice', {
+      admin: state.userModule.admin
+    });
+    const status = res.status === 200;
+    status && commit(SET_DEV_MODULE, { userDeviceList: res.data });
+    return status;
+  },
+  // 创建设备
+  async [DEV_CREATE]({ state, commit }, { deviceInfo }) {
+    const res = await https.fetchPost('/userDevice/create', {
+      deviceInfo,
+      admin: state.userModule.admin
+    });
+    const status = res.status === 200;
+    status && commit(SET_DEV_MODULE, { userDeviceList: res.data });
+    return true;
+  },
   // 派生设备
   async [INHERIT_DEV]({ state, commit }, { id, productModel, deviceName }) {
     const res = await https.fetchPost('/userDevice/inheritDevice', {
@@ -153,11 +212,23 @@ export default {
     status && window.myvm.$toast.info('删除设备成功') && commit(SET_DEV_MODULE, { userDeviceList: res.data });
     return status;
   },
+  // 保存设备更改
+  async [DEV_SAVE]({ state, commit }, { idList }) {
+    const res = await https.fetchPost('/userDevice/save', {
+      midType: state.devModule.midType,
+      idList,
+      id: state.devModule.deviceKey,
+      admin: state.userModule.admin
+    });
+    const status = res.status === 200;
+    status && window.myvm.$toast.info('保存成功') && commit(SET_DEV_MODULE, { userDeviceList: res.data });
+  },
   // 设备删除功能
   async [DEL_DEV_FUNC]({ state, commit, getters }, { index }) {
     const funcId = getters.funcImport[index];
     const res = await https.fetchPost('/userDevice/delFunc', {
       admin: state.userModule.admin,
+      midType: state.devModule.midType,
       funcId,
       id: state.devModule.deviceKey
     });
@@ -207,6 +278,19 @@ export default {
     let token = '';
     eleToken && (token = eleToken.split('Bearer ')[1]);
     newWin.location.href = `${process.env.VUE_APP_SERVE_URL}:3000/userDevice/download?deviceKey=${deviceKey}&token=${token}`;
+    return status;
+  },
+  //
+  async [DEV_ADD_MIDTYPE]({ state, commit }, { midType, addMidType }) {
+    if (!addMidType) return;
+    const res = await https.fetchPost('/userDevice/midType/add', {
+      midType,
+      addMidType,
+      id: state.devModule.deviceKey,
+      admin: state.userModule.admin
+    });
+    const status = res.status === 200;
+    status && window.myvm.$toast.info('添加细分码成功') && commit(SET_DEV_MODULE, { userDeviceList: res.data, midType: addMidType });
     return status;
   }
 };

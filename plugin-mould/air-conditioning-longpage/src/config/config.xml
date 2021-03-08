@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<device>
+  <mid></mid>
+  <version></version>
+  <iconpath>/images/icon.png</iconpath>
+  <iconpath2>/images/iconGroup.png</iconpath2>
+  <statueJson></statueJson>
+  <statueJson2></statueJson2>
+  <moduleVer>1</moduleVer>
+  <uiVersion>1</uiVersion>
+  <pluginMqttVersion>1</pluginMqttVersion>
+</device>

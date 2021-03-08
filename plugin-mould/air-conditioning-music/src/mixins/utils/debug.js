@@ -36,6 +36,15 @@ const mixin = {
       },
       // 发送json数据给设备
       sendDataToDevice: () => {
+        return new Promise((resolve, reject) => {
+          try {
+            setTimeout(() => {
+              resolve('ok');
+            }, 1000);
+          } catch (e) {
+            reject(e);
+          }
+        });
         // console.log('发送json数据给设备', { mac, json, isFollowSysVibration });
       },
       // 跳转到设备预约页

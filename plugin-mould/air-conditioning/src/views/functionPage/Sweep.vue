@@ -4,6 +4,7 @@
     <gree-page class="page-sweep">
       <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <gree-sweep-select
         canvas-id="sweep-lr"
         :canvas-width="canvasWidth"
@@ -26,6 +27,8 @@
         <p>{{ $language('sweep.Stage_tips') }}</p>
         <p v-html="$language('sweep.sweep_txt2')"></p>
 =======
+=======
+>>>>>>> origin/master
       <div v-if="oppositeType.show" class="opposite" @touchend.prevent="clickOpposite" :class="oppositeType.type">
         <span v-html="oppositeType.text" />
         <!-- <img :src="oppositeType.img" v-if="oppositeType.show" /> -->
@@ -54,7 +57,10 @@
           <p>{{ $language('sweep.Stage_tips') }}</p>
           <p v-html="$language('sweep.sweep_txt2')"></p>
         </div>
+<<<<<<< HEAD
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master
       </div>
     </gree-page>
   </gree-view>
@@ -100,7 +106,7 @@ export default {
       Pow: state => state.dataObject.Pow,
       selectSwingLfRig: state => {
         const swingLfRig = state.dataObject.SwingLfRig;
-        const swingLfRigMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5']];
+        const swingLfRigMap = [[], ['1', '2', '3', '4', '5'], ['1'], ['2'], ['3'], ['4'], ['5'], ['1', '5'], ['1', '2', '3', '4', '5']];
         return swingLfRigMap[swingLfRig];
       },
       selectSwUpDn: state => {
@@ -112,7 +118,10 @@ export default {
     routeName() {
       return this.$route.name;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/master
     },
     oppositeType() {
       return {
@@ -120,7 +129,10 @@ export default {
         type: this.SwingLfRig === 8 ? 'on' : 'off',
         show: this.touchId === 1
       };
+<<<<<<< HEAD
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master
     }
   },
   watch: {
@@ -132,6 +144,22 @@ export default {
           Toast.info(`${this.$language('sweep.sweep_powoff_tips')}`);
         }
         this.turnBack();
+      }
+    },
+    selectSwUpDn(newVal) {
+      const touchId = this.$route.params.id;
+      if (touchId === 2) {
+        this.selectDefault = newVal;
+        this.touchId = 0;
+        this.$nextTick(() => (this.touchId = touchId));
+      }
+    },
+    selectSwingLfRig(newVal) {
+      const touchId = this.$route.params.id;
+      if (touchId === 1) {
+        this.selectDefault = newVal;
+        this.touchId = 0;
+        this.$nextTick(() => (this.touchId = touchId));
       }
     }
   },
@@ -177,16 +205,18 @@ export default {
     },
     sweepLrChangeHandler(val) {
       const val2 = [];
-      val.forEach(item => {
-        val2.indexOf(item) === -1 ? val2.push(item) : '';
-      });
+      if (JSON.stringify(val) !== JSON.stringify(this.selectSwingLfRig)) {
+        val.forEach(item => {
+          val2.indexOf(item) === -1 ? val2.push(item) : '';
+        });
+      }
       if (val2) {
         if (val2.length === 0) {
           this._setSweep({ SwingLfRig: 0 });
         } else if (val2.length === 1) {
-          this._setSweep({ SwingLfRig: Number(val2[0]) + 1, SmartWind: 0 });
+          this._setSweep({ SwingLfRig: Number(val2[0]) + 1, SmartWind: 0, UnmanedShutDown: 0 });
         } else if (val2.length === 5) {
-          this._setSweep({ SwingLfRig: 1, SmartWind: 0 });
+          this._setSweep({ SwingLfRig: 1, SmartWind: 0, UnmanedShutDown: 0 });
         } else {
           try {
             showToast(this.$language('sweep.sweep_lr_tips'), 0);
@@ -198,16 +228,18 @@ export default {
     },
     sweepUdChangeHandler(val) {
       const val2 = [];
-      val.forEach(item => {
-        val2.indexOf(item) === -1 ? val2.push(item) : '';
-      });
+      if (JSON.stringify(val) !== JSON.stringify(this.selectSwUpDn)) {
+        val.forEach(item => {
+          val2.indexOf(item) === -1 ? val2.push(item) : '';
+        });
+      }
       if (val2) {
         if (val2.length === 0) {
           this._setSweep({ SwUpDn: 0 });
         } else if (val2.length === 1) {
-          this._setSweep({ SwUpDn: Number(val2[0]) + 1, SmartWind: 0 });
+          this._setSweep({ SwUpDn: Number(val2[0]) + 1, SmartWind: 0, UnmanedShutDown: 0 });
         } else if (val2.length === 5) {
-          this._setSweep({ SwUpDn: 1, SmartWind: 0 });
+          this._setSweep({ SwUpDn: 1, SmartWind: 0, UnmanedShutDown: 0 });
         } else {
           try {
             showToast(this.$language('sweep.sweep_ud_tips2'), 0);
@@ -223,7 +255,7 @@ export default {
       }
       if (typeof data.SwingLfRig !== 'undefined' && this.SwingLfRig !== data.SwingLfRig) {
         this.setState(['ableSend', true]);
-        this.setDataObject({ ...data, SmartWind: 0 });
+        this.setDataObject({ ...data, SmartWind: 0, UnmanedShutDown: 0 });
         this.sendCtrl({ ...data, SmartWind: 0 });
         if (data.SwingLfRig === 0) {
           try {
@@ -236,8 +268,8 @@ export default {
 
       if (typeof data.SwUpDn !== 'undefined' && this.SwUpDn !== data.SwUpDn) {
         this.setState(['ableSend', true]);
-        this.setDataObject({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
-        this.sendCtrl({ ...data, SmartWind: 0, AntiDirectBlow: 0 });
+        this.setDataObject({ ...data, SmartWind: 0, AntiDirectBlow: 0, UnmanedShutDown: 0 });
+        this.sendCtrl({ ...data, SmartWind: 0, AntiDirectBlow: 0, UnmanedShutDown: 0 });
         if (data.SwUpDn === 0) {
           showToast(this.$language('sweep.sweep_ud_turnoff_tips'), 0);
           try {
@@ -247,12 +279,26 @@ export default {
           }
         }
       }
+    },
+    clickOpposite() {
+      if (this.SwingLfRig === 8) {
+        this.setState(['ableSend', true]);
+        this.setDataObject({ SwingLfRig: 0 });
+        this.sendCtrl({ SwingLfRig: 0 });
+      } else {
+        this.setState(['ableSend', true]);
+        this.setDataObject({ SwingLfRig: 8, SmartWind: 0, AntiDirectBlow: 0, UnmanedShutDown: 0 });
+        this.sendCtrl({ SwingLfRig: 8, SmartWind: 0, AntiDirectBlow: 0, UnmanedShutDown: 0 });
+      }
     }
   }
 };
 </script>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/master
 
 <style lang="scss" scoped>
 .sweep-body {
@@ -279,4 +325,7 @@ export default {
   }
 }
 </style>
+<<<<<<< HEAD
 >>>>>>> 5a44fac... feat(all):  零零散散的更新
+=======
+>>>>>>> origin/master

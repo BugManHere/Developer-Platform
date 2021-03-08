@@ -1,1 +1,1684 @@
-{"excludeMap":{"OutHome_status_1":["SvSt_status_1","Blo_status_1","Humi_status_1","LoopMod_status_2","Mod_cool_status_1","Mod_dry_status_1","Mod_fan_status_1","Mod_heat_status_1","AcSvSt_status_1"],"AcSvSt_status_1":["SvSt_status_1","OutHome_status_1"],"SvSt_status_1":["OutHome_status_1","AcSvSt_status_1"]},"hideMap":{"CHMod_default":["HWMax_default","HWMin_default","HtWtSetTem_default","HSMax_default","HSMin_default","HtSetTem_default","AssHt_status_1","SvSt_status_1","OutHome_status_1"],"CHMod_status_1":["CWMin_default","CWMax_default","ColWtSetTem_default","ColSetTem_default","CSMin_default","CSMax_default"],"OutHome_status_1":["Tem_default","WdSpd_default","Humi_status_1","Blo_status_1","LoopMod_status_2","AppTimer_status_1","AutoImshow_default","ColWtSetTem_default","HtWtSetTem_default","ColSetTem_default","HtSetTem_default"],"AcSvSt_default":["OutWtTem_default"],"AcSvSt_undefined":["OutWtTem_default"],"AcSvSt_status_1":["CWMax_default","CWMin_default","HWMax_default","HWMin_default","ColWtSetTem_default","HtWtSetTem_default","IndoorTem_default"],"SvSt_default":["OutWtTem_default"],"SvSt_undefined":["OutWtTem_default"],"SvSt_status_1":["CWMax_default","CWMin_default","HWMax_default","HWMin_default","ColWtSetTem_default","HtWtSetTem_default","IndoorTem_default"],"Pow_default":["OutHome_status_1","LoopMod_default","LoopMod_status_2","SvSt_status_1","Blo_status_1","x_status_1","Humi_status_1","AcSvSt_status_1","Quiet(Btn)_status_1","AssHt_status_1","ModPopup_status_1","ParameterQuery_default","FuncPopup_status_1"],"SvStEffect_status_1":["SvSt_default","SvSt_status_1"],"AcSvStEffect_status_1":["AcSvSt_default","AcSvSt_status_1"],"AssHtEffect_status_1":["AssHt_default","AssHt_status_1"]},"productModel":"809031","deviceName":"强热型冷暖一体机","funcDefine":[{"order":[],"_id":"5f6331d70cc4352f906ca199","name":"制冷进水温度上限","identifier":"CWMax","json":"CWMax","type":"inertia-temMax","statusDefine":{"default":{"name":"默认","value":"22","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6332cc0cc4352f906ca19a","name":"制冷进水温度下限","identifier":"CWMin","json":"CWMin","type":"inertia-temMin","statusDefine":{"default":{"name":"默认","value":"12","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6332cc0cc4352f906ca19b","name":"制热进水温度上限","identifier":"HWMax","json":"HWMax","type":"inertia-temMax","statusDefine":{"default":{"name":"默认","value":"55","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6332cd0cc4352f906ca19c","name":"制热进水温度下限","identifier":"HWMin","json":"HWMin","type":"inertia-temMin","statusDefine":{"default":{"name":"默认","value":"30","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6345be0cc4352f906ca1eb","name":"制冷进水温度设定","identifier":"ColWtSetTem","json":"ColWtSetTem","type":"inertia-tem","statusDefine":{"default":{"name":"默认","value":"18","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6345bf0cc4352f906ca1ec","name":"制热进水温度设定","identifier":"HtWtSetTem","json":"HtWtSetTem","type":"inertia-tem","statusDefine":{"default":{"name":"默认","value":"40","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6347390cc4352f906ca241","name":"制冷室内温度上限","identifier":"CSMax","json":"CSMax","type":"inertia-temMax","statusDefine":{"default":{"name":"默认","value":"30","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f63473a0cc4352f906ca242","name":"制冷室内温度下限","identifier":"CSMin","json":"CSMin","type":"inertia-temMin","statusDefine":{"default":{"name":"默认","value":"16","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f63473a0cc4352f906ca243","name":"制热室内温度上限","identifier":"HSMax","json":"HSMax","type":"inertia-temMax","statusDefine":{"default":{"name":"默认","value":"25","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f63473a0cc4352f906ca244","name":"制热室内温度下限","identifier":"HSMin","json":"HSMin","type":"inertia-temMin","statusDefine":{"default":{"name":"默认","value":"10","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f63473b0cc4352f906ca245","name":"制冷室内温度设定","identifier":"ColSetTem","json":"ColSetTem","type":"inertia-tem","statusDefine":{"default":{"name":"默认","value":"25","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f63473b0cc4352f906ca246","name":"制热室内温度设定","identifier":"HtSetTem","json":"HtSetTem","type":"inertia-tem","statusDefine":{"default":{"name":"默认","value":"20","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"default","undefined":"default"}},{"order":[],"_id":"5f6352b80cc4352f906ca4ae","name":"制冷制热控制","identifier":"CHMod","json":"Mod","type":"inertia-mod","statusDefine":{"default":{"name":"制冷模式","value":"1","isCheck":true,"customize":false,"icon":{"key":"zhileng","type":"on"},"miniIcon":{"key":"undefined"},"hideArr":["HWMax_default","HWMin_default","HtWtSetTem_default","HSMax_default","HSMin_default","HtSetTem_default","AssHt_status_1","SvSt_status_1","OutHome_status_1"]},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"制热模式","value":"2","isCheck":true,"customize":false,"icon":{"key":"zhire","type":"on"},"miniIcon":{"key":"CHMod"},"hideArr":["CWMin_default","CWMax_default","ColWtSetTem_default","ColSetTem_default","CSMin_default","CSMax_default"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":[],"_id":"5f64064e0cc4352f906cabac","name":"室内温度显示","identifier":"IndoorTem","json":"IndoorTem","type":"inertia-imshowSlot1","statusDefine":{"default":{"name":"隐藏","value":"25","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default"}},{"order":[],"_id":"5f6406da0cc4352f906cabd3","name":"出水温度显示","identifier":"OutWtTem","json":"OutWtTem","type":"inertia-imshowSlot1","statusDefine":{"default":{"name":"隐藏","value":"78","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default"}},{"order":["status_1"],"_id":"5f6355dc0cc4352f906ca724","name":"模式入口","identifier":"ModPopup","json":"ModPopup","type":"active-homeButton","statusDefine":{"default":{"name":"收起","value":0,"isCheck":false,"customize":false,"icon":{"key":"moshi","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"打开","value":1,"isCheck":true,"customize":false,"icon":{"key":"moshi","type":"on"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f641a150cc4352f906caf86","name":"预约","identifier":"AppTimer(Home)","json":"AppTimer","type":"active-homeButton","statusDefine":{"default":{"name":"默认","value":0,"isCheck":false,"customize":"replace","icon":{"key":"AppTimer","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":"replace","icon":{"key":"AppTimer","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f6354ce0cc4352f906ca653","name":"高级功能入口","identifier":"FuncPopup","json":"FuncPopup","type":"active-homeButton","statusDefine":{"default":{"name":"收起","value":0,"isCheck":false,"customize":false,"icon":{"key":"gaoji","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"打开","value":1,"isCheck":true,"customize":false,"icon":{"key":"gaoji","type":"on"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f6420d10cc4352f906cb160","name":"静音","identifier":"Quiet(Btn)","json":"Quiet","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":false,"customize":false,"icon":{"key":"yuyinjineng","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":false,"icon":{"key":"yuyinjineng","type":"on"},"miniIcon":{"key":"yuyinjineng"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5eb5fb7ec253963e304cb43f","name":"外出模式","identifier":"OutHome","json":"OutHome","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":false,"customize":false,"icon":{"key":"Avoid","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"OutHome","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":false,"hideArr":["Tem_default","WdSpd_default","Humi_status_1","Blo_status_1","LoopMod_status_2","AppTimer_status_1","AutoImshow_default","ColWtSetTem_default","HtWtSetTem_default","ColSetTem_default","HtSetTem_default"],"excludeArr":["SvSt_status_1","Blo_status_1","Humi_status_1","LoopMod_status_2","Mod_cool_status_1","Mod_dry_status_1","Mod_fan_status_1","Mod_heat_status_1","AcSvSt_status_1"],"icon":{"key":"Avoid","type":"on"},"miniIcon":{"key":"Avoid"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f6422290cc4352f906cb33a","name":"辅热","identifier":"AssHt","json":"AssHt","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":true,"customize":false,"icon":{"key":"AssHt","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"disable","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":false,"icon":{"key":"AssHt","type":"on"},"miniIcon":{"key":"AssHt"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f641ad80cc4352f906cafd7","name":"空调节能","identifier":"AcSvSt","json":"AcSvSt","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":true,"customize":false,"icon":{"key":"Health","type":"off"},"miniIcon":{"key":"undefined"},"hideArr":["OutWtTem_default"]},"undefined":{"name":"其他","value":"-","isCheck":true,"customize":false,"icon":{"key":"disable","type":"off"},"miniIcon":{"key":"undefined"},"hideArr":["OutWtTem_default"]},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":false,"icon":{"key":"Health","type":"on"},"miniIcon":{"key":"Health"},"excludeArr":["SvSt_status_1","OutHome_status_1"],"hideArr":["CWMax_default","CWMin_default","HWMax_default","HWMin_default","ColWtSetTem_default","HtWtSetTem_default","IndoorTem_default"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5eb5fbbec253963e304cb447","name":"节能","identifier":"SvSt","json":"SvSt","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":true,"customize":false,"icon":{"key":"jieneng","type":"off"},"miniIcon":{"key":"undefined"},"hideArr":["OutWtTem_default"]},"undefined":{"name":"其他","value":"-","isCheck":true,"customize":false,"icon":{"key":"disable","type":"off"},"miniIcon":{"key":"undefined"},"hideArr":["OutWtTem_default"]},"status_1":{"name":"开启","value":1,"isCheck":true,"customize":false,"icon":{"key":"jieneng","type":"on"},"miniIcon":{"key":"jieneng"},"hideArr":["CWMax_default","CWMin_default","HWMax_default","HWMin_default","ColWtSetTem_default","HtWtSetTem_default","IndoorTem_default"],"excludeArr":["OutHome_status_1","AcSvSt_status_1"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":["status_1"],"_id":"5f64249c0cc4352f906cb703","name":"参数查询","identifier":"ParameterQuery","json":"ParameterQuery","type":"active-button","statusDefine":{"default":{"name":"默认","value":0,"isCheck":true,"customize":"replace","icon":{"key":"dianliangchaxun","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default"}},{"order":["status_1"],"_id":"5eb5faefc253963e304cb425","name":"开关","identifier":"Pow","json":"Pow","type":"inertia","statusDefine":{"default":{"name":"默认","value":0,"isCheck":true,"customize":false,"hideArr":["OutHome_status_1","LoopMod_default","LoopMod_status_2","SvSt_status_1","Blo_status_1","x_status_1","Humi_status_1","AcSvSt_status_1","Quiet(Btn)_status_1","AssHt_status_1","ModPopup_status_1","ParameterQuery_default","FuncPopup_status_1"],"icon":{"key":"Pow","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"Pow","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"开机","value":1,"status":"on","isCheck":true,"customize":false,"icon":{"key":"Pow","type":"on"},"miniIcon":{"key":"Pow"}}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":[],"_id":"5f642d162eaa4205082910ab","name":"自动调温显示","identifier":"AutoImshow","json":"AutoImshow","type":"inertia-imshowSlot2","statusDefine":{"default":{"name":"隐藏","value":0,"isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}}},"map":{"default":"status_1","undefined":"default"}},{"order":[],"_id":"5f9d1379573166364c31b08a","name":"节能图标显示","identifier":"SvStEffect","json":"SvStEffect","type":"inertia","statusDefine":{"default":{"name":"显示","value":"1","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"隐藏","value":"0","isCheck":true,"customize":false,"icon":{"key":"SvStEffect","type":"off"},"miniIcon":{"key":"SvStEffect"},"hideArr":["SvSt_default","SvSt_status_1"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":[],"_id":"5f9d132d573166364c31b05a","name":"空调节能图标显示","identifier":"AcSvStEffect","json":"AcSvStEffect","type":"inertia","statusDefine":{"default":{"name":"显示","value":"1","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"隐藏","value":"0","isCheck":true,"customize":false,"icon":{"key":"AcSvStEffect","type":"off"},"miniIcon":{"key":"AcSvStEffect"},"hideArr":["AcSvSt_default","AcSvSt_status_1"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}},{"order":[],"_id":"5f9d1379573166364c31b089","name":"辅热图标显示","identifier":"AssHtEffect","json":"AssHtEffect","type":"inertia","statusDefine":{"default":{"name":"显示","value":"1","isCheck":true,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"undefined":{"name":"其他","value":"-","isCheck":false,"customize":false,"icon":{"key":"undefined","type":"off"},"miniIcon":{"key":"undefined"}},"status_1":{"name":"隐藏","value":"0","isCheck":true,"customize":false,"icon":{"key":"AssHtEffect","type":"off"},"miniIcon":{"key":"AssHtEffect"},"hideArr":["AssHt_default","AssHt_status_1"]}},"map":{"default":"status_1","undefined":"default","status_1":"default"}}],"moreOption":{"statueJson":["CWMax","CWMin","HWMax","HWMin","ColWtSetTem","HtWtSetTem","CSMax","CSMin","HSMax","HSMin","ColSetTem","HtSetTem","Mod","IndoorTem","OutWtTem","ModPopup","AppTimer","FuncPopup","Quiet","OutHome","AssHt","AcSvSt","SvSt","ParameterQuery","Pow","AutoImshow","SvStEffect","AcSvStEffect","AssHtEffect"],"statueJson2":["CWMax","CWMin","HWMax","HWMin","ColWtSetTem","HtWtSetTem","CSMax","CSMin","HSMax","HSMin","ColSetTem","HtSetTem","Mod","IndoorTem","OutWtTem","ModPopup","AppTimer","FuncPopup","Quiet","OutHome","AssHt","AcSvSt","SvSt","ParameterQuery","Pow","AutoImshow","SvStEffect","AcSvStEffect","AssHtEffect"],"_id":"5fbcd3a7555b5237181189f6","voiceSkill":false,"temStep":"1","pluginVer":"1.0"}}
+{
+  "excludeMap": {
+    "OutHome_status_1": [
+      "SvSt_status_1",
+      "Blo_status_1",
+      "Humi_status_1",
+      "LoopMod_status_2",
+      "Mod_cool_status_1",
+      "Mod_dry_status_1",
+      "Mod_fan_status_1",
+      "Mod_heat_status_1",
+      "AcSvSt_status_1"
+    ],
+    "AcSvSt_status_1": [
+      "SvSt_status_1",
+      "OutHome_status_1"
+    ],
+    "SvSt_status_1": [
+      "OutHome_status_1",
+      "AcSvSt_status_1"
+    ],
+    "Pow_default": [
+      "BottomSleep_status_1"
+    ]
+  },
+  "hideMap": {
+    "CHMod_default": [
+      "HWMax_default",
+      "HWMin_default",
+      "HtWtSetTem_default",
+      "HSMax_default",
+      "HSMin_default",
+      "HtSetTem_default",
+      "AssHt_status_1",
+      "SvSt_status_1",
+      "OutHome_status_1",
+      "AssHt_default"
+    ],
+    "CHMod_status_1": [
+      "CWMin_default",
+      "CWMax_default",
+      "ColWtSetTem_default",
+      "ColSetTem_default",
+      "CSMin_default",
+      "CSMax_default"
+    ],
+    "OutHome_status_1": [
+      "Tem_default",
+      "WdSpd_default",
+      "Humi_status_1",
+      "Blo_status_1",
+      "LoopMod_status_2",
+      "AppTimer_status_1",
+      "AutoImshow_default",
+      "ColWtSetTem_default",
+      "HtWtSetTem_default",
+      "ColSetTem_default",
+      "HtSetTem_default"
+    ],
+    "AcSvSt_default": [
+      "OutWtTem_default"
+    ],
+    "AcSvSt_undefined": [
+      "OutWtTem_default"
+    ],
+    "AcSvSt_status_1": [
+      "CWMax_default",
+      "CWMin_default",
+      "HWMax_default",
+      "HWMin_default",
+      "ColWtSetTem_default",
+      "HtWtSetTem_default",
+      "IndoorTem_default"
+    ],
+    "SvSt_default": [
+      "OutWtTem_default",
+      "CoolSvStTemMin_default",
+      "HumiSvStTemMin_default",
+      "HeatSvStTemMax_default"
+    ],
+    "SvSt_undefined": [
+      "OutWtTem_default"
+    ],
+    "SvSt_status_1": [
+      "CWMax_default",
+      "CWMin_default",
+      "HWMax_default",
+      "HWMin_default",
+      "ColWtSetTem_default",
+      "HtWtSetTem_default",
+      "IndoorTem_default"
+    ],
+    "Pow_default": [
+      "OutHome_status_1",
+      "LoopMod_default",
+      "LoopMod_status_2",
+      "SvSt_status_1",
+      "Blo_status_1",
+      "x_status_1",
+      "Humi_status_1",
+      "AcSvSt_status_1",
+      "Quiet(Btn)_status_1",
+      "AssHt_status_1",
+      "ParameterQuery_default",
+      "FanPopup_status_1",
+      "ModPopup_status_1",
+      "Ventilation_status_1",
+      "SwingUD_status_1",
+      "SwingLR_status_1",
+      "BottomSleep_status_1"
+    ],
+    "SvStEffect_status_1": [
+      "SvSt_default",
+      "SvSt_status_1"
+    ],
+    "AcSvStEffect_status_1": [
+      "AcSvSt_default",
+      "AcSvSt_status_1"
+    ],
+    "AssHtEffect_status_1": [
+      "AssHt_default",
+      "AssHt_status_1"
+    ]
+  },
+  "productModel": "809031",
+  "deviceName": "强热型冷暖一体机",
+  "funcDefine": [
+    {
+      "order": [],
+      "_id": "5f6331d70cc4352f906ca199",
+      "name": "制冷进水温度上限",
+      "identifier": "CWMax",
+      "json": "CWMax",
+      "type": "inertia-temMax",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "22",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6332cc0cc4352f906ca19a",
+      "name": "制冷进水温度下限",
+      "identifier": "CWMin",
+      "json": "CWMin",
+      "type": "inertia-temMin",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "12",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6332cc0cc4352f906ca19b",
+      "name": "制热进水温度上限",
+      "identifier": "HWMax",
+      "json": "HWMax",
+      "type": "inertia-temMax",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "55",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6332cd0cc4352f906ca19c",
+      "name": "制热进水温度下限",
+      "identifier": "HWMin",
+      "json": "HWMin",
+      "type": "inertia-temMin",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "30",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6345be0cc4352f906ca1eb",
+      "name": "制冷进水温度设定",
+      "identifier": "ColWtSetTem",
+      "json": "ColWtSetTem",
+      "type": "inertia-tem",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "18",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6345bf0cc4352f906ca1ec",
+      "name": "制热进水温度设定",
+      "identifier": "HtWtSetTem",
+      "json": "HtWtSetTem",
+      "type": "inertia-tem",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "40",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6347390cc4352f906ca241",
+      "name": "制冷室内温度上限",
+      "identifier": "CSMax",
+      "json": "CSMax",
+      "type": "inertia-temMax",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "30",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f63473a0cc4352f906ca242",
+      "name": "制冷室内温度下限",
+      "identifier": "CSMin",
+      "json": "CSMin",
+      "type": "inertia-temMin",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "16",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f63473a0cc4352f906ca243",
+      "name": "制热室内温度上限",
+      "identifier": "HSMax",
+      "json": "HSMax",
+      "type": "inertia-temMax",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "25",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f63473a0cc4352f906ca244",
+      "name": "制热室内温度下限",
+      "identifier": "HSMin",
+      "json": "HSMin",
+      "type": "inertia-temMin",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "10",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f63473b0cc4352f906ca245",
+      "name": "制冷室内温度设定",
+      "identifier": "ColSetTem",
+      "json": "ColSetTem",
+      "type": "inertia-tem",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "25",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f63473b0cc4352f906ca246",
+      "name": "制热室内温度设定",
+      "identifier": "HtSetTem",
+      "json": "HtSetTem",
+      "type": "inertia-tem",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": "20",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "default",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6352b80cc4352f906ca4ae",
+      "name": "制冷制热控制",
+      "identifier": "CHMod",
+      "json": "Mod",
+      "type": "inertia-mod",
+      "statusDefine": {
+        "default": {
+          "name": "制冷模式",
+          "value": "1",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "zhileng",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "hideArr": [
+            "HWMax_default",
+            "HWMin_default",
+            "HtWtSetTem_default",
+            "HSMax_default",
+            "HSMin_default",
+            "HtSetTem_default",
+            "AssHt_status_1",
+            "SvSt_status_1",
+            "OutHome_status_1",
+            "AssHt_default"
+          ]
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "制热模式",
+          "value": "2",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "zhire",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "CHMod"
+          },
+          "hideArr": [
+            "CWMin_default",
+            "CWMax_default",
+            "ColWtSetTem_default",
+            "ColSetTem_default",
+            "CSMin_default",
+            "CSMax_default"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f64064e0cc4352f906cabac",
+      "name": "室内温度显示",
+      "identifier": "IndoorTem",
+      "json": "IndoorTem",
+      "type": "inertia-imshowSlot1",
+      "statusDefine": {
+        "default": {
+          "name": "隐藏",
+          "value": "25",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f6406da0cc4352f906cabd3",
+      "name": "出水温度显示",
+      "identifier": "OutWtTem",
+      "json": "OutWtTem",
+      "type": "inertia-imshowSlot1",
+      "statusDefine": {
+        "default": {
+          "name": "隐藏",
+          "value": "78",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f6355dc0cc4352f906ca724",
+      "name": "模式入口",
+      "identifier": "ModPopup",
+      "json": "ModPopup",
+      "type": "active-homeButton",
+      "statusDefine": {
+        "default": {
+          "name": "收起",
+          "value": 0,
+          "isCheck": false,
+          "customize": "replace",
+          "icon": {
+            "key": "moshi",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": "replace",
+          "icon": {
+            "key": "moshi",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "打开",
+          "value": 1,
+          "isCheck": true,
+          "customize": "replace",
+          "icon": {
+            "key": "moshi",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f641a150cc4352f906caf86",
+      "name": "预约",
+      "identifier": "AppTimer(Home)",
+      "json": "AppTimer",
+      "type": "active-homeButton",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": "replace",
+          "icon": {
+            "key": "AppTimer",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": "replace",
+          "icon": {
+            "key": "AppTimer",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "AppTimer"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f6354ce0cc4352f906ca653",
+      "name": "高级功能入口",
+      "identifier": "FuncPopup",
+      "json": "FuncPopup",
+      "type": "active-homeButton",
+      "statusDefine": {
+        "default": {
+          "name": "收起",
+          "value": 0,
+          "isCheck": false,
+          "customize": "replace",
+          "icon": {
+            "key": "gaoji",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": "replace",
+          "icon": {
+            "key": "gaoji",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "打开",
+          "value": 1,
+          "isCheck": true,
+          "customize": "replace",
+          "icon": {
+            "key": "gaoji",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f6420d10cc4352f906cb160",
+      "name": "静音",
+      "identifier": "Quiet(Btn)",
+      "json": "Quiet",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "yuyinjineng",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "yuyinjineng",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "yuyinjineng"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5eb5fb7ec253963e304cb43f",
+      "name": "外出模式",
+      "identifier": "OutHome",
+      "json": "OutHome",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "Avoid",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "OutHome",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "hideArr": [
+            "Tem_default",
+            "WdSpd_default",
+            "Humi_status_1",
+            "Blo_status_1",
+            "LoopMod_status_2",
+            "AppTimer_status_1",
+            "AutoImshow_default",
+            "ColWtSetTem_default",
+            "HtWtSetTem_default",
+            "ColSetTem_default",
+            "HtSetTem_default"
+          ],
+          "excludeArr": [
+            "SvSt_status_1",
+            "Blo_status_1",
+            "Humi_status_1",
+            "LoopMod_status_2",
+            "Mod_cool_status_1",
+            "Mod_dry_status_1",
+            "Mod_fan_status_1",
+            "Mod_heat_status_1",
+            "AcSvSt_status_1"
+          ],
+          "icon": {
+            "key": "Avoid",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "Avoid"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f6422290cc4352f906cb33a",
+      "name": "辅热",
+      "identifier": "AssHt",
+      "json": "AssHt",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "AssHt",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "disable",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "AssHt",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "AssHt"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f641ad80cc4352f906cafd7",
+      "name": "空调节能",
+      "identifier": "AcSvSt",
+      "json": "AcSvSt",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Health",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "hideArr": [
+            "OutWtTem_default"
+          ]
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "disable",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "hideArr": [
+            "OutWtTem_default"
+          ]
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Health",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "Health"
+          },
+          "excludeArr": [
+            "SvSt_status_1",
+            "OutHome_status_1"
+          ],
+          "hideArr": [
+            "CWMax_default",
+            "CWMin_default",
+            "HWMax_default",
+            "HWMin_default",
+            "ColWtSetTem_default",
+            "HtWtSetTem_default",
+            "IndoorTem_default"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5eb5fbbec253963e304cb447",
+      "name": "节能",
+      "identifier": "SvSt",
+      "json": "SvSt",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "jieneng",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "hideArr": [
+            "OutWtTem_default",
+            "CoolSvStTemMin_default",
+            "HumiSvStTemMin_default",
+            "HeatSvStTemMax_default"
+          ]
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "disable",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "hideArr": [
+            "OutWtTem_default"
+          ]
+        },
+        "status_1": {
+          "name": "开启",
+          "value": 1,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "jieneng",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "jieneng"
+          },
+          "hideArr": [
+            "CWMax_default",
+            "CWMin_default",
+            "HWMax_default",
+            "HWMin_default",
+            "ColWtSetTem_default",
+            "HtWtSetTem_default",
+            "IndoorTem_default"
+          ],
+          "excludeArr": [
+            "OutHome_status_1",
+            "AcSvSt_status_1"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      },
+      "page": {
+        "routerName": "SvSt",
+        "key": "SvSt",
+        "module": "air-conditioning-new"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5f64249c0cc4352f906cb703",
+      "name": "参数查询",
+      "identifier": "ParameterQuery",
+      "json": "ParameterQuery",
+      "type": "active-button",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": "replace",
+          "icon": {
+            "key": "dianliangchaxun",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [
+        "status_1"
+      ],
+      "_id": "5eb5faefc253963e304cb425",
+      "name": "开关",
+      "identifier": "Pow",
+      "json": "Pow",
+      "type": "inertia",
+      "statusDefine": {
+        "default": {
+          "name": "默认",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "hideArr": [
+            "OutHome_status_1",
+            "LoopMod_default",
+            "LoopMod_status_2",
+            "SvSt_status_1",
+            "Blo_status_1",
+            "x_status_1",
+            "Humi_status_1",
+            "AcSvSt_status_1",
+            "Quiet(Btn)_status_1",
+            "AssHt_status_1",
+            "ParameterQuery_default",
+            "FanPopup_status_1",
+            "ModPopup_status_1",
+            "Ventilation_status_1",
+            "SwingUD_status_1",
+            "SwingLR_status_1",
+            "BottomSleep_status_1"
+          ],
+          "icon": {
+            "key": "Pow",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          },
+          "excludeArr": [
+            "BottomSleep_status_1"
+          ]
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "Pow",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "开机",
+          "value": 1,
+          "status": "on",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "Pow",
+            "type": "on"
+          },
+          "miniIcon": {
+            "key": "Pow"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f642d162eaa4205082910ab",
+      "name": "自动调温显示",
+      "identifier": "AutoImshow",
+      "json": "AutoImshow",
+      "type": "inertia-imshowSlot2",
+      "statusDefine": {
+        "default": {
+          "name": "隐藏",
+          "value": 0,
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f9d1379573166364c31b08a",
+      "name": "节能图标显示",
+      "identifier": "SvStEffect",
+      "json": "SvStEffect",
+      "type": "inertia",
+      "statusDefine": {
+        "default": {
+          "name": "显示",
+          "value": "1",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "隐藏",
+          "value": "0",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "SvStEffect",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "SvStEffect"
+          },
+          "hideArr": [
+            "SvSt_default",
+            "SvSt_status_1"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f9d132d573166364c31b05a",
+      "name": "空调节能图标显示",
+      "identifier": "AcSvStEffect",
+      "json": "AcSvStEffect",
+      "type": "inertia",
+      "statusDefine": {
+        "default": {
+          "name": "显示",
+          "value": "1",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "隐藏",
+          "value": "0",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "AcSvStEffect",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "AcSvStEffect"
+          },
+          "hideArr": [
+            "AcSvSt_default",
+            "AcSvSt_status_1"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    },
+    {
+      "order": [],
+      "_id": "5f9d1379573166364c31b089",
+      "name": "辅热图标显示",
+      "identifier": "AssHtEffect",
+      "json": "AssHtEffect",
+      "type": "inertia",
+      "statusDefine": {
+        "default": {
+          "name": "显示",
+          "value": "1",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "undefined": {
+          "name": "其他",
+          "value": "-",
+          "isCheck": false,
+          "customize": false,
+          "icon": {
+            "key": "undefined",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "undefined"
+          }
+        },
+        "status_1": {
+          "name": "隐藏",
+          "value": "0",
+          "isCheck": true,
+          "customize": false,
+          "icon": {
+            "key": "AssHtEffect",
+            "type": "off"
+          },
+          "miniIcon": {
+            "key": "AssHtEffect"
+          },
+          "hideArr": [
+            "AssHt_default",
+            "AssHt_status_1"
+          ]
+        }
+      },
+      "map": {
+        "default": "status_1",
+        "undefined": "default",
+        "status_1": "default"
+      }
+    }
+  ],
+  "moreOption": {
+    "statueJson": [
+      "CWMax",
+      "CWMin",
+      "HWMax",
+      "HWMin",
+      "ColWtSetTem",
+      "HtWtSetTem",
+      "CSMax",
+      "CSMin",
+      "HSMax",
+      "HSMin",
+      "ColSetTem",
+      "HtSetTem",
+      "Mod",
+      "IndoorTem",
+      "OutWtTem",
+      "ModPopup",
+      "AppTimer",
+      "FuncPopup",
+      "Quiet",
+      "OutHome",
+      "AssHt",
+      "AcSvSt",
+      "SvSt",
+      "ParameterQuery",
+      "Pow",
+      "AutoImshow",
+      "SvStEffect",
+      "AcSvStEffect",
+      "AssHtEffect"
+    ],
+    "statueJson2": [
+      "CWMax",
+      "CWMin",
+      "HWMax",
+      "HWMin",
+      "ColWtSetTem",
+      "HtWtSetTem",
+      "CSMax",
+      "CSMin",
+      "HSMax",
+      "HSMin",
+      "ColSetTem",
+      "HtSetTem",
+      "Mod",
+      "IndoorTem",
+      "OutWtTem",
+      "ModPopup",
+      "AppTimer",
+      "FuncPopup",
+      "Quiet",
+      "OutHome",
+      "AssHt",
+      "AcSvSt",
+      "SvSt",
+      "ParameterQuery",
+      "Pow",
+      "AutoImshow",
+      "SvStEffect",
+      "AcSvStEffect",
+      "AssHtEffect"
+    ],
+    "_id": "6000383e811d470714752bd2",
+    "voiceSkill": false,
+    "temStep": "1",
+    "pluginVer": "1.0"
+  }
+}

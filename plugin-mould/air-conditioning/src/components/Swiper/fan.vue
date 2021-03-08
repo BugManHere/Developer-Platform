@@ -157,7 +157,7 @@ export default {
       const toIndex = this.leftLen + moveLen;
       this.setFanName(toIndex);
       this.swiperChange(toIndex);
-      this.updateSwiper();
+      this.initSwiper();
     },
     'imshowList.length': {
       handler(newVal, oldVal) {
@@ -199,14 +199,9 @@ export default {
     // 初始化
     initSwiper() {
       this.$refs[this.ref].updateSwiper(this.leftLen);
-      setTimeout(() => {
-        this.removeAllSlide();
-        this.insertAllSlide();
-        this.$nextTick(() => {
-          this.$refs[this.ref].updateSwiper(this.leftLen);
-          this.setFanName();
-        });
-      }, 0);
+      this.removeAllSlide();
+      this.insertAllSlide();
+      this.setFanName();
     },
     // 给滑轮赋予初始区间
     setList() {
@@ -294,6 +289,7 @@ export default {
           this.$refs[this.ref].removeSlide(removeList);
         }, 0);
       }
+      this.updateSwiper();
     },
     // 滑动事件
     swiperChange(index) {

@@ -33,28 +33,33 @@ export default {
       });
     }
 
-    axios
-      .get(`${process.env.VUE_APP_ICONFONT_URL}.json`)
-      .then(
-        response => {
-          const glyphs = response.data.glyphs;
-          const classList = glyphs.map(icon => icon.font_class);
-          this.setUserModule({
-            iconArr: classList
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      )
-      .catch(error => {
-        console.log(error);
+    const isLocal = process.env.VUE_APP_SERVE_MOED === 'local' && false;
+    console.log(`运行模式：${isLocal ? '本地' : '线上'}`);
+    if (isLocal) {
+      const { glyphs } = require('@public/iconfont/iconfont.json');
+      const classList = glyphs.map(icon => icon.font_class);
+      this.setUserModule({
+        iconArr: classList
       });
-    // const { glyphs } = require('@public/iconfont/iconfont.json');
-    // const classList = glyphs.map(icon => icon.font_class);
-    // this.setUserModule({
-    //   iconArr: classList
-    // });
+    } else {
+      axios
+        .get(`${process.env.VUE_APP_ICONFONT_URL}.json`)
+        .then(
+          response => {
+            const glyphs = response.data.glyphs;
+            const classList = glyphs.map(icon => icon.font_class);
+            this.setUserModule({
+              iconArr: classList
+            });
+          },
+          err => {
+            console.log(err);
+          }
+        )
+        .catch(error => {
+          console.log(error);
+        });
+    }
   },
   methods: {
     ...mapMutations({

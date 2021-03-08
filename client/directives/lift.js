@@ -15,7 +15,7 @@ const lift = {
       if (el.dataset.liftDisplay !== 'false') {
         clearTimeout(el.dataset.liftTimer);
         el.style.display = el.dataset.liftDisplay;
-        el.style.animation = `fadeShow ${animationSecond}s infinite`;
+        el.style.animation = `liftDown ${animationSecond}s infinite`;
         el.style['animation-iteration-count'] = '1';
       }
     } else {
@@ -26,7 +26,7 @@ const lift = {
         el.style.display = 'none';
       }, animationSecond * 900);
 
-      el.style.animation = `fadeHide ${animationSecond}s infinite`;
+      el.style.animation = `liftUp ${animationSecond}s infinite`;
       el.style['animation-iteration-count'] = '1';
     }
   }
