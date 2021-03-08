@@ -60,10 +60,7 @@ $musicMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
     min-height: $musicMainHeight;
     background-color: #fff;
     overflow: hidden;
-<<<<<<< HEAD:plugin-mould/air-conditioning-music/src/components/Card/control/index.vue
-=======
     z-index: 1;
->>>>>>> 5a44fac... feat(all):  零零散散的更新:plugin-mould/air-conditioning-music/src/components/card/control/index.vue
     &-box {
       height: auto;
     }
