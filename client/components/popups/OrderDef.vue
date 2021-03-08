@@ -15,7 +15,7 @@
             <span v-text="'指向'" class="text-label" />
             <select class="select-medium form-control" v-model="currentDrection" @change="setDirection">
               <option
-                v-for="(status, key) in statusList.filter((item, index) => ![currentStatusIndex, 1].includes(index))"
+                v-for="(status, key) in statusList.filter((item, index) => currentStatusIndex !== index)"
                 :value="status.key"
                 :key="key"
                 v-text="status.name"
