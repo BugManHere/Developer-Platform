@@ -1,6 +1,5 @@
-import { types, defineTypes } from '../types';
-
 import Vue from 'vue';
+import { defineTypes, types } from '../types';
 
 const { customizeFunction, customizeInit } = require('../userdef');
 

@@ -418,6 +418,8 @@ function mapRelation(fromMap, toMap) {
   fromMapKey.forEach(item => {
     if (fromMap[item] === toMap[item]) {
       num += 1;
+      console.log('xxxx', fromMap[2], toMap[2]);
+      console.log('qqq', num);
     }
   });
   if (!num) {
@@ -440,24 +442,36 @@ function getStatusName({ state, getters, rootGetters }, model, checkHide = false
   const result = {};
   // 获取被隐藏的stateName
   const hideStateNameArr = JSON.parse(state.deriveData.hideStateNameJson);
+  console.log('1', state.deriveData.hideStateNameJson);
   const identifier = model.identifier;
+  console.log('2', identifier);
   // 根据identifier获取statusName列表
   const statusNameArr = getters.statusNameMap[identifier];
+  console.log('3', statusNameArr);
+  console.log('4', getters.statusNameMap);
   // result[identifier] = {};
   statusNameArr.forEach(statusName => {
     if (statusName === 'undefined') return;
     const stateName = `${identifier}_${statusName}`;
+    console.log('5', stateName);
     // 隐藏的状态不参与
     if (checkHide && hideStateNameArr.includes(stateName)) {
       return;
     }
     const val = model.statusDefine[statusName].value;
+    console.log('6', model.statusDefine);
+    console.log('7', val);
     const beforeStatusName = result[val];
+    console.log('8', beforeStatusName);
     // 是否存在同源状态（JSON取值相等）
     if (beforeStatusName) {
       const commandBefore = model.statusDefine[beforeStatusName].moreCommand;
+      console.log('9', commandBefore);
       const commandCurrent = model.statusDefine[statusName].moreCommand;
+      console.log('10', commandCurrent);
       const currentType = mapRelation(commandCurrent, rootGetters.inputMap);
+      console.log('11', currentType);
+      console.log('12', rootGetters.inputMap);
       // 同源状态是否有moreCommand
       if (commandBefore) {
         const beforeType = mapRelation(commandBefore, rootGetters.inputMap); // 状态是否满足
