@@ -4,7 +4,6 @@ const { errorCode, codeParse } = require('@/mixins/error');
 export default {
   // 用于状态机的map
   inputMap: state => {
-    console.log(window.myvm && window.myvm.$FsmTs);
     return state.control.dataObject;
   },
   // 开关机的statusName
@@ -31,6 +30,35 @@ export default {
     const modIdentifier = getters.modIdentifier;
     return statusMap[modIdentifier].statusName;
   },
+  // 特殊模式的定义
+  spModDefine: (state, getters) => {
+    return getModelsByType({ getters }, 'inertia', state.spModKey);
+  },
+  modModels: (state, getters) => {
+    return [getters.modDefine, ...getters.spModDefine];
+  },
+  modSwitchType: (state, getters) => {
+    let result = 'off';
+    getters.modModels.some(model => {
+      const { identifier } = model;
+      const statusName = getCurrentStatusName({ getters }, identifier);
+      if (statusName === 'undefined') return false;
+      result = model.statusDefine[statusName].icon.type;
+      return true;
+    });
+    return result;
+  },
+  modTextKey: (state, getters) => {
+    let result = '';
+    getters.modModels.some(model => {
+      const { identifier } = model;
+      const statusName = getCurrentStatusName({ getters }, identifier);
+      if (statusName === 'undefined') return false;
+      result = `mod.${identifier}_${model.statusDefine[statusName].name}`;
+      return true;
+    });
+    return result;
+  },
   // 风速的定义
   fanDefine: (state, getters) => {
     const models = getAllModelsByType({ getters }, 'inertia', state.fanKey);
@@ -56,13 +84,52 @@ export default {
     const statusLoop = getters['machine/statusLoop'];
     return statusLoop[getters.fanIdentifier];
   },
+  // 特殊风速的定义
+  specialFanDefine: (state, getters) => {
+    const models = getAllModelsByType({ getters }, 'inertia', state.specialFan);
+    return models.length && models[0];
+  },
+  // 特殊风速的id
+  specialFanIdentifier: (state, getters) => {
+    return getters.specialFanDefine && getters.specialFanDefine.identifier;
+  },
+  // 特殊风速的状态指向循环
+  specialFanLoop: (state, getters) => {
+    const statusLoop = getters['machine/statusLoop'];
+    return statusLoop[getters.specialFanIdentifier];
+  },
+  // 风速当前statusName
+  specialFanCurrentStatusName: (state, getters) => {
+    const statusMap = getters['machine/statusMap'];
+    const fanIdentifier = getters.specialFanIdentifier;
+    return statusMap[fanIdentifier] && statusMap[fanIdentifier].statusName;
+  },
+  swingDefine: (state, getters) => {
+    return getAllModelsByType({ getters }, 'active', state.swingKey);
+  },
   // 高级功能按钮的定义
   buttonDefine: (state, getters) => {
     return getAllModelsByType({ getters }, 'active', state.buttonKey);
   },
+  // 高级功能按钮的定义
+  cardFuncDefine: (state, getters) => {
+    return getAllModelsByType({ getters }, 'active', state.cardFuncKey);
+  },
   // 主页按钮的定义
-  popupDefine: (state, getters) => {
-    return getAllModelsByType({ getters }, 'active', state.popupsKey);
+  mainBtnDefine: (state, getters) => {
+    return getAllModelsByType({ getters }, 'active', state.mainBtnKey);
+  },
+  mainPopupDefine: (state, getters) => {
+    const models = getAllModelsByType({ getters }, 'inertia', state.mainPopupKey);
+    return models.length && models[0];
+  },
+  mainPopupIdentifier: (state, getters) => {
+    return getters.mainPopupDefine && getters.mainPopupDefine.identifier;
+  },
+  mainPopupCurrentStatusName: (state, getters) => {
+    const statusMap = getters['machine/statusMap'];
+    const identifier = getters.mainPopupIdentifier;
+    return statusMap[identifier].statusName;
   },
   // 显示插槽1, 隐藏的状态被禁用就显示
   imshowSlot1: (state, getters) => {
@@ -212,4 +279,9 @@ function parseErrorJson(value) {
     .split('')
     .reverse()
     .map(v => Number(v));
+}
+
+function getCurrentStatusName({ getters }, identifier) {
+  const statusMap = getters['machine/statusMap'];
+  return String(statusMap[identifier].statusName);
 }

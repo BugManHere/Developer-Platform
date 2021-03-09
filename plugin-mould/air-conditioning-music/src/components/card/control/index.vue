@@ -65,7 +65,6 @@ $musicMainHeight: calc(100vh - #{$cardHeaderHeight} - #{$pageHeaderHeight} - #{$
     background-color: #fff;
     overflow: hidden;
     z-index: 1;
-    transform: scale3d(1, 1, 1);
     &-box {
       height: auto;
     }

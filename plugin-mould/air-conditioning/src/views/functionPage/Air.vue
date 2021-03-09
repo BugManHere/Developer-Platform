@@ -37,16 +37,16 @@ export default {
       return [
         {
           value: 1,
-          text: '开'
+          text: this.$language('air.on')
         },
         {
           value: 0,
-          text: '关'
+          text: this.$language('air.off')
         },
         {
           value: 3,
-          text: '智能',
-          brief: '根据环境自动开启，关闭新风',
+          text: this.$language('air.Intelligent'),
+          brief: this.$language('air.air_powoff_tips'),
           disabled: Boolean(!this.Pow)
         }
       ];

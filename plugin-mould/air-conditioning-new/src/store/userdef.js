@@ -97,7 +97,7 @@ export const customizeFunction = {
     let value = 0;
     let res = true;
     nextStatusName === 'status_1' && (value = 1);
-    value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
+    value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
     Number(res) && switchClean(value);
   },
   SwingUD: () => {

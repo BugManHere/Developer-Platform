@@ -1,7 +1,7 @@
 import { types, defineTypes } from '@/store/types';
 import { getConfig } from '@/utils/fsm';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast, closePage } from '@PluginInterface'; // 主体接口
+import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast } from '@PluginInterface'; // 主体接口
 
 let _timer = null; // 轮询定时器
 let _timer2 = null; // 延时发送指令定时器
@@ -70,10 +70,10 @@ export default {
   /**
    * @description 初始化，并将小卡片传进来的值赋予 state
    */
-  [defineTypes.CONTROL_INIT]({ dispatch, state }) {
+  async [defineTypes.CONTROL_INIT]({ dispatch, state }) {
     try {
       // 初始化设备数据
-      dispatch(types.INIT_DEVICE_DATA, null, { root: true });
+      await dispatch(types.INIT_DEVICE_DATA, null, { root: true });
       // 获取设备信息
       dispatch(types.GET_DEVICE_INFO, null, { root: true });
       // 查询一包数据
@@ -149,13 +149,12 @@ export default {
     const dataObject = {};
     if (!data) return dataObject;
     try {
-      const cols = opt || statueJson2;
+      const cols = (opt.length && opt) || statueJson2;
       const res = JSON.parse(data);
       // 遍历查询到的数据
       cols.forEach((json, index) => {
         dataObject[json] = res[index];
       });
-      console.log('dataObject2:', JSON.stringify(dataObject));
     } catch (e) {
       console.error(e);
     }
@@ -167,8 +166,9 @@ export default {
    */
   [defineTypes.GET_DEVICE_INFO]({ commit, state }) {
     try {
-      const { mac } = state;
-      getInfo(mac)
+      const { mac, mainMac } = state;
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
+      getInfo(sendMac)
         .then(res => {
           const deviceInfo = JSON.parse(res);
           commit(types.SET_DEVICE_INFO, deviceInfo, { root: true });
@@ -185,7 +185,7 @@ export default {
   async [defineTypes.GET_DEVICE_DATA]({ state, dispatch }) {
     try {
       // 集中控制时数据不查询
-      if (state.functype) return;
+      if (state.dataObject.functype) return;
 
       const { mac, mainMac } = state;
       const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
@@ -193,14 +193,11 @@ export default {
       // 采用本地 STATUS_JSON 作查询， fullstatueJson 弃用，为了更快显示H5
       const cols = statueJson2;
       const t = 'status';
-      const STATUS_JSON = JSON.stringify({ cols, mac: sendMac, t, sub: mac });
-      console.log('-----------------sendDataToDevice--start');
+      const STATUS_JSON = JSON.stringify({ cols, mac, t, sub: mac });
       const data = await sendDataToDevice(sendMac, STATUS_JSON, false);
-      console.log('-----------------sendDataToDevice--end');
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
         showToast('网络异常', 1);
-        closePage();
       }
       _firstCallback = false;
 
@@ -266,7 +263,6 @@ export default {
       } catch (e) {
         e;
       }
-      console.log('dataObject1:', JSON.stringify(dataObject));
     }
   },
 

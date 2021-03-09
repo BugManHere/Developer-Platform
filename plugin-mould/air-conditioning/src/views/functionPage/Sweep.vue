@@ -3,8 +3,9 @@
   <gree-view :bg-color="`#404040`">
     <gree-page class="page-sweep">
       <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
-      <div class="opposite" @touchend.prevent="clickOpposite">
-        <img :src="oppositeType.img" v-if="oppositeType.show" />
+      <div v-if="oppositeType.show" class="opposite" @touchend.prevent="clickOpposite" :class="oppositeType.type">
+        <span v-html="oppositeType.text" />
+        <!-- <img :src="oppositeType.img" v-if="oppositeType.show" /> -->
       </div>
       <div class="sweep-body">
         <gree-sweep-select
@@ -89,7 +90,8 @@ export default {
     },
     oppositeType() {
       return {
-        img: this.SwingLfRig === 8 ? require('@/assets/img/functionBtn/sweep/oppositeopen.png') : require('@/assets/img/functionBtn/sweep/oppositeclose.png'),
+        text: this.$language('sweep.opposite'),
+        type: this.SwingLfRig === 8 ? 'on' : 'off',
         show: this.touchId === 1
       };
     }
@@ -261,14 +263,21 @@ export default {
 }
 .opposite {
   position: absolute;
-  height: auto;
-  width: auto;
+  height: 156px;
+  width: 156px;
   top: 200px;
   right: 100px;
   z-index: 999;
-  img {
-    width: 156px;
-    height: 156px;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #404657;
+  &.on {
+    background-color: rgb(35, 151, 243);
+    color: #fff;
   }
 }
 </style>

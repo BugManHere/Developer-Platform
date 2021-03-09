@@ -135,6 +135,7 @@ window.onReFocus = function onReFocus(msg) {
     .then(res => {
       const deviceInfo = JSON.parse(res);
       store.commit(types.SET_DEVICE_INFO, deviceInfo);
+      store.dispatch(types.GET_AUTH_TYPE);
     })
     .catch(err => {
       err;
@@ -150,6 +151,7 @@ window.onResume = function onResume(msg) {
     .then(res => {
       const deviceInfo = JSON.parse(res);
       store.commit(types.SET_DEVICE_INFO, deviceInfo);
+      store.dispatch(types.GET_AUTH_TYPE);
     })
     .catch(err => {
       err;

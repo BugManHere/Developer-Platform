@@ -2,6 +2,8 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import updateStatus from './updateStatus'; // 自定义初始化功能，可以修改
 import { Dialog } from 'gree-ui';
 import { types } from '@/store/types';
+import { timerTasks } from '@/api/mock';
+import { encrypt } from '@/utils/encryption';
 
 const mixin = {
   mixins: [updateStatus],
@@ -91,6 +93,64 @@ const mixin = {
       },
       closePage() {
         console.log('关闭webview');
+      },
+      getCloudTimerByMac(mac, callback) {
+        const result = {
+          mac,
+          r: 200,
+          subId: '',
+          timerTasks
+        };
+        callback(JSON.stringify(result));
+      },
+      setCloudTimer(timerDic, taskDic, callback) {
+        const timer = {
+          ...timerDic,
+          timerID: Math.floor(Math.random() * 100000)
+        };
+        const task = {
+          ...taskDic,
+          cmd: encrypt(taskDic.cmd, ':lO!2t-PD~$y2q*`'),
+          status: timerDic.status,
+          key: ':lO!2t-PD~$y2q*`',
+          result: '',
+          stateDes: '',
+          subId: ''
+        };
+        timerTasks.push({
+          timer,
+          task
+        });
+        callback(timerTasks);
+      },
+      modifyCloudTimer(timerDic, taskDic, timerID, callback) {
+        const timerTask = timerTasks.find(item => item.timer.timerID === timerID);
+
+        const { key } = timerTask.task;
+        const cmd = encrypt(taskDic.cmd, key);
+        const timer = {
+          ...timerDic,
+          timerID
+        };
+        const task = {
+          cmd,
+          dat: taskDic.dat,
+          key,
+          remark: taskDic.remark,
+          result: timerTask.task.result,
+          stateDes: timerTask.task.stateDes,
+          status: timerDic.status,
+          subId: timerTask.task.subId
+        };
+        timerTask.timer = timer;
+        timerTask.task = task;
+        callback(timerTasks);
+      },
+      deleteCloudTimer(timerIDs, callback) {
+        const timerTasksFilter = timerTasks.filter(timerTask => !timerIDs.includes(timerTask.timer.timerID));
+        timerTasks.length = 0;
+        timerTasksFilter.forEach(timerTask => timerTasks.push(timerTask));
+        callback(timerTasks);
       }
     };
   },

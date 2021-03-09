@@ -35,7 +35,7 @@
   top: -$pageHeaderHeight;
   background-position: 100px calc(0px - env(safe-area-inset-top));
   z-index: 5;
-  transform: scale3d(1, 1, 1);
+  transform: translate3d(0, 0, 0) scale3d(1, 1, 1.1);
 }
 .page-header {
   position: relative;

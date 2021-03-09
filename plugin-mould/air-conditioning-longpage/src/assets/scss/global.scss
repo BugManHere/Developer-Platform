@@ -125,6 +125,15 @@ body {
     font-size: 58px;
   }
 }
+
+.gree-switch--on {
+  background-color: #619ce7 !important;
+}
+
+.column-item.active {
+  color: #619ce7 !important;
+}
+
 .page {
   .list {
     margin: 0;

@@ -8,15 +8,39 @@ export const getConfig = (param = {}) => {
   // localconfig模式下强制启用本地配置
   const getLocalConfig = () => {
     const isLocalConfig = process.env.VUE_APP_MODE === 'local' || param.isLocal;
-    return isLocalConfig && require(`@/api/${key}.json`);
+    return isLocalConfig && require(`@/../../../output/${key}.json`);
   };
   // 如果是development环境，获取线上配置
   const getServeConfig = () => {
     const isServeConfig = process.env.NODE_ENV === 'development';
-    return isServeConfig ? param.storage.get('config') : require(`@/api/${key}.json`);
+    return isServeConfig ? param.storage.get('config') : require(`@/../../../output/${key}.json`);
   };
   // 本地模式下优先获取本地配置
   return getLocalConfig() || getServeConfig();
+};
+
+export const fixJsonType = (map, jsonDefine) => {
+  const obj = JSON.parse(JSON.stringify(map));
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const define = jsonDefine.find(Define => {
+        return Define.json === key;
+      });
+      if (define) {
+        switch (define.type) {
+          case 'String':
+            obj[key] = String(obj[key]);
+            break;
+          default:
+            obj[key] = Number(obj[key]);
+            break;
+        }
+      } else {
+        obj[key] = Number(obj[key]);
+      }
+    }
+  }
+  return obj;
 };
 
 export const getState = result => {

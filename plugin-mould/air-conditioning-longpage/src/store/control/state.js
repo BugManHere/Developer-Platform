@@ -13,7 +13,8 @@ export default {
     Tur: 0,
     Quiet: 0,
     ErrType1: 0,
-    ErrType2: 0
+    ErrType2: 0,
+    MainPopupType: ''
   },
   checkObject: {},
   // deviceInfo中name可以修改，其他的请勿修改
@@ -24,6 +25,7 @@ export default {
     lang: 'zh_CN', // 语言
     name: '分体机'
   },
+  popup: {},
   devOptions: {
     mid: '',
     statueJson: '[]',

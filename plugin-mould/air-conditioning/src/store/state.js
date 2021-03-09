@@ -48,7 +48,7 @@ const state = {
     path: '', // 主体插件页面路径
     fullstatueJson: '', // config.xml里对应的查询字段
     deviceState: 2, // 设备在线状态，-1离线，2在线
-    lang: 'zh_CN', // 语言
+    lang: 'en', // 语言
     name: '空调'
   },
   devOptions: {
