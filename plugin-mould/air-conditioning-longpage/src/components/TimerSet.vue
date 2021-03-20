@@ -61,14 +61,15 @@
             </div>
           </div>
           <!-- 大大的添加按钮 -->
-          <div v-else class="timer-manage-blank">
-            <div
-              class="timer-manage-blank-add"
-              @click="
-                setPickerPropData();
-                showTimerSetPopup();
-              "
-            >
+          <div
+            v-else
+            class="timer-manage-blank"
+            @click="
+              setPickerPropData();
+              showTimerSetPopup();
+            "
+          >
+            <div class="timer-manage-blank-add">
               <div class="timer-manage-blank-add-icon" />
               <span class="timer-manage-blank-add-text" v-text="'添加'" />
             </div>
@@ -84,11 +85,10 @@
 <script>
 import { Switch, Check } from 'gree-ui';
 import { setCloudTimer, modifyCloudTimer, deleteCloudTimer, showToast, getCloudTimerByMac } from '@PluginInterface';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { analysisTimer } from '@/utils/encryptionFun';
 import CardGroup from '@/components/CardGroup/index';
 import TimerPicker from '@/components/Popup/TimerPicker';
-import { mapMutations } from 'vuex';
 
 export default {
   name: 'timer-set-group',
@@ -122,7 +122,8 @@ export default {
   },
   computed: {
     ...mapState('control', {
-      mac: state => state.mac
+      mac: state => state.mac,
+      mainMac: state => state.mainMac
     }),
     isAllSelect() {
       return this.timerTasks.every((v, i) => {
@@ -160,6 +161,7 @@ export default {
   },
   methods: {
     ...mapMutations('control', {
+      setDataObject: 'SET_DATA_OBJECT',
       SetPopup: 'SET_POPUP'
     }),
     // 新增查询定时
@@ -169,22 +171,29 @@ export default {
       }, 5000);
     },
     localGetCloudTimer() {
-      return getCloudTimerByMac(this.mac).then(res => {
+      const { mac, mainMac } = this;
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
+      return getCloudTimerByMac(sendMac).then(res => {
         const result = JSON.parse(res);
         if (result.r === 200) {
           this.timerTasks = analysisTimer(result.timerTasks);
           // 更新开关状态
-          this.updateSwitchType();
+          const hasTaskOn = this.updateSwitchType();
+          this.setDataObject({ TimerSet: hasTaskOn });
         }
       });
     },
     // 更新开关状态
     updateSwitchType() {
+      let hasTaskOn = false;
       this.listSwitchType = this.timerTasks
         ? this.timerTasks.map(timerTask => {
-            return Boolean(timerTask.timer.status);
+            const type = Boolean(timerTask.timer.status);
+            hasTaskOn = hasTaskOn || type;
+            return type;
           })
         : [];
+      return hasTaskOn;
     },
     // 更新高度
     updateBoxHeight() {
@@ -228,6 +237,9 @@ export default {
     },
     changeTask(index) {
       const { task, timer } = this.timerTasks[index];
+      const { mac, mainMac } = this;
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
+
       const timerDic = {
         timeType: timer.timeType,
         weeks: timer.weeks,
@@ -236,7 +248,8 @@ export default {
         status: Number(!timer.status)
       };
       const taskDic = {
-        mac: this.mac,
+        mac: sendMac,
+        subId: mac,
         cmd: JSON.stringify(task.cmd),
         remark: task.remark,
         dat: task.dat
@@ -307,6 +320,9 @@ export default {
     },
     async getPickerData(val) {
       await this.localGetCloudTimer();
+      const { mac, mainMac } = this;
+      const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
+
       const [pickerData, weekList, timerID] = val;
 
       const hour = (((pickerData[0].value + (24 - 8)) % 24) + '').padStart(2, '0');
@@ -328,8 +344,9 @@ export default {
         status: 1
       };
       const taskDic = {
-        mac: this.mac,
-        cmd: JSON.stringify({ t: 'cmd', opt, p }),
+        mac: sendMac,
+        subId: mac,
+        cmd: JSON.stringify({ t: 'cmd', sub: mac, opt, p }),
         remark: 'i am lazy, no remark',
         dat: p.map(String)
       };
@@ -344,6 +361,7 @@ export default {
         if (this.timerTasks.length >= 3) {
           showToast('定时已满，请先删除其他定时', 0);
         } else {
+          console.log('setCloudTimer--------------参数：', JSON.stringify(timerDic), JSON.stringify(taskDic));
           setCloudTimer(timerDic, taskDic).then(() => {
             showToast('保存成功');
             // 保存成功主动查一次
@@ -474,6 +492,7 @@ export default {
   }
   &-blank {
     height: 440px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

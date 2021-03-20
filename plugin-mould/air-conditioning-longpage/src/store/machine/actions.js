@@ -29,52 +29,59 @@ export default {
     if (!stateQueue.length) return;
     const { getters, dispatch } = context;
     // 从队列中获取事件stateEvent，解构得出identifier、statusName（指定到此status）
-    const { identifier, statusName } = stateQueue.shift();
+    const { identifier, toStatusName, fromStatusName, type } = stateQueue.shift();
     // 根据identifier得出当前statusName：currentStatusName
-    const currentStatusName = getters.statusMap[identifier].statusName;
+    let currentStatusName = getters.statusMap[identifier].statusName;
     // 根据情况获取当前status信息，情况1：已有指定statusName，从statusInfoMap获取信息；情况2：没有指定statusName，从status指向中获取信息
-    const nextStatusInfo = statusName ? getters.statusInfoMap[identifier][statusName] : getters.nextStatusInfoMap[identifier];
+    let nextStatusInfo = toStatusName ? getters.statusInfoMap[identifier][toStatusName] : getters.nextStatusInfoMap[identifier];
     // 获取指向statusName
-    const nextStatusName = nextStatusInfo.statusName;
-    // 如果statusName为undefined，不输出状态值
-    if (nextStatusName && nextStatusName !== 'undefined' && nextStatusName !== currentStatusName) {
-      // 获取自定义函数接入方式
-      const customize = nextStatusInfo.customize;
-      // 获取需要发送的指令
-      const setData = nextStatusInfo.setData;
-      // 定义自定义函数执行函数
-      const runCustomizeFunction = identifier => {
-        // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
-        const fn = customizeFunction[identifier];
-        if (fn) {
-          fn(context, currentStatusName, nextStatusName);
-        } else {
-          console.info('找不到自定义函数', { identifier });
-        }
-      };
-      // 如果自定义函数接入方式为'before'，在返回输出前执行动作
-      customize === 'before' && runCustomizeFunction(identifier);
-      // 如果自定义函数接入方式为'replace'，则取代输出
-      if (customize === 'replace') {
-        runCustomizeFunction(identifier);
-      } else {
-        // 将状态发送值输出
-        dispatch(
-          types.STATE_MACHINE_INTERFACE,
-          { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName },
-          { root: true }
-        ).then(() => {
-          // 如果自定义函数接入方式为'after'，在执行完输出函数后执行自定义函数
-          customize === 'after' && runCustomizeFunction(identifier);
-        });
+    let nextStatusName = nextStatusInfo.statusName;
+    if (type === 'exclude' && fromStatusName !== currentStatusName && getters.statusInfoMap[identifier][currentStatusName]) {
+      let nextStatusInfo = getters.statusInfoMap[identifier][currentStatusName];
+      eventHandler(context, { identifier, currentStatusName: fromStatusName, nextStatusName: currentStatusName, nextStatusInfo });
+    } else {
+      // 如果statusName为undefined，不输出状态值
+      if (nextStatusName && nextStatusName !== 'undefined' && nextStatusName !== currentStatusName) {
+        eventHandler(context, { identifier, currentStatusName, nextStatusName, nextStatusInfo });
       }
-      // 根据identifier检查对应model的互斥
-      checkLogic(context, identifier, nextStatusName);
     }
     // 执行下一事件
     dispatch(types.RUN_EVENT, stateQueue, { root: true });
   }
 };
+
+function eventHandler(context, { identifier, currentStatusName, nextStatusName, nextStatusInfo }) {
+  // 获取自定义函数接入方式
+  const customize = nextStatusInfo.customize;
+  // 获取需要发送的指令
+  const setData = nextStatusInfo.setData;
+  // 定义自定义函数执行函数
+  const runCustomizeFunction = identifier => {
+    // 先判断是否存在，如果存在，传入context与参数currentStatusName与nextStatusName执行
+    const fn = customizeFunction[identifier];
+    if (fn) {
+      fn(context, currentStatusName, nextStatusName);
+    } else {
+      console.info('找不到自定义函数', { identifier });
+    }
+  };
+  // 如果自定义函数接入方式为'before'，在返回输出前执行动作
+  customize === 'before' && runCustomizeFunction(identifier);
+  // 如果自定义函数接入方式为'replace'，则取代输出
+  if (customize === 'replace') {
+    runCustomizeFunction(identifier);
+  } else {
+    // 将状态发送值输出
+    context
+      .dispatch(types.STATE_MACHINE_INTERFACE, { data: setData, type: 'output', identifier, from: currentStatusName, to: nextStatusName }, { root: true })
+      .then(() => {
+        // 如果自定义函数接入方式为'after'，在执行完输出函数后执行自定义函数
+        customize === 'after' && runCustomizeFunction(identifier);
+      });
+  }
+  // 根据identifier检查对应model的互斥
+  checkLogic(context, identifier, nextStatusName);
+}
 
 class stateMachine {
   /**
@@ -129,15 +136,21 @@ class stateMachine {
   // 根据`identifier`激活`model`的次态
   nextStatus(identifier) {
     // 将事件推送到事件队列内
-    this.stateQueue.push({ identifier, statusName: undefined });
+    this.stateQueue.push({ identifier });
     setTimeout(() => {
       this.updateState;
     }, 0);
   }
   // 根据identifier跳转到指定状态
-  toStatus(identifier, statusName) {
+  toStatus(identifier, toStatusName) {
     // 将事件推送到事件队列内
-    this.stateQueue.push({ identifier, statusName: String(statusName) });
+    this.stateQueue.push({ identifier, toStatusName: String(toStatusName) });
+    setTimeout(() => {
+      this.updateState;
+    }, 0);
+  }
+  excludeStatus(identifier, fromStatusName) {
+    this.stateQueue.push({ identifier, fromStatusName, type: 'exclude' });
     setTimeout(() => {
       this.updateState;
     }, 0);
@@ -223,7 +236,7 @@ function checkLogic(context, identifier, statusName) {
     // 获取identifier的当前stateName
     const currentStateName = `${identifier}_${currentStatusName}`;
     // 如果当前stateName被排斥，则跳转到指向状态
-    stateName === currentStateName && Vue.prototype.$stateMachine.nextStatus(identifier);
+    stateName === currentStateName && Vue.prototype.$stateMachine.excludeStatus(identifier, currentStateName);
   });
 }
 

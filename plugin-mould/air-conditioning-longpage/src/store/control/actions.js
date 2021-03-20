@@ -19,6 +19,22 @@ function customizeDataObject(_dataObject) {
   return dataObject;
 }
 
+function parseDataByCols({ data, opt }) {
+  const dataObject = {};
+  if (!data) return dataObject;
+  try {
+    const cols = (opt && opt.length && opt) || statueJson2;
+    const res = JSON.parse(data);
+    // 遍历查询到的数据
+    cols.forEach((json, index) => {
+      dataObject[json] = res[index];
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  return dataObject;
+}
+
 // 封装发送指令代码
 function sendControl({ state, commit, dispatch, rootState }, dataMap) {
   if (state.dataObject.functype || !state.ableSend) return;
@@ -35,6 +51,7 @@ function sendControl({ state, commit, dispatch, rootState }, dataMap) {
     setData = {};
     if (!setOpt.length) return;
     const { mac, mainMac } = state;
+    console.log('--------------mac---', mac, mainMac);
     const sendMac = mainMac.length ? `${mac}@${mainMac}` : mac; // 查询包需要传入主mac及子mac
 
     try {
@@ -52,7 +69,7 @@ function sendControl({ state, commit, dispatch, rootState }, dataMap) {
     // console.table([opt, p]);
     // console.log([opt, p]);
 
-    const CMD_JSON = JSON.stringify({ mac: sendMac, t, opt, p, sub: mac });
+    const CMD_JSON = JSON.stringify({ mac, t, opt, p, sub: mac });
     console.log(CMD_JSON);
     await sendDataToDevice(sendMac, CMD_JSON, false);
     // 3秒后重启轮询
@@ -120,7 +137,7 @@ export default {
         console.log(e);
       }
 
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data, opt }, { root: true });
+      let dataObject = parseDataByCols({ data, opt });
 
       // 获取functype
       const functype = getQueryStringByName('functype') || 0;
@@ -201,10 +218,11 @@ export default {
       }
       _firstCallback = false;
 
-      let dataObject = await dispatch(types.PARSE_DATA_BY_COLS, { data }, { root: true });
+      let dataObject = parseDataByCols({ data });
       // 自定义数据，根据业务更改
       dataObject = customizeDataObject(dataObject);
       // 更新本地数据
+      console.log(dataObject);
       dispatch(types.UPDATE_DATAOBJECT, dataObject, { root: true });
     } catch (e) {
       console.error(e);

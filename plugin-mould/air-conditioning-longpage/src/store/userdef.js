@@ -68,11 +68,11 @@ export const cacheDataMap = {
     {
       storageKey: 'temSetting',
       jsons: ['SetTem', 'Add0.5', 'Add0.1']
-    },
-    {
-      storageKey: 'fanSetting',
-      jsons: ['WdSpd', 'Tur', 'Quiet']
     }
+    // {
+    //   storageKey: 'fanSetting',
+    //   jsons: ['WdSpd', 'Tur', 'Quiet']
+    // }
   ]
 };
 

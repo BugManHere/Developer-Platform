@@ -1,7 +1,10 @@
 <template>
   <gree-view bg-color="#F4F4F4">
     <gree-page class="page-offline">
-      <gree-header :left-options="{ preventGoBack: true }" @on-click-back="goBack">{{ $language('name') }}</gree-header>
+      <gree-header :left-options="{ preventGoBack: true }" @on-click-back="goBack"
+        >{{ $language('name') }}
+        <i class="iconfont iconfont-gengduo" slot="right" @click="moreInfo" />
+      </gree-header>
       <div class="page-main">
         <!-- 图片 -->
         <div class="page-main-img">
@@ -44,6 +47,7 @@ export default {
   },
   computed: {
     ...mapState('control', {
+      mac: state => state.mac,
       devname: state => state.deviceInfo.name,
       isOffline: state => state.deviceInfo.deviceState
     })
@@ -64,6 +68,9 @@ export default {
      */
     goBack() {
       closePage();
+    },
+    moreInfo() {
+      editDevice(this.mac);
     }
   }
 };

@@ -21,7 +21,7 @@
     "fsm-ts": "^1.0.8",
     "fsm-vue": "^1.0.5",
     "gree-ui": "http://10.2.11.226/li/gree-ui.git",
-    "jquery": "^3.4.1",
+    "jquery": "^3.6.0",
     "lodash": "^4.17.15",
     "round-slider": "^1.3.3",
     "swiper": "^6.2.0",
@@ -31,8 +31,7 @@
     "vue-i18n": "^8.15.5",
     "vue-router": "^3.1.6",
     "vuex": "^3.1.3",
-    "webpack-stylesheet-variable-replacer-plugin": "^1.6.0",
-    "webpack-theme-color-replacer": "^1.3.17"
+    "webpack-stylesheet-variable-replacer-plugin": "^1.6.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.3",
@@ -54,6 +53,7 @@
     "svg-sprite-loader": "^4.2.5",
     "vue-template-compiler": "^2.6.11",
     "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-theme-color-replacer": "^1.3.17",
     "xml2js": "^0.4.23"
   }
 }

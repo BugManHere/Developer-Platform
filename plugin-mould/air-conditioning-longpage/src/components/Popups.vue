@@ -1,22 +1,22 @@
 <template>
   <div class="main-popup" v-changeHeight:main-popup-box="forceUpdate">
-    <div class="main-popup-box" ref="main-popup-box" v-fixSrcollTop:page-content>
+    <div class="main-popup-box" ref="main-popup-box" v-fixSrcollTop:page-content="currentMainBtnIndex">
       <!-- 箭头 -->
       <div class="main-popup-box-arrow" v-show="currentMainBtnIndex !== -1">
         <div class="main-popup-box-arrow-item" :style="{ left: `${currentMainBtnIndex * 25}%` }" />
       </div>
       <keep-alive>
         <component
-          v-if="componentMap[currentMainPopup] && componentMap[currentMainPopup].keep"
-          :is="componentMap[currentMainPopup].name"
+          v-if="initComponent || (componentMap[currentMainPopup] && componentMap[currentMainPopup].keep)"
+          :is="initComponent || componentMap[currentMainPopup].name"
           class="main-popup-box-component"
           ref="main-popup-box-component"
           @updateHeight="updateBoxHeight"
         />
       </keep-alive>
       <component
-        v-if="componentMap[currentMainPopup] && !componentMap[currentMainPopup].keep"
-        :is="componentMap[currentMainPopup].name"
+        v-if="initComponent || (componentMap[currentMainPopup] && !componentMap[currentMainPopup].keep)"
+        :is="initComponent || componentMap[currentMainPopup].name"
         class="main-popup-box-component"
         ref="main-popup-box-component"
         @updateHeight="updateBoxHeight"
@@ -42,7 +42,8 @@ export default {
       componentMap: {
         TimerSet: {
           name: 'timer-set-group',
-          keep: true
+          keep: true,
+          init: true
         },
         FanSet: {
           name: 'wind-set-group',
@@ -54,7 +55,8 @@ export default {
         }
       },
       componentType: false,
-      forceUpdate: false
+      forceUpdate: false,
+      initComponent: null
     };
   },
   computed: {
@@ -68,6 +70,19 @@ export default {
     },
     currentMainBtnIndex() {
       return this.mainBtnOrder.findIndex(order => order === this.currentMainPopup);
+    }
+  },
+  created() {
+    for (const key in this.componentMap) {
+      if (Object.hasOwnProperty.call(this.componentMap, key)) {
+        const componentObj = this.componentMap[key];
+        if (componentObj && componentObj.init) {
+          this.initComponent = componentObj.name;
+          this.$nextTick(() => {
+            this.initComponent = null;
+          });
+        }
+      }
     }
   },
   watch: {
