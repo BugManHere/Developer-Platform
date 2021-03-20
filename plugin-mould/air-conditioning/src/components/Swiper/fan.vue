@@ -318,7 +318,7 @@ export default {
       this.fanName = this.imshowList[toIndex].name;
     },
     swiperShowDisable() {
-      showToast(`${this.modeName}模式下不可滑动`, 1);
+      showToast(this.$language(`fan.${this.modeName}_tip`), 1);
     },
     getSwiperIndex(value) {
       const turIndex = this.imshowList.findIndex(item => item.value === 6);

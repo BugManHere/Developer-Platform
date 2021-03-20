@@ -8,7 +8,8 @@ module.exports = {
     smart: 'Smart',
     timing: 'Timing',
     CO2: 'CO2 concentration',
-    Electric: 'Electricity inquiry'
+    Electric: 'Electricity inquiry',
+    netword_warnning: 'Network abnormality'
   },
   ban: {
     Auto: {
@@ -52,7 +53,8 @@ module.exports = {
     medium_high: 'Medium-High',
     high: 'High',
     turbo: 'Turbo',
-    quiet: 'Quiet'
+    quiet: 'Quiet',
+    Dry_tip: "Can't set Wind in Dry mode."
   },
   btn: {
     Sleep: 'Sleep',
@@ -96,6 +98,7 @@ module.exports = {
     'UDFanPort(Cabinet)': '下出风',
     'UDFanPort(Cabinet)_默认': '下出风自动',
     AntiDirectBlow: '防直吹',
+    'AntiDirectBlow(HeatMod)': '防直吹',
     // 商用
     OutHome: '外出模式',
     circulationPatterns: '循环模式',

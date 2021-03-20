@@ -62,10 +62,10 @@ export default {
           err;
         });
         try {
-          showToast('空调已被关闭，自动退出新风设置。', 1);
+          showToast(this.$language('air.air_powoff_tips'), 1);
         } catch (e) {
           Toast({
-            content: '空调已被关闭，自动退出新风设置。',
+            content: this.$language('air.air_powoff_tips'),
             position: 'bottom'
           });
         }

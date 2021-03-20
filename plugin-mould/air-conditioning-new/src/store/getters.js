@@ -4,7 +4,6 @@ const { errorCode, codeParse } = require('@/mixins/error');
 export default {
   // 用于状态机的map
   inputMap: state => {
-    console.log(window.myvm && window.myvm.$FsmTs);
     return state.control.dataObject;
   },
   // 开关机的statusName

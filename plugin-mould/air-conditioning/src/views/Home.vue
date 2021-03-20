@@ -431,7 +431,7 @@ export default {
     // 点击10次进入调试模式
     onTest() {
       getCurrentMode().then(res => {
-        if (res === '0' || res === 0) {
+        if (![1, '1'].includes(res)) {
           this.onTestFlag += 1;
           this.onTestFlag === 5 && new VConsole();
           this.onTestFlag === 10 && this.$router.push({ name: 'Test' });
