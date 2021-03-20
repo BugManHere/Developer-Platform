@@ -242,7 +242,7 @@ export default {
 
       // 尝试修复设备断电后，立刻点击小卡片，显示WebView控制页面的整改问题
       if (_firstCallback && data === '') {
-        showToast('网络异常', 1);
+        showToast(this.$language('home.netword_warnning'), 1);
         // closePage();
       } else {
         _firstCallback = false;

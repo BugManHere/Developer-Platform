@@ -52,8 +52,8 @@ function sendControl({ state, commit, dispatch }, dataMap) {
     console.table([opt, p]);
     console.log([opt, p]);
 
-    const CMD_JSON = JSON.stringify({ mac: sendMac, t, opt, p, sub: mac });
-
+    const CMD_JSON = JSON.stringify({ mac, t, opt, p, sub: mac });
+    console.log(CMD_JSON);
     await sendDataToDevice(sendMac, CMD_JSON, false);
     // 3秒后重启轮询
     if (_timer) {

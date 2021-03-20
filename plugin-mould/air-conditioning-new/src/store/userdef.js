@@ -89,20 +89,60 @@ export const customizeFunction = {
   EnvAreaSt: ({ commit }) => {
     runPageMethod({ commit }, 'AreaFan');
   },
+  AutoClean: async ({ commit, dispatch }, currentStatusName) => {
+    const switchClean = value => {
+      dispatch('SEND_DATA', { AutoClean: value }, { root: true });
+      commit('control/SET_DATA_OBJECT', { CleanState: value, AutoClean: value ? 2 : 3 }, { root: true });
+    };
+    let res = 0;
+    switch (currentStatusName) {
+      case 'default':
+        showToast('正在启动自清洁', 1);
+        switchClean(1);
+        break;
+      case 'status_1':
+        res = await showConfirm('提示', '是否退出自清洁功能？');
+        Number(res) && switchClean(0);
+        break;
+      case 'status_2':
+        showToast('正在进入自清洁中，请耐心等待...', 1);
+        break;
+      case 'status_3':
+        showToast('正在退出自清洁中，请耐心等待...', 1);
+        break;
+      default:
+        break;
+    }
+  },
   CleanState: async ({ commit, dispatch }, currentStatusName, nextStatusName) => {
     const switchClean = value => {
       dispatch('SEND_DATA', { AutoClean: value }, { root: true });
       commit('control/SET_DATA_OBJECT', { CleanState: value }, { root: true });
     };
-    let value = 0;
-    let res = true;
-    nextStatusName === 'status_1' && (value = 1);
-    value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
-    res && switchClean(value);
-    value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
-    Number(res) && switchClean(value);
-    value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
-    Number(res) && switchClean(value);
+    let res = 0;
+    switch (currentStatusName) {
+      case 'default':
+        showToast('正在启动自清洁中，请耐心等待...', 1);
+        switchClean(1);
+        break;
+      case 'status_1':
+        res = await showConfirm('提示', '是否退出自清洁功能？');
+        Number(res) && switchClean(0);
+        break;
+      case 'status_2':
+        showToast('正在进入自清洁中，请耐心等待...', 1);
+        break;
+      case 'status_3':
+        showToast('正在退出自清洁中，请耐心等待...', 1);
+        break;
+      default:
+        break;
+    }
+    // let value = 0;
+    // let res = true;
+    // nextStatusName === 'status_1' && (value = 1);
+    // value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
+    // Number(res) && switchClean(value);
   },
   SwingUD: () => {
     const storage = window.storage;

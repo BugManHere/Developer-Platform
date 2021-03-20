@@ -23,7 +23,7 @@
       // opacity: 1 !important;
       visibility: visible !important;
     }
-    *{
+    * {
       // outline: 1px solid green !important;
     }
   }
@@ -39,7 +39,8 @@
   height: 400px;
 }
 
-.fan-swiper, .mode-swiper {
+.fan-swiper,
+.mode-swiper {
   display: flex;
   justify-content: center;
   > div {
@@ -67,7 +68,8 @@
   z-index: 2;
 }
 
-.fan-name, .mode-name {
+.fan-name,
+.mode-name {
   position: relative;
   display: flex;
   justify-content: center;
@@ -85,11 +87,11 @@
   color: #fff;
   position: relative;
   top: 200px;
-  text-shadow: 0 0 10px #FFFFFF;
+  text-shadow: 0 0 10px #ffffff;
 }
 
 .swiper-text {
-  position: relative; 
+  position: relative;
   align-items: center;
   height: 100%;
   display: flex;

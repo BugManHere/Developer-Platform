@@ -195,12 +195,10 @@ export default {
     },
     // 特殊奇葩操作，滑到一版手机息屏。需要设置值，再清除
     cancelSwiperHold(key) {
-      console.log(123);
-      this.setSwiperHold(key);
       this.clearSwiperHold(key);
-          // this.$nextTick(() => {
-          //   this.$refs[this.slidesData.key].swiper.update();
-          // });
+      this.$nextTick(() => {
+        this.$refs[this.slidesData.key].swiper.update();
+      });
     },
     emitIndex() {
       this.$nextTick(() => {

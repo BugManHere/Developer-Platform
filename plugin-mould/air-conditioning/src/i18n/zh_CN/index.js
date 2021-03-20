@@ -12,7 +12,8 @@ module.exports = {
     smart: '智能',
     timing: '定时',
     CO2: '二氧化碳浓度',
-    Electric: '电量查询'
+    Electric: '电量查询',
+    netword_warnning: '网络异常'
   },
   ban: {
     Auto: {
@@ -167,7 +168,8 @@ module.exports = {
     medium_high: '中高风档',
     high: '高风档',
     turbo: '强劲档',
-    quiet: '静音档'
+    quiet: '静音档',
+    Dry_tip: '除湿模式下不可调节风速。'
   },
   btn: {
     Sleep: '睡眠',

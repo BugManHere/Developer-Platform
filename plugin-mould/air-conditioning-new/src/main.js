@@ -1,6 +1,10 @@
 import { types } from '@/store/types';
 // 引入内部文件
 import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import Vuex from 'vuex';
+
 // 引入第三方
 import { Page, View } from 'gree-ui';
 import 'round-slider/dist/roundslider.min.css';
@@ -19,6 +23,7 @@ import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
 
+// import { getConfig, getState } from './utils/fsm';
 // const customize = require('@/store/userdef');
 
 // 安装插件
