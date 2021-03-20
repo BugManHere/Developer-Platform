@@ -14,6 +14,7 @@
           @updateHeight="updateBoxHeight"
         />
       </keep-alive>
+      <!-- test -->
       <component
         v-if="componentMap[currentMainPopup] && !componentMap[currentMainPopup].keep"
         :is="componentMap[currentMainPopup].name"
