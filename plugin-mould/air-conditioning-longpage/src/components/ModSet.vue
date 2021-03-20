@@ -76,7 +76,7 @@ export default {
   .icon {
     background: linear-gradient(rgba(150, 197, 255, 0.2), rgba(116, 175, 248, 0.2));
     .iconfont {
-      color: rgba(107, 164, 250, 0.5);
+      color: rgba(107, 164, 251, 0.5);
     }
   }
 

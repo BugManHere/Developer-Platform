@@ -1,4 +1,5 @@
 const client = require('webpack-theme-color-replacer/client');
+const forElementUI = require('webpack-theme-color-replacer/forElementUI');
 
 const btnColor = {
   cold: ['#8dbffd', '#77a7e0', '14, 110, 227'],
@@ -44,13 +45,23 @@ function getColors(type) {
 
 // 动态切换主题色
 function changeThemeColor(newColors) {
-  var options = { newColors };
+  const colors = getElementUISeries(newColors);
+  var options = { newColors: colors };
   return client.changer.changeColor(options, Promise);
 }
 
+function getElementUISeries(colors) {
+  const matchColersArray = [];
+  colors.forEach(color => {
+    matchColersArray.push(...forElementUI.getElementUISeries(color));
+  });
+  return matchColersArray;
+}
+
 module.exports = {
-  matchColors: coldColors,
+  matchColors: getElementUISeries(coldColors),
   coldColors,
   warmColors,
-  changeThemeColor
+  changeThemeColor,
+  getElementUISeries
 };

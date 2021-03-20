@@ -1,9 +1,9 @@
-import { timerTasks } from '@/api/mock';
-import { types } from '@/store/types';
-import { encrypt } from '@/utils/encryption';
-import { Dialog } from 'gree-ui';
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import updateStatus from './updateStatus'; // 自定义初始化功能，可以修改
+import { Dialog } from 'gree-ui';
+import { types } from '@/store/types';
+import { timerTasks } from '@/api/mock';
+import { encrypt } from '@/utils/encryption';
 
 const mixin = {
   mixins: [updateStatus],

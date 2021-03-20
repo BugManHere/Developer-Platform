@@ -1,12 +1,12 @@
 /* 将指定元素滚动到当前元素高度的位置 */
 
 const timer = {};
-const step = 1000 / 60; // 采用标准60hz屏幕刷新率
+const step = 1000 / 120; // 120hz屏幕刷新率
 
 export default {
   componentUpdated: (el, binding) => {
-    const { arg: targetElId } = binding;
-    if (timer[targetElId]) return;
+    const { arg: targetElId, value, oldValue } = binding;
+    if (timer[targetElId] || value === oldValue) return;
     const targetEl = document.getElementsByClassName(targetElId)[0];
 
     targetEl &&

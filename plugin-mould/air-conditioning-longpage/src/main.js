@@ -1,27 +1,28 @@
-import vChangeHeight from '@/directives/changeHeight';
-// import { getConfig, getState } from './utils/fsm';
-import vFixSrcollTop from '@/directives/fixSrcollTop';
-import { types } from '@/store/types';
-// 引入内部文件
-import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
-// 引入第三方
-import { Page, View } from 'gree-ui';
-import 'round-slider/dist/roundslider.min.css';
-// import Fsm from 'fsm-ts';
-import 'round-slider/dist/roundslider.min.js';
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
-import App from './App';
+
+// 引入第三方
+import { Page, View } from 'gree-ui';
+// import Fsm from 'fsm-ts';
+import 'round-slider/dist/roundslider.min.js';
+import 'round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
 import './assets/scss/global.scss';
+
+// 引入内部文件
+import { closePage, getInfo } from '@PluginInterface'; // 主体接口：关闭插件页、获取设备信息、改变状态栏颜色
+import { types } from '@/store/types';
+import App from './App';
 import debugMixin from './mixins/debug'; // 开发环境初始化
 import initMixin from './mixins/init'; // 生产环境初始化
 import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
-
+// import { getConfig, getState } from './utils/fsm';
+import vChangeHeight from '@/directives/changeHeight';
+import vFixSrcollTop from '@/directives/fixSrcollTop';
 // const customize = require('@/store/userdef');
 
 // 安装插件

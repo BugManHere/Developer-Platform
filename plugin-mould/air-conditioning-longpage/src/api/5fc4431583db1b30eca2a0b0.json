@@ -1,11 +1,37 @@
 {
   "excludeMap": {
-    "Pow_default": ["BottomSleep_status_1"],
-    "Mod_status_1": ["Blo_status_1"],
-    "Mod_status_2": ["Fan_status_6", "Fan_status_7", "BottomSleep_status_1", "SvSt_status_1", "Blo_status_1"],
-    "Mod_status_3": ["Fan_status_6", "Fan_status_5", "Fan_status_4", "Fan_status_3", "Fan_status_2", "Fan_default"],
-    "Mod_status_4": ["Fan_status_6", "Fan_status_7", "BottomSleep_status_1", "SvSt_status_1", "Blo_status_1"],
-    "SvSt_status_1": ["OutHome_status_1", "AcSvSt_status_1"]
+    "Pow_default": [
+      "BottomSleep_status_1"
+    ],
+    "Mod_status_1": [
+      "Blo_status_1"
+    ],
+    "Mod_status_2": [
+      "Fan_status_6",
+      "Fan_status_7",
+      "BottomSleep_status_1",
+      "SvSt_status_1",
+      "Blo_status_1"
+    ],
+    "Mod_status_3": [
+      "Fan_status_6",
+      "Fan_status_5",
+      "Fan_status_4",
+      "Fan_status_3",
+      "Fan_status_2",
+      "Fan_default"
+    ],
+    "Mod_status_4": [
+      "Fan_status_6",
+      "Fan_status_7",
+      "BottomSleep_status_1",
+      "SvSt_status_1",
+      "Blo_status_1"
+    ],
+    "SvSt_status_1": [
+      "OutHome_status_1",
+      "AcSvSt_status_1"
+    ]
   },
   "hideMap": {
     "Pow_default": [
@@ -90,18 +116,46 @@
       "SetCoolHumiMin_default",
       "Tem_default"
     ],
-    "SvSt_default": ["OutWtTem_default", "CoolSvStTemMin_default", "HumiSvStTemMin_default", "HeatSvStTemMax_default"],
-    "SvSt_undefined": ["OutWtTem_default"],
-    "SvSt_status_1": ["CWMax_default", "CWMin_default", "HWMax_default", "HWMin_default", "ColWtSetTem_default", "HtWtSetTem_default", "IndoorTem_default"],
-    "CleanState_status_1": ["AutoCleanTxt_default", "CleanTime_default"],
-    "HumiEnable_default": ["Tem_default", "SetTemMin_default", "SetTemMax_default"],
-    "HumiEnable_status_1": ["SetCoolHumi_default", "SetCoolHumiMax_default", "SetCoolHumiMin_default"]
+    "SvSt_default": [
+      "OutWtTem_default",
+      "CoolSvStTemMin_default",
+      "HumiSvStTemMin_default",
+      "HeatSvStTemMax_default"
+    ],
+    "SvSt_undefined": [
+      "OutWtTem_default"
+    ],
+    "SvSt_status_1": [
+      "CWMax_default",
+      "CWMin_default",
+      "HWMax_default",
+      "HWMin_default",
+      "ColWtSetTem_default",
+      "HtWtSetTem_default",
+      "IndoorTem_default"
+    ],
+    "CleanState_status_1": [
+      "AutoCleanTxt_default",
+      "CleanTime_default"
+    ],
+    "HumiEnable_default": [
+      "Tem_default",
+      "SetTemMin_default",
+      "SetTemMax_default"
+    ],
+    "HumiEnable_status_1": [
+      "SetCoolHumi_default",
+      "SetCoolHumiMax_default",
+      "SetCoolHumiMin_default"
+    ]
   },
   "productModel": "60a1",
   "deviceName": "HDC风管机",
   "funcDefine": [
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5eb5faefc253963e304cb425",
       "name": "开关",
       "identifier": "Pow",
@@ -145,7 +199,9 @@
           "miniIcon": {
             "key": "undefined"
           },
-          "excludeArr": ["BottomSleep_status_1"]
+          "excludeArr": [
+            "BottomSleep_status_1"
+          ]
         },
         "undefined": {
           "name": "其他",
@@ -182,7 +238,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5f6355dc0cc4352f906ca724",
       "name": "模式入口",
       "identifier": "ModPopup",
@@ -290,7 +348,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5fc44e0d83db1b30eca2a88e",
       "name": "睡眠",
       "identifier": "BottomSleep",
@@ -344,7 +404,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5f6354ce0cc4352f906ca653",
       "name": "高级功能入口",
       "identifier": "FuncPopup",
@@ -460,7 +522,9 @@
             "SetCoolHumiMax_default",
             "SetCoolHumiMin_default"
           ],
-          "excludeArr": ["Blo_status_1"]
+          "excludeArr": [
+            "Blo_status_1"
+          ]
         },
         "status_2": {
           "name": "送风模式",
@@ -488,7 +552,13 @@
             "SetCoolHumiMin_default",
             "SetCoolHumiMax_default"
           ],
-          "excludeArr": ["Fan_status_6", "Fan_status_7", "BottomSleep_status_1", "SvSt_status_1", "Blo_status_1"]
+          "excludeArr": [
+            "Fan_status_6",
+            "Fan_status_7",
+            "BottomSleep_status_1",
+            "SvSt_status_1",
+            "Blo_status_1"
+          ]
         },
         "status_3": {
           "name": "除湿模式",
@@ -512,7 +582,14 @@
             "CoolSvStTemMin_default",
             "HeatSvStTemMax_default"
           ],
-          "excludeArr": ["Fan_status_6", "Fan_status_5", "Fan_status_4", "Fan_status_3", "Fan_status_2", "Fan_default"]
+          "excludeArr": [
+            "Fan_status_6",
+            "Fan_status_5",
+            "Fan_status_4",
+            "Fan_status_3",
+            "Fan_status_2",
+            "Fan_default"
+          ]
         },
         "status_4": {
           "name": "自动模式",
@@ -542,7 +619,13 @@
             "SetCoolHumiMin_default",
             "Tem_default"
           ],
-          "excludeArr": ["Fan_status_6", "Fan_status_7", "BottomSleep_status_1", "SvSt_status_1", "Blo_status_1"]
+          "excludeArr": [
+            "Fan_status_6",
+            "Fan_status_7",
+            "BottomSleep_status_1",
+            "SvSt_status_1",
+            "Blo_status_1"
+          ]
         }
       },
       "map": {
@@ -757,7 +840,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5fc453c883db1b30eca2aead",
       "name": "上下扫风",
       "identifier": "SwingUD",
@@ -811,7 +896,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5fc453c883db1b30eca2aeae",
       "name": "左右扫风",
       "identifier": "SwingLR",
@@ -865,7 +952,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5eb5fbe0c253963e304cb44c",
       "name": "干燥",
       "identifier": "Blo",
@@ -919,7 +1008,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5eb5fbbec253963e304cb447",
       "name": "节能",
       "identifier": "SvSt",
@@ -938,7 +1029,12 @@
           "miniIcon": {
             "key": "undefined"
           },
-          "hideArr": ["OutWtTem_default", "CoolSvStTemMin_default", "HumiSvStTemMin_default", "HeatSvStTemMax_default"]
+          "hideArr": [
+            "OutWtTem_default",
+            "CoolSvStTemMin_default",
+            "HumiSvStTemMin_default",
+            "HeatSvStTemMax_default"
+          ]
         },
         "undefined": {
           "name": "其他",
@@ -952,7 +1048,9 @@
           "miniIcon": {
             "key": "undefined"
           },
-          "hideArr": ["OutWtTem_default"]
+          "hideArr": [
+            "OutWtTem_default"
+          ]
         },
         "status_1": {
           "name": "开启",
@@ -966,8 +1064,19 @@
           "miniIcon": {
             "key": "jieneng"
           },
-          "hideArr": ["CWMax_default", "CWMin_default", "HWMax_default", "HWMin_default", "ColWtSetTem_default", "HtWtSetTem_default", "IndoorTem_default"],
-          "excludeArr": ["OutHome_status_1", "AcSvSt_status_1"]
+          "hideArr": [
+            "CWMax_default",
+            "CWMin_default",
+            "HWMax_default",
+            "HWMin_default",
+            "ColWtSetTem_default",
+            "HtWtSetTem_default",
+            "IndoorTem_default"
+          ],
+          "excludeArr": [
+            "OutHome_status_1",
+            "AcSvSt_status_1"
+          ]
         }
       },
       "map": {
@@ -982,7 +1091,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5fc44cc883db1b30eca2a58e",
       "name": "换气",
       "identifier": "Ventilation",
@@ -1036,7 +1147,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5fc4537783db1b30eca2ae79",
       "name": "自清洁",
       "identifier": "CleanState",
@@ -1081,7 +1194,10 @@
           "miniIcon": {
             "key": "zidongqingjie"
           },
-          "hideArr": ["AutoCleanTxt_default", "CleanTime_default"]
+          "hideArr": [
+            "AutoCleanTxt_default",
+            "CleanTime_default"
+          ]
         }
       },
       "map": {
@@ -1091,7 +1207,9 @@
       }
     },
     {
-      "order": ["status_1"],
+      "order": [
+        "status_1"
+      ],
       "_id": "5eb6006bc253963e304cb5cb",
       "name": "预约",
       "identifier": "AppTimer",
@@ -1364,7 +1482,11 @@
           "miniIcon": {
             "key": "undefined"
           },
-          "hideArr": ["Tem_default", "SetTemMin_default", "SetTemMax_default"]
+          "hideArr": [
+            "Tem_default",
+            "SetTemMin_default",
+            "SetTemMax_default"
+          ]
         },
         "undefined": {
           "name": "其他",
@@ -1391,7 +1513,11 @@
           "miniIcon": {
             "key": "HumiEnable"
           },
-          "hideArr": ["SetCoolHumi_default", "SetCoolHumiMax_default", "SetCoolHumiMin_default"]
+          "hideArr": [
+            "SetCoolHumi_default",
+            "SetCoolHumiMax_default",
+            "SetCoolHumiMin_default"
+          ]
         }
       },
       "map": {

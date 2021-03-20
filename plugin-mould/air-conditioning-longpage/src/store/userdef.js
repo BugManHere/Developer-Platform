@@ -1,4 +1,4 @@
-import { showConfirm, showToast } from '@PluginInterface';
+import { showToast, showConfirm } from '@PluginInterface';
 /**
  * @description 自定义函数，根据status.customize的取值选择插入方式
  * @returns {Object} identifier对应的自定义函数
@@ -68,11 +68,11 @@ export const cacheDataMap = {
     {
       storageKey: 'temSetting',
       jsons: ['SetTem', 'Add0.5', 'Add0.1']
-    },
-    {
-      storageKey: 'fanSetting',
-      jsons: ['WdSpd', 'Tur', 'Quiet']
     }
+    // {
+    //   storageKey: 'fanSetting',
+    //   jsons: ['WdSpd', 'Tur', 'Quiet']
+    // }
   ]
 };
 

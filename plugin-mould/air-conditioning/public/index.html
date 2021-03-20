@@ -60,13 +60,34 @@
         src: url('./../../font/SF-UI-Display-Ultralight.otf');
       }
 
-      @font-face {
-        font-family: 'appleLight';
-        src: url('./../../font/SF-UI-Display-Light.otf');
-      }
-    </style>
-    <% } %>
-  </head>
+    @font-face {
+      font-family: 'appleLight';
+      src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+    }
+  </style>
+  <% } else if (NODE_ENV === 'production') { %>
+  <script src="./../../cordova.js"></script>
+  <script src="./js/cordovainit.js"></script>
+  <style>
+    @font-face {
+      font-family: 'appleUltralight';
+      src: url('./../../font/SF-UI-Display-Ultralight.otf');
+    }
+
+    @font-face {
+      font-family: 'appleLight';
+      src: url('./../../font/SF-UI-Display-Light.otf');
+    }
+  </style>
+  <% } %>
+</head>
+
+<body ontouchstart="">
+  <noscript>
+    <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript
+      enabled. Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
 
   <body ontouchstart="">
     <noscript>
