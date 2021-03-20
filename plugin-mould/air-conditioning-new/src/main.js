@@ -7,6 +7,8 @@ import Vuex from 'vuex';
 
 // 引入第三方
 import { Page, View } from 'gree-ui';
+// import Fsm from 'fsm-ts';
+import 'round-slider/dist/roundslider.min.js';
 import 'round-slider/dist/roundslider.min.css';
 // import Fsm from 'fsm-ts';
 import 'round-slider/dist/roundslider.min.js';
@@ -22,7 +24,6 @@ import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
-
 // import { getConfig, getState } from './utils/fsm';
 // const customize = require('@/store/userdef');
 
