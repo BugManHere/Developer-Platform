@@ -176,7 +176,7 @@ export default {
       this.updateFanLoop();
     },
     updateFanLoop() {
-      const [fanStatusNameList, specialFanStatusNameList] = this.getFanOrder();
+      const [specialFanStatusNameList, fanStatusNameList] = this.getFanOrder();
       this.fanStatusNameList = fanStatusNameList;
       this.specialFanStatusNameList = specialFanStatusNameList;
     },

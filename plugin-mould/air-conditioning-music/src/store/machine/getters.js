@@ -418,7 +418,7 @@ function mapRelation(fromMap, toMap) {
   fromMapKey.forEach(item => {
     if (fromMap[item] === toMap[item]) {
       num += 1;
-      console.log('xxxx', fromMap[2], toMap[2]);
+      console.log('xxxx', fromMap, toMap);
       console.log('qqq', num);
     }
   });

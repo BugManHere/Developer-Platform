@@ -3,8 +3,6 @@
   <gree-view :bg-color="`#404040`">
     <gree-page class="page-sweep">
       <gree-header>{{ $language(`sweep.${['speedTitle', 'advance_leftright', 'advance_updown'][touchId]}`) }}</gree-header>
-<<<<<<< HEAD
-<<<<<<< HEAD
       <gree-sweep-select
         canvas-id="sweep-lr"
         :canvas-width="canvasWidth"
@@ -26,9 +24,7 @@
       <div class="point-text">
         <p>{{ $language('sweep.Stage_tips') }}</p>
         <p v-html="$language('sweep.sweep_txt2')"></p>
-=======
-=======
->>>>>>> origin/master
+      </div>
       <div v-if="oppositeType.show" class="opposite" @touchend.prevent="clickOpposite" :class="oppositeType.type">
         <span v-html="oppositeType.text" />
         <!-- <img :src="oppositeType.img" v-if="oppositeType.show" /> -->
@@ -57,10 +53,6 @@
           <p>{{ $language('sweep.Stage_tips') }}</p>
           <p v-html="$language('sweep.sweep_txt2')"></p>
         </div>
-<<<<<<< HEAD
->>>>>>> 5a44fac... feat(all):  零零散散的更新
-=======
->>>>>>> origin/master
       </div>
     </gree-page>
   </gree-view>
@@ -117,11 +109,6 @@ export default {
     }),
     routeName() {
       return this.$route.name;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/master
     },
     oppositeType() {
       return {
@@ -129,10 +116,6 @@ export default {
         type: this.SwingLfRig === 8 ? 'on' : 'off',
         show: this.touchId === 1
       };
-<<<<<<< HEAD
->>>>>>> 5a44fac... feat(all):  零零散散的更新
-=======
->>>>>>> origin/master
     }
   },
   watch: {
@@ -294,11 +277,6 @@ export default {
   }
 };
 </script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/master
 
 <style lang="scss" scoped>
 .sweep-body {
@@ -325,7 +303,3 @@ export default {
   }
 }
 </style>
-<<<<<<< HEAD
->>>>>>> 5a44fac... feat(all):  零零散散的更新
-=======
->>>>>>> origin/master

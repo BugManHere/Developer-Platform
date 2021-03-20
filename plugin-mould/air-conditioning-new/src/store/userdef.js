@@ -1,4 +1,4 @@
-import { timerListDevice, showToast, showConfirm } from '@PluginInterface';
+import { showConfirm, showToast, timerListDevice } from '@PluginInterface';
 
 /**
  * @description 自定义函数，根据status.customize的取值选择插入方式
@@ -97,18 +97,12 @@ export const customizeFunction = {
     let value = 0;
     let res = true;
     nextStatusName === 'status_1' && (value = 1);
-<<<<<<< HEAD
-<<<<<<< HEAD
     value || (res = await showConfirm('提示', '是否退出自清洁功能？'));
     res && switchClean(value);
-=======
     value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
     Number(res) && switchClean(value);
->>>>>>> 5a44fac... feat(all):  零零散散的更新
-=======
     value ? showToast('正在启动自清洁中，请耐心等待...', 1) : (res = await showConfirm('提示', '是否退出自清洁功能？'));
     Number(res) && switchClean(value);
->>>>>>> origin/master
   },
   SwingUD: () => {
     const storage = window.storage;

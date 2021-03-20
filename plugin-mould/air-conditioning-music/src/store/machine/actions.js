@@ -109,7 +109,7 @@ class stateMachine {
         } else {
           checkTime += 1;
           oldList = result;
-          this.updateState;
+          this.updateState; //更新互斥关系，防止隐藏之后不判断互斥关系。出现状态隐藏但未关闭的情况
           commit(types.SET_BASEDATA, { funcDefine: state.baseData.funcDefine }, { root: true });
         }
         return true;

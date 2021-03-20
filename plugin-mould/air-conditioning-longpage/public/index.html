@@ -1,15 +1,16 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html style="overflow: hidden">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="format-detection" content="telephone=no,address=no,email=no" />
-    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
-    <title>iotfe</title>
-    <% if (NODE_ENV==='testing' ) { %>
-    <script async src="//172.28.4.33:8091/target.js"></script>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover"
+    name="viewport" />
+  <title>iotfe</title>
+  <% if (NODE_ENV==='testing' ) { %>
+    <!-- <script async src="//172.28.4.33:8091/target.js"></script> -->
     <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
     <script>
       function trigger() {
@@ -61,221 +62,82 @@
     </style>
     <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
     <% } else if (NODE_ENV==='production' ) { %>
-    <script src="./../../cordova.js"></script>
-    <script src="./js/cordovainit.js"></script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('./../../font/SF-UI-Display-Ultralight.otf');
-      }
+      <script src="./../../cordova.js"></script>
+      <script src="./js/cordovainit.js"></script>
+      <style>
+        @font-face {
+          font-family: 'appleUltralight';
+          src: url('./../../font/SF-UI-Display-Ultralight.otf');
+        }
 
-      @font-face {
-        font-family: 'appleLight';
-        src: url('./../../font/SF-UI-Display-Light.otf');
-      }
+        @font-face {
+          font-family: 'appleLight';
+          src: url('./../../font/SF-UI-Display-Light.otf');
+        }
 
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('./../../font/SF-UI-Display-Regular.otf');
-      }
+        @font-face {
+          font-family: 'appleRegular';
+          src: url('./../../font/SF-UI-Display-Regular.otf');
+        }
 
-      @font-face {
-        font-family: 'appleThin';
-        src: url('./../../font/SF-UI-Display-Thin.otf');
-      }
+        @font-face {
+          font-family: 'appleThin';
+          src: url('./../../font/SF-UI-Display-Thin.otf');
+        }
 
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('./../../font/FZLTHJ.ttf');
-      }
+        @font-face {
+          font-family: 'FZLTHJ';
+          src: url('./../../font/FZLTHJ.ttf');
+        }
 
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('./../../font/Roboto-Light.ttf');
-      }
-    </style>
-    <% } else { %>
-    <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
+        @font-face {
+          font-family: 'Roboto-Light';
+          src: url('./../../font/Roboto-Light.ttf');
+        }
+      </style>
+      <% } else { %>
+        <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
+        <style>
+          @font-face {
+            font-family: 'appleUltralight';
+            src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
+          }
 
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
+          @font-face {
+            font-family: 'appleLight';
+            src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
+          }
 
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
+          @font-face {
+            font-family: 'appleRegular';
+            src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
+          }
 
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
+          @font-face {
+            font-family: 'appleThin';
+            src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
+          }
 
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
+          @font-face {
+            font-family: 'FZLTHJ';
+            src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
+          }
 
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
-    </style>
-    <% } %>
-  </head>
+          @font-face {
+            font-family: 'Roboto-Light';
+            src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
+          }
+        </style>
+        <% } %>
+</head>
 
-  <body ontouchstart="">
-    <noscript>
-      <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<body ontouchstart="">
+  <noscript>
+    <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
-=======
-<!DOCTYPE html>
-<html style="overflow: hidden">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="format-detection" content="telephone=no,address=no,email=no" />
-    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
-    <title>iotfe</title>
-    <% if (NODE_ENV==='testing' ) { %>
-    <script async src="//172.28.4.33:8091/target.js"></script>
-    <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
-    <script>
-      function trigger() {
-        var re = /OS ((\d{1,2})_\d{1,2}||(\d{1,2})_\d{1,2}_\d{1,2}) like Mac OS X/i;
-        var result = re.exec(window.navigator.userAgent);
-        var ver = result && result[1] && result[1].substr(0, 2);
-        return parseInt(ver) >= 8;
-      }
-      var script = document.createElement('script');
-      if (trigger()) {
-        // script.src = "http://iotfe.gree.com/ios/cordova.js";
-        script.src = '<%= BASE_URL %>static/plugin/ios/cordova.js'; // 本地调试
-      } else {
-        // script.src = "http://iotfe.gree.com/cordova.js";
-        script.src = '<%= BASE_URL %>static/plugin/cordova.js'; // 本地调试;
-      }
-      document.head.appendChild(script);
-    </script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
-
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
-
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
-
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
-
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
-
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
-    </style>
-    <script src="<%= BASE_URL %>static/lib/cordovainit.js"></script>
-    <% } else if (NODE_ENV==='production' ) { %>
-    <script src="./../../cordova.js"></script>
-    <script src="./js/cordovainit.js"></script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('./../../font/SF-UI-Display-Ultralight.otf');
-      }
-
-      @font-face {
-        font-family: 'appleLight';
-        src: url('./../../font/SF-UI-Display-Light.otf');
-      }
-
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('./../../font/SF-UI-Display-Regular.otf');
-      }
-
-      @font-face {
-        font-family: 'appleThin';
-        src: url('./../../font/SF-UI-Display-Thin.otf');
-      }
-
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('./../../font/FZLTHJ.ttf');
-      }
-
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('./../../font/Roboto-Light.ttf');
-      }
-    </style>
-    <% } else { %>
-    <script src="//cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
-    <style>
-      @font-face {
-        font-family: 'appleUltralight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Ultralight.otf');
-      }
-
-      @font-face {
-        font-family: 'appleLight';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Light.otf');
-      }
-
-      @font-face {
-        font-family: 'appleRegular';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Regular.otf');
-      }
-
-      @font-face {
-        font-family: 'appleThin';
-        src: url('<%= BASE_URL %>static/font/SF-UI-Display-Thin.otf');
-      }
-
-      @font-face {
-        font-family: 'FZLTHJ';
-        src: url('<%= BASE_URL %>static/font/FZLTHJ.ttf');
-      }
-
-      @font-face {
-        font-family: 'Roboto-Light';
-        src: url('<%= BASE_URL %>static/font/Roboto-Light.ttf');
-      }
-    </style>
-    <% } %>
-  </head>
-
-  <body ontouchstart="">
-    <noscript>
-      <strong>We're sorry but iotfe-vue-cli3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
-</html>
->>>>>>> origin/master

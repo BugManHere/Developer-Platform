@@ -211,6 +211,7 @@ module.exports = {
     'UDFanPort(Cabinet)': '下出风',
     'UDFanPort(Cabinet)_默认': '下出风自动',
     AntiDirectBlow: '防直吹',
+    'AntiDirectBlow(HeatMod)': '防直吹',
     // 商用
     OutHome: '外出模式',
     circulationPatterns: '循环模式',
