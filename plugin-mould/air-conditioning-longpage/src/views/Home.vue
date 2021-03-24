@@ -100,7 +100,7 @@ export default {
       midTypeFunc: state => state.baseData.midTypeFunc
     }),
     ...mapGetters('machine', ['funcDefine', 'funcDefine_active', 'statusMap']),
-    ...mapGetters(['temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
+    ...mapGetters(['imshowSlot2', 'temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
     iconClassList() {
       const iconMsg = require('@assets/iconfont/iconfont.json');
       const result = iconMsg.glyphs.map(icon => icon.font_class);
@@ -133,7 +133,7 @@ export default {
       );
     },
     titleInfo() {
-      const temText = `${this.temSetVal}℃`;
+      const temText = this.imshowSlot2 ? '' : `${this.temSetVal}℃`;
       const fanText = this.$language(`fan.${this.fanIdentifier}_${this.fanDefine.statusDefine[this.fanCurrentStatusName].name}`);
       const modText = this.$language(this.modTextKey);
       let result = `${temText}&nbsp;${modText}模式&nbsp;${fanText}`;

@@ -100,7 +100,12 @@
       font-size: 40px;
       width: 42px;
       text-align: center;
-      color: #6ba4fa;
+      color: #6ba4fd;
+      &.iconfont {
+        &-jieneng {
+          color: rgb(95, 202, 156);
+        }
+      }
     }
     span {
       font-size: 36px;

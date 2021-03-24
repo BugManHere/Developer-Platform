@@ -66,7 +66,7 @@ export default {
   #btn-group-Pow {
     .icon {
       color: #fff;
-      background: linear-gradient(#969cd9, #7abdf1) !important;
+      background: linear-gradient(rgb(122, 189, 241), rgb(150, 156, 217)) !important;
       box-shadow: 0 9px 21px rgba(14, 110, 227, 0.35) !important;
     }
   }

@@ -102,7 +102,7 @@ export default {
       }
       &.select {
         .icon {
-          background-image: linear-gradient(180deg, #8dbffd, #77a7e0);
+          background-image: linear-gradient(rgb(141, 191, 253), rgb(119, 167, 224));
           box-shadow: 0 9px 21px rgba(14, 110, 227, 0.15);
           i {
             color: #fff;
