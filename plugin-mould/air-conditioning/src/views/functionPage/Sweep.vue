@@ -32,6 +32,35 @@
           <p v-html="$language('sweep.sweep_txt2')"></p>
         </div>
       </div>
+      <div v-if="oppositeType.show" class="opposite" @touchend.prevent="clickOpposite" :class="oppositeType.type">
+        <span v-html="oppositeType.text" />
+        <!-- <img :src="oppositeType.img" v-if="oppositeType.show" /> -->
+      </div>
+      <div class="sweep-body">
+        <gree-sweep-select
+          canvas-id="sweep-lr"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          :origin="originLr"
+          :select-default="selectSwingLfRig"
+          @change="sweepLrChangeHandler"
+          v-if="touchId === 1"
+        >
+        </gree-sweep-select>
+        <gree-sweep-select
+          canvas-id="sweep-ud"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          :origin="originUd"
+          :select-default="selectSwUpDn"
+          @change="sweepUdChangeHandler"
+          v-else-if="touchId === 2"
+        ></gree-sweep-select>
+        <div class="point-text">
+          <p>{{ $language('sweep.Stage_tips') }}</p>
+          <p v-html="$language('sweep.sweep_txt2')"></p>
+        </div>
+      </div>
     </gree-page>
   </gree-view>
 </template>

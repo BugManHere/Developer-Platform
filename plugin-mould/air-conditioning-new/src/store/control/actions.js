@@ -1,4 +1,4 @@
-import { types, defineTypes } from '@/store/types';
+import { defineTypes, types } from '@/store/types';
 import { getConfig } from '@/utils/fsm';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast } from '@PluginInterface'; // 主体接口

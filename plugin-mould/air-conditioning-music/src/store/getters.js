@@ -25,6 +25,7 @@ export default {
   // 模式的定义
   modDefine: (state, getters) => {
     const models = getAllModelsByType({ getters }, 'inertia', state.modKey);
+    console.log(models);
     return models.length && models[0];
   },
   // 模式的id
