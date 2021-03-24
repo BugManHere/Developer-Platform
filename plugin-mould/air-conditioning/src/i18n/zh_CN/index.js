@@ -204,6 +204,7 @@ module.exports = {
     Follow: '风随',
     Avoid: '风避',
     Air: '新风',
+    'Air(base)': '新风',
     Air_智能: '智能新风',
     NobodySave: '无人节能',
     FbidBloPer: '防直吹',

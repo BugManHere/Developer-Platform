@@ -47,13 +47,14 @@ const homeConfig = {
         });
       // 如果1.
       !this.$store.state.dataObject.functype &&
-        this.$store.state.devOptions.statueJson2.includes('ElcEn') &&
+        this.$store.state.devOptions.identifierArr.includes('ElcEn') &&
         this.$store.state.dataObject.ElcEn &&
         result.push({
           url: require('../../assets/img/Electric.png'),
           name: this.$language('home.Electric'),
           key: 'ElcEn'
         });
+      console.log(this.$store.state.devOptions);
       return result;
     }
   }
