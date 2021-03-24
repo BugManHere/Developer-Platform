@@ -1,7 +1,7 @@
-import { types, defineTypes } from '@/store/types';
-
-import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, getAuthResult } from '@PluginInterface'; // 主体接口
+import { defineTypes, types } from '@/store/types';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
+import { finishLoad, getAuthResult, getInfo, sendDataToDevice, setMqttStatusCallback, updateStates } from '@PluginInterface'; // 主体接口
+
 
 const _timers = {
   _polling: null,
