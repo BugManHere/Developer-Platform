@@ -169,7 +169,7 @@ module.exports = {
     high: '高风档',
     turbo: '强劲档',
     quiet: '静音档',
-    Dry_tip: '除湿模式下不可调节风速。'
+    Mod_dry_tip: '除湿模式下不可调节风速。'
   },
   btn: {
     Sleep: '睡眠',

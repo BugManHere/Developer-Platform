@@ -54,7 +54,7 @@ module.exports = {
     high: 'High',
     turbo: 'Turbo',
     quiet: 'Quiet',
-    Dry_tip: "Can't set Wind in Dry mode."
+    Mod_dry_tip: "Can't set Wind in Dry mode."
   },
   btn: {
     Sleep: 'Sleep',

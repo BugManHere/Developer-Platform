@@ -30,7 +30,7 @@
           <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeName="getModeName" />
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeKey="getModeName" />
 
         <!-- 故障提示 -->
         <gree-notice-bar scrollable v-show="errStatus" class="notice-bar" icon="warning" v-text="errMsg">
@@ -55,7 +55,7 @@
         <!-- 室内温度 -->
         <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen" />
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-name="modeName" />
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-key="modeKey" />
         <airFanSwiper v-else-if="hasAir && Air && !loading" key="airFanSwiper" />
       </div>
       <!-- 尾部 -->
@@ -135,7 +135,7 @@ export default {
       currentCO2Level: 0,
       currentCO2Img: '',
       warnningText: false,
-      modeName: ''
+      modeKey: ''
     };
   },
   computed: {
@@ -426,7 +426,7 @@ export default {
       this.dialogOpen = true;
     },
     getModeName(val) {
-      this.modeName = val;
+      this.modeKey = val;
     },
     // 点击10次进入调试模式
     onTest() {

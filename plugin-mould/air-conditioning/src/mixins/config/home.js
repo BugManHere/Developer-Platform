@@ -54,7 +54,6 @@ const homeConfig = {
           name: this.$language('home.Electric'),
           key: 'ElcEn'
         });
-      console.log(this.$store.state.devOptions);
       return result;
     }
   }

@@ -19,7 +19,7 @@ export default {
   },
   mixins: [LogicDefine],
   props: {
-    modeName: {
+    modeKey: {
       type: String,
       default: ''
     }
@@ -318,7 +318,7 @@ export default {
       this.fanName = this.imshowList[toIndex].name;
     },
     swiperShowDisable() {
-      showToast(this.$language(`fan.${this.modeName}_tip`), 1);
+      showToast(this.$language(`fan.${this.modeKey}_tip`), 1);
     },
     getSwiperIndex(value) {
       const turIndex = this.imshowList.findIndex(item => item.value === 6);
