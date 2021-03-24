@@ -174,7 +174,7 @@ export default {
     },
     // 开关睡眠
     switchSleep(value) {
-      const sendData = { SwhSlp: Number(value), SmartSlpMod: 0, SlpMod: 0 };
+      const sendData = { SwhSlp: Number(value), SmartSlpMod: 0, SlpMod: Number(value) };
       if (value) {
         const { SmartSlpMod, SlpMod } = this.getCacheData();
         sendData.SmartSlpMod = SmartSlpMod;

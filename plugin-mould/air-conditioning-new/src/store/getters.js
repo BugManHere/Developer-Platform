@@ -33,6 +33,7 @@ export default {
   // 风速的定义
   fanDefine: (state, getters) => {
     const models = getAllModelsByType({ getters }, 'inertia', state.fanKey);
+    console.log(models);
     return models.length && models[0];
   },
   // 风速的id

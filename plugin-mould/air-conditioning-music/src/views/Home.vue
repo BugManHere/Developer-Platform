@@ -86,6 +86,7 @@ export default {
     // 获取卡片栏高度
     setTimeout(() => {
       this.headerHeight = document.getElementsByClassName('card-header-box')[0].clientHeight;
+      console.log('xxx', this.headerHeight);
     }, 200);
   },
   watch: {

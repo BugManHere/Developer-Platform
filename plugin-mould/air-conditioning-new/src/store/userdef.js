@@ -1,4 +1,4 @@
-import { timerListDevice, showToast, showConfirm } from '@PluginInterface';
+import { showConfirm, showToast, timerListDevice } from '@PluginInterface';
 
 /**
  * @description 自定义函数，根据status.customize的取值选择插入方式
