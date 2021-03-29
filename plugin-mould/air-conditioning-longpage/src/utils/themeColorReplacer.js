@@ -12,8 +12,8 @@ const sliderColor = {
 };
 
 const powBtnColor = {
-  cold: ['#969cd9', '#7abdf1'],
-  warm: ['#fe8a71', '#fcb392']
+  cold: ['#969cd9', '#7abdf1', '#0e6ee3'],
+  warm: ['#fe8a71', '#fcb392', '#ebac8d']
 };
 
 const iconColor = {
@@ -31,11 +31,16 @@ const switchColor = {
   warm: ['#ffac83']
 };
 
+const cardBgColor = {
+  cold: ['#f3f8ff'],
+  warm: ['#fdf8f6']
+};
+
 const coldColors = getColors('cold');
 const warmColors = getColors('warm');
 
 function getColors(type) {
-  const colorsList = [btnColor, powBtnColor, iconColor, sliderColor, cardIconColor, switchColor];
+  const colorsList = [btnColor, powBtnColor, iconColor, sliderColor, cardIconColor, switchColor, cardBgColor];
   const result = [];
   colorsList.forEach(colors => {
     result.push(...colors[type]);

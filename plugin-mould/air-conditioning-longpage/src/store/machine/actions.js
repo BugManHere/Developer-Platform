@@ -236,7 +236,7 @@ function checkLogic(context, identifier, statusName) {
     // 获取identifier的当前stateName
     const currentStateName = `${identifier}_${currentStatusName}`;
     // 如果当前stateName被排斥，则跳转到指向状态
-    stateName === currentStateName && Vue.prototype.$stateMachine.excludeStatus(identifier, currentStateName);
+    stateName === currentStateName && Vue.prototype.$stateMachine.excludeStatus(identifier, currentStatusName);
   });
 }
 

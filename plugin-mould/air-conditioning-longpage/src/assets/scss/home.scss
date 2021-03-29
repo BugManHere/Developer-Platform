@@ -2,6 +2,7 @@
   background-image: url(../img/bg.png);
   background-size: 100% 200%;
   background-position: 0 100%;
+
   .page-content {
     &::-webkit-scrollbar {
       display: none;
@@ -22,12 +23,17 @@
       min-height: 1048px;
       max-height: 1048px;
       background-color: transparent;
+      transform: translateZ(1.1);
+
       &-drawer {
         $guideHeight: 72px;
         $mainCardHeight: 258px;
-        $marginTop: calc(100vh - #{$guideHeight} - #{$mainCardHeight} - 124px - 36px - env(safe-area-inset-top));
+        $marginTop: calc(100vh - #{$guideHeight} - #{$mainCardHeight} - 124px - 36px);
         position: relative;
+        // top: $marginTop;
+        // top: calc(#{$marginTop} - env(safe-area-inset-top));
         margin-top: $marginTop;
+        margin-top: calc(#{$marginTop} - env(safe-area-inset-top));
         padding-bottom: calc(env(safe-area-inset-bottom) / 2);
         &-direction-guide {
           position: sticky;
@@ -97,7 +103,7 @@
       color: #6ba4fd;
       &.iconfont {
         &-jieneng {
-          color: rgb(95, 202, 156);
+          color: #5bc999;
         }
       }
     }

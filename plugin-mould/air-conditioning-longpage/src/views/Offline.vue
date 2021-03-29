@@ -5,6 +5,7 @@
         >{{ $language('name') }}
         <i class="iconfont iconfont-gengduo" slot="right" @click="moreInfo" />
       </gree-header>
+
       <div class="page-main">
         <!-- 图片 -->
         <div class="page-main-img">

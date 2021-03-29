@@ -61,13 +61,18 @@ export default {
 <style lang="scss">
 .main-btn-group {
   position: sticky !important;
+  position: -webkit-sticky !important;
   top: -36px;
   z-index: 10;
+  .select {
+    .icon {
+      box-shadow: 0 9px 27px 3px rgba(14, 110, 227, 0.3) !important;
+    }
+  }
   #btn-group-Pow {
     .icon {
       color: #fff;
-      background: linear-gradient(rgb(122, 189, 241), rgb(150, 156, 217)) !important;
-      box-shadow: 0 9px 21px rgba(14, 110, 227, 0.35) !important;
+      background: linear-gradient(#7abdf1, #969cd9) !important;
     }
   }
 }
