@@ -20,7 +20,7 @@
         <CenterSlider :style="bgBlurStyle" :round-bg="roundBg" />
         <div class="page-main-drawer" ref="page-main-scroll">
           <!-- 引导箭头 -->
-          <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'iconfont-fanhui' : 'line'" />
+          <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'arrow' : 'line'" />
           <!-- 主要功能按钮 -->
           <main-btn-group />
           <!-- 弹出层 -->

@@ -39,22 +39,16 @@
           justify-content: center;
           z-index: 2;
           &.line {
-            &::before {
-              border-radius: 6px;
-              height: 9px;
-              width: 120px;
-              background-color: rgba(152, 152, 152, 0.45);
-              font-family: 'Roboto-Light';
-              content: '';
-            }
+            background-image: url('~@/assets/img/line.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 120px 27px;
           }
-          &.iconfont-fanhui {
-            transform: rotateZ(-90deg) scaleY(2.6);
-            &::before {
-              font-size: 40px;
-              font-weight: 900;
-              color: rgba(152, 152, 152, 0.45);
-            }
+          &.arrow {
+            background-image: url('~@/assets/img/arrow.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 120px 27px;
           }
         }
       }
