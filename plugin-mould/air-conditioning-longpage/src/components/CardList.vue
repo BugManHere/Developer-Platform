@@ -19,7 +19,7 @@
                 </div>
               </div>
               <!-- 描述文字 -->
-              <p class="card-item-left-describe" v-text="card.describe" />
+              <p class="card-item-left-describe" :class="{ on: card.icon.type === 'on' }" v-text="card.describe" />
             </div>
             <!-- 右边 -->
             <div class="card-item-right">
@@ -57,7 +57,7 @@ export default {
       HumiSvStTemMin: state => state.dataObject.HumiSvStTemMin || 18,
       HeatSvStTemMax: state => state.dataObject.HeatSvStTemMax || 18
     }),
-    ...mapGetters(['cardFuncDefine', 'modTextKey']),
+    ...mapGetters(['cardFuncDefine', 'modTextKey', 'modCurrentStatusName']),
     ...mapGetters('machine', ['statusMap', 'blindModelArr']),
     cardList() {
       if (!Object.keys(this.statusMap).length) return [];
@@ -182,8 +182,11 @@ export default {
         width: 420px;
         font-size: 36px;
         margin-right: 24px;
-        color: #619ce7;
         white-space: nowrap;
+        color: #989898;
+        &.on {
+          color: #619ce5;
+        }
       }
     }
     &-right {

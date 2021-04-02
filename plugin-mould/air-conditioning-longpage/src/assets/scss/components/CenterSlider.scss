@@ -2,6 +2,7 @@
   position: fixed;
   top: 0;
   margin-top: env(safe-area-inset-top);
+  transform: scaleZ(1.1);
   &-main {
     position: relative;
     // margin-top: 226px;

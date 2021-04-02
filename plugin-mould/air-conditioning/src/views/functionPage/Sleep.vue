@@ -541,7 +541,6 @@ export default {
     },
     currentAge: {
       handler(newVal) {
-        console.log(newVal);
         if (isNaN(newVal)) return;
         this.selectRadio = newVal;
       },

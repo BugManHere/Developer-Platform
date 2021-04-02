@@ -126,8 +126,11 @@ body {
   }
 }
 
-.gree-switch--on {
-  background-color: #619ce7 !important;
+.gree-switch {
+  background-color: #c5c5c5 !important;
+  &--on {
+    background-color: #619ce5 !important;
+  }
 }
 
 .column-item.active {

@@ -2,6 +2,7 @@
   background-image: url(../img/bg.png);
   background-size: 100% 200%;
   background-position: 0 100%;
+
   .page-content {
     &::-webkit-scrollbar {
       display: none;
@@ -22,12 +23,17 @@
       min-height: 1048px;
       max-height: 1048px;
       background-color: transparent;
+      transform: translateZ(1.1);
+
       &-drawer {
         $guideHeight: 72px;
         $mainCardHeight: 258px;
-        $marginTop: calc(100vh - #{$guideHeight} - #{$mainCardHeight} - 124px - 36px - env(safe-area-inset-top));
+        $marginTop: calc(100vh - #{$guideHeight} - #{$mainCardHeight} - 124px - 36px);
         position: relative;
+        // top: $marginTop;
+        // top: calc(#{$marginTop} - env(safe-area-inset-top));
         margin-top: $marginTop;
+        margin-top: calc(#{$marginTop} - env(safe-area-inset-top));
         padding-bottom: calc(env(safe-area-inset-bottom) / 2);
         &-direction-guide {
           position: sticky;
@@ -39,22 +45,16 @@
           justify-content: center;
           z-index: 2;
           &.line {
-            &::before {
-              border-radius: 6px;
-              height: 9px;
-              width: 120px;
-              background-color: rgba(152, 152, 152, 0.45);
-              font-family: 'Roboto-Light';
-              content: '';
-            }
+            background-image: url('~@/assets/img/line.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 120px 27px;
           }
-          &.iconfont-fanhui {
-            transform: rotateZ(-90deg) scaleY(2.6);
-            &::before {
-              font-size: 40px;
-              font-weight: 900;
-              color: rgba(152, 152, 152, 0.45);
-            }
+          &.arrow {
+            background-image: url('~@/assets/img/arrow.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 120px 27px;
           }
         }
       }
@@ -100,7 +100,12 @@
       font-size: 40px;
       width: 42px;
       text-align: center;
-      color: #6ba4fa;
+      color: #6ba4fd;
+      &.iconfont {
+        &-jieneng {
+          color: #5bc999;
+        }
+      }
     }
     span {
       font-size: 36px;

@@ -1,4 +1,5 @@
 const client = require('webpack-theme-color-replacer/client');
+const forElementUI = require('webpack-theme-color-replacer/forElementUI');
 
 const btnColor = {
   cold: ['#8dbffd', '#77a7e0', '14, 110, 227'],
@@ -11,8 +12,8 @@ const sliderColor = {
 };
 
 const powBtnColor = {
-  cold: ['#969cd9', '#7abdf1'],
-  warm: ['#fe8a71', '#fcb392']
+  cold: ['#969cd9', '#7abdf1', '#0e6ee3'],
+  warm: ['#fe8a71', '#fcb392', '#ebac8d']
 };
 
 const iconColor = {
@@ -30,11 +31,16 @@ const switchColor = {
   warm: ['#ffac83']
 };
 
+const cardBgColor = {
+  cold: ['#f3f8ff'],
+  warm: ['#fdf8f6']
+};
+
 const coldColors = getColors('cold');
 const warmColors = getColors('warm');
 
 function getColors(type) {
-  const colorsList = [btnColor, powBtnColor, iconColor, sliderColor, cardIconColor, switchColor];
+  const colorsList = [btnColor, powBtnColor, iconColor, sliderColor, cardIconColor, switchColor, cardBgColor];
   const result = [];
   colorsList.forEach(colors => {
     result.push(...colors[type]);
@@ -44,13 +50,23 @@ function getColors(type) {
 
 // 动态切换主题色
 function changeThemeColor(newColors) {
-  var options = { newColors };
+  const colors = getElementUISeries(newColors);
+  var options = { newColors: colors };
   return client.changer.changeColor(options, Promise);
 }
 
+function getElementUISeries(colors) {
+  const matchColersArray = [];
+  colors.forEach(color => {
+    matchColersArray.push(...forElementUI.getElementUISeries(color));
+  });
+  return matchColersArray;
+}
+
 module.exports = {
-  matchColors: coldColors,
+  matchColors: getElementUISeries(coldColors),
   coldColors,
   warmColors,
-  changeThemeColor
+  changeThemeColor,
+  getElementUISeries
 };

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -41,9 +41,6 @@ export default {
     this.updateStatusNameList();
   },
   computed: {
-    ...mapState('control', {
-      Pow: state => state.dataObject.Pow
-    }),
     ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'fanLoop']),
     fanData() {
       const result = this.fanStatusNameList.map(fanStatusName => {
@@ -65,7 +62,7 @@ export default {
       return result;
     },
     isGray() {
-      return !this.Pow;
+      return false;
     }
   },
   watch: {

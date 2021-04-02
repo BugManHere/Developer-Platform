@@ -12,7 +12,8 @@ module.exports = {
     smart: '智能',
     timing: '定时',
     CO2: '二氧化碳浓度',
-    Electric: '电量查询'
+    Electric: '电量查询',
+    netword_warnning: '网络异常'
   },
   ban: {
     Auto: {
@@ -167,7 +168,8 @@ module.exports = {
     medium_high: '中高风档',
     high: '高风档',
     turbo: '强劲档',
-    quiet: '静音档'
+    quiet: '静音档',
+    Mod_dry_tip: '除湿模式下不可调节风速。'
   },
   btn: {
     Sleep: '睡眠',
@@ -202,6 +204,7 @@ module.exports = {
     Follow: '风随',
     Avoid: '风避',
     Air: '新风',
+    'Air(base)': '新风',
     Air_智能: '智能新风',
     NobodySave: '无人节能',
     FbidBloPer: '防直吹',
@@ -211,6 +214,7 @@ module.exports = {
     'UDFanPort(Cabinet)': '下出风',
     'UDFanPort(Cabinet)_默认': '下出风自动',
     AntiDirectBlow: '防直吹',
+    'AntiDirectBlow(HeatMod)': '防直吹',
     // 商用
     OutHome: '外出模式',
     circulationPatterns: '循环模式',

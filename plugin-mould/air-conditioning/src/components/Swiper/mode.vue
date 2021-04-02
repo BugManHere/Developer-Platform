@@ -215,13 +215,10 @@ export default {
       this.updateList(index);
     },
     setFanName(index) {
-      if (index === undefined) {
-        this.modeName = this.imshowList.find(item => item.value === this.swiperValue).name;
-        return;
-      }
       const toIndex = this.countIndex(this.swiperValue, index - this.leftLen);
-      this.modeName = this.imshowList[toIndex].name;
-      this.$emit('modeName', this.modeName);
+      const { name, key } = index === undefined ? this.imshowList.find(item => item.value === this.swiperValue) : this.imshowList[toIndex];
+      this.modeName = name;
+      this.$emit('modeKey', key);
     }
   }
 };

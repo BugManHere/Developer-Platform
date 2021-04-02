@@ -1,4 +1,4 @@
-import { types, defineTypes } from '@/store/types';
+import { defineTypes, types } from '@/store/types';
 import { getConfig } from '@/utils/fsm';
 import { getQueryStringByName, isMqtt } from '@/utils/index';
 import { sendDataToDevice, getInfo, updateStates, finishLoad, setMqttStatusCallback, showToast } from '@PluginInterface'; // 主体接口
@@ -68,7 +68,7 @@ function sendControl({ state, commit, dispatch, rootState }, dataMap) {
     // console.table([opt, p]);
     // console.log([opt, p]);
 
-    const CMD_JSON = JSON.stringify({ mac: sendMac, t, opt, p, sub: mac });
+    const CMD_JSON = JSON.stringify({ mac, t, opt, p, sub: mac });
     console.log(CMD_JSON);
     await sendDataToDevice(sendMac, CMD_JSON, false);
     // 3秒后重启轮询

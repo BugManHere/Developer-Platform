@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import BtnContent from './btn/index';
 import { types } from '@/store/types';
 
@@ -43,9 +43,6 @@ export default {
     this.emitModText();
   },
   computed: {
-    ...mapState('control', {
-      Pow: state => state.dataObject.Pow
-    }),
     ...mapGetters(['modDefine', 'modIdentifier', 'modCurrentStatusName']),
     ...mapGetters('machine', ['fakeStatusLoop', 'hideStateNameArr']),
     // 按钮列表

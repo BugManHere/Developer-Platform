@@ -29,7 +29,6 @@ const configList = fs.readdirSync(resolve('../../output'));
 const deleteConfigList = configList.filter(config => !config.includes(key));
 
 const { matchColors } = require('./src/utils/themeColorReplacer');
-// console.log([...forElementUI.getElementUISeries('#fffe11')]);
 module.exports = {
   publicPath: '',
   outputDir: `dist/plugins/Plugins/${process.env.VUE_APP_MID}`,

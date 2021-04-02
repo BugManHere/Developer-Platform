@@ -25,12 +25,12 @@
             </gree-col>
           </gree-row>
         </div>
-        <div class="bar-co2" v-if="!functype && Air && JSON.parse(devOptions.statueJson2).includes('CO2')">
+        <div class="bar-co2" v-if="!functype && Air && identifierArr.includes('CO2') && hasAir">
           <img :src="co2Img" />
           <span v-text="'CO2浓度等级'" @click="showCO2" />
         </div>
         <!-- 模式滑轮 -->
-        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeName="getModeName" />
+        <modeSwiper v-if="Pow && !loading" key="modeSwiper" @modeKey="getModeName" />
 
         <!-- 故障提示 -->
         <gree-notice-bar scrollable v-show="errStatus" class="notice-bar" icon="warning" v-text="errMsg">
@@ -47,7 +47,7 @@
           <gree-icon slot="left" name="bell"></gree-icon>
           {{ warnningText }}
         </gree-notice-bar>
-        <div v-show="!Pow" v-text="$language(`${Air ? 'btn.Air' : 'home.powerOff'}`)" class="poweroff-tip" />
+        <div v-show="!Pow" v-text="$language(`${hasAir && Air ? 'btn.Air' : 'home.powerOff'}`)" class="poweroff-tip" />
         <!-- 温度滑轮 -->
         <temSwiper v-if="Pow && !loading" key="temSwiper" />
         <!-- 温度单位图标 -->
@@ -55,8 +55,8 @@
         <!-- 室内温度 -->
         <div class="room-tem" v-text="`当前温度${TemSen - 40}℃`" v-if="hasTemSen" />
         <!-- 风档滑轮 -->
-        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-name="modeName" />
-        <airFanSwiper v-else-if="Air && !loading" key="airFanSwiper" />
+        <fanSwiper v-if="Pow && !loading" key="fanSwiper" :mode-key="modeKey" />
+        <airFanSwiper v-else-if="hasAir && Air && !loading" key="airFanSwiper" />
       </div>
       <!-- 尾部 -->
       <div class="page-footer">
@@ -135,13 +135,14 @@ export default {
       currentCO2Level: 0,
       currentCO2Img: '',
       warnningText: false,
-      modeName: ''
+      modeKey: ''
     };
   },
   computed: {
     ...mapState({
       dataObject: state => state.dataObject,
       devOptions: state => state.devOptions,
+      identifierArr: state => state.devOptions.identifierArr,
       devname: state => state.deviceInfo.name,
       functype: state => state.dataObject.functype,
       mac: state => state.mac,
@@ -260,11 +261,10 @@ export default {
       return result;
     },
     airFanShow() {
-      return Boolean(!this.Pow && this.Air);
+      return Boolean(!this.Pow && this.Air && this.hasAir);
     },
     hasAir() {
-      const statueJson2 = JSON.parse(this.devOptions.statueJson2);
-      return statueJson2.includes('Air');
+      return this.identifierArr.includes('Air') || this.identifierArr.includes('Air(base)');
     },
     hasTemSen() {
       const statueJson2 = JSON.parse(this.devOptions.statueJson2);
@@ -426,12 +426,12 @@ export default {
       this.dialogOpen = true;
     },
     getModeName(val) {
-      this.modeName = val;
+      this.modeKey = val;
     },
     // 点击10次进入调试模式
     onTest() {
       getCurrentMode().then(res => {
-        if (res === '0' || res === 0) {
+        if (![1, '1'].includes(res)) {
           this.onTestFlag += 1;
           this.onTestFlag === 5 && new VConsole();
           this.onTestFlag === 10 && this.$router.push({ name: 'Test' });

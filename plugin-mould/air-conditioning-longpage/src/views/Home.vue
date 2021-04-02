@@ -20,7 +20,7 @@
         <CenterSlider :style="bgBlurStyle" :round-bg="roundBg" />
         <div class="page-main-drawer" ref="page-main-scroll">
           <!-- 引导箭头 -->
-          <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'iconfont-fanhui' : 'line'" />
+          <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'arrow' : 'line'" />
           <!-- 主要功能按钮 -->
           <main-btn-group />
           <!-- 弹出层 -->
@@ -100,7 +100,7 @@ export default {
       midTypeFunc: state => state.baseData.midTypeFunc
     }),
     ...mapGetters('machine', ['funcDefine', 'funcDefine_active', 'statusMap']),
-    ...mapGetters(['temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
+    ...mapGetters(['imshowSlot2', 'temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
     iconClassList() {
       const iconMsg = require('@assets/iconfont/iconfont.json');
       const result = iconMsg.glyphs.map(icon => icon.font_class);
@@ -133,7 +133,7 @@ export default {
       );
     },
     titleInfo() {
-      const temText = `${this.temSetVal}℃`;
+      const temText = this.imshowSlot2 ? '' : `${this.temSetVal}℃`;
       const fanText = this.$language(`fan.${this.fanIdentifier}_${this.fanDefine.statusDefine[this.fanCurrentStatusName].name}`);
       const modText = this.$language(this.modTextKey);
       let result = `${temText}&nbsp;${modText}模式&nbsp;${fanText}`;
@@ -175,6 +175,7 @@ export default {
   watch: {
     modSwitchType: {
       handler(newVal) {
+        console.log(newVal);
         if (newVal === 'on') {
           changeThemeColor(warmColors);
         } else {
