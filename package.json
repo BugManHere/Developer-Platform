@@ -33,7 +33,7 @@
     "mongoose": "^5.7.1",
     "morgan": "^1.9.1",
     "node-dev": "^4.0.0",
-    "node-sass": "4.12",
+    "node-sass": "4.14",
     "nodemailer": "^6.3.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
