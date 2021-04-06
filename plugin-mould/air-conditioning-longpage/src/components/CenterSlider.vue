@@ -1,6 +1,6 @@
 <template>
   <div class="center-slider">
-    <div v-show="powType" class="center-slider-main">
+    <div v-show="powType()" class="center-slider-main">
       <div id="slider" :style="`opacity: ${temAbleSet ? 1 : 0.01}`" />
       <div
         class="layer"
@@ -43,7 +43,7 @@
       </article>
     </div>
     <!-- 加减按钮 -->
-    <div class="center-slider-btn-group" :class="{ 'set-gray': imshowSlot2 }" v-if="powType">
+    <div class="center-slider-btn-group" :class="{ 'set-gray': imshowSlot2 }" v-if="powType()">
       <div class="center-slider-btn-group-minus" @click="setTemByStep(-1)" />
       <div class="center-slider-btn-group-plus" @click="setTemByStep(1)" />
     </div>
@@ -57,6 +57,7 @@
 import { Block, AnimatedNumber } from 'gree-ui';
 import { mapActions, mapGetters } from 'vuex';
 import { types } from '@/store/types';
+import { statusNameGetter } from '@/utils/fsm';
 
 export default {
   props: {
@@ -97,7 +98,6 @@ export default {
       'fanIdentifier',
       'imshowSlot1',
       'imshowSlot2',
-      'powType',
       'modTextKey'
     ]),
     ...mapGetters('machine', ['funcDefineMap', 'statusMap']),
@@ -275,6 +275,9 @@ export default {
         unit: this.circleValUnit,
         show: Boolean(!this.imshowSlot2)
       });
+    },
+    powType() {
+      return statusNameGetter('Pow') === 'status_1';
     }
   }
 };

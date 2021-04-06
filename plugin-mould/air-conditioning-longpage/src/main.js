@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 // 引入第三方
 import { Page, View } from 'gree-ui';
 // import Fsm from 'fsm-ts';
+import Fsm from 'F:/WebCode/commit/fsm-ts/dist/index';
 import 'round-slider/dist/roundslider.min.js';
 import 'round-slider/dist/roundslider.min.css';
 import './assets/js/flexible';
@@ -20,10 +21,10 @@ import router from './router';
 import store from './store';
 import language from './utils/language'; // 对i18n的封装
 import Storage from './utils/storage';
-// import { getConfig, getState } from './utils/fsm';
+import { getConfig, getState } from './utils/fsm';
 import vChangeHeight from '@/directives/changeHeight';
 import vFixSrcollTop from '@/directives/fixSrcollTop';
-// const customize = require('@/store/userdef');
+const customize = require('@/store/userdef');
 
 // 安装插件
 Vue.use(VueI18n);
@@ -101,12 +102,12 @@ async function createVue() {
   }
   vm.$router.replace('Home').catch(e => console.log(e));
   // 给状态机传入配置
-  // Vue.prototype.$FsmTs = new Fsm.FsmTs({
-  //   config: getConfig({ storage: window.storage }),
-  //   input: vm.$store.state.control.dataObject,
-  //   handler: getState,
-  //   customize
-  // });
+  Vue.prototype.$FsmTs = new Fsm.FsmTs({
+    config: getConfig({ storage: window.storage }),
+    input: vm.$store.state.control.dataObject,
+    handler: getState,
+    customize
+  });
   // 挂载到#app上
   vm.$mount('#app');
 }

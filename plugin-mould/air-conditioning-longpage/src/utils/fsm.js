@@ -46,3 +46,15 @@ export const fixJsonType = (map, jsonDefine) => {
 export const getState = result => {
   console.log('------------getState', result);
 };
+
+export const hideStateNameArr = () => {
+  return myvm.$FsmTs.stateInfo.hideStateNameArr.value;
+};
+
+export const statusNameGetter = identifier => {
+  return myvm.$FsmTs.stateInfo.statusNameGetter(identifier);
+};
+
+export const modelAllGetter = (mainType, secondType) => {
+  return myvm.$FsmTs.stateInfo.modelAllGetter(mainType, secondType);
+};

@@ -13,6 +13,8 @@ export default {
     const { jsonDefine } = this.state.machine.baseData;
     let map = fixJsonType(obj, jsonDefine);
     state.dataObject = { ...state.dataObject, ...map };
+    // 更新状态机输入
+    myvm.$FsmTs.inputHandler(map);
   },
   [defineTypes.SET_CHECK_OBJECT](state, obj) {
     state.checkObject = { ...state.checkObject, ...obj };

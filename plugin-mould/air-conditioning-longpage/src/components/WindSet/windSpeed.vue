@@ -16,7 +16,7 @@
           class="wind-special-set-content-box"
           v-for="(spFan, spFanIndex) in specialFanData"
           :key="spFanIndex"
-          :class="{ select: spFan.statusName === fanCurrentStatusName, gray: fanHideStatusNameList.includes(spFan.statusName) }"
+          :class="{ select: spFan.statusName === fanCurrentStatusName, gray: fanHideStatusNameList().includes(spFan.statusName) }"
           @click="fanHandler(spFan.statusName)"
         >
           <i class="iconfont" :class="`iconfont-${spFan.icon.key}`" />
@@ -41,7 +41,7 @@
           <div
             class="wind-speed-set-content-slider-bg-round"
             v-for="(fan, fanIndex) in fanData"
-            :class="{ cover: fanDragIndex > fanIndex, gray: fanHideStatusNameList.includes(fan.statusName) }"
+            :class="{ cover: fanDragIndex > fanIndex, gray: fanHideStatusNameList().includes(fan.statusName) }"
             :key="fanIndex"
             @click="fanHandler(fan.statusName)"
           >
@@ -51,7 +51,7 @@
       </div>
       <!-- 文本 -->
       <div class="wind-speed-set-content-text">
-        <span v-text="fan.name" v-for="(fan, fanIndex) in fanData" :key="fanIndex" :class="{ gray: fanHideStatusNameList.includes(fan.statusName) }" />
+        <span v-text="fan.name" v-for="(fan, fanIndex) in fanData" :key="fanIndex" :class="{ gray: fanHideStatusNameList().includes(fan.statusName) }" />
       </div>
     </div>
   </div>
@@ -61,6 +61,7 @@
 import { Row } from 'gree-ui';
 import { mapGetters } from 'vuex';
 import { glyphs } from '@assets/iconfont/iconfont.json';
+import { hideStateNameArr, modelAllGetter } from '@/utils/fsm';
 
 export default {
   name: 'wind-speed',
@@ -68,7 +69,12 @@ export default {
     [Row.name]: Row
   },
   data() {
+    const stateInfo = this.$FsmTs.stateInfo;
+    // watchEffect(() => {
+    //   console.log(stateInfo.statusMap.value['Pow']);
+    // });
     return {
+      stateInfo,
       fanStatusNameList: [], // 风档的顺序
       specialFanStatusNameList: [], // 特殊风档的顺序
       sliderProgress: 60, // 滑条进度
@@ -80,15 +86,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('machine', ['hideStateNameArr']),
-    ...mapGetters(['fanDefine', 'fanIdentifier', 'fanCurrentStatusName', 'fanAbleSet', 'fanLoop']),
+    ...mapGetters(['fanCurrentStatusName', 'fanAbleSet']),
+    // stateInfo() {
+    //   return this.$FsmTs.stateInfo;
+    // },
     fanData() {
       const result = this.fanStatusNameList.map(fanStatusName => {
         // status定义
-        const status = this.fanDefine.statusDefine[fanStatusName];
+        const status = this.fanDefine().statusDefine[fanStatusName];
         // 名称
         const statusNameText = status.name;
-        const stateNameText = this.$language(`fan.${this.fanIdentifier}_${statusNameText}`);
+        const stateNameText = this.$language(`fan.${this.fanIdentifier()}_${statusNameText}`);
         // 图标
         const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         return { name: stateNameText, statusName: fanStatusName, icon };
@@ -98,10 +106,10 @@ export default {
     specialFanData() {
       const result = this.specialFanStatusNameList.map(fanStatusName => {
         // status定义
-        const status = this.fanDefine.statusDefine[fanStatusName];
+        const status = this.fanDefine().statusDefine[fanStatusName];
         // 名称
         const statusNameText = status.name;
-        const stateNameText = this.$language(`fan.${this.fanIdentifier}_${statusNameText}`);
+        const stateNameText = this.$language(`fan.${this.fanIdentifier()}_${statusNameText}`);
         // 图标
         const icon = glyphs.some(item => item.font_class === status.icon.key) ? status.icon : { key: 'undefined', type: 'off' };
         return { name: stateNameText, statusName: fanStatusName, icon };
@@ -139,14 +147,8 @@ export default {
     sliderStep() {
       return Math.round(100 / (this.fanData.length - 1));
     },
-    fanHideStatusNameList() {
-      const { fanIdentifier } = this;
-      const result = [];
-      const reg = new RegExp(`^${fanIdentifier}_`);
-      this.hideStateNameArr.forEach(stateName => {
-        reg.test(stateName) && result.push(RegExp.rightContext);
-      });
-      return result;
+    statusLoop() {
+      return this.stateInfo.statusMap.value['Pow'];
     }
   },
   mounted() {
@@ -158,15 +160,18 @@ export default {
     fanAbleSet(newVal) {
       newVal || (this.showPopup = false);
     },
-    fanLoop() {
-      this.init();
-    },
     fanCurrentStatusName() {
       this.init();
     },
     fanCurrentIndex: {
       handler(newVal) {
         this.setSliderPos(newVal);
+      },
+      immediate: true
+    },
+    statusLoop: {
+      handler(newVal) {
+        // console.log(newVal);
       },
       immediate: true
     }
@@ -182,7 +187,7 @@ export default {
     },
     // 采用自底向上递归方法获取风档排列, 0: 普通风档, 1: 特殊风档
     getFanOrder() {
-      const { map } = this.fanDefine;
+      const { map } = this.fanDefine();
       const filpMap = {}; // 映射对象
       const endPoints = []; // 指向'undefined'的状态为结束状态，作为递归的起始点
 
@@ -294,8 +299,25 @@ export default {
     },
     // 滑条事件
     fanHandler(statusName) {
-      this.fanHideStatusNameList.includes(statusName) || this.$stateMachine.toStatus(this.fanIdentifier, statusName);
+      this.fanHideStatusNameList().includes(statusName) || this.$stateMachine.toStatus(this.fanIdentifier(), statusName);
       this.setSliderPos(this.fanCurrentIndex);
+    },
+    fanDefine() {
+      const models = modelAllGetter('inertia', 'fan');
+      return models.length && models[0];
+    },
+    fanIdentifier() {
+      const fanDefine = this.fanDefine();
+      return fanDefine && fanDefine.identifier;
+    },
+    fanHideStatusNameList() {
+      const fanIdentifier = this.fanIdentifier();
+      const result = [];
+      const reg = new RegExp(`^${fanIdentifier}_`);
+      hideStateNameArr().forEach(stateName => {
+        reg.test(stateName) && result.push(RegExp.rightContext);
+      });
+      return result;
     }
   }
 };

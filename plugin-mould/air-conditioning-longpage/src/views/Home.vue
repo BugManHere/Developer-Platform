@@ -163,7 +163,6 @@ export default {
   watch: {
     modSwitchType: {
       handler(newVal) {
-        console.log(newVal);
         if (newVal === 'on') {
           changeThemeColor(warmColors);
         } else {
