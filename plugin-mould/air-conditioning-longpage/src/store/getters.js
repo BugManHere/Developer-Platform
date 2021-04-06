@@ -184,7 +184,7 @@ export default {
   },
   // 温度显示值
   temSetVal: (state, getters) => {
-    return getters.temSetJson && getTem({ getters, state });
+    return (getters.temSetJson && getTem({ getters, state })) || 25;
   },
   // 温度最小值设定
   temMinVal: (state, getters) => {
@@ -262,7 +262,7 @@ function checkReg(str, checkStr) {
 function getTem({ getters, state }) {
   const temInt = getters.inputMap[getters.temSetJson];
   let temDeci = 0;
-  if (getters.temStep < 1) {
+  if (getters.temSetJson === 'SetTem') {
     const temJson05 = state.jsonArr.tem05;
     const temJson01 = state.jsonArr.tem01;
     const temDeci05 = (temJson05 && getters.inputMap[temJson05] * 5) || 0;

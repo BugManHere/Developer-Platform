@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { closePage, startCatalogConfigActivity } from '@PluginInterface';
+import { closePage, startCatalogConfigActivity, editDevice } from '@PluginInterface';
 import { Header, Toast, Radio, RadioList, Switch, List, Item } from 'gree-ui';
 
 export default {

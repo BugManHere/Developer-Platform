@@ -1,6 +1,6 @@
 <template>
   <div class="center-slider">
-    <div v-show="powType" class="center-slider-main">
+    <div v-show="powType()" class="center-slider-main">
       <div id="slider" :style="`opacity: ${temAbleSet ? 1 : 0.01}`" />
       <div
         class="layer"
@@ -34,10 +34,7 @@
         <div v-else class="tem-value" :class="{ 'deci-tem': temStep < 1 }">
           <gree-animated-number class="tem-value-int" :value="circleValInt" :precision="0" :duration="200" transition />
           <gree-animated-number v-if="temStep < 1" class="tem-value-dec" :value="circleValDec * 10" :precision="0" :duration="200" transition />
-          <div
-            :class="{ 'unit-tem': temSetJson === 'SetTem', 'unit-humi': temSetJson === 'SetCoolHumi' }"
-            v-text="{ SetTem: '℃', SetCoolHumi: '%', undefined: '' }[temSetJson]"
-          />
+          <div :class="{ 'unit-tem': temSetJson === 'SetTem', 'unit-humi': temSetJson === 'SetCoolHumi' }" v-text="circleValUnit" />
         </div>
         <!-- 显示插槽1 -->
         <div v-if="imshowSlot1" class="slider-slot-1">
@@ -46,7 +43,7 @@
       </article>
     </div>
     <!-- 加减按钮 -->
-    <div class="center-slider-btn-group" v-if="powType">
+    <div class="center-slider-btn-group" :class="{ 'set-gray': imshowSlot2 }" v-if="powType()">
       <div class="center-slider-btn-group-minus" @click="setTemByStep(-1)" />
       <div class="center-slider-btn-group-plus" @click="setTemByStep(1)" />
     </div>
@@ -60,6 +57,7 @@
 import { Block, AnimatedNumber } from 'gree-ui';
 import { mapActions, mapGetters } from 'vuex';
 import { types } from '@/store/types';
+import { statusNameGetter } from '@/utils/fsm';
 
 export default {
   props: {
@@ -100,7 +98,6 @@ export default {
       'fanIdentifier',
       'imshowSlot1',
       'imshowSlot2',
-      'powType',
       'modTextKey'
     ]),
     ...mapGetters('machine', ['funcDefineMap', 'statusMap']),
@@ -112,6 +109,11 @@ export default {
     },
     circleValDec() {
       return this.circleVal % 1;
+    },
+    circleValUnit() {
+      const map = { SetTem: '℃', SetCoolHumi: '%', undefined: '' };
+      const result = map[this.temSetJson];
+      return result;
     }
   },
   mounted() {
@@ -199,6 +201,24 @@ export default {
         this.throttle(newVal, 'max');
       },
       immediate: true
+    },
+    circleValInt: {
+      handler() {
+        this.outPutCircleVal();
+      },
+      immediate: true
+    },
+    circleValDec: {
+      handler() {
+        this.outPutCircleVal();
+      },
+      immediate: true
+    },
+    circleValUnit: {
+      handler() {
+        this.outPutCircleVal();
+      },
+      immediate: true
     }
   },
   methods: {
@@ -246,6 +266,18 @@ export default {
     setTemByStep(type) {
       const step = this.temStep;
       this.temSetMethod(this.circleVal + step * type);
+    },
+    outPutCircleVal() {
+      this.$emit('circleVal', {
+        int: this.circleValInt,
+        dec: this.circleValDec,
+        val: this.circleVal,
+        unit: this.circleValUnit,
+        show: Boolean(!this.imshowSlot2)
+      });
+    },
+    powType() {
+      return statusNameGetter('Pow') === 'status_1';
     }
   }
 };

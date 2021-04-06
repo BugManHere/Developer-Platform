@@ -17,7 +17,7 @@
       </div>
       <div class="page-main">
         <!-- 圆环 -->
-        <CenterSlider :style="bgBlurStyle" :round-bg="roundBg" />
+        <CenterSlider :style="bgBlurStyle" :round-bg="roundBg" @circleVal="getCircleVal" />
         <div class="page-main-drawer" ref="page-main-scroll">
           <!-- 引导箭头 -->
           <div class="page-main-drawer-direction-guide iconfont" ref="page-main-scroll-guide" :class="isScroll ? 'arrow' : 'line'" />
@@ -32,13 +32,6 @@
         </div>
       </div>
     </gree-page>
-    <!-- 细分码测试 -->
-    <!-- <div class="vender-text-box" v-text="`当前细分码：${vender === '' ? 'default' : vender}`" draggable @click="changeVender" />
-    <gree-dialog v-model="slotDialog.open" :btns="slotDialog.btns">
-      <div class="dialog-banner" slot="default">
-        <gree-input-item placeholder="请输入细分码" is-amount v-model="slotDialog.value" />
-      </div>
-    </gree-dialog> -->
   </gree-view>
 </template>
 
@@ -69,19 +62,14 @@ export default {
   data() {
     return {
       onTestFlag: 0,
-      slotDialog: {
-        open: false,
-        value: '',
-        btns: [
-          {
-            text: '确定',
-            handler: this.enterVender
-          }
-        ]
-      },
       blurWeight: 0,
       isBlur: false,
-      isScroll: false
+      isScroll: false,
+      circleVal: {
+        int: 25,
+        dec: 0,
+        unit: ''
+      }
     };
   },
   computed: {
@@ -100,7 +88,7 @@ export default {
       midTypeFunc: state => state.baseData.midTypeFunc
     }),
     ...mapGetters('machine', ['funcDefine', 'funcDefine_active', 'statusMap']),
-    ...mapGetters(['imshowSlot2', 'temSetVal', 'modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
+    ...mapGetters(['modTextKey', 'modSwitchType', 'fanDefine', 'fanIdentifier', 'fanCurrentStatusName']),
     iconClassList() {
       const iconMsg = require('@assets/iconfont/iconfont.json');
       const result = iconMsg.glyphs.map(icon => icon.font_class);
@@ -133,7 +121,7 @@ export default {
       );
     },
     titleInfo() {
-      const temText = this.imshowSlot2 ? '' : `${this.temSetVal}℃`;
+      const temText = this.circleVal.show ? `${this.circleVal.val}${this.circleVal.unit}` : '';
       const fanText = this.$language(`fan.${this.fanIdentifier}_${this.fanDefine.statusDefine[this.fanCurrentStatusName].name}`);
       const modText = this.$language(this.modTextKey);
       let result = `${temText}&nbsp;${modText}模式&nbsp;${fanText}`;
@@ -175,7 +163,6 @@ export default {
   watch: {
     modSwitchType: {
       handler(newVal) {
-        console.log(newVal);
         if (newVal === 'on') {
           changeThemeColor(warmColors);
         } else {
@@ -243,15 +230,8 @@ export default {
         }
       });
     },
-    changeVender() {
-      this.slotDialog.open = true;
-    },
-    enterVender() {
-      console.log(this.slotDialog.value);
-      this.setDataObject({
-        vender: this.slotDialog.value
-      });
-      this.slotDialog.open = false;
+    getCircleVal(circleVal) {
+      this.circleVal = circleVal;
     }
   }
 };

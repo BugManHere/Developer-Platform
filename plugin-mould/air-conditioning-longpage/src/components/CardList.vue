@@ -191,14 +191,11 @@ export default {
     }
     &-right {
       padding: 0 52px 0 24px;
-      min-width: 138px;
+      width: auto;
       height: 100%;
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      &-switch {
-        width: 100%;
-      }
     }
   }
 }
